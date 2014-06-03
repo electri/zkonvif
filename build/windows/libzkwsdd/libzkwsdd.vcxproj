@@ -41,11 +41,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../../../libzkwsdd/soap/;$(IncludePath)</IncludePath>
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;../../../libzkwsdd/soap/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../../libzkwsdd/soap/;$(IncludePath)</IncludePath>
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;../../../libzkwsdd/soap/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,6 +85,16 @@
     <ClCompile Include="..\..\..\libzkwsdd\src\tdnImpl.cpp" />
     <ClCompile Include="..\..\..\libzkwsdd\src\wsddImpl.cpp" />
     <ClCompile Include="..\..\..\libzkwsdd\src\zkwsdd.cpp" />
+    <ClCompile Include="..\..\..\libzkwsdd\src\zkwsddImpl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\libzkwsdd\include\zkwsdd.h" />
+    <ClInclude Include="..\..\..\libzkwsdd\src\zkwsddImpl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ccgnu2\ccgnu2.vcxproj">
+      <Project>{399a07de-0289-40cb-abf6-2aa4499b7049}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

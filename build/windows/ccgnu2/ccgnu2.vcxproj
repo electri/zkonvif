@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{399A07DE-0289-40CB-ABF6-2AA4499B7049}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ccgnu2</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>CCXX_NAMESPACES;WIN32;_DEBUG;_WINDOWS;_USRDLL;CCGNU2_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>CCXX_NAMESPACES;WIN32;NDEBUG;_WINDOWS;_USRDLL;CCGNU2_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>ws2_32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\applog.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\assoc.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\buffer.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\cidr.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\cmdoptns.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\date.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\digest.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\dir.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\dso.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\engine.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\event.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\exception.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\file.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\friends.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\getopt.c" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\getopt1.c" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\in6addr.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\inaddr.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\keydata.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\linked.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\lockfile.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\map.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\md5.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\mempager.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\mime.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\missing.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\mutex.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\nat.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\network.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\numbers.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\peer.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\persist.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\pointer.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\process.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\runlist.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\semaphore.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\serial.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\simplesocket.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\slog.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\socket.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\socketport.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\ssl.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\strchar.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\string.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\thread.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\threadkey.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\timer.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\tokenizer.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\unix.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\url.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\urlstring.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\xml.cpp" />
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\zstream.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\address.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\applog.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\buffer.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\cmdoptns.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\common.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\counter.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\digest.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\exception.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\export.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\file.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\functions.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\mime.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\misc.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\missing.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\network.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\numbers.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\objcount.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\object.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\objlink.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\objmap.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\objsync.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\oststring.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\persist.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\pointer.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\process.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\serial.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\slog.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\socket.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\socketport.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\ssl.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\strchar.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\string.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\template.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\thread.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\tokenizer.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\unix.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\url.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\xml.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\zstream.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\src\getopt.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\src\nat.h" />
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\src\private.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
