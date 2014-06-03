@@ -26,6 +26,6 @@ else
 	sed -i 's/int SOAP_ENV__Fault/int SOAP_ENV__Fault2/g' wsa5.h
 fi
 
-soapcpp2.exe -Ld soap/ onvif.h -I.:/usr/share/gsoap/import:/usr/share/gsoap
+soapcpp2.exe -Ld soap/ onvif.h -I.:$GSOAP/import:$GSOAP
 
 echo 'En, just make it!'
