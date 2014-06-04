@@ -61,7 +61,7 @@ inline bool is_vm_mac(const char *mac)
 	return false;
 }
 
-// 将 byte[] 类型，转换为小写的 ascii 字符串
+// 将 byte[] 类型，转换为小写的 ascii 字符串.
 inline std::string conv_mac(unsigned char mac[], int len)
 {
 	std::string s;
@@ -75,7 +75,7 @@ inline std::string conv_mac(unsigned char mac[], int len)
 	return s;
 }
 
-// 描述一个网卡配置
+// 描述一个网卡配置.
 struct NetInf
 {
 	std::string macaddr;
@@ -103,8 +103,8 @@ inline bool get_all_netinfs(std::vector<NetInf> &nis)
 		while (p) {
 			if ((p->IfType == IF_TYPE_ETHERNET_CSMACD || p->IfType == IF_TYPE_IEEE80211) &&
 				(p->OperStatus == IfOperStatusUp)) {
-				// 仅仅考虑 ethernet 或者 wifi，并且活动的
-				// 不包括虚拟机的 mac
+				// 仅仅考虑 ethernet 或者 wifi，并且活动的.
+				// 不包括虚拟机的 mac.
 				std::string mac = conv_mac(p->PhysicalAddress, p->PhysicalAddressLength);
 				if (!is_vm_mac(mac.c_str())) {
 					NetInf ni;

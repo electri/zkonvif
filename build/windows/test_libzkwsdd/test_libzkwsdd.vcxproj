@@ -41,9 +41,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -79,6 +81,9 @@
     <ClCompile Include="..\..\..\libzkwsdd\test\test_zkwsdd.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ccgnu2\ccgnu2.vcxproj">
+      <Project>{399a07de-0289-40cb-abf6-2aa4499b7049}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\libzkwsdd\libzkwsdd.vcxproj">
       <Project>{e1cd4e8b-ad34-4d3c-a784-c2f79276f6d3}</Project>
     </ProjectReference>
