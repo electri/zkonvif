@@ -44,7 +44,7 @@ void TargetThread::run()
 	soap soap;
 	soap_init1(&soap, SOAP_IO_UDP);
 	
-	soap.user = this;
+	soap.user = new ThreadOpaque("target", this);
 	soap.bind_flags = SO_REUSEADDR;		// 可能多个 ...
 
 	if (!soap_valid_socket(soap_bind(&soap, 0, PORT, 100))) {
@@ -54,7 +54,7 @@ void TargetThread::run()
 
 	ip_mreq mcast;
 	mcast.imr_multiaddr.s_addr = inet_addr(MULTI_ADDR);
-	mcast.imr_interface.s_addr = htonl(INADDR_ANY);
+	mcast.imr_interface.s_addr = inet_addr("172.16.1.104");
 	if (setsockopt(soap.master, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&mcast, sizeof(mcast)) < 0) {
 		log(LOG_FAULT, "%s: ohhh, can't join multiaddr of %s!!!!\n", __func__, MULTI_ADDR);
 		::exit(-1);
@@ -69,4 +69,17 @@ void TargetThread::run()
 	soap_done(&soap);
 
 	log(LOG_INFO, "%s: thread terminated!\n", __func__);
+}
+
+std::vector<Target*> TargetThread::probe_matched(const char *types, const char *scopes)
+{
+	std::vector<Target *> targets;
+	ost::MutexLock al(cs_fifo_);
+
+	FIFO::const_iterator it;
+	for (it = fifo_.begin(); it != fifo_.end(); ++it) {
+		targets.push_back(*it);
+	}
+
+	return targets;
 }
