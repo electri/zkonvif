@@ -1,4 +1,5 @@
 #include "soapH.h"
+#include "log.h"
 
 int __wsdd__Hello(soap *soap, wsdd__HelloType *data)
 {
@@ -12,6 +13,7 @@ int __wsdd__Bye(soap *soap, wsdd__ByeType *data)
 
 int __wsdd__Probe(soap *soap, wsdd__ProbeType *data)
 {
+	log("%s: calling ...\n", __func__);
 	return SOAP_OK;
 }
 

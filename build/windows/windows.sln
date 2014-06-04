@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libzkonvif", "libzkonvif\libzkonvif.vcxproj", "{FDFCDDF2-2690-492C-BBCF-FFA91A3C0289}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libzkwsdd", "libzkwsdd\libzkwsdd.vcxproj", "{E1CD4E8B-AD34-4D3C-A784-C2F79276F6D3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ccgnu2", "ccgnu2\ccgnu2.vcxproj", "{399A07DE-0289-40CB-ABF6-2AA4499B7049}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_libzkwsdd", "test_libzkwsdd\test_libzkwsdd.vcxproj", "{35046FFD-5BA2-475D-8F93-76FA3346720B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FDFCDDF2-2690-492C-BBCF-FFA91A3C0289}.Debug|Win32.ActiveCfg = Debug|Win32
-		{FDFCDDF2-2690-492C-BBCF-FFA91A3C0289}.Debug|Win32.Build.0 = Debug|Win32
-		{FDFCDDF2-2690-492C-BBCF-FFA91A3C0289}.Release|Win32.ActiveCfg = Release|Win32
-		{FDFCDDF2-2690-492C-BBCF-FFA91A3C0289}.Release|Win32.Build.0 = Release|Win32
 		{E1CD4E8B-AD34-4D3C-A784-C2F79276F6D3}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E1CD4E8B-AD34-4D3C-A784-C2F79276F6D3}.Debug|Win32.Build.0 = Debug|Win32
 		{E1CD4E8B-AD34-4D3C-A784-C2F79276F6D3}.Release|Win32.ActiveCfg = Release|Win32
@@ -27,6 +23,10 @@ Global
 		{399A07DE-0289-40CB-ABF6-2AA4499B7049}.Debug|Win32.Build.0 = Debug|Win32
 		{399A07DE-0289-40CB-ABF6-2AA4499B7049}.Release|Win32.ActiveCfg = Release|Win32
 		{399A07DE-0289-40CB-ABF6-2AA4499B7049}.Release|Win32.Build.0 = Release|Win32
+		{35046FFD-5BA2-475D-8F93-76FA3346720B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{35046FFD-5BA2-475D-8F93-76FA3346720B}.Debug|Win32.Build.0 = Debug|Win32
+		{35046FFD-5BA2-475D-8F93-76FA3346720B}.Release|Win32.ActiveCfg = Release|Win32
+		{35046FFD-5BA2-475D-8F93-76FA3346720B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
