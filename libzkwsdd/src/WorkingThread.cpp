@@ -78,6 +78,8 @@ std::vector<Target*> TargetThread::probe_matched(const char *types, const char *
 
 	FIFO::const_iterator it;
 	for (it = fifo_.begin(); it != fifo_.end(); ++it) {
+		// TODO: 这里进行 types, scopes 的匹配 ...
+
 		targets.push_back(*it);
 	}
 

@@ -118,15 +118,20 @@ int __wsdd__Probe(soap *soap, wsdd__ProbeType *data)
 
 int __wsdd__ProbeMatches(soap *soap, wsdd__ProbeMatchesType *data)
 {
+	// TODO: 
 	return SOAP_OK;
 }
 
 int __wsdd__Resolve(soap *soap, wsdd__ResolveType *data)
 {
+	// TODO: 
+
 	return SOAP_OK;
 }
 
 int __wsdd__ResolveMatches(soap *soap, wsdd__ResolveMatchesType *data)
 {
+	// TODO:
+
 	return SOAP_OK;
 }
