@@ -5,11 +5,25 @@
 
 int __wsdd__Hello(soap *soap, wsdd__HelloType *data)
 {
+	log("%s: calling ...\n", __func__);
+
+	ThreadOpaque *opaque = (ThreadOpaque*)soap->user;
+	assert(!strcmp(opaque->name(), "client"));
+
+	// TODO: client 处理收到的 Hello ...
+
 	return SOAP_OK;
 }
 
 int __wsdd__Bye(soap *soap, wsdd__ByeType *data)
 {
+	log("%s: calling ...\n", __func__);
+
+	ThreadOpaque *opaque = (ThreadOpaque*)soap->user;
+	assert(!strcmp(opaque->name(), "client"));
+
+	// TODO: client 处理收到的 Bye ... 
+
 	return SOAP_OK;
 }
 
@@ -86,8 +100,10 @@ int __wsdd__Probe(soap *soap, wsdd__ProbeType *data)
 	header->wsa__RelatesTo->RelationshipType = 0;
 
 	header->wsa__MessageID = soap_strdup(soap, my_messageid());
-	header->wsa__Action = soap_strdup(soap, "http://schemas.xmlsoap.org/ws/2005/04/discovery/ProbeMatches");
-	header->wsa__To = soap_strdup(soap, "http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous");
+//	header->wsa__Action = soap_strdup(soap, "http://schemas.xmlsoap.org/ws/2005/04/discovery/ProbeMatches");
+//	header->wsa__To = soap_strdup(soap, "http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous");
+	header->wsa__Action = 0;
+	header->wsa__To = 0;
 
 	// FIXME: 是否单播发送的？？？
 	//		查看代码发现， soap->peer 保存了发送者的地址（非组播地址）
