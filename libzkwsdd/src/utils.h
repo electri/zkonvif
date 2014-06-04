@@ -22,7 +22,7 @@
 #endif
 #endif
 
-// ÅĞ¶Ï mac ÊÇ·ñÎªĞéÄâ»ú mac
+// åˆ¤æ–­ mac æ˜¯å¦ä¸ºè™šæ‹Ÿæœº mac
 inline bool is_vm_mac(const char *mac)
 {
 	/**
@@ -61,7 +61,7 @@ inline bool is_vm_mac(const char *mac)
 	return false;
 }
 
-// ½« byte[] ÀàĞÍ£¬×ª»»ÎªĞ¡Ğ´µÄ ascii ×Ö·û´®
+// å°† byte[] ç±»å‹ï¼Œè½¬æ¢ä¸ºå°å†™çš„ ascii å­—ç¬¦ä¸²
 inline std::string conv_mac(unsigned char mac[], int len)
 {
 	std::string s;
@@ -75,14 +75,14 @@ inline std::string conv_mac(unsigned char mac[], int len)
 	return s;
 }
 
-// ÃèÊöÒ»¸öÍø¿¨ÅäÖÃ
+// æè¿°ä¸€ä¸ªç½‘å¡é…ç½®
 struct NetInf
 {
 	std::string macaddr;
 	std::vector<std::string> ips;
 };
 
-/** »ñÈ¡¿ÉÓÃÍø¿¨ÅäÖÃ£¬½ö½öÑ¡ÔñÆô¶¯µÄ ipv4µÄ£¬·ÇĞéÄâ»úµÄ£¬ethernet
+/** è·å–å¯ç”¨ç½‘å¡é…ç½®ï¼Œä»…ä»…é€‰æ‹©å¯åŠ¨çš„ ipv4çš„ï¼Œéè™šæ‹Ÿæœºçš„ï¼Œethernet
 */
 inline bool get_all_netinfs(std::vector<NetInf> &nis)
 {
@@ -91,7 +91,7 @@ inline bool get_all_netinfs(std::vector<NetInf> &nis)
 	ULONG len = 16 * 1024;
 	IP_ADAPTER_ADDRESSES *adapter = (IP_ADAPTER_ADDRESSES*)malloc(len);
 
-	// ½ö½ö ipv4
+	// ä»…ä»… ipv4
 	DWORD rc = GetAdaptersAddresses(AF_INET, 0, 0, adapter, &len);
 	if (rc == ERROR_BUFFER_OVERFLOW) {
 		adapter = (IP_ADAPTER_ADDRESSES*)realloc(adapter, len);
@@ -103,8 +103,8 @@ inline bool get_all_netinfs(std::vector<NetInf> &nis)
 		while (p) {
 			if ((p->IfType == IF_TYPE_ETHERNET_CSMACD || p->IfType == IF_TYPE_IEEE80211) &&
 				(p->OperStatus == IfOperStatusUp)) {
-				// ½ö½ö¿¼ÂÇ ethernet »òÕß wifi£¬²¢ÇÒ»î¶¯µÄ
-				// ²»°üÀ¨ĞéÄâ»úµÄ mac
+				// ä»…ä»…è€ƒè™‘ ethernet æˆ–è€… wifiï¼Œå¹¶ä¸”æ´»åŠ¨çš„
+				// ä¸åŒ…æ‹¬è™šæ‹Ÿæœºçš„ mac
 				std::string mac = conv_mac(p->PhysicalAddress, p->PhysicalAddressLength);
 				if (!is_vm_mac(mac.c_str())) {
 					NetInf ni;
@@ -129,9 +129,8 @@ inline bool get_all_netinfs(std::vector<NetInf> &nis)
 	}
 
 #else
-	char buffer[8192];
+	char buffer[8096];
 	struct ifconf ifc;
-	struct ifreq ifr;
 
 	int fd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (fd == -1)
@@ -143,32 +142,40 @@ inline bool get_all_netinfs(std::vector<NetInf> &nis)
 	if (ioctl(fd, SIOCGIFCONF, &ifc) == -1)
 		return false;
 
-	int count = ifc.ifc_len / sizeof(ifreq);
+    for (char *ptr = buffer; ptr < buffer + ifc.ifc_len; ) {
+        ifreq *req = (ifreq*)ptr;
+        int len = sizeof(sockaddr) > req->ifr_addr.sa_len ? sizeof(sockaddr) : req->ifr_addr.sa_len;
+        
+        ptr += sizeof(req->ifr_name) + len; // next
+        
+        if (req->ifr_addr.sa_family != AF_INET)
+            continue;
+        
+        
+        ioctl(fd, SIOCGIFFLAGS, req);
+        int flags = req->ifr_flags;
+        if (flags & IFF_LOOPBACK)
+            continue;
+        
+        if (!(flags & IFF_UP))
+            continue;
+        
+        
+        
+        sockaddr_in sin;
+        sin.sin_addr = ((sockaddr_in&)req->ifr_addr).sin_addr;
+        
+        fprintf(stderr, "if: name=%s, ip=%s\n", req->ifr_name, inet_ntoa(sin.sin_addr));
+        
+        NetInf ni;
+        ni.macaddr = req->ifr_name;
+        ni.ips.push_back(inet_ntoa(sin.sin_addr));
 
-	struct ifreq *req = ifc.ifc_req;
-	struct ifreq *end = req + count;
-	for (; req != end; ++req) {
-		strcpy(ifr.ifr_name, req->ifr_name);
-		ioctl(fd, SIOCGIFFLAGS, &ifr);
-		if (ifr.ifr_flags & IFF_LOOPBACK)
-			continue;	// lo
+    }
 
-		sockaddr_in sin;
-		sin.sin_addr = ((sockaddr_in&)req->ifr_addr).sin_addr;
-
-		ioctl(fd, SIOCGIFHWADDR, &ifr);
-		unsigned char mac_addr[6];
-		memcpy(mac_addr, ifr.ifr_hwaddr.sa_data, 6);
-
-		NetInf ni;
-		ni.ips.push_back(inet_ntoa(sin.sin_addr));
-		ni.macaddr = conv_mac(mac_addr, 6);
-
-		nis.push_back(ni);
-	}
 	close(fd);
-
 #endif
+    
 	return true;
 }
 

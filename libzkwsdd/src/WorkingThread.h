@@ -1,4 +1,4 @@
-/** ¹¤×÷Ïß³Ì
+/** å·¥ä½œçº¿ç¨‹
  */
 
 #pragma once
@@ -9,7 +9,7 @@
 #include <cc++/thread.h>
 #include "Target_Client.h"
 
-// ·½±ã soap ´¦Àíº¯ÊıÖĞÇø·Ö
+// æ–¹ä¾¿ soap å¤„ç†å‡½æ•°ä¸­åŒºåˆ†
 class ThreadOpaque
 {
 	std::string name_;
@@ -31,7 +31,7 @@ public:
 	}
 };
 
-/** Target ¹¤×÷Ïß³Ì£¬ÊÕµ½ probe/resolve ºó£¬»áÒÀ´Î²éÑ¯ Target
+/** Target å·¥ä½œçº¿ç¨‹ï¼Œæ”¶åˆ° probe/resolve åï¼Œä¼šä¾æ¬¡æŸ¥è¯¢ Target
  */
 class TargetThread : ost::Thread
 {
@@ -48,7 +48,7 @@ public:
 	int bind(Target *target);
 	int unbind(Target *target);
 
-	// ·µ»Ø probe Æ¥ÅäµÄÁĞ±í
+	// è¿”å› probe åŒ¹é…çš„åˆ—è¡¨
 	std::vector<Target*> probe_matched(const char *type, const char *scope);
 
 private:

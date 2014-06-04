@@ -1,0 +1,326 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C004A4FE193F3E77009A9EE6 /* log.h in Headers */ = {isa = PBXBuildFile; fileRef = C004A4F4193F3E77009A9EE6 /* log.h */; };
+		C004A4FF193F3E77009A9EE6 /* Target_Client.h in Headers */ = {isa = PBXBuildFile; fileRef = C004A4F5193F3E77009A9EE6 /* Target_Client.h */; };
+		C004A500193F3E77009A9EE6 /* tdnImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A4F6193F3E77009A9EE6 /* tdnImpl.cpp */; };
+		C004A501193F3E77009A9EE6 /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = C004A4F7193F3E77009A9EE6 /* utils.h */; };
+		C004A502193F3E77009A9EE6 /* WorkingThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A4F8193F3E77009A9EE6 /* WorkingThread.cpp */; };
+		C004A503193F3E77009A9EE6 /* WorkingThread.h in Headers */ = {isa = PBXBuildFile; fileRef = C004A4F9193F3E77009A9EE6 /* WorkingThread.h */; };
+		C004A504193F3E77009A9EE6 /* wsddImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A4FA193F3E77009A9EE6 /* wsddImpl.cpp */; };
+		C004A505193F3E77009A9EE6 /* zkwsdd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A4FB193F3E77009A9EE6 /* zkwsdd.cpp */; };
+		C004A506193F3E77009A9EE6 /* zkwsddImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A4FC193F3E77009A9EE6 /* zkwsddImpl.cpp */; };
+		C004A507193F3E77009A9EE6 /* zkwsddImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = C004A4FD193F3E77009A9EE6 /* zkwsddImpl.h */; };
+		C004A50A193F3E91009A9EE6 /* stdsoap2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A508193F3E91009A9EE6 /* stdsoap2.cpp */; };
+		C004A50B193F3E91009A9EE6 /* stdsoap2.h in Headers */ = {isa = PBXBuildFile; fileRef = C004A509193F3E91009A9EE6 /* stdsoap2.h */; };
+		C004A51D193F4130009A9EE6 /* soapC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A517193F4130009A9EE6 /* soapC.cpp */; };
+		C004A51E193F4130009A9EE6 /* soapClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A518193F4130009A9EE6 /* soapClient.cpp */; };
+		C004A51F193F4130009A9EE6 /* soapH.h in Headers */ = {isa = PBXBuildFile; fileRef = C004A519193F4130009A9EE6 /* soapH.h */; };
+		C004A520193F4130009A9EE6 /* soapServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A51A193F4130009A9EE6 /* soapServer.cpp */; };
+		C004A521193F4130009A9EE6 /* soapStub.h in Headers */ = {isa = PBXBuildFile; fileRef = C004A51B193F4130009A9EE6 /* soapStub.h */; };
+		C004A525193F475F009A9EE6 /* zkwsdd.h in Headers */ = {isa = PBXBuildFile; fileRef = C004A524193F475F009A9EE6 /* zkwsdd.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C004A4C3193F3E2F009A9EE6 /* libzkwsdd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libzkwsdd.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C004A4F4193F3E77009A9EE6 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = log.h; path = ../../../libzkwsdd/src/log.h; sourceTree = "<group>"; };
+		C004A4F5193F3E77009A9EE6 /* Target_Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Target_Client.h; path = ../../../libzkwsdd/src/Target_Client.h; sourceTree = "<group>"; };
+		C004A4F6193F3E77009A9EE6 /* tdnImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tdnImpl.cpp; path = ../../../libzkwsdd/src/tdnImpl.cpp; sourceTree = "<group>"; };
+		C004A4F7193F3E77009A9EE6 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utils.h; path = ../../../libzkwsdd/src/utils.h; sourceTree = "<group>"; };
+		C004A4F8193F3E77009A9EE6 /* WorkingThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WorkingThread.cpp; path = ../../../libzkwsdd/src/WorkingThread.cpp; sourceTree = "<group>"; };
+		C004A4F9193F3E77009A9EE6 /* WorkingThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorkingThread.h; path = ../../../libzkwsdd/src/WorkingThread.h; sourceTree = "<group>"; };
+		C004A4FA193F3E77009A9EE6 /* wsddImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wsddImpl.cpp; path = ../../../libzkwsdd/src/wsddImpl.cpp; sourceTree = "<group>"; };
+		C004A4FB193F3E77009A9EE6 /* zkwsdd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zkwsdd.cpp; path = ../../../libzkwsdd/src/zkwsdd.cpp; sourceTree = "<group>"; };
+		C004A4FC193F3E77009A9EE6 /* zkwsddImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = zkwsddImpl.cpp; path = ../../../libzkwsdd/src/zkwsddImpl.cpp; sourceTree = "<group>"; };
+		C004A4FD193F3E77009A9EE6 /* zkwsddImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zkwsddImpl.h; path = ../../../libzkwsdd/src/zkwsddImpl.h; sourceTree = "<group>"; };
+		C004A508193F3E91009A9EE6 /* stdsoap2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stdsoap2.cpp; path = ../../../libzkwsdd/soap/stdsoap2.cpp; sourceTree = "<group>"; };
+		C004A509193F3E91009A9EE6 /* stdsoap2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdsoap2.h; path = ../../../libzkwsdd/soap/stdsoap2.h; sourceTree = "<group>"; };
+		C004A517193F4130009A9EE6 /* soapC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapC.cpp; path = ../../../libzkwsdd/soap/soapC.cpp; sourceTree = "<group>"; };
+		C004A518193F4130009A9EE6 /* soapClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapClient.cpp; path = ../../../libzkwsdd/soap/soapClient.cpp; sourceTree = "<group>"; };
+		C004A519193F4130009A9EE6 /* soapH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapH.h; path = ../../../libzkwsdd/soap/soapH.h; sourceTree = "<group>"; };
+		C004A51A193F4130009A9EE6 /* soapServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapServer.cpp; path = ../../../libzkwsdd/soap/soapServer.cpp; sourceTree = "<group>"; };
+		C004A51B193F4130009A9EE6 /* soapStub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapStub.h; path = ../../../libzkwsdd/soap/soapStub.h; sourceTree = "<group>"; };
+		C004A51C193F4130009A9EE6 /* wsdd.nsmap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = wsdd.nsmap; path = ../../../libzkwsdd/soap/wsdd.nsmap; sourceTree = "<group>"; };
+		C004A524193F475F009A9EE6 /* zkwsdd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zkwsdd.h; path = ../../../libzkwsdd/include/zkwsdd.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C004A4C0193F3E2F009A9EE6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C004A4BA193F3E2F009A9EE6 = {
+			isa = PBXGroup;
+			children = (
+				C004A526193F4768009A9EE6 /* src */,
+				C004A523193F473E009A9EE6 /* include */,
+				C004A522193F4725009A9EE6 /* soap */,
+				C004A4C4193F3E2F009A9EE6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C004A4C4193F3E2F009A9EE6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C004A4C3193F3E2F009A9EE6 /* libzkwsdd.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C004A522193F4725009A9EE6 /* soap */ = {
+			isa = PBXGroup;
+			children = (
+				C004A508193F3E91009A9EE6 /* stdsoap2.cpp */,
+				C004A509193F3E91009A9EE6 /* stdsoap2.h */,
+				C004A51C193F4130009A9EE6 /* wsdd.nsmap */,
+				C004A517193F4130009A9EE6 /* soapC.cpp */,
+				C004A518193F4130009A9EE6 /* soapClient.cpp */,
+				C004A519193F4130009A9EE6 /* soapH.h */,
+				C004A51A193F4130009A9EE6 /* soapServer.cpp */,
+				C004A51B193F4130009A9EE6 /* soapStub.h */,
+			);
+			name = soap;
+			sourceTree = "<group>";
+		};
+		C004A523193F473E009A9EE6 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				C004A524193F475F009A9EE6 /* zkwsdd.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		C004A526193F4768009A9EE6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				C004A4F4193F3E77009A9EE6 /* log.h */,
+				C004A4F5193F3E77009A9EE6 /* Target_Client.h */,
+				C004A4F6193F3E77009A9EE6 /* tdnImpl.cpp */,
+				C004A4F7193F3E77009A9EE6 /* utils.h */,
+				C004A4F8193F3E77009A9EE6 /* WorkingThread.cpp */,
+				C004A4F9193F3E77009A9EE6 /* WorkingThread.h */,
+				C004A4FA193F3E77009A9EE6 /* wsddImpl.cpp */,
+				C004A4FB193F3E77009A9EE6 /* zkwsdd.cpp */,
+				C004A4FC193F3E77009A9EE6 /* zkwsddImpl.cpp */,
+				C004A4FD193F3E77009A9EE6 /* zkwsddImpl.h */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		C004A4C1193F3E2F009A9EE6 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C004A501193F3E77009A9EE6 /* utils.h in Headers */,
+				C004A521193F4130009A9EE6 /* soapStub.h in Headers */,
+				C004A4FF193F3E77009A9EE6 /* Target_Client.h in Headers */,
+				C004A525193F475F009A9EE6 /* zkwsdd.h in Headers */,
+				C004A50B193F3E91009A9EE6 /* stdsoap2.h in Headers */,
+				C004A507193F3E77009A9EE6 /* zkwsddImpl.h in Headers */,
+				C004A503193F3E77009A9EE6 /* WorkingThread.h in Headers */,
+				C004A51F193F4130009A9EE6 /* soapH.h in Headers */,
+				C004A4FE193F3E77009A9EE6 /* log.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		C004A4C2193F3E2F009A9EE6 /* zkwsdd */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C004A4C7193F3E2F009A9EE6 /* Build configuration list for PBXNativeTarget "zkwsdd" */;
+			buildPhases = (
+				C004A4BF193F3E2F009A9EE6 /* Sources */,
+				C004A4C0193F3E2F009A9EE6 /* Frameworks */,
+				C004A4C1193F3E2F009A9EE6 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = zkwsdd;
+			productName = zkwsdd;
+			productReference = C004A4C3193F3E2F009A9EE6 /* libzkwsdd.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C004A4BB193F3E2F009A9EE6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = sunkw;
+			};
+			buildConfigurationList = C004A4BE193F3E2F009A9EE6 /* Build configuration list for PBXProject "zkwsdd" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C004A4BA193F3E2F009A9EE6;
+			productRefGroup = C004A4C4193F3E2F009A9EE6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C004A4C2193F3E2F009A9EE6 /* zkwsdd */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C004A4BF193F3E2F009A9EE6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C004A506193F3E77009A9EE6 /* zkwsddImpl.cpp in Sources */,
+				C004A51E193F4130009A9EE6 /* soapClient.cpp in Sources */,
+				C004A520193F4130009A9EE6 /* soapServer.cpp in Sources */,
+				C004A500193F3E77009A9EE6 /* tdnImpl.cpp in Sources */,
+				C004A51D193F4130009A9EE6 /* soapC.cpp in Sources */,
+				C004A502193F3E77009A9EE6 /* WorkingThread.cpp in Sources */,
+				C004A50A193F3E91009A9EE6 /* stdsoap2.cpp in Sources */,
+				C004A505193F3E77009A9EE6 /* zkwsdd.cpp in Sources */,
+				C004A504193F3E77009A9EE6 /* wsddImpl.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C004A4C5193F3E2F009A9EE6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C004A4C6193F3E2F009A9EE6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		C004A4C8193F3E2F009A9EE6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.9.xctoolchain/usr/include,
+					/opt/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /opt/local/lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C004A4C9193F3E2F009A9EE6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.9.xctoolchain/usr/include,
+					/opt/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = /opt/local/lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C004A4BE193F3E2F009A9EE6 /* Build configuration list for PBXProject "zkwsdd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C004A4C5193F3E2F009A9EE6 /* Debug */,
+				C004A4C6193F3E2F009A9EE6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C004A4C7193F3E2F009A9EE6 /* Build configuration list for PBXNativeTarget "zkwsdd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C004A4C8193F3E2F009A9EE6 /* Debug */,
+				C004A4C9193F3E2F009A9EE6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C004A4BB193F3E2F009A9EE6 /* Project object */;
+}

@@ -44,3 +44,10 @@ obj/
 *.suo
 *.aps
 *.xml
+
+soapC.cpp
+soapH.h
+soapClient.cpp
+soapServer.cpp
+soapStub.h
+*.nsmap

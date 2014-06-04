@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:test_zkwsdd/test_zkwsdd.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:zkwsdd/zkwsdd.xcodeproj">
+   </FileRef>
+</Workspace>

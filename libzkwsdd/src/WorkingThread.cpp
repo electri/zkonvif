@@ -40,13 +40,13 @@ void TargetThread::run()
 {
 	log(LOG_INFO, "%s: Target thread started!\n", __func__);
 
-	/** Target ¹¤×÷Ïß³Ì¼ÓÈë×é²¥µØÖ·£¬¿ªÊ¼½ÓÊÜÊı¾İ ....
+	/** Target å·¥ä½œçº¿ç¨‹åŠ å…¥ç»„æ’­åœ°å€ï¼Œå¼€å§‹æ¥å—æ•°æ® ....
 	 */
 	soap soap;
 	soap_init1(&soap, SOAP_IO_UDP);
 	
 	soap.user = new ThreadOpaque("target", this);
-	soap.bind_flags = SO_REUSEADDR;		// ¿ÉÄÜ¶à¸ö ...
+	soap.bind_flags = SO_REUSEADDR;		// å¯èƒ½å¤šä¸ª ...
 
 	if (!soap_valid_socket(soap_bind(&soap, 0, PORT, 100))) {
 		log(LOG_FAULT, "%s: soap_bind %d failure!!\n", __func__, PORT);
@@ -62,7 +62,7 @@ void TargetThread::run()
 	}
 
 	while (!quit_) {
-		soap_serve(&soap);	// udp ½ÓÊÕ×èÈûÔÚ´Ë 
+		soap_serve(&soap);	// udp æ¥æ”¶é˜»å¡åœ¨æ­¤ 
 		soap_destroy(&soap);
 		soap_end(&soap);
 	}
@@ -79,7 +79,7 @@ std::vector<Target*> TargetThread::probe_matched(const char *types, const char *
 
 	FIFO::const_iterator it;
 	for (it = fifo_.begin(); it != fifo_.end(); ++it) {
-		// TODO: ÕâÀï½øĞĞ types, scopes µÄÆ¥Åä ...
+		// TODO: è¿™é‡Œè¿›è¡Œ types, scopes çš„åŒ¹é… ...
 
 		targets.push_back(*it);
 	}

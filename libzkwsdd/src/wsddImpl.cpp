@@ -10,7 +10,7 @@ int __wsdd__Hello(soap *soap, wsdd__HelloType *data)
 	ThreadOpaque *opaque = (ThreadOpaque*)soap->user;
 	assert(!strcmp(opaque->name(), "client"));
 
-	// TODO: client ´¦ÀíÊÕµ½µÄ Hello ...
+	// TODO: client å¤„ç†æ”¶åˆ°çš„ Hello ...
 
 	return SOAP_OK;
 }
@@ -22,7 +22,7 @@ int __wsdd__Bye(soap *soap, wsdd__ByeType *data)
 	ThreadOpaque *opaque = (ThreadOpaque*)soap->user;
 	assert(!strcmp(opaque->name(), "client"));
 
-	// TODO: client ´¦ÀíÊÕµ½µÄ Bye ... 
+	// TODO: client å¤„ç†æ”¶åˆ°çš„ Bye ... 
 
 	return SOAP_OK;
 }
@@ -62,7 +62,7 @@ int __wsdd__Probe(soap *soap, wsdd__ProbeType *data)
 	
 	std::vector<Target *> targets = th->probe_matched(type, scope);
 
-	// ¸ù¾İ targets ¹¹Ôì ProbeMatches ...
+	// æ ¹æ® targets æ„é€  ProbeMatches ...
 	wsdd__ProbeMatchesType pms;
 	pms.__sizeProbeMatch = targets.size();
 	pms.ProbeMatch = (wsdd__ProbeMatchType *)soap_malloc(soap, pms.__sizeProbeMatch * sizeof(wsdd__ProbeMatchType));
@@ -89,11 +89,11 @@ int __wsdd__Probe(soap *soap, wsdd__ProbeType *data)
 		pm->MetadataVersion = 1;
 	}
 
-	// ĞèÒªĞŞ¸Ä wsa_Header
+	// éœ€è¦ä¿®æ”¹ wsa_Header
 	SOAP_ENV__Header * header = soap->header;
 	assert(header);
 
-	// XXX: ±ØĞëµÄ£¬·ñÔò client ²»ÖªµÀÕâ¸ö PM ÊÇ¶ÔÓ¦×ÅÄÇ¸ö P
+	// XXX: å¿…é¡»çš„ï¼Œå¦åˆ™ client ä¸çŸ¥é“è¿™ä¸ª PM æ˜¯å¯¹åº”ç€é‚£ä¸ª P
 	header->wsa__RelatesTo = (wsa__Relationship *)soap_malloc(soap, sizeof(wsa__Relationship));
 	header->wsa__RelatesTo->__item = soap_strdup(soap, header->wsa__MessageID);
 	header->wsa__RelatesTo->__anyAttribute = 0;
@@ -105,8 +105,8 @@ int __wsdd__Probe(soap *soap, wsdd__ProbeType *data)
 	header->wsa__Action = 0;
 	header->wsa__To = 0;
 
-	// FIXME: ÊÇ·ñµ¥²¥·¢ËÍµÄ£¿£¿£¿
-	//		²é¿´´úÂë·¢ÏÖ£¬ soap->peer ±£´æÁË·¢ËÍÕßµÄµØÖ·£¨·Ç×é²¥µØÖ·£©
+	// FIXME: æ˜¯å¦å•æ’­å‘é€çš„ï¼Ÿï¼Ÿï¼Ÿ
+	//		æŸ¥çœ‹ä»£ç å‘ç°ï¼Œ soap->peer ä¿å­˜äº†å‘é€è€…çš„åœ°å€ï¼ˆéç»„æ’­åœ°å€ï¼‰
 	soap->fpreparesend = debug_before_send;
 	_fp = fopen("pm.xml", "w");
 	soap_send___wsdd__ProbeMatches(soap, "http://", 0, &pms);

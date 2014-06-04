@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/zkwsdd.h"
-#include <Windows.h>
+#include <cc++/thread.h>
 
-// Ä£Äâ Target
+// æ¨¡æ‹Ÿ Target
 class MyTarget : public zkwsdd_Target
 {
 public:
@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	MyTarget target;
 
 	while (1) {
-		Sleep(100);
+        ost::Thread::sleep(100);
 	}
 
 	return 0;
