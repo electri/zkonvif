@@ -62,5 +62,8 @@
     <ClInclude Include="..\..\..\libzkwsdd\src\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\libzkwsdd\src\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

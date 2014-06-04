@@ -1,3 +1,4 @@
+#include "utils.h"
 #include "WorkingThread.h"
 #include "../soap/soapH.h"
 #include <algorithm>
@@ -54,7 +55,7 @@ void TargetThread::run()
 
 	ip_mreq mcast;
 	mcast.imr_multiaddr.s_addr = inet_addr(MULTI_ADDR);
-	mcast.imr_interface.s_addr = inet_addr("172.16.1.104");
+	mcast.imr_interface.s_addr = inet_addr(util_get_myip());
 	if (setsockopt(soap.master, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&mcast, sizeof(mcast)) < 0) {
 		log(LOG_FAULT, "%s: ohhh, can't join multiaddr of %s!!!!\n", __func__, MULTI_ADDR);
 		::exit(-1);
