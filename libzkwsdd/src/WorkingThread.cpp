@@ -94,9 +94,13 @@ std::vector<Target*> TargetThread::resolve_matched(const char *address)
 
 	FIFO::const_iterator it;
 	for (it = fifo_.begin(); it != fifo_.end(); ++it) {
-		// TODO: 这里进行 address 的匹配 ...
+		//这里进行 address 的匹配 ...
+		Target *t = *it;
+		if (t->id()==address)
+		{
+			targets.push_back(*it);
+		}
 
-		targets.push_back(*it);
 	}
 
 	return targets;
