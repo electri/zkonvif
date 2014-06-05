@@ -86,3 +86,18 @@ std::vector<Target*> TargetThread::probe_matched(const char *types, const char *
 
 	return targets;
 }
+
+std::vector<Target*> TargetThread::resolve_matched(const char *address)
+{
+	std::vector<Target *> targets;
+	ost::MutexLock al(cs_fifo_);
+
+	FIFO::const_iterator it;
+	for (it = fifo_.begin(); it != fifo_.end(); ++it) {
+		// TODO: 这里进行 address 的匹配 ...
+
+		targets.push_back(*it);
+	}
+
+	return targets;
+}

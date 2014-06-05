@@ -50,6 +50,8 @@ public:
 
 	// 返回 probe 匹配的列表
 	std::vector<Target*> probe_matched(const char *type, const char *scope);
+	// 返回 resolve 匹配的列表
+	std::vector<Target*> resolve_matched(const char *address);
 
 private:
 	void run();
