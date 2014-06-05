@@ -62,7 +62,7 @@ void TargetThread::run()
 	}
 
 	while (!quit_) {
-		soap_serve(&soap);	// udp 接收阻塞在此 
+		soap_serve(&soap);	// udp 接收阻塞在此. 
 		soap_destroy(&soap);
 		soap_end(&soap);
 	}
