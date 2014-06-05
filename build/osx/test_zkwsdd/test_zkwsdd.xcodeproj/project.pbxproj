@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C004A558193F48EB009A9EE6 /* test_zkwsdd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C004A557193F48EB009A9EE6 /* test_zkwsdd.cpp */; };
+		77DE4ADE193FFE1A00B851EC /* test_zkwsdd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 77DE4ADD193FFE1A00B851EC /* test_zkwsdd.cpp */; };
 		C004A55A193F49CF009A9EE6 /* libzkwsdd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C004A559193F49CF009A9EE6 /* libzkwsdd.a */; };
 		C004A55C193F49FE009A9EE6 /* libccgnu2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C004A55B193F49FE009A9EE6 /* libccgnu2.a */; };
 /* End PBXBuildFile section */
@@ -25,9 +25,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		77DE4ADD193FFE1A00B851EC /* test_zkwsdd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_zkwsdd.cpp; path = ../../../libzkwsdd/test/test_zkwsdd.cpp; sourceTree = "<group>"; };
 		C004A54B193F48C4009A9EE6 /* test_zkwsdd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test_zkwsdd; sourceTree = BUILT_PRODUCTS_DIR; };
-		C004A557193F48EB009A9EE6 /* test_zkwsdd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_zkwsdd.cpp; path = ../../../../libzkwsdd/test/test_zkwsdd.cpp; sourceTree = "<group>"; };
-		C004A559193F49CF009A9EE6 /* libzkwsdd.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libzkwsdd.a; path = ../zkwsdd/build/Debug/libzkwsdd.a; sourceTree = "<group>"; };
+		C004A559193F49CF009A9EE6 /* libzkwsdd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libzkwsdd.a; path = ../zkwsdd/build/Debug/libzkwsdd.a; sourceTree = "<group>"; };
 		C004A55B193F49FE009A9EE6 /* libccgnu2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libccgnu2.a; path = /opt/local/lib/libccgnu2.a; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -47,8 +47,8 @@
 		C004A542193F48C4009A9EE6 = {
 			isa = PBXGroup;
 			children = (
+				77DE4ADD193FFE1A00B851EC /* test_zkwsdd.cpp */,
 				C004A55D193F4A10009A9EE6 /* libs */,
-				C004A54D193F48C4009A9EE6 /* test_zkwsdd */,
 				C004A54C193F48C4009A9EE6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,14 +59,6 @@
 				C004A54B193F48C4009A9EE6 /* test_zkwsdd */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		C004A54D193F48C4009A9EE6 /* test_zkwsdd */ = {
-			isa = PBXGroup;
-			children = (
-				C004A557193F48EB009A9EE6 /* test_zkwsdd.cpp */,
-			);
-			path = test_zkwsdd;
 			sourceTree = "<group>";
 		};
 		C004A55D193F4A10009A9EE6 /* libs */ = {
@@ -129,7 +121,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C004A558193F48EB009A9EE6 /* test_zkwsdd.cpp in Sources */,
+				77DE4ADE193FFE1A00B851EC /* test_zkwsdd.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +241,7 @@
 				C004A556193F48C4009A9EE6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
