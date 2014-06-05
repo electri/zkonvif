@@ -14,31 +14,6 @@ zkwsdd_Target::~zkwsdd_Target()
 	delete (zkwsdd_TargetImpl*)internal_impl;
 }
 
-zkwsdd_Client::zkwsdd_Client()
-{
-
-}
-
-zkwsdd_Client::~zkwsdd_Client()
-{
-
-}
-
-void zkwsdd_Client::updated()
-{
-
-}
-
-int zkwsdd_Client::probe()
-{
-	return -1;
-}
-
-int zkwsdd_Client::resolve()
-{
-	return -1;
-}
-
 zkwsdd_TargetImpl::zkwsdd_TargetImpl(const char *id, const char *type, const char *url)
 {
 	assert(id && type);

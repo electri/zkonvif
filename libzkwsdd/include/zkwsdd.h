@@ -1,8 +1,16 @@
 /** zonekey onvif
 
-	支持两种角色：
-		client 接收 Hello, Bye
-		target 接收 Probe, Resolve
+		zkwsdd_Target: 方便实现 onvif target
+
+		class MyService : public wsdd_Target
+		{
+		public:
+			MyService(id, "ptz", "http://xxxx");
+		};
+
+
+		MyService *ptz_service = new MyService("xxxx");
+		...
  */
 
 #pragma once
@@ -27,22 +35,6 @@ public:
 		const char *url = 0);		// 对应 XAddrs
 
 	virtual ~zkwsdd_Target();
-
-private:
-	void *internal_impl;	// 内部实现，绝对不要动 :)
-};
-
-class ZKWSDD_API zkwsdd_Client
-{
-public:
-	zkwsdd_Client();
-	virtual ~zkwsdd_Client();
-
-	int probe();	// 主动发出 probe
-	int resolve();	// 主动发出 resolve
-
-protected:
-	virtual void updated();	// target 列表已经更新
 
 private:
 	void *internal_impl;	// 内部实现，绝对不要动 :)

@@ -4,8 +4,8 @@
 #include <algorithm>
 #include "log.h"
 
-void send_hello(Target *target);
-void send_bye(Target *target);
+static void send_hello(Target *target);
+static void send_bye(Target *target);
 
 TargetThread::TargetThread()
 {
@@ -105,8 +105,7 @@ static const char *my_messageid()
 	return buf;
 }
 
-
-void send_hello(Target *target)
+static void send_hello(Target *target)
 {
     soap soap;
     soap.send_timeout = 1;
@@ -114,11 +113,14 @@ void send_hello(Target *target)
 	
 	soap.bind_flags = SO_REUSEADDR;
     
-	if (!soap_valid_socket(soap_bind(&soap, 0, PORT, 100))) {
+	const char *ip = util_get_myip();
+	ip = "172.16.1.104";
+	if (!soap_valid_socket(soap_bind(&soap, ip, 0, 100))) {
 		log(LOG_FAULT, "%s: soap_bind %d failure!!\n", __func__, PORT);
 		::exit(-1);
 	}
     
+	/*
 	ip_mreq mcast;
 	mcast.imr_multiaddr.s_addr = inet_addr(MULTI_ADDR);
 	mcast.imr_interface.s_addr = inet_addr(util_get_myip());
@@ -126,14 +128,18 @@ void send_hello(Target *target)
 		log(LOG_FAULT, "%s: ohhh, can't join multiaddr of %s!!!!\n", __func__, MULTI_ADDR);
 		::exit(-1);
 	}
+	*/
     
     struct wsdd__HelloType *wsdd_hello = (struct wsdd__HelloType*)soap_malloc(&soap, sizeof(struct wsdd__HelloType));
     
     wsdd_hello->Scopes = NULL;
     wsdd_hello->Types = soap_strdup(&soap, target->type());
     
-    //FIXME:下面这行，赋值方式 有可能 错误
-    wsdd_hello->MetadataVersion = atoi(my_messageid()); // maybe mistake
+	wsdd_hello->MetadataVersion = 1; //
+
+	wsdd_hello->XAddrs = 0;
+
+	memset(&wsdd_hello->wsa__EndpointReference, 0, sizeof(wsa__EndpointReferenceType));
     wsdd_hello->wsa__EndpointReference.Address = soap_strdup(&soap, target->id());
     
     // header
@@ -150,7 +156,12 @@ void send_hello(Target *target)
     header.wsa__MessageID = NULL; // optional
     
     soap.header = &header;
-    
+
+	// Hello 发送的目标地址为组播 .
+	soap.peer.sin_family = AF_INET;
+	soap.peer.sin_port = htons(PORT);
+	soap.peer.sin_addr.s_addr = inet_addr(MULTI_ADDR);
+
     if (soap_send___wsdd__Hello(&soap, "http://", NULL, wsdd_hello) != SOAP_OK)
         soap_print_fault(&soap, stderr); // report error
 
@@ -161,7 +172,7 @@ void send_hello(Target *target)
 }
 
 
-void send_bye(Target *target)
+static void send_bye(Target *target)
 {
     soap soap;
     soap.send_timeout = 1;
@@ -169,11 +180,12 @@ void send_bye(Target *target)
 	
 	soap.bind_flags = SO_REUSEADDR;
     
-	if (!soap_valid_socket(soap_bind(&soap, 0, PORT, 100))) {
+	if (!soap_valid_socket(soap_bind(&soap, 0, 0, 100))) {
 		log(LOG_FAULT, "%s: soap_bind %d failure!!\n", __func__, PORT);
 		::exit(-1);
 	}
     
+	/*
 	ip_mreq mcast;
 	mcast.imr_multiaddr.s_addr = inet_addr(MULTI_ADDR);
 	mcast.imr_interface.s_addr = inet_addr(util_get_myip());
@@ -181,13 +193,12 @@ void send_bye(Target *target)
 		log(LOG_FAULT, "%s: ohhh, can't join multiaddr of %s!!!!\n", __func__, MULTI_ADDR);
 		::exit(-1);
 	}
-    
-    //FIXME: version 有可能 错误
-    unsigned int version = atoi(my_messageid()); // maybe mistake
-    
+    */
+
     struct wsdd__ByeType *wsdd_bye = (struct wsdd__ByeType*)soap_malloc(&soap, sizeof(struct wsdd__ByeType));
     wsdd_bye->wsa__EndpointReference.Address = soap_strdup(&soap, target->id());
-    wsdd_bye->MetadataVersion = &version;
+	wsdd_bye->MetadataVersion = (unsigned int*)soap_malloc(&soap, sizeof(int));
+	*wsdd_bye->MetadataVersion = 1;
     
     if (soap_send___wsdd__Bye(&soap, "soap.udp://...", NULL, wsdd_bye) != SOAP_OK)
         soap_print_fault(&soap, stderr); //report error
