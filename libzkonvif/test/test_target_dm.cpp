@@ -7,6 +7,7 @@
 #include <string>
 #include "../soap/soapDeviceBindingService.h"
 #include "../soap/soapwsddService.h"
+#include <assert.h>
 #include "../../common/utils.h"
 #include "../../common/log.h"
 
