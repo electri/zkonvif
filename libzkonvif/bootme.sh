@@ -8,15 +8,14 @@ fi
 if [ -f onvif.h ]; then
 	echo 'onvif.h exist!'
 else
-	wsdl2h.exe -jP -oonvif.h -t soap/typemap.dat \
+	echo 'exec wsdl2h ...'
+	wsdl2h -vjP -o onvif.h -t wsdl/typemap.dat \
 		wsdl/devicemgmt.wsdl \
 		wsdl/deviceio.wsdl \
 		wsdl/event.wsdl \
 		wsdl/media.wsdl \
 		wsdl/remotediscovery.wsdl
 fi
-
-mkdir -p soap
 
 # 貌似 wsa5.h 中 SOAP_ENV__Fault 重复定义
 if [ -f wsa5.h ]; then
@@ -26,6 +25,13 @@ else
 	sed -i 's/int SOAP_ENV__Fault/int SOAP_ENV__Fault2/g' wsa5.h
 fi
 
-soapcpp2.exe -Ld soap/ onvif.h -I.:$GSOAP/import:$GSOAP
+rm -rf soap/*
+
+mkdir -p soap/xml/
+
+soapcpp2 -jLd soap/ onvif.h -I.:$GSOAP/import:$GSOAP
+mv soap/*.xml soap/xml
+
+echo '#include "wsdd.nsmap"' > soap/nsmap.cpp
 
 echo 'En, just make it!'

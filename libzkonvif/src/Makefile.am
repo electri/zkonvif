@@ -1,6 +1,21 @@
-lib_LIBRARIES= libzktarget_wsdd.a libzkclient_wsdd.a
+lib_LIBRARIES= libzkonvif.a
 
-libzktarget_wsdd_a_SOURCES= zk_wsdd.cpp ../soap/soapServer.cpp ../soap/soapClient.cpp
+AM_CXXFLAGS=${GLOBAL_CXXFLAGS} -DWITH_PURE_VIRTUAL
 
-libzkclient_wsdd_a_SOURCES= zk_wsdd.cpp
+libzkonvif_a_SOURCES= ../soap/nsmap.cpp		\
+	../soap/soapC.cpp				\
+	../soap/soapDeviceBindingProxy.cpp		\
+	../soap/soapDeviceBindingService.cpp	\
+	../soap/soapDeviceIOBindingProxy.cpp	\
+	../soap/soapDeviceIOBindingService.cpp	\
+	../soap/soapMediaBindingProxy.cpp		\
+	../soap/soapMediaBindingService.cpp	\
+	../soap/soapPullPointSubscriptionBindingProxy.cpp		\
+	../soap/soapPullPointSubscriptionBindingService.cpp	\
+	../soap/soapRemoteDiscoveryBindingProxy.cpp		\
+	../soap/soapRemoteDiscoveryBindingService.cpp		\
+	../soap/soapwsddProxy.cpp			\
+	../soap/soapwsddService.cpp	\
+	../gsoap/stdsoap2.cpp
+
 

@@ -4823,6 +4823,7 @@ soap_bind(struct soap *soap, const char *host, int port, int backlog)
 #ifndef WITH_LEAN
   if (soap->bind_flags && setsockopt(soap->master, SOL_SOCKET, soap->bind_flags, (char*)&set, sizeof(int)))
   { soap->errnum = soap_socket_errno(soap->master);
+      fprintf(stderr, "setsockopt err: %d, %s\n", errno, strerror(errno));
     soap_set_receiver_error(soap, tcp_error(soap), "setsockopt failed in soap_bind()", SOAP_TCP_ERROR);
     return SOAP_INVALID_SOCKET;
   }
@@ -4889,6 +4890,7 @@ soap_bind(struct soap *soap, const char *host, int port, int backlog)
   soap->errmode = 0;
   if (bind(soap->master, (struct sockaddr*)&soap->peer, (int)soap->peerlen))
   { soap->errnum = soap_socket_errno(soap->master);
+      fprintf(stderr, "bind err: %d, %s\n", errno, strerror(errno));
     DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Could not bind to host\n"));
     soap_closesock(soap);
     soap_set_receiver_error(soap, tcp_error(soap), "bind failed in soap_bind()", SOAP_TCP_ERROR);

@@ -14,9 +14,16 @@ AC_PROG_MAKE_SET
 AM_PROG_AR
 AC_PROG_RANLIB
 
+AC_SUBST(GLOBAL_CXXFLAGS)
+GLOBAL_CXXFLAGS='-DZONEKEY_SOURCE'
+
 # Checks for libraries.
+AC_CHECK_LIB(ssl, ssl2_enc_init, 
+		[ GLOBAL_CXXFLAGS+= -DUSING_OPENSSL=1  ], 
+		[ echo "Warning: NO openssl lib!" ])
 
 # Checks for header files.
+AC_CHECK_HEADERS([openssl/ssl.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL

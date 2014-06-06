@@ -1,0 +1,6 @@
+如果 gsoap 安装目录不在 /usr/share/gsoap，需要使用
+
+GSOAP=<path> ./bootme.sh
+
+成功后, configure, make ...
+
