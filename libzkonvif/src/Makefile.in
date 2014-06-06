@@ -135,7 +135,7 @@ am_libzkonvif_a_OBJECTS = nsmap.$(OBJEXT) soapC.$(OBJEXT) \
 	soapRemoteDiscoveryBindingProxy.$(OBJEXT) \
 	soapRemoteDiscoveryBindingService.$(OBJEXT) \
 	soapwsddProxy.$(OBJEXT) soapwsddService.$(OBJEXT) \
-	stdsoap2.$(OBJEXT)
+	duration.$(OBJEXT) stdsoap2.$(OBJEXT)
 libzkonvif_a_OBJECTS = $(am_libzkonvif_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -308,6 +308,7 @@ libzkonvif_a_SOURCES = ../soap/nsmap.cpp		\
 	../soap/soapRemoteDiscoveryBindingService.cpp		\
 	../soap/soapwsddProxy.cpp			\
 	../soap/soapwsddService.cpp	\
+	../soap/duration.cpp 	\
 	../soap/stdsoap2.cpp
 
 all: all-am
@@ -387,6 +388,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/duration.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nsmap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapC.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapDeviceBindingProxy.Po@am__quote@
@@ -612,6 +614,20 @@ soapwsddService.obj: ../soap/soapwsddService.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='../soap/soapwsddService.cpp' object='soapwsddService.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapwsddService.obj `if test -f '../soap/soapwsddService.cpp'; then $(CYGPATH_W) '../soap/soapwsddService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapwsddService.cpp'; fi`
+
+duration.o: ../soap/duration.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT duration.o -MD -MP -MF $(DEPDIR)/duration.Tpo -c -o duration.o `test -f '../soap/duration.cpp' || echo '$(srcdir)/'`../soap/duration.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/duration.Tpo $(DEPDIR)/duration.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='../soap/duration.cpp' object='duration.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o duration.o `test -f '../soap/duration.cpp' || echo '$(srcdir)/'`../soap/duration.cpp
+
+duration.obj: ../soap/duration.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT duration.obj -MD -MP -MF $(DEPDIR)/duration.Tpo -c -o duration.obj `if test -f '../soap/duration.cpp'; then $(CYGPATH_W) '../soap/duration.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/duration.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/duration.Tpo $(DEPDIR)/duration.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='../soap/duration.cpp' object='duration.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o duration.obj `if test -f '../soap/duration.cpp'; then $(CYGPATH_W) '../soap/duration.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/duration.cpp'; fi`
 
 stdsoap2.o: ../soap/stdsoap2.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stdsoap2.o -MD -MP -MF $(DEPDIR)/stdsoap2.Tpo -c -o stdsoap2.o `test -f '../soap/stdsoap2.cpp' || echo '$(srcdir)/'`../soap/stdsoap2.cpp

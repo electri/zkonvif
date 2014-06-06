@@ -46,7 +46,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;WITH_PURE_VIRTUAL;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WITH_PURE_VIRTUAL;ZONEKEY_SOURCE;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -62,7 +62,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;WITH_PURE_VIRTUAL;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WITH_PURE_VIRTUAL;ZONEKEY_SOURCE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -73,9 +73,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="..\..\..\libzkonvif\soap\duration.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\nsmap.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapC.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.cpp" />
@@ -93,6 +91,7 @@
     <ClCompile Include="..\..\..\libzkonvif\soap\stdsoap2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\libzkonvif\soap\duration.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingService.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingProxy.h" />

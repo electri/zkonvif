@@ -549,7 +549,11 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 #endif
 
 #ifdef WITH_PURE_VIRTUAL
-# define SOAP_PURE_VIRTUAL = 0
+# ifdef ZONEKEY_SOURCE
+#  define SOAP_PURE_VIRTUAL { return SOAP_OK; }
+# else
+#  define SOAP_PURE_VIRTUAL = 0
+# endif // for zonekey
 #else
 # define SOAP_PURE_VIRTUAL
 #endif

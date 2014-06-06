@@ -32,6 +32,8 @@ mkdir -p soap/xml/
 soapcpp2 -jLd soap/ onvif.h -I.:$GSOAP/import:$GSOAP
 mv soap/*.xml soap/xml
 cp gsoap/* soap/
+cp $GSOAP/custom/duration.c soap/duration.cpp
+cp $GSOAP/custom/duration.h soap/
 
 echo '#include "wsdd.nsmap"' > soap/nsmap.cpp
 

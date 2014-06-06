@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\..\libzkonvif\soap\nsmap.cpp">
       <Filter>gsoap_gen</Filter>
     </ClCompile>
@@ -67,6 +64,9 @@
       <Filter>gsoap_gen</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\libzkonvif\soap\stdsoap2.cpp">
+      <Filter>gsoap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\duration.cpp">
       <Filter>gsoap</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,6 +114,9 @@
       <Filter>gsoap_gen</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\libzkonvif\soap\stdsoap2.h">
+      <Filter>gsoap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\duration.h">
       <Filter>gsoap</Filter>
     </ClInclude>
   </ItemGroup>
