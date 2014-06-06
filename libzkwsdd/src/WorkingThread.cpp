@@ -115,6 +115,7 @@ static void send_hello(Target *target)
     
     //
     // *init soap
+    //    
     soap soap;
 	soap_init(&soap);
     soap.send_timeout = 1;
@@ -170,6 +171,7 @@ static void send_bye(Target *target)
     
     //
     // *init soap
+    //
     soap soap;
 	soap_init(&soap);
     soap.send_timeout = 1;
