@@ -16,6 +16,6 @@ libzkonvif_a_SOURCES= ../soap/nsmap.cpp		\
 	../soap/soapRemoteDiscoveryBindingService.cpp		\
 	../soap/soapwsddProxy.cpp			\
 	../soap/soapwsddService.cpp	\
-	../gsoap/stdsoap2.cpp
+	../soap/stdsoap2.cpp
 
 

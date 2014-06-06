@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ccgnu2", "ccgnu2\ccgnu2.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_libzkwsdd", "test_libzkwsdd\test_libzkwsdd.vcxproj", "{35046FFD-5BA2-475D-8F93-76FA3346720B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libzkonvif", "libzkonvif\libzkonvif.vcxproj", "{8AAC020D-C865-4881-BBFA-336FC48A3B9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{35046FFD-5BA2-475D-8F93-76FA3346720B}.Debug|Win32.Build.0 = Debug|Win32
 		{35046FFD-5BA2-475D-8F93-76FA3346720B}.Release|Win32.ActiveCfg = Release|Win32
 		{35046FFD-5BA2-475D-8F93-76FA3346720B}.Release|Win32.Build.0 = Release|Win32
+		{8AAC020D-C865-4881-BBFA-336FC48A3B9E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8AAC020D-C865-4881-BBFA-336FC48A3B9E}.Debug|Win32.Build.0 = Debug|Win32
+		{8AAC020D-C865-4881-BBFA-336FC48A3B9E}.Release|Win32.ActiveCfg = Release|Win32
+		{8AAC020D-C865-4881-BBFA-336FC48A3B9E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

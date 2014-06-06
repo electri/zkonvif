@@ -19,7 +19,7 @@ GLOBAL_CXXFLAGS='-DZONEKEY_SOURCE'
 
 # Checks for libraries.
 AC_CHECK_LIB(ssl, ssl2_enc_init, 
-		[ GLOBAL_CXXFLAGS+= -DUSING_OPENSSL=1  ], 
+		[ GLOBAL_CXXFLAGS="${GLOBAL_CXXFLAGS} -DUSING_OPENSSL=1"  ], 
 		[ echo "Warning: NO openssl lib!" ])
 
 # Checks for header files.

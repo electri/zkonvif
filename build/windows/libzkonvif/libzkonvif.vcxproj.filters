@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="gsoap">
+      <UniqueIdentifier>{5158905b-008c-45a6-8443-801b25a1f714}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gsoap_gen">
+      <UniqueIdentifier>{9a36125c-0b04-42a1-84c6-666de44d41c9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\libzkonvif\soap\nsmap.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapC.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceBindingService.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingProxy.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingService.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapMediaBindingProxy.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapMediaBindingService.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingProxy.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingService.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingProxy.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingService.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapwsddProxy.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapwsddService.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\stdsoap2.cpp">
+      <Filter>gsoap</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingService.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingProxy.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingService.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapH.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapMediaBindingProxy.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapMediaBindingService.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingProxy.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingService.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingProxy.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingService.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapStub.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapwsddProxy.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapwsddService.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\stdsoap2.h">
+      <Filter>gsoap</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
