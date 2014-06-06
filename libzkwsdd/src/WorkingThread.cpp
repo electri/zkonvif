@@ -237,8 +237,7 @@ std::vector<Target*> TargetThread::resolve_matched(const char *address)
 	for (it = fifo_.begin(); it != fifo_.end(); ++it) {
 		//这里进行 address 的匹配 ...
 		Target *t = *it;
-		if (t->id()==address)
-		{
+		if(strcmp(t->id(),address)==0){		
 			targets.push_back(*it);
 		}
 
