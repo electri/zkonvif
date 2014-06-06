@@ -1,6 +1,6 @@
 /** zonekey onvif
 
-		zkwsdd_Target: ·½±ãÊµÏÖ onvif target
+		zkwsdd_Target: æ–¹ä¾¿å®ç° onvif target
 
 		class MyService : public wsdd_Target
 		{
@@ -25,17 +25,17 @@
 #	define ZKWSDD_API
 #endif 
 
-/** Target »ùÀà£¬¹¹ÔìÊ±·¢ËÍ Hello£¬Îö¹¹Ê±·¢ËÍ Bye
+/** Target åŸºç±»ï¼Œæ„é€ æ—¶å‘é€ Helloï¼Œææ„æ—¶å‘é€ Bye
  */
 class ZKWSDD_API zkwsdd_Target
 {
 public:
-	zkwsdd_Target(const char *id,	// ¶ÔÓ¦ EndpointReference.Address£¬Ò»°ã¸ñÊ½Îª urn:xxxx-xxxx....
-		const char *type = "eval",	// ¶ÔÓ¦ Type£¬Ä¿Ç°½ö½öÖ§³Ö eval ºÍ ptz Á½ÖÖ
-		const char *url = 0);		// ¶ÔÓ¦ XAddrs
+	zkwsdd_Target(const char *id,	// å¯¹åº” EndpointReference.Addressï¼Œä¸€èˆ¬æ ¼å¼ä¸º urn:xxxx-xxxx....
+		const char *type = "eval",	// å¯¹åº” Typeï¼Œç›®å‰ä»…ä»…æ”¯æŒ eval å’Œ ptz ä¸¤ç§
+		const char *url = 0);		// å¯¹åº” XAddrs
 
 	virtual ~zkwsdd_Target();
 
 private:
-	void *internal_impl;	// ÄÚ²¿ÊµÏÖ£¬¾ø¶Ô²»Òª¶¯ :)
+	void *internal_impl;	// å†…éƒ¨å®ç°ï¼Œç»å¯¹ä¸è¦åŠ¨ :)
 };
