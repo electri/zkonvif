@@ -8,7 +8,7 @@ int __wsdd__Hello(soap *soap, wsdd__HelloType *data)
 	log("%s: calling ...\n", __func__);
 
 	ThreadOpaque *opaque = (ThreadOpaque*)soap->user;
-	assert(!strcmp(opaque->name(), "client"));
+//	assert(!strcmp(opaque->name(), "client"));
 
 	// TODO: client 处理收到的 Hello ...
 

@@ -1,8 +1,9 @@
-#include "../../common/utils.h"
+#include "utils.h"
 #include "WorkingThread.h"
 #include "../soap/soapH.h"
 #include <algorithm>
 #include "log.h"
+#include <assert.h>
 
 static void send_hello(Target *target);
 static void send_bye(Target *target);
