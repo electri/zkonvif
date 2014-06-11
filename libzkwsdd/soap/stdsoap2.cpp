@@ -1,4 +1,4 @@
-/*
+:/*
 	stdsoap2.c[pp] 2.8.17r
 
 	gSOAP runtime engine

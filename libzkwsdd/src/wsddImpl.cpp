@@ -8,7 +8,7 @@ int __wsdd__Hello(soap *soap, wsdd__HelloType *data)
 	log("%s: calling ...\n", __func__);
 
 	ThreadOpaque *opaque = (ThreadOpaque*)soap->user;
-	assert(!strcmp(opaque->name(), "client"));
+//	assert(!strcmp(opaque->name(), "client"));
 
 	// TODO: client 处理收到的 Hello ...
 
@@ -58,6 +58,7 @@ int __wsdd__Probe(soap *soap, wsdd__ProbeType *data)
 
 	TargetThread *th = (TargetThread*)opaque->th();
 
+    //XXXX: 代码描述不清晰
 	const char *type = 0, *scope = 0;
 	
 	std::vector<Target *> targets = th->probe_matched(type, scope);
