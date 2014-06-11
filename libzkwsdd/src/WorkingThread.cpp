@@ -1,8 +1,9 @@
-#include "../../common/utils.h"
+#include "utils.h"
 #include "WorkingThread.h"
 #include "../soap/soapH.h"
 #include <algorithm>
 #include "log.h"
+#include <assert.h>
 
 static void send_hello(Target *target);
 static void send_bye(Target *target);
@@ -96,6 +97,10 @@ std::vector<Target*> TargetThread::probe_matched(const char *types, const char *
 }
 
 #define SOAP_UDP "soap.udp://239.255.255.250:3702"
+
+#ifdef WIN32
+#define in_addr_t unsigned long
+#endif
 
 static void send_hello(Target *target)
 {

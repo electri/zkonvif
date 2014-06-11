@@ -10,11 +10,21 @@ if [ -f onvif.h ]; then
 else
 	echo 'exec wsdl2h ...'
 	wsdl2h -vjP -o onvif.h -t wsdl/typemap.dat \
-		wsdl/devicemgmt.wsdl \
-		wsdl/deviceio.wsdl \
-		wsdl/event.wsdl \
-		wsdl/media.wsdl \
-		wsdl/remotediscovery.wsdl
+		http://www.onvif.org/onvif/ver10/event/wsdl/event.wsdl	\
+		http://www.onvif.org/onvif/ver10/device/wsdl/devicemgmt.wsdl \
+		http://www.onvif.org/onvif/ver20/ptz/wsdl/ptz.wsdl \
+		http://www.onvif.org/onvif/ver10/network/wsdl/remotediscovery.wsdl
+#http://www.onvif.org/onvif/ver10/deviceio.wsdl
+#http://www.onvif.org/onvif/ver20/analytics/wsdl/analytics.wsdl
+#http://www.onvif.org/onvif/ver10/analyticsdevice.wsdl
+#http://www.onvif.org/onvif/ver10/display.wsdl
+#http://www.onvif.org/onvif/ver20/imaging/wsdl/imaging.wsdl
+#http://www.onvif.org/onvif/ver10/media/wsdl/media.wsdl
+#http://www.onvif.org/onvif/ver10/Receiver.wsdl
+#http://www.onvif.org/onvif/ver10/Recording.wsdl
+#http://www.onvif.org/onvif/ver10/Replay.wsdl
+#http://www.onvif.org/onvif/ver10/Search.wsdl
+
 fi
 
 # 貌似 wsa5.h 中 SOAP_ENV__Fault 重复定义

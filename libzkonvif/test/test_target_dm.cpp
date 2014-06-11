@@ -1,5 +1,5 @@
 /**	Zonekey Source:
-		ÊµÏÖ target ¶ËµÄ device mgrt ½Ó¿Ú
+		å®ç° target ç«¯çš„ device mgrt æ¥å£
  */
 
 #include <cc++/thread.h>
@@ -7,10 +7,11 @@
 #include <string>
 #include "../soap/soapDeviceBindingService.h"
 #include "../soap/soapwsddService.h"
+#include <assert.h>
 #include "../../common/utils.h"
 #include "../../common/log.h"
 
-/** ÊµÏÖÒ»¸ö½Ó¿Ú£¬±¾ÖÊ¾ÍÊÇÖØÔØ gsoap Éú³ÉµÄ xxxxService Àà£¬È»ºó¾ßÌåÊµÏÖËùÓĞ¡°´¿Ğéº¯Êı¡±¼´¿É; 
+/** å®ç°ä¸€ä¸ªæ¥å£ï¼Œæœ¬è´¨å°±æ˜¯é‡è½½ gsoap ç”Ÿæˆçš„ xxxxService ç±»ï¼Œç„¶åå…·ä½“å®ç°æ‰€æœ‰â€œçº¯è™šå‡½æ•°â€å³å¯; 
  */
 class MyDevice : DeviceBindingService
 			   , ost::Thread
@@ -28,11 +29,11 @@ public:
 		snprintf(buf, sizeof(buf), "http://%s:%d", util_get_myip(), listen_port_);
 		url_ = buf;
 
-		/** Ê¹ÓÃ mac µØÖ·×÷Îª id */
+		/** ä½¿ç”¨ mac åœ°å€ä½œä¸º id */
 		snprintf(buf, sizeof(buf), "urn:uuid:%s", util_get_mymac());
 		id_ = buf;
 
-		start();	// Æô¶¯¹¤×÷Ïß³Ì. 
+		start();	// å¯åŠ¨å·¥ä½œçº¿ç¨‹. 
 	}
 
 	const char *id() const { return id_.c_str(); }
@@ -45,14 +46,14 @@ private:
 	}
 
 private:
-	/// ÏÂÃæÊµÏÖ device mgrt ½Ó¿Ú£¬.....
+	/// ä¸‹é¢å®ç° device mgrt æ¥å£ï¼Œ.....
 
 	
 };
 
 static FILE *_fp;
 
-/** Éè±¸·¢ÏÖ£¬ÓÃÓÚÉùÃ÷ MyDevice ½Ó¿Ú
+/** è®¾å¤‡å‘ç°ï¼Œç”¨äºå£°æ˜ MyDevice æ¥å£
  */
 class MyDeviceDiscovery : wsddService
 					    , ost::Thread
@@ -60,17 +61,17 @@ class MyDeviceDiscovery : wsddService
 	const MyDevice *device_;
 
 public:
-	MyDeviceDiscovery(const MyDevice *device) : wsddService(SOAP_IO_UDP)	// ×ÜÊÇ udp Ä£Ê½
+	MyDeviceDiscovery(const MyDevice *device) : wsddService(SOAP_IO_UDP)	// æ€»æ˜¯ udp æ¨¡å¼
 	{
 		device_ = device;
 
-		start();	// Æô¶¯¹¤×÷Ïß³Ì.
+		start();	// å¯åŠ¨å·¥ä½œçº¿ç¨‹.
 	}
 
 private:
 	void run()
 	{
-		// ¼ÓÈë×é²¥µØÖ·£¬°ó¶¨ 3702 ¶Ë¿Ú
+		// åŠ å…¥ç»„æ’­åœ°å€ï¼Œç»‘å®š 3702 ç«¯å£
 #define PORT 3702
 #define ADDR "239.255.255.250"
 
@@ -112,9 +113,9 @@ private:
 
 	virtual int Probe(struct wsdd__ProbeType *probe)
 	{
-		/** Probe: Èç¹û tds£¬Ôò·µ»Ø MyDevice µÄ  url ...
+		/** Probe: å¦‚æœ tdsï¼Œåˆ™è¿”å› MyDevice çš„  url ...
 		 */
-		// ¸ù¾İ targets ¹¹Ôì ProbeMatches ...
+		// æ ¹æ® targets æ„é€  ProbeMatches ...
 		log(LOG_DEBUG, "%s: 'Probe' incoming: types=%s\n", __func__, probe->Types);
 		if (!strcmp("tds:Device", probe->Types) || !strcmp("tdn:NetworkVideoTransmitter", probe->Types)) {
 			wsdd__ProbeMatchesType pms;
@@ -122,7 +123,7 @@ private:
 			pms.ProbeMatch = (wsdd__ProbeMatchType*)soap_malloc(soap, 1 * sizeof(wsdd__ProbeMatchType));
 			wsdd__ProbeMatchType *pm = &pms.ProbeMatch[0];
 
-			// Ìî¿Õ ..
+			// å¡«ç©º ..
 			pm->wsa__EndpointReference.Address = soap_strdup(soap, device_->id());
 			pm->wsa__EndpointReference.ReferenceParameters = 0;
 			pm->wsa__EndpointReference.ReferenceProperties = 0;
@@ -142,11 +143,11 @@ private:
 
 			pm->MetadataVersion = 1;
 
-			// ĞèÒªĞŞ¸Ä wsa_Header
+			// éœ€è¦ä¿®æ”¹ wsa_Header
 			SOAP_ENV__Header * header = soap->header;
 			assert(header);
 
-			// XXX: ±ØĞëµÄ£¬·ñÔò client ²»ÖªµÀÕâ¸ö PM ÊÇ¶ÔÓ¦×ÅÄÇ¸ö P
+			// XXX: å¿…é¡»çš„ï¼Œå¦åˆ™ client ä¸çŸ¥é“è¿™ä¸ª PM æ˜¯å¯¹åº”ç€é‚£ä¸ª P
 			header->wsa__RelatesTo = (wsa__Relationship *)soap_malloc(soap, sizeof(wsa__Relationship));
 			header->wsa__RelatesTo->__item = soap_strdup(soap, header->wsa__MessageID);
 			header->wsa__RelatesTo->__anyAttribute = 0;
@@ -177,8 +178,8 @@ private:
 	}
 
 
-	// ÏÂÃæÕâ¶Î´úÂë´Ó soapwsddProxy.cpp ÖĞ¸´ÖÆµÄ£¬ÉÔ¼ÓĞŞ¸Ä :)
-	// ÉùÃ÷Îª static µÄÄ¿µÄÊÇ·ÀÖ¹Ê¹ÓÃ members
+	// ä¸‹é¢è¿™æ®µä»£ç ä» soapwsddProxy.cpp ä¸­å¤åˆ¶çš„ï¼Œç¨åŠ ä¿®æ”¹ :)
+	// å£°æ˜ä¸º static çš„ç›®çš„æ˜¯é˜²æ­¢ä½¿ç”¨ members
 	static int __send_ProbeMatches(struct soap *soap, const char *soap_endpoint, const char *soap_action, struct wsdd__ProbeMatchesType *wsdd__ProbeMatches)
 	{
 		struct __wsdd__ProbeMatches soap_tmp___wsdd__ProbeMatches;
