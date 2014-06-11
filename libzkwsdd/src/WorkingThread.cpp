@@ -108,6 +108,10 @@ static const char *my_messageid()
 
 #define SOAP_UDP "soap.udp://239.255.255.250:3702"
 
+#ifdef WIN32
+#define in_addr_t unsigned long
+#endif
+
 static void send_hello(Target *target)
 {
     const char *ip = util_get_myip();
@@ -115,7 +119,8 @@ static void send_hello(Target *target)
     in_addr_t addr = inet_addr(ip);
     
     //
-    // *init soap
+    // * init soap
+	//
     soap soap;
 	soap_init(&soap);
     soap.send_timeout = 1;
@@ -170,7 +175,8 @@ static void send_bye(Target *target)
     in_addr_t addr = inet_addr(ip);
     
     //
-    // *init soap
+    // * init soap
+	//
     soap soap;
 	soap_init(&soap);
     soap.send_timeout = 1;
