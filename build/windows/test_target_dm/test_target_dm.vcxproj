@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\common\utils.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\test_target_dm.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +90,10 @@
     <ProjectReference Include="..\libzkonvif\libzkonvif.vcxproj">
       <Project>{8aac020d-c865-4881-bbfa-336fc48a3b9e}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\common\log.h" />
+    <ClInclude Include="..\..\..\common\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
