@@ -96,16 +96,6 @@ std::vector<Target*> TargetThread::probe_matched(const char *types, const char *
 	return targets;
 }
 
-static const char *my_messageid()
-{
-	static int _i = 0;
-	static char buf[64];
-    
-	snprintf(buf, sizeof(buf), "id:%u", _i++);
-    
-	return buf;
-}
-
 #define SOAP_UDP "soap.udp://239.255.255.250:3702"
 
 #ifdef WIN32
@@ -119,8 +109,8 @@ static void send_hello(Target *target)
     in_addr_t addr = inet_addr(ip);
     
     //
-    // * init soap
-	//
+    // *init soap
+    //    
     soap soap;
 	soap_init(&soap);
     soap.send_timeout = 1;
@@ -175,8 +165,8 @@ static void send_bye(Target *target)
     in_addr_t addr = inet_addr(ip);
     
     //
-    // * init soap
-	//
+    // *init soap
+    //
     soap soap;
 	soap_init(&soap);
     soap.send_timeout = 1;

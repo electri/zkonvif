@@ -58,6 +58,7 @@ int __wsdd__Probe(soap *soap, wsdd__ProbeType *data)
 
 	TargetThread *th = (TargetThread*)opaque->th();
 
+    //XXXX: 代码描述不清晰
 	const char *type = 0, *scope = 0;
 	
 	std::vector<Target *> targets = th->probe_matched(type, scope);
