@@ -1,4 +1,4 @@
-/**	Zonekey Source:
+﻿/**	Zonekey Source:
 		实现 target 端的 device mgrt 接口
  */
 
@@ -11,7 +11,7 @@
 #include "../../common/utils.h"
 #include "../../common/log.h"
 
-/** 实现一个接口，本质就是重载 gsoap 生成的 xxxxService 类，然后具体实现所有“纯虚函数”即可; 
+/** 实现一个接口，本质就是重载 gsoap 生成的 xxxxService 类，然后具体实现所有“纯虚函数” . 
  */
 class MyDevice : DeviceBindingService
 			   , ost::Thread
@@ -46,14 +46,14 @@ private:
 	}
 
 private:
-	/// 下面实现 device mgrt 接口，.....
+	/// 下面实现 device mgrt 接口... 
 
 	
 };
 
 static FILE *_fp;
 
-/** 设备发现，用于声明 MyDevice 接口
+/** 设备发现，声明 MyDevice 接口 .
  */
 class MyDeviceDiscovery : wsddService
 					    , ost::Thread
@@ -61,17 +61,17 @@ class MyDeviceDiscovery : wsddService
 	const MyDevice *device_;
 
 public:
-	MyDeviceDiscovery(const MyDevice *device) : wsddService(SOAP_IO_UDP)	// 总是 udp 模式
+	MyDeviceDiscovery(const MyDevice *device) : wsddService(SOAP_IO_UDP)	// 总是 udp 模式 .
 	{
 		device_ = device;
 
-		start();	// 启动工作线程.
+		start();	// 启动工作线程 .
 	}
 
 private:
 	void run()
 	{
-		// 加入组播地址，绑定 3702 端口
+		// 加入组播地址，绑定到 3702 端口 .
 #define PORT 3702
 #define ADDR "239.255.255.250"
 
@@ -113,14 +113,12 @@ private:
 
 	virtual int Probe(struct wsdd__ProbeType *probe)
 	{
-		/** Probe: 如果 tds，则返回 MyDevice 的  url ...
-		 */
-		// 根据 targets 构造 ProbeMatches ...
+		// 根据 targets 填充 ProbeMatches ...
 		log(LOG_DEBUG, "%s: 'Probe' incoming: types=%s\n", __func__, probe->Types);
 		if (!strcmp("tds:Device", probe->Types) || !strcmp("tdn:NetworkVideoTransmitter", probe->Types)) {
 			wsdd__ProbeMatchesType pms;
 			pms.__sizeProbeMatch = 1;
-			pms.ProbeMatch = (wsdd__ProbeMatchType*)soap_malloc(soap, 1 * sizeof(wsdd__ProbeMatchType));
+			pms.ProbeMatch = (wsdd__ProbeMatchType*)soap_malloc(soap, pms.__sizeProbeMatch * sizeof(wsdd__ProbeMatchType));
 			wsdd__ProbeMatchType *pm = &pms.ProbeMatch[0];
 
 			// 填空 ..
@@ -143,7 +141,7 @@ private:
 
 			pm->MetadataVersion = 1;
 
-			// 需要修改 wsa_Header
+			// 修改 wsa_Header
 			SOAP_ENV__Header * header = soap->header;
 			assert(header);
 

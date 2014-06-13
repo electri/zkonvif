@@ -78,10 +78,8 @@
     <ClCompile Include="..\..\..\libzkonvif\soap\soapC.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceBindingService.cpp" />
-    <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingProxy.cpp" />
-    <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingService.cpp" />
-    <ClCompile Include="..\..\..\libzkonvif\soap\soapMediaBindingProxy.cpp" />
-    <ClCompile Include="..\..\..\libzkonvif\soap\soapMediaBindingService.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapPTZBindingProxy.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapPTZBindingService.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingProxy.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingService.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingProxy.cpp" />
@@ -94,11 +92,9 @@
     <ClInclude Include="..\..\..\libzkonvif\soap\duration.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingService.h" />
-    <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingProxy.h" />
-    <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingService.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapH.h" />
-    <ClInclude Include="..\..\..\libzkonvif\soap\soapMediaBindingProxy.h" />
-    <ClInclude Include="..\..\..\libzkonvif\soap\soapMediaBindingService.h" />
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapPTZBindingProxy.h" />
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapPTZBindingService.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingProxy.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingService.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingProxy.h" />

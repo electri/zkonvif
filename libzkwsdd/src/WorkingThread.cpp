@@ -105,29 +105,47 @@ static const char *my_messageid()
 	return buf;
 }
 
-#define SOAP_UDP "soap.udp://239.255.255.250:3702"
-
 static void send_hello(Target *target)
 {
-    const char *ip = util_get_myip();
-    assert(ip != 0);
-    in_addr_t addr = inet_addr(ip);
-    
-    //
-    // *init soap
     soap soap;
-	soap_init(&soap);
     soap.send_timeout = 1;
-    soap.connect_flags = SO_BROADCAST;
-    soap.ipv4_multicast_if = (char*)&addr;
-    soap.ipv6_multicast_if = addr;
-    soap.ipv4_multicast_ttl = 1;
+	soap_init1(&soap, SOAP_IO_UDP);
+	
+	soap.bind_flags = SO_REUSEADDR;
+    
+	const char *ip = util_get_myip();
+	ip = "172.16.1.104";
+	if (!soap_valid_socket(soap_bind(&soap, ip, 0, 100))) {
+		log(LOG_FAULT, "%s: soap_bind %d failure!!\n", __func__, PORT);
+		::exit(-1);
+	}
+    
+	/*
+	ip_mreq mcast;
+	mcast.imr_multiaddr.s_addr = inet_addr(MULTI_ADDR);
+	mcast.imr_interface.s_addr = inet_addr(util_get_myip());
+	if (setsockopt(soap.master, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&mcast, sizeof(mcast)) < 0) {
+		log(LOG_FAULT, "%s: ohhh, can't join multiaddr of %s!!!!\n", __func__, MULTI_ADDR);
+		::exit(-1);
+	}
+	*/
+    
+    struct wsdd__HelloType *wsdd_hello = (struct wsdd__HelloType*)soap_malloc(&soap, sizeof(struct wsdd__HelloType));
+    
+    wsdd_hello->Scopes = NULL;
+    wsdd_hello->Types = soap_strdup(&soap, target->type());
+    
+	wsdd_hello->MetadataVersion = 1; //
 
-    //
-    // * header
-    //
+	wsdd_hello->XAddrs = 0;
+
+	memset(&wsdd_hello->wsa__EndpointReference, 0, sizeof(wsa__EndpointReferenceType));
+    wsdd_hello->wsa__EndpointReference.Address = soap_strdup(&soap, target->id());
+    
+    // header
+    
     struct SOAP_ENV__Header header;
-    soap_default_SOAP_ENV__Header(&soap, &header);
+    soap_default_SOAP_ENV__Header(&soap, &header); // init SOAP Header
     
     header.wsa__Action = soap_strdup(&soap, "http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01/Hello"); // mustUnderstand
     header.wsa__To = soap_strdup(&soap, "urn:docs-oasis-open-org:ws-dd:ns:discovery:2009:01"); //mustUnderstand
@@ -138,21 +156,13 @@ static void send_hello(Target *target)
     header.wsa__MessageID = NULL; // optional
     
     soap.header = &header;
-    
-    //
-    // * sent parameter
-    //
-    struct wsdd__HelloType *wsdd_hello = (struct wsdd__HelloType*)soap_malloc(&soap, sizeof(struct wsdd__HelloType));
 
-    wsdd_hello->Scopes = NULL;
-    wsdd_hello->Types = soap_strdup(&soap, target->type());
-    wsdd_hello->MetadataVersion = 1;
-	wsdd_hello->XAddrs = 0;
+	// Hello 发送的目标地址为组播 .
+	soap.peer.sin_family = AF_INET;
+	soap.peer.sin_port = htons(PORT);
+	soap.peer.sin_addr.s_addr = inet_addr(MULTI_ADDR);
 
-	memset(&wsdd_hello->wsa__EndpointReference, 0, sizeof(wsa__EndpointReferenceType));
-    wsdd_hello->wsa__EndpointReference.Address = soap_strdup(&soap, target->id());
-    
-    if (soap_send___wsdd__Hello(&soap, SOAP_UDP, NULL, wsdd_hello) != SOAP_OK)
+    if (soap_send___wsdd__Hello(&soap, "http://", NULL, wsdd_hello) != SOAP_OK)
         soap_print_fault(&soap, stderr); // report error
 
     soap_destroy(&soap); // cleanup
@@ -164,28 +174,43 @@ static void send_hello(Target *target)
 
 static void send_bye(Target *target)
 {
-    const char *ip = util_get_myip();
-    assert(ip != 0);
-    in_addr_t addr = inet_addr(ip);
-    
-    //
-    // *init soap
     soap soap;
-	soap_init(&soap);
     soap.send_timeout = 1;
-    soap.connect_flags = SO_BROADCAST;
-    soap.ipv4_multicast_if = (char*)&addr;
-    soap.ipv6_multicast_if = addr;
-    soap.ipv4_multicast_ttl = 1;
+	soap_init1(&soap, SOAP_IO_UDP);
+	
+	soap.bind_flags = SO_REUSEADDR;
     
-    //
-    // * header
-    //
+	if (!soap_valid_socket(soap_bind(&soap, 0, 0, 100))) {
+		log(LOG_FAULT, "%s: soap_bind %d failure!!\n", __func__, PORT);
+		::exit(-1);
+	}
+    
+	/*
+	ip_mreq mcast;
+	mcast.imr_multiaddr.s_addr = inet_addr(MULTI_ADDR);
+	mcast.imr_interface.s_addr = inet_addr(util_get_myip());
+	if (setsockopt(soap.master, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*)&mcast, sizeof(mcast)) < 0) {
+		log(LOG_FAULT, "%s: ohhh, can't join multiaddr of %s!!!!\n", __func__, MULTI_ADDR);
+		::exit(-1);
+	}
+    */
+
+    struct wsdd__ByeType *wsdd_bye = (struct wsdd__ByeType*)soap_malloc(&soap, sizeof(struct wsdd__ByeType));
+    wsdd_bye->wsa__EndpointReference.Address = soap_strdup(&soap, target->id());
+	wsdd_bye->MetadataVersion = (unsigned int*)soap_malloc(&soap, sizeof(int));
+	*wsdd_bye->MetadataVersion = 1;
+    
+    if (soap_send___wsdd__Bye(&soap, "soap.udp://...", NULL, wsdd_bye) != SOAP_OK)
+        soap_print_fault(&soap, stderr); //report error
+    
+
+    // header
+    
     struct SOAP_ENV__Header header;
-    soap_default_SOAP_ENV__Header(&soap, &header);
+    soap_default_SOAP_ENV__Header(&soap, &header); // init SOAP Header
     
     header.wsa__Action = soap_strdup(&soap, "http://docs.oasis-open.org/ws-dd/ns/discovery/2009/01/Bye"); // mustUnderstand
-    header.wsa__To = soap_strdup(&soap, "urn:docs-oasis-open-org:ws-dd:ns:discovery:2009:01"); //mustUnderstand
+    header.wsa__To = soap_strdup(&soap, "urn:docs-oasis-open-org:ws-dd:ns:discovery:2009:01");//mustUnderstand
     header.wsa__ReplyTo = NULL; //mustUnderst
     header.wsdd__AppSequence = NULL; // optional
     header.wsa__From = NULL; // optional
@@ -194,25 +219,13 @@ static void send_bye(Target *target)
     
     soap.header = &header;
     
-    //
-    // * sent parameter
-    //
-    unsigned int *version = (unsigned int*)soap_malloc(&soap, 1 * sizeof(unsigned int));
-    *version = 1;
-    struct wsdd__ByeType *wsdd_bye = (struct wsdd__ByeType*)soap_malloc(&soap, sizeof(struct wsdd__ByeType));
-    wsdd_bye->MetadataVersion = version;
-    wsdd_bye->Scopes = 0;
-    wsdd_bye->Types = soap_strdup(&soap, target->type());
-    
-    memset(&wsdd_bye->wsa__EndpointReference, 0, sizeof(wsa__EndpointReferenceType));
-    wsdd_bye->wsa__EndpointReference.Address = soap_strdup(&soap, target->id());
-    
-    if (soap_send___wsdd__Bye(&soap, SOAP_UDP, NULL, wsdd_bye) != SOAP_OK)
+    if (soap_send___wsdd__Bye(&soap, "http://", NULL, wsdd_bye) != SOAP_OK)
         soap_print_fault(&soap, stderr); // report error
     
     soap_destroy(&soap); // cleanup
     soap_end(&soap); // cleanup
     soap_done(&soap); // close connection (should not use soap struct after this)
+    
 }
 
 std::vector<Target*> TargetThread::resolve_matched(const char *address)
