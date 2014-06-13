@@ -9,6 +9,8 @@ if [ -f onvif.h ]; then
 	echo 'onvif.h exist!'
 else
 	echo 'exec wsdl2h ...'
+#v: verbose output; j: don't generate SOAP_ENV__HEADER and SOAP_ENV__Detail 
+#definitions; p: don't create polymorphic types inherited from xsd__anyType
 	wsdl2h -vjP -o onvif.h -t wsdl/typemap.dat \
 		http://www.onvif.org/onvif/ver10/event/wsdl/event.wsdl	\
 		http://www.onvif.org/onvif/ver10/device/wsdl/devicemgmt.wsdl \

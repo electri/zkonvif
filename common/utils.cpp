@@ -431,3 +431,60 @@ const char *util_get_mymac()
 	return _mac.c_str();
 }
 
+#include "../libzkonvif/soap/soapH.h"
+
+/** 
+@fn const char *soap_wsa_rand_uuid(struct soap *soap)
+@brief Generates a random UUID(UUID algorithm version 4).
+@param soap context
+@return UUID "urn:uid:xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxx"
+*/
+
+const char* soap_wsa_rand_uuid(struct soap *soap)
+{
+	const int uuidlen = 48;
+	char *uuid = (char*)soap_malloc(soap, uuidlen);
+	int r1, r2, r3, r4;
+#ifdef WITH_OPENSSL
+	r1 = soap_random;
+	r2 = soap_randome;
+#else
+	static int k = 0xFACEB00B;
+	int lo = k % 127773;
+	int hi = k / 127773;
+#	ifndef WIN32
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	r1 = 10000000 * tv.tv_sec + tv.tv_usec;
+#else
+	r1 = (int)time(NULL);
+#	endif
+	k = 16807 * lo - 2836 * hi;
+	if (k <= 0)
+		k += 0x7FFFFFFF;
+	r2 = k;
+	k &= 0x8FFFFFFF;
+	r2 += *(int*)soap->buf;
+#endif
+	r3 = soap_random;
+	r4 = soap_random;
+#ifdef HAVE_SNPRINTF
+	soap_snprintf(uuid, uuidlen, "urn:uuid:%8.8x-%4.4hx-4%3.3hx-%4.4hx-%8.8x",
+		r1,
+		(short)(r2 >> 16),
+		((short)r2 >> 4) & 0x0FFF,
+		((short)(r3 >> 16) & 0x3FFF),
+		(short)r3,
+		r4);
+#else
+	snprintf(uuid, uuidlen, "urn:uuid:%8.8x-%4.4hx-4%3.3hx-%4.4hx-%8.8x",
+		r1,
+		(short)(r2 >> 16),
+		((short)r2 >> 4) & 0x0FFF,
+		((short)(r3 >> 16) & 0x3FFF),
+		(short)r3,
+		r4);
+#endif
+	//DEGFUN1("soap_wsa_rand_uuid", "%s", uuid);
+	return uuid;
+}
