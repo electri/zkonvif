@@ -1,8 +1,9 @@
-#include "../../common/utils.h"
+#include "utils.h"
 #include "WorkingThread.h"
 #include "../soap/soapH.h"
 #include <algorithm>
 #include "log.h"
+#include <assert.h>
 
 static void send_hello(Target *target);
 static void send_bye(Target *target);
@@ -95,26 +96,27 @@ std::vector<Target*> TargetThread::probe_matched(const char *types, const char *
 	return targets;
 }
 
-static const char *my_messageid()
-{
-	static int _i = 0;
-	static char buf[64];
-    
-	snprintf(buf, sizeof(buf), "id:%u", _i++);
-    
-	return buf;
-}
+#define SOAP_UDP "soap.udp://239.255.255.250:3702"
+
+#ifdef WIN32
+#define in_addr_t unsigned long
+#endif
 
 static void send_hello(Target *target)
 {
+    const char *ip = util_get_myip();
+    assert(ip != 0);
+    in_addr_t addr = inet_addr(ip);
+    
+    //
+    // *init soap
+    //    
     soap soap;
     soap.send_timeout = 1;
 	soap_init1(&soap, SOAP_IO_UDP);
 	
 	soap.bind_flags = SO_REUSEADDR;
     
-	const char *ip = util_get_myip();
-	ip = "172.16.1.104";
 	if (!soap_valid_socket(soap_bind(&soap, ip, 0, 100))) {
 		log(LOG_FAULT, "%s: soap_bind %d failure!!\n", __func__, PORT);
 		::exit(-1);
@@ -174,6 +176,13 @@ static void send_hello(Target *target)
 
 static void send_bye(Target *target)
 {
+    const char *ip = util_get_myip();
+    assert(ip != 0);
+    in_addr_t addr = inet_addr(ip);
+    
+    //
+    // *init soap
+    //
     soap soap;
     soap.send_timeout = 1;
 	soap_init1(&soap, SOAP_IO_UDP);

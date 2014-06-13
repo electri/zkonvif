@@ -10,8 +10,8 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 -->
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" targetNamespace="http://www.onvif.org/ver10/device/wsdl">
 	<wsdl:types>
-		<xs:schema targetNamespace="http://www.onvif.org/ver10/device/wsdl" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" elementFormDefault="qualified" version="2.3">
-			<xs:import namespace="http://www.onvif.org/ver10/schema" schemaLocation="onvif.xsd"/>
+		<xs:schema targetNamespace="http://www.onvif.org/ver10/device/wsdl" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" elementFormDefault="qualified" version="2.4.1">
+			<xs:import namespace="http://www.onvif.org/ver10/schema" schemaLocation="../../../ver10/schema/onvif.xsd"/>
 			<!--===============================-->
 			<xs:element name="GetServices">
 				<xs:complexType>
@@ -238,6 +238,11 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 				<xs:attribute name="SupportedEAPMethods" type="tds:EAPMethodTypes">
 					<xs:annotation>
 						<xs:documentation>EAP Methods supported by the device. The int values refer to the <a href="http://www.iana.org/assignments/eap-numbers/eap-numbers.xhtml">IANA EAP Registry</a>.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="MaxUsers" type="xs:int">
+					<xs:annotation>
+						<xs:documentation>The maximum number of users that the device supports.</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 				<xs:anyAttribute processContents="lax"/>
@@ -2349,7 +2354,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 				command. <br/>
 				If system time and date are set manually, the client shall include UTCDateTime in the request.<br/>
 				A TimeZone token which is not formed according to the rules of IEEE 1003.1 section 8.3 is considered as invalid timezone.<br/>
-				The DayLightSavings flag should be set to true to activate any DST settings of the TimeZone string.
+				The DayLightSavings flag should be set to true to activate any DST settings of the TimeZone string. 
 				Clear the DayLightSavings flag if the DST portion of the TimeZone settings should be ignored.
 			</wsdl:documentation>
 			<wsdl:input message="tds:SetSystemDateAndTimeRequest"/>
@@ -2418,7 +2423,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 				Fixed scope parameters cannot be altered through the device management interface but are
 				permanent device characteristics part of the device firmware configurations. The scope type is
 				indicated in the scope list returned in the get scope parameters response. Configurable scope
-				parameters can be set throught the set and add scope parameters operations.
+				parameters can be set throught the set and add scope parameters operations. 
 				The device shall support retrieval of discovery scope parameters
 				through the GetScopes command. As some scope parameters are mandatory, the client
 				always expects a scope list in the response.</wsdl:documentation>
@@ -2528,7 +2533,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<wsdl:output message="tds:GetUsersResponse"/>
 		</wsdl:operation>
 		<wsdl:operation name="CreateUsers">
-			<wsdl:documentation>This operation creates new device users and corresponding credentials on a device for authentication purposes.
+			<wsdl:documentation>This operation creates new device users and corresponding credentials on a device for authentication purposes. 
 				The device shall support creation of device users and their credentials through the CreateUsers
 				command. Either all users are created successfully or a fault message shall be returned
 				without creating any user.<br/>
@@ -2539,7 +2544,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<wsdl:output message="tds:CreateUsersResponse"/>
 		</wsdl:operation>
 		<wsdl:operation name="DeleteUsers">
-			<wsdl:documentation>This operation deletes users on a device. The device shall support deletion of device users and their credentials
+			<wsdl:documentation>This operation deletes users on a device. The device shall support deletion of device users and their credentials 
 				through the DeleteUsers command. A device may have one or more fixed users
 				that cannot be deleted to ensure access to the unit. Either all users are deleted successfully or a
 				fault message shall be returned and no users be deleted.</wsdl:documentation>
@@ -2548,7 +2553,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 		</wsdl:operation>
 		<wsdl:operation name="SetUser">
 			<wsdl:documentation>This operation updates the settings for one or several users on a device for authentication purposes.
-				The device shall support update of device users and their credentials through the SetUser command.
+				The device shall support update of device users and their credentials through the SetUser command. 
 				Either all change requests are processed successfully or a fault message shall be returned and no change requests be processed.</wsdl:documentation>
 			<wsdl:input message="tds:SetUserRequest"/>
 			<wsdl:output message="tds:SetUserResponse"/>
@@ -2580,8 +2585,8 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 		<wsdl:operation name="SetHostname">
 			<wsdl:documentation>This operation sets the hostname on a device. It shall be possible to set the device hostname
 				configurations through the SetHostname command.<br/>
-				A device shall accept string formated according to RFC 1123 section 2.1 or alternatively to RFC 952,
-				other string shall be considered as invalid strings.
+				A device shall accept string formated according to RFC 1123 section 2.1 or alternatively to RFC 952, 
+				other string shall be considered as invalid strings. 
 			</wsdl:documentation>
 			<wsdl:input message="tds:SetHostnameRequest"/>
 			<wsdl:output message="tds:SetHostnameResponse"/>
@@ -2612,7 +2617,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 		<wsdl:operation name="SetNTP">
 			<wsdl:documentation>This operation sets the NTP settings on a device. If the device supports NTP, it shall be
 				possible to set the NTP server settings through the SetNTP command.<br/>
-				A device shall accept string formated according to RFC 1123 section 2.1 or alternatively to RFC 952,
+				A device shall accept string formated according to RFC 1123 section 2.1 or alternatively to RFC 952, 
 				other string shall be considered as invalid strings. <br/>
 				Changes to the NTP server list will not affect the clock mode DateTimeType. Use SetSystemDateAndTime to activate NTP operation.
 			</wsdl:documentation>
@@ -2846,18 +2851,18 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<wsdl:output message="tds:SetRelayOutputStateResponse"/>
 		</wsdl:operation>
 		<wsdl:operation name="SendAuxiliaryCommand">
-			<wsdl:documentation>Manage auxiliary commands supported by a device, such as controlling an Infrared (IR) lamp,
+			<wsdl:documentation>Manage auxiliary commands supported by a device, such as controlling an Infrared (IR) lamp, 
 				a heater or a wiper or a thermometer that is connected to the device.<br/>
 				The supported commands can be retrieved via the AuxiliaryCommands capability.<br/>
-				Although the name of the auxiliary commands can be freely defined, commands starting with the prefix tt: are
+				Although the name of the auxiliary commands can be freely defined, commands starting with the prefix tt: are 
 				reserved to define frequently used commands and these reserved commands shall all share the "tt:command|parameter" syntax.
 				<ul>
 					<li>tt:Wiper|On – Request to start the wiper.</li>
 					<li>tt:Wiper|Off – Request to stop the wiper.</li>
 					<li>tt:Washer|On – Request to start the washer.</li>
-					<li>tt:Washer|Off – Request to stop the washe.</li>
-					<li>tt:WashingProcedue|On – Request to start the washing procedue.</li>
-					<li>tt: WashingProcedue |Off – Request to stop the washing procedue.</li>
+					<li>tt:Washer|Off – Request to stop the washer.</li>
+					<li>tt:WashingProcedure|On – Request to start the washing procedure.</li>
+					<li>tt: WashingProcedure |Off – Request to stop the washing procedure.</li>
 				</ul>
 				A device that indicates auxiliary service capability shall support this command.</wsdl:documentation>
 			<wsdl:input message="tds:SendAuxiliaryCommandRequest"/>

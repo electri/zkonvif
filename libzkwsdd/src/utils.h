@@ -4,6 +4,8 @@
 #include <cc++/socket.h>
 #include <cc++/network.h>
 #include <cc++/address.h>
+#include <map>
+#include <string>
 #ifdef WIN32
 #	include <IPHlpApi.h>
 #endif
@@ -20,6 +22,11 @@
 #ifdef	HAVE_NET_IF_H
 #include <net/if.h>
 #endif
+#endif
+
+#ifdef __APPLE__
+#  include <ifaddrs.h>
+#  include <net/if_dl.h>
 #endif
 
 // 判断 mac 是否为虚拟机 mac
@@ -128,6 +135,74 @@ inline bool get_all_netinfs(std::vector<NetInf> &nis)
 		free(adapter);
 	}
 
+#elif __APPLE__
+    struct ifaddrs *ifap, *ifa;
+    struct Tmp
+    {
+        std::string mac;
+        std::string ipv4;
+    };
+    std::map<std::string, Tmp> name_macs;
+    std::map<std::string, Tmp>::iterator itf;
+    
+    if (getifaddrs(&ifap) == 0 && ifap) {
+        for (ifa = ifap; ifa; ifa = ifa->ifa_next) {
+            if (ifa->ifa_flags & IFF_LOOPBACK)
+                continue;
+            if (!(ifa->ifa_flags & IFF_RUNNING))
+                continue;
+            
+            if (strstr(ifa->ifa_name, "bridge")) // 去除桥接网卡
+                continue;
+            
+            fprintf(stderr, "name: %s, family=%d\n", ifa->ifa_name, ifa->ifa_addr->sa_family);
+            if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_LINK) {
+                /* Link layer interface */
+                struct sockaddr_dl *dl = (struct sockaddr_dl*)ifa->ifa_addr;
+                unsigned char *p = (unsigned char*)LLADDR(dl);
+                std::string mac = conv_mac(p, dl->sdl_alen);
+                if (!is_vm_mac(mac.c_str())) {
+                    itf = name_macs.find(ifa->ifa_name);
+                    if (itf == name_macs.end()) {
+                        Tmp tmp;
+                        tmp.mac = mac;
+                        name_macs[ifa->ifa_name] = tmp;
+                    }
+                    else {
+                        itf->second.mac = mac;
+                    }
+                }
+            }
+            
+            if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET) {
+                // IPV4
+                struct sockaddr_in *sin = (struct sockaddr_in*)ifa->ifa_addr;
+                std::string ip = inet_ntoa(sin->sin_addr);
+                itf = name_macs.find(ifa->ifa_name);
+                if (itf == name_macs.end()) {
+                    Tmp tmp;
+                    tmp.ipv4 = ip;
+                    name_macs[ifa->ifa_name] = tmp;
+                }
+                else {
+                    itf->second.ipv4 = ip;
+                }
+            }
+        }
+        
+        for (itf = name_macs.begin(); itf != name_macs.end(); ++itf) {
+            Tmp &tmp = itf->second;
+            if (!tmp.mac.empty() && !tmp.ipv4.empty()) {
+                NetInf ni;
+                ni.macaddr = tmp.mac;
+                ni.ips.push_back(tmp.ipv4);
+                
+                nis.push_back(ni);
+            }
+        }
+        
+        freeifaddrs(ifap);
+    }
 #else
 	char buffer[8096];
 	struct ifconf ifc;
@@ -151,7 +226,6 @@ inline bool get_all_netinfs(std::vector<NetInf> &nis)
         if (req->ifr_addr.sa_family != AF_INET)
             continue;
         
-        
         ioctl(fd, SIOCGIFFLAGS, req);
         int flags = req->ifr_flags;
         if (flags & IFF_LOOPBACK)
@@ -160,17 +234,17 @@ inline bool get_all_netinfs(std::vector<NetInf> &nis)
         if (!(flags & IFF_UP))
             continue;
         
-        
-        
         sockaddr_in sin;
         sin.sin_addr = ((sockaddr_in&)req->ifr_addr).sin_addr;
         
-        fprintf(stderr, "if: name=%s, ip=%s\n", req->ifr_name, inet_ntoa(sin.sin_addr));
+        ioctl(fd, SIOCGIFHWADDR, req);
+        uint8_t *mac = (uint8_t*)req->ifr_hwaddr.sa_data;
         
         NetInf ni;
-        ni.macaddr = req->ifr_name;
+        ni.macaddr = conv_mac(mac, 6);
         ni.ips.push_back(inet_ntoa(sin.sin_addr));
 
+        fprintf(stderr, "if: name=%s, ip=%s, mac=%s\n", req->ifr_name, inet_ntoa(sin.sin_addr), ni.macaddr.c_str());
     }
 
 	close(fd);
