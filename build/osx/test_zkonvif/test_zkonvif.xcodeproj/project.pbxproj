@@ -1,0 +1,285 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C032CFB9194B21E2003C56B7 /* MyEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CFB5194B21E2003C56B7 /* MyEvent.cpp */; };
+		C032CFBA194B21E2003C56B7 /* test_target_dm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CFB8194B21E2003C56B7 /* test_target_dm.cpp */; };
+		C032CFBC194B21FB003C56B7 /* libzkonvif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C032CFBB194B21FB003C56B7 /* libzkonvif.a */; };
+		C032CFBE194B227F003C56B7 /* libccgnu2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C032CFBD194B227F003C56B7 /* libccgnu2.a */; };
+		C032CFC3194B22C2003C56B7 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CFC1194B22C2003C56B7 /* utils.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C032CFA7194B21B2003C56B7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		C032CFA9194B21B2003C56B7 /* test_zkonvif */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test_zkonvif; sourceTree = BUILT_PRODUCTS_DIR; };
+		C032CFB5194B21E2003C56B7 /* MyEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyEvent.cpp; path = ../../../../libzkonvif/test/MyEvent.cpp; sourceTree = "<group>"; };
+		C032CFB6194B21E2003C56B7 /* MyEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyEvent.h; path = ../../../../libzkonvif/test/MyEvent.h; sourceTree = "<group>"; };
+		C032CFB7194B21E2003C56B7 /* myservice.inf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = myservice.inf.h; path = ../../../../libzkonvif/test/myservice.inf.h; sourceTree = "<group>"; };
+		C032CFB8194B21E2003C56B7 /* test_target_dm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_target_dm.cpp; path = ../../../../libzkonvif/test/test_target_dm.cpp; sourceTree = "<group>"; };
+		C032CFBB194B21FB003C56B7 /* libzkonvif.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libzkonvif.a; path = "../../../../../../Library/Developer/Xcode/DerivedData/osx-fbqcmhirtguemkgsnbaxhwrthcbo/Build/Products/Debug/libzkonvif.a"; sourceTree = "<group>"; };
+		C032CFBD194B227F003C56B7 /* libccgnu2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libccgnu2.a; path = ../../../../../../../../opt/local/lib/libccgnu2.a; sourceTree = "<group>"; };
+		C032CFC0194B22C2003C56B7 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		C032CFC1194B22C2003C56B7 /* utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utils.cpp; sourceTree = "<group>"; };
+		C032CFC2194B22C2003C56B7 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C032CFA6194B21B2003C56B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C032CFBE194B227F003C56B7 /* libccgnu2.a in Frameworks */,
+				C032CFBC194B21FB003C56B7 /* libzkonvif.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C032CFA0194B21B2003C56B7 = {
+			isa = PBXGroup;
+			children = (
+				C032CFBD194B227F003C56B7 /* libccgnu2.a */,
+				C032CFBB194B21FB003C56B7 /* libzkonvif.a */,
+				C032CFAB194B21B2003C56B7 /* test_zkonvif */,
+				C032CFAA194B21B2003C56B7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C032CFAA194B21B2003C56B7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C032CFA9194B21B2003C56B7 /* test_zkonvif */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C032CFAB194B21B2003C56B7 /* test_zkonvif */ = {
+			isa = PBXGroup;
+			children = (
+				C032CFBF194B22C2003C56B7 /* common */,
+				C032CFB5194B21E2003C56B7 /* MyEvent.cpp */,
+				C032CFB6194B21E2003C56B7 /* MyEvent.h */,
+				C032CFB7194B21E2003C56B7 /* myservice.inf.h */,
+				C032CFB8194B21E2003C56B7 /* test_target_dm.cpp */,
+			);
+			path = test_zkonvif;
+			sourceTree = "<group>";
+		};
+		C032CFBF194B22C2003C56B7 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				C032CFC0194B22C2003C56B7 /* log.h */,
+				C032CFC1194B22C2003C56B7 /* utils.cpp */,
+				C032CFC2194B22C2003C56B7 /* utils.h */,
+			);
+			name = common;
+			path = ../../../../common;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C032CFA8194B21B2003C56B7 /* test_zkonvif */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C032CFB2194B21B2003C56B7 /* Build configuration list for PBXNativeTarget "test_zkonvif" */;
+			buildPhases = (
+				C032CFA5194B21B2003C56B7 /* Sources */,
+				C032CFA6194B21B2003C56B7 /* Frameworks */,
+				C032CFA7194B21B2003C56B7 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = test_zkonvif;
+			productName = test_zkonvif;
+			productReference = C032CFA9194B21B2003C56B7 /* test_zkonvif */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C032CFA1194B21B2003C56B7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = sunkw;
+			};
+			buildConfigurationList = C032CFA4194B21B2003C56B7 /* Build configuration list for PBXProject "test_zkonvif" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C032CFA0194B21B2003C56B7;
+			productRefGroup = C032CFAA194B21B2003C56B7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C032CFA8194B21B2003C56B7 /* test_zkonvif */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C032CFA5194B21B2003C56B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C032CFC3194B22C2003C56B7 /* utils.cpp in Sources */,
+				C032CFB9194B21E2003C56B7 /* MyEvent.cpp in Sources */,
+				C032CFBA194B21E2003C56B7 /* test_target_dm.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C032CFB0194B21B2003C56B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C032CFB1194B21B2003C56B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		C032CFB3194B21B2003C56B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = ZONEKEY_SOURCE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/opt/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/osx-fbqcmhirtguemkgsnbaxhwrthcbo/Build/Products/Debug",
+					/opt/local/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C032CFB4194B21B2003C56B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = ZONEKEY_SOURCE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/opt/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/osx-fbqcmhirtguemkgsnbaxhwrthcbo/Build/Products/Debug",
+					/opt/local/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C032CFA4194B21B2003C56B7 /* Build configuration list for PBXProject "test_zkonvif" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C032CFB0194B21B2003C56B7 /* Debug */,
+				C032CFB1194B21B2003C56B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C032CFB2194B21B2003C56B7 /* Build configuration list for PBXNativeTarget "test_zkonvif" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C032CFB3194B21B2003C56B7 /* Debug */,
+				C032CFB4194B21B2003C56B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C032CFA1194B21B2003C56B7 /* Project object */;
+}
