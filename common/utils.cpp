@@ -27,6 +27,11 @@
 #ifdef __APPLE__
 #  include <ifaddrs.h>
 #  include <net/if_dl.h>
+struct Tmp
+{
+	std::string mac;
+	std::string ipv4;
+};
 #endif
 
 // 判断 mac 是否为虚拟机 mac
@@ -137,11 +142,6 @@ bool get_all_netinfs(std::vector<NetInf> &nis)
     
 #elif __APPLE__
     struct ifaddrs *ifap, *ifa;
-    struct Tmp
-    {
-        std::string mac;
-        std::string ipv4;
-    };
     std::map<std::string, Tmp> name_macs;
     std::map<std::string, Tmp>::iterator itf;
     
