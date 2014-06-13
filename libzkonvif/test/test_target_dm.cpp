@@ -7,9 +7,69 @@
 #include <string>
 #include "../soap/soapDeviceBindingService.h"
 #include "../soap/soapwsddService.h"
+#include "../soap/soapPTZBindingService.h"
 #include <assert.h>
 #include "../../common/utils.h"
 #include "../../common/log.h"
+
+/** 这个用于方便 MyDevice 支持更多的服务 ...
+	注意： 这里的接口，需要根据 MyDevice 的 GetServices 实际需要进行扩展 .....
+ */
+class ServiceInf
+{
+public:
+	virtual const char *url() const = 0;	// 所有的服务，都必须有个 url .
+	virtual const char *desc() const { return ""; }	// 可选有个描述信息 ..
+};
+
+/** 云台接口 
+ */
+class MyPtz : PTZBindingService
+		    , ost::Thread
+			, public ServiceInf
+{
+	std::string url_;
+	int port_;
+
+public:
+	MyPtz(int listen_port)
+	{
+		port_ = listen_port;
+
+		char buf[128];
+		snprintf(buf, sizeof(buf), "http://%s:%d", util_get_myip(), listen_port);
+
+		url_ = buf;
+
+		start();
+	}
+
+private:
+	void run()
+	{
+		PTZBindingService::run(port_);
+	}
+
+private:
+	const char *url() const { return url_.c_str(); }
+};
+
+/** rtmp 服务接口，这个仅仅为了演示如何使用 ServiceInf 
+ */
+class MyMediaStream : public ServiceInf
+{
+	std::string url_;
+
+public:
+	MyMediaStream()
+	{
+		url_ = "rtmp://0.0.0.0:0";  // FIXME: 一个非法的 url :) 
+	}
+
+private:
+	const char *url() const { return url_.c_str(); }
+	const char *desc() const { return "zonekey RTMP living cast ...!"; }
+};
 
 /** 实现一个接口，本质就是重载 gsoap 生成的 xxxxService 类，然后具体实现所有“纯虚函数” . 
  */
@@ -19,9 +79,10 @@ class MyDevice : DeviceBindingService
 	int listen_port_;
 	std::string url_;
 	std::string id_;
+	const std::vector<ServiceInf *> services_;	// 这个设备上，聚合的所有服务的列表 ...
 
 public:
-	MyDevice(int listen_port)
+	MyDevice(int listen_port, const std::vector<ServiceInf *> &services)
 	{
 		listen_port_ = listen_port;
 		char buf[128];
@@ -48,7 +109,31 @@ private:
 private:
 	/// 下面实现 device mgrt 接口... 
 
-	
+	virtual	int GetServices(_tds__GetServices *tds__GetServices, _tds__GetServicesResponse *tds__GetServicesResponse)
+	{
+		/** TODO: 这里应该返回 services_ 中所有的服务信息 ....
+		 */
+		std::vector<ServiceInf*>::const_iterator it;
+		for (it = services_.begin(); it != services_.end(); ++it) {
+			/// TODO： ....
+			///		url = it->url() ..
+			///		desc = it->desc() ...
+		}
+
+		return SOAP_OK;
+	}
+
+	// 测试工具会调用这里，填充信息 ....
+	virtual	int GetDeviceInformation(_tds__GetDeviceInformation *tds__GetDeviceInformation, _tds__GetDeviceInformationResponse *tds__GetDeviceInformationResponse)
+	{
+		tds__GetDeviceInformationResponse->Manufacturer = "zonekey";
+		tds__GetDeviceInformationResponse->Model = "ptz";
+		tds__GetDeviceInformationResponse->FirmwareVersion = "0.0.1";
+		tds__GetDeviceInformationResponse->HardwareId = util_get_mymac();
+		tds__GetDeviceInformationResponse->SerialNumber = "11001";
+
+		return SOAP_OK;
+	}
 };
 
 static FILE *_fp;
@@ -220,7 +305,15 @@ int main(int argc, char **argv)
 {
 	log_init();
 
-	MyDevice device(9999);
+	std::vector<ServiceInf *> services;
+
+	MyPtz ptz(10001);	// 云台服务 ..
+	services.push_back(&ptz);
+
+	MyMediaStream ms;	// 直播服务 ..
+	services.push_back(&ms);
+
+	MyDevice device(9999, services);
 	MyDeviceDiscovery discovery(&device);
 
 	while (1) {
