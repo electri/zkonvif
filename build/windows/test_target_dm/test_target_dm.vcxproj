@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\common\utils.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\MyEvent.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\test_target_dm.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +95,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\common\log.h" />
     <ClInclude Include="..\..\..\common\utils.h" />
+    <ClInclude Include="..\..\..\libzkonvif\test\MyEvent.h" />
+    <ClInclude Include="..\..\..\libzkonvif\test\myservice.inf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
