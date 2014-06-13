@@ -1,4 +1,4 @@
-/** 实现 event 接口 */
+/** 瀹炵幇 event 鎺ュ彛 */
 
 #pragma once
 #include "../soap/soapPullPointSubscriptionBindingService.h"
@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 
-/** 实现 Real-time Pull-Point Notification Interface 模型  (core 9.2)  */
+/** 瀹炵幇 Real-time Pull-Point Notification Interface 妯″瀷  (core 9.2)  */
 class MyEvent : PullPointSubscriptionBindingService
 			  , ost::Thread
 			  , public ServiceInf
