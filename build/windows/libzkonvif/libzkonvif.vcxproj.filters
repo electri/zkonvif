@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\libzkonvif\soap\nsmap.cpp">
-      <Filter>gsoap_gen</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\libzkonvif\soap\soapC.cpp">
       <Filter>gsoap_gen</Filter>
     </ClCompile>
@@ -31,18 +28,6 @@
       <Filter>gsoap_gen</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceBindingService.cpp">
-      <Filter>gsoap_gen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingProxy.cpp">
-      <Filter>gsoap_gen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingService.cpp">
-      <Filter>gsoap_gen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libzkonvif\soap\soapMediaBindingProxy.cpp">
-      <Filter>gsoap_gen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\libzkonvif\soap\soapMediaBindingService.cpp">
       <Filter>gsoap_gen</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingProxy.cpp">
@@ -69,6 +54,15 @@
     <ClCompile Include="..\..\..\libzkonvif\soap\duration.cpp">
       <Filter>gsoap</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\nsmap.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapPTZBindingProxy.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapPTZBindingService.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.h">
@@ -77,19 +71,7 @@
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingService.h">
       <Filter>gsoap_gen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingProxy.h">
-      <Filter>gsoap_gen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceIOBindingService.h">
-      <Filter>gsoap_gen</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\libzkonvif\soap\soapH.h">
-      <Filter>gsoap_gen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\libzkonvif\soap\soapMediaBindingProxy.h">
-      <Filter>gsoap_gen</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\libzkonvif\soap\soapMediaBindingService.h">
       <Filter>gsoap_gen</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingProxy.h">
@@ -118,6 +100,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\libzkonvif\soap\duration.h">
       <Filter>gsoap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapPTZBindingProxy.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapPTZBindingService.h">
+      <Filter>gsoap_gen</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
