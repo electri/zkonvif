@@ -47,9 +47,66 @@ private:
 
 private:
 	/// 下面实现 device mgrt 接口，.....
-
+	virtual	int RestoreSystem(_tds__RestoreSystem *tds__RestoreSystem, _tds__RestoreSystemResponse *tds__RestoreSystemResponse);
 	
 };
+
+int MyDevice::RestoreSystem(_tds__RestoreSystem *tds__RestoreSystem, _tds__RestoreSystemResponse *tds__RestoreSystemResponse)
+{
+	char *endpoint = NULL;
+	char *soap_endpoint = NULL;
+	char *soap_action = NULL;
+	struct soap *soap = this->soap;
+	struct __tds__RestoreSystem_ soap_tmp___tds__RestoreSystem_;
+	if (endpoint)
+		soap_endpoint = endpoint;
+	if (soap_action == NULL)
+		soap_action = "http://www.onvif.org/ver10/device/wsdl/RestoreSystem";
+	soap_begin(soap);
+	soap->encodingStyle = NULL;
+	soap_tmp___tds__RestoreSystem_.tds__RestoreSystem = tds__RestoreSystem;
+	soap_serializeheader(soap);
+	soap_serialize___tds__RestoreSystem_(soap, &soap_tmp___tds__RestoreSystem_);
+	if (soap_begin_count(soap))
+		return soap->error;
+	if (soap->mode & SOAP_IO_LENGTH)
+	{
+		if (soap_envelope_begin_out(soap)
+			|| soap_putheader(soap)
+			|| soap_body_begin_out(soap)
+			|| soap_put___tds__RestoreSystem_(soap, &soap_tmp___tds__RestoreSystem_, "-tds:RestoreSystem", NULL)
+			|| soap_body_end_out(soap)
+			|| soap_envelope_end_out(soap))
+			return soap->error;
+	}
+	if (soap_end_count(soap))
+		return soap->error;
+	if (soap_connect(soap, soap_url(soap, soap_endpoint, NULL), soap_action)
+		|| soap_envelope_begin_out(soap)
+		|| soap_putheader(soap)
+		|| soap_body_begin_out(soap)
+		|| soap_put___tds__RestoreSystem_(soap, &soap_tmp___tds__RestoreSystem_, "-tds:RestoreSystem", NULL)
+		|| soap_body_end_out(soap)
+		|| soap_envelope_end_out(soap)
+		|| soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!tds__RestoreSystemResponse)
+		return soap_closesock(soap);
+	tds__RestoreSystemResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+		|| soap_envelope_begin_in(soap)
+		|| soap_recv_header(soap)
+		|| soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	tds__RestoreSystemResponse->soap_get(soap, "tds:RestoreSystemResponse", "");
+	if (soap->error)
+		return soap_recv_fault(soap, 0);
+	if (soap_body_end_in(soap)
+		|| soap_envelope_end_in(soap)
+		|| soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
 
 static FILE *_fp;
 
