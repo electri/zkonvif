@@ -26,6 +26,7 @@ int MyEvent::GetServiceCapabilities(_tev__GetServiceCapabilities *tev__GetServic
 									_tev__GetServiceCapabilitiesResponse *tev__GetServiceCapabilitiesResponse)
 {
 	tev__GetServiceCapabilitiesResponse->Capabilities = (tev__Capabilities*)soap_malloc(soap, sizeof(tev__Capabilities));
+	memset(&tev__GetServiceCapabilitiesResponse->Capabilities, 0, sizeof(tev__Capabilities));
 
 	// ²»Ö§³Ö basic notification interface .
 	tev__GetServiceCapabilitiesResponse->Capabilities->MaxNotificationProducers = (int*)soap_malloc(soap, sizeof(int));
