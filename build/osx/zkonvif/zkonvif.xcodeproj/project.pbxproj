@@ -1,0 +1,878 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C032CE7D194B1F4F003C56B7 /* duration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE60194B1F4F003C56B7 /* duration.cpp */; };
+		C032CE7E194B1F4F003C56B7 /* duration.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE61194B1F4F003C56B7 /* duration.h */; };
+		C032CE7F194B1F4F003C56B7 /* nsmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE62194B1F4F003C56B7 /* nsmap.cpp */; };
+		C032CE80194B1F4F003C56B7 /* soapC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE63194B1F4F003C56B7 /* soapC.cpp */; };
+		C032CE81194B1F4F003C56B7 /* soapDeviceBindingProxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE64194B1F4F003C56B7 /* soapDeviceBindingProxy.cpp */; };
+		C032CE82194B1F4F003C56B7 /* soapDeviceBindingProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE65194B1F4F003C56B7 /* soapDeviceBindingProxy.h */; };
+		C032CE83194B1F4F003C56B7 /* soapDeviceBindingService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE66194B1F4F003C56B7 /* soapDeviceBindingService.cpp */; };
+		C032CE84194B1F4F003C56B7 /* soapDeviceBindingService.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE67194B1F4F003C56B7 /* soapDeviceBindingService.h */; };
+		C032CE85194B1F4F003C56B7 /* soapH.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE68194B1F4F003C56B7 /* soapH.h */; };
+		C032CE86194B1F4F003C56B7 /* soapPTZBindingProxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE69194B1F4F003C56B7 /* soapPTZBindingProxy.cpp */; };
+		C032CE87194B1F4F003C56B7 /* soapPTZBindingProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE6A194B1F4F003C56B7 /* soapPTZBindingProxy.h */; };
+		C032CE88194B1F4F003C56B7 /* soapPTZBindingService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE6B194B1F4F003C56B7 /* soapPTZBindingService.cpp */; };
+		C032CE89194B1F4F003C56B7 /* soapPTZBindingService.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE6C194B1F4F003C56B7 /* soapPTZBindingService.h */; };
+		C032CE8A194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE6D194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.cpp */; };
+		C032CE8B194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE6E194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.h */; };
+		C032CE8C194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE6F194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.cpp */; };
+		C032CE8D194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE70194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.h */; };
+		C032CE8E194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE71194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.cpp */; };
+		C032CE8F194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE72194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.h */; };
+		C032CE90194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE73194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.cpp */; };
+		C032CE91194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE74194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.h */; };
+		C032CE92194B1F4F003C56B7 /* soapStub.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE75194B1F4F003C56B7 /* soapStub.h */; };
+		C032CE93194B1F4F003C56B7 /* soapwsddProxy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE76194B1F4F003C56B7 /* soapwsddProxy.cpp */; };
+		C032CE94194B1F4F003C56B7 /* soapwsddProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE77194B1F4F003C56B7 /* soapwsddProxy.h */; };
+		C032CE95194B1F4F003C56B7 /* soapwsddService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE78194B1F4F003C56B7 /* soapwsddService.cpp */; };
+		C032CE96194B1F4F003C56B7 /* soapwsddService.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE79194B1F4F003C56B7 /* soapwsddService.h */; };
+		C032CE97194B1F4F003C56B7 /* stdsoap2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE7A194B1F4F003C56B7 /* stdsoap2.cpp */; };
+		C032CE98194B1F4F003C56B7 /* stdsoap2.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE7B194B1F4F003C56B7 /* stdsoap2.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C032CE58194B1DD5003C56B7 /* libzkonvif.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libzkonvif.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C032CE60194B1F4F003C56B7 /* duration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = duration.cpp; path = ../../../libzkonvif/soap/duration.cpp; sourceTree = "<group>"; };
+		C032CE61194B1F4F003C56B7 /* duration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = duration.h; path = ../../../libzkonvif/soap/duration.h; sourceTree = "<group>"; };
+		C032CE62194B1F4F003C56B7 /* nsmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nsmap.cpp; path = ../../../libzkonvif/soap/nsmap.cpp; sourceTree = "<group>"; };
+		C032CE63194B1F4F003C56B7 /* soapC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapC.cpp; path = ../../../libzkonvif/soap/soapC.cpp; sourceTree = "<group>"; };
+		C032CE64194B1F4F003C56B7 /* soapDeviceBindingProxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapDeviceBindingProxy.cpp; path = ../../../libzkonvif/soap/soapDeviceBindingProxy.cpp; sourceTree = "<group>"; };
+		C032CE65194B1F4F003C56B7 /* soapDeviceBindingProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapDeviceBindingProxy.h; path = ../../../libzkonvif/soap/soapDeviceBindingProxy.h; sourceTree = "<group>"; };
+		C032CE66194B1F4F003C56B7 /* soapDeviceBindingService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapDeviceBindingService.cpp; path = ../../../libzkonvif/soap/soapDeviceBindingService.cpp; sourceTree = "<group>"; };
+		C032CE67194B1F4F003C56B7 /* soapDeviceBindingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapDeviceBindingService.h; path = ../../../libzkonvif/soap/soapDeviceBindingService.h; sourceTree = "<group>"; };
+		C032CE68194B1F4F003C56B7 /* soapH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapH.h; path = ../../../libzkonvif/soap/soapH.h; sourceTree = "<group>"; };
+		C032CE69194B1F4F003C56B7 /* soapPTZBindingProxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapPTZBindingProxy.cpp; path = ../../../libzkonvif/soap/soapPTZBindingProxy.cpp; sourceTree = "<group>"; };
+		C032CE6A194B1F4F003C56B7 /* soapPTZBindingProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapPTZBindingProxy.h; path = ../../../libzkonvif/soap/soapPTZBindingProxy.h; sourceTree = "<group>"; };
+		C032CE6B194B1F4F003C56B7 /* soapPTZBindingService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapPTZBindingService.cpp; path = ../../../libzkonvif/soap/soapPTZBindingService.cpp; sourceTree = "<group>"; };
+		C032CE6C194B1F4F003C56B7 /* soapPTZBindingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapPTZBindingService.h; path = ../../../libzkonvif/soap/soapPTZBindingService.h; sourceTree = "<group>"; };
+		C032CE6D194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapPullPointSubscriptionBindingProxy.cpp; path = ../../../libzkonvif/soap/soapPullPointSubscriptionBindingProxy.cpp; sourceTree = "<group>"; };
+		C032CE6E194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapPullPointSubscriptionBindingProxy.h; path = ../../../libzkonvif/soap/soapPullPointSubscriptionBindingProxy.h; sourceTree = "<group>"; };
+		C032CE6F194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapPullPointSubscriptionBindingService.cpp; path = ../../../libzkonvif/soap/soapPullPointSubscriptionBindingService.cpp; sourceTree = "<group>"; };
+		C032CE70194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapPullPointSubscriptionBindingService.h; path = ../../../libzkonvif/soap/soapPullPointSubscriptionBindingService.h; sourceTree = "<group>"; };
+		C032CE71194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapRemoteDiscoveryBindingProxy.cpp; path = ../../../libzkonvif/soap/soapRemoteDiscoveryBindingProxy.cpp; sourceTree = "<group>"; };
+		C032CE72194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapRemoteDiscoveryBindingProxy.h; path = ../../../libzkonvif/soap/soapRemoteDiscoveryBindingProxy.h; sourceTree = "<group>"; };
+		C032CE73194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapRemoteDiscoveryBindingService.cpp; path = ../../../libzkonvif/soap/soapRemoteDiscoveryBindingService.cpp; sourceTree = "<group>"; };
+		C032CE74194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapRemoteDiscoveryBindingService.h; path = ../../../libzkonvif/soap/soapRemoteDiscoveryBindingService.h; sourceTree = "<group>"; };
+		C032CE75194B1F4F003C56B7 /* soapStub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapStub.h; path = ../../../libzkonvif/soap/soapStub.h; sourceTree = "<group>"; };
+		C032CE76194B1F4F003C56B7 /* soapwsddProxy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapwsddProxy.cpp; path = ../../../libzkonvif/soap/soapwsddProxy.cpp; sourceTree = "<group>"; };
+		C032CE77194B1F4F003C56B7 /* soapwsddProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapwsddProxy.h; path = ../../../libzkonvif/soap/soapwsddProxy.h; sourceTree = "<group>"; };
+		C032CE78194B1F4F003C56B7 /* soapwsddService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = soapwsddService.cpp; path = ../../../libzkonvif/soap/soapwsddService.cpp; sourceTree = "<group>"; };
+		C032CE79194B1F4F003C56B7 /* soapwsddService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = soapwsddService.h; path = ../../../libzkonvif/soap/soapwsddService.h; sourceTree = "<group>"; };
+		C032CE7A194B1F4F003C56B7 /* stdsoap2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stdsoap2.cpp; path = ../../../libzkonvif/soap/stdsoap2.cpp; sourceTree = "<group>"; };
+		C032CE7B194B1F4F003C56B7 /* stdsoap2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdsoap2.h; path = ../../../libzkonvif/soap/stdsoap2.h; sourceTree = "<group>"; };
+		C032CE7C194B1F4F003C56B7 /* wsdd.nsmap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = wsdd.nsmap; path = ../../../libzkonvif/soap/wsdd.nsmap; sourceTree = "<group>"; };
+		C032CE9B194B1FB7003C56B7 /* DeviceBinding.AddIPAddressFilter.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.AddIPAddressFilter.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.AddIPAddressFilter.req.xml; sourceTree = "<group>"; };
+		C032CE9C194B1FB7003C56B7 /* DeviceBinding.AddIPAddressFilter.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.AddIPAddressFilter.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.AddIPAddressFilter.res.xml; sourceTree = "<group>"; };
+		C032CE9D194B1FB7003C56B7 /* DeviceBinding.AddScopes.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.AddScopes.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.AddScopes.req.xml; sourceTree = "<group>"; };
+		C032CE9E194B1FB7003C56B7 /* DeviceBinding.AddScopes.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.AddScopes.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.AddScopes.res.xml; sourceTree = "<group>"; };
+		C032CE9F194B1FB7003C56B7 /* DeviceBinding.CreateCertificate.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.CreateCertificate.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.CreateCertificate.req.xml; sourceTree = "<group>"; };
+		C032CEA0194B1FB7003C56B7 /* DeviceBinding.CreateCertificate.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.CreateCertificate.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.CreateCertificate.res.xml; sourceTree = "<group>"; };
+		C032CEA1194B1FB7003C56B7 /* DeviceBinding.CreateDot1XConfiguration.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.CreateDot1XConfiguration.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.CreateDot1XConfiguration.req.xml; sourceTree = "<group>"; };
+		C032CEA2194B1FB7003C56B7 /* DeviceBinding.CreateDot1XConfiguration.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.CreateDot1XConfiguration.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.CreateDot1XConfiguration.res.xml; sourceTree = "<group>"; };
+		C032CEA3194B1FB7003C56B7 /* DeviceBinding.CreateUsers.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.CreateUsers.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.CreateUsers.req.xml; sourceTree = "<group>"; };
+		C032CEA4194B1FB7003C56B7 /* DeviceBinding.CreateUsers.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.CreateUsers.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.CreateUsers.res.xml; sourceTree = "<group>"; };
+		C032CEA5194B1FB7003C56B7 /* DeviceBinding.DeleteCertificates.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.DeleteCertificates.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.DeleteCertificates.req.xml; sourceTree = "<group>"; };
+		C032CEA6194B1FB7003C56B7 /* DeviceBinding.DeleteCertificates.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.DeleteCertificates.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.DeleteCertificates.res.xml; sourceTree = "<group>"; };
+		C032CEA7194B1FB7003C56B7 /* DeviceBinding.DeleteDot1XConfiguration.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.DeleteDot1XConfiguration.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.DeleteDot1XConfiguration.req.xml; sourceTree = "<group>"; };
+		C032CEA8194B1FB7003C56B7 /* DeviceBinding.DeleteDot1XConfiguration.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.DeleteDot1XConfiguration.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.DeleteDot1XConfiguration.res.xml; sourceTree = "<group>"; };
+		C032CEA9194B1FB7003C56B7 /* DeviceBinding.DeleteUsers.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.DeleteUsers.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.DeleteUsers.req.xml; sourceTree = "<group>"; };
+		C032CEAA194B1FB7003C56B7 /* DeviceBinding.DeleteUsers.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.DeleteUsers.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.DeleteUsers.res.xml; sourceTree = "<group>"; };
+		C032CEAB194B1FB7003C56B7 /* DeviceBinding.GetAccessPolicy.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetAccessPolicy.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetAccessPolicy.req.xml; sourceTree = "<group>"; };
+		C032CEAC194B1FB7003C56B7 /* DeviceBinding.GetAccessPolicy.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetAccessPolicy.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetAccessPolicy.res.xml; sourceTree = "<group>"; };
+		C032CEAD194B1FB7003C56B7 /* DeviceBinding.GetCACertificates.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCACertificates.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCACertificates.req.xml; sourceTree = "<group>"; };
+		C032CEAE194B1FB7003C56B7 /* DeviceBinding.GetCACertificates.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCACertificates.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCACertificates.res.xml; sourceTree = "<group>"; };
+		C032CEAF194B1FB7003C56B7 /* DeviceBinding.GetCapabilities.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCapabilities.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCapabilities.req.xml; sourceTree = "<group>"; };
+		C032CEB0194B1FB7003C56B7 /* DeviceBinding.GetCapabilities.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCapabilities.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCapabilities.res.xml; sourceTree = "<group>"; };
+		C032CEB1194B1FB7003C56B7 /* DeviceBinding.GetCertificateInformation.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCertificateInformation.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCertificateInformation.req.xml; sourceTree = "<group>"; };
+		C032CEB2194B1FB7003C56B7 /* DeviceBinding.GetCertificateInformation.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCertificateInformation.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCertificateInformation.res.xml; sourceTree = "<group>"; };
+		C032CEB3194B1FB7003C56B7 /* DeviceBinding.GetCertificates.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCertificates.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCertificates.req.xml; sourceTree = "<group>"; };
+		C032CEB4194B1FB7003C56B7 /* DeviceBinding.GetCertificates.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCertificates.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCertificates.res.xml; sourceTree = "<group>"; };
+		C032CEB5194B1FB7003C56B7 /* DeviceBinding.GetCertificatesStatus.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCertificatesStatus.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCertificatesStatus.req.xml; sourceTree = "<group>"; };
+		C032CEB6194B1FB7003C56B7 /* DeviceBinding.GetCertificatesStatus.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetCertificatesStatus.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetCertificatesStatus.res.xml; sourceTree = "<group>"; };
+		C032CEB7194B1FB7003C56B7 /* DeviceBinding.GetClientCertificateMode.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetClientCertificateMode.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetClientCertificateMode.req.xml; sourceTree = "<group>"; };
+		C032CEB8194B1FB7003C56B7 /* DeviceBinding.GetClientCertificateMode.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetClientCertificateMode.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetClientCertificateMode.res.xml; sourceTree = "<group>"; };
+		C032CEB9194B1FB7003C56B7 /* DeviceBinding.GetDeviceInformation.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDeviceInformation.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDeviceInformation.req.xml; sourceTree = "<group>"; };
+		C032CEBA194B1FB7003C56B7 /* DeviceBinding.GetDeviceInformation.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDeviceInformation.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDeviceInformation.res.xml; sourceTree = "<group>"; };
+		C032CEBB194B1FB7003C56B7 /* DeviceBinding.GetDiscoveryMode.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDiscoveryMode.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDiscoveryMode.req.xml; sourceTree = "<group>"; };
+		C032CEBC194B1FB7003C56B7 /* DeviceBinding.GetDiscoveryMode.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDiscoveryMode.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDiscoveryMode.res.xml; sourceTree = "<group>"; };
+		C032CEBD194B1FB7003C56B7 /* DeviceBinding.GetDNS.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDNS.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDNS.req.xml; sourceTree = "<group>"; };
+		C032CEBE194B1FB7003C56B7 /* DeviceBinding.GetDNS.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDNS.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDNS.res.xml; sourceTree = "<group>"; };
+		C032CEBF194B1FB7003C56B7 /* DeviceBinding.GetDot11Capabilities.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDot11Capabilities.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDot11Capabilities.req.xml; sourceTree = "<group>"; };
+		C032CEC0194B1FB7003C56B7 /* DeviceBinding.GetDot11Capabilities.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDot11Capabilities.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDot11Capabilities.res.xml; sourceTree = "<group>"; };
+		C032CEC1194B1FB7003C56B7 /* DeviceBinding.GetDot11Status.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDot11Status.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDot11Status.req.xml; sourceTree = "<group>"; };
+		C032CEC2194B1FB7003C56B7 /* DeviceBinding.GetDot11Status.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDot11Status.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDot11Status.res.xml; sourceTree = "<group>"; };
+		C032CEC3194B1FB7003C56B7 /* DeviceBinding.GetDot1XConfiguration.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDot1XConfiguration.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDot1XConfiguration.req.xml; sourceTree = "<group>"; };
+		C032CEC4194B1FB7003C56B7 /* DeviceBinding.GetDot1XConfiguration.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDot1XConfiguration.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDot1XConfiguration.res.xml; sourceTree = "<group>"; };
+		C032CEC5194B1FB7003C56B7 /* DeviceBinding.GetDot1XConfigurations.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDot1XConfigurations.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDot1XConfigurations.req.xml; sourceTree = "<group>"; };
+		C032CEC6194B1FB7003C56B7 /* DeviceBinding.GetDot1XConfigurations.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDot1XConfigurations.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDot1XConfigurations.res.xml; sourceTree = "<group>"; };
+		C032CEC7194B1FB7003C56B7 /* DeviceBinding.GetDPAddresses.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDPAddresses.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDPAddresses.req.xml; sourceTree = "<group>"; };
+		C032CEC8194B1FB7003C56B7 /* DeviceBinding.GetDPAddresses.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDPAddresses.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDPAddresses.res.xml; sourceTree = "<group>"; };
+		C032CEC9194B1FB7003C56B7 /* DeviceBinding.GetDynamicDNS.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDynamicDNS.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDynamicDNS.req.xml; sourceTree = "<group>"; };
+		C032CECA194B1FB7003C56B7 /* DeviceBinding.GetDynamicDNS.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetDynamicDNS.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetDynamicDNS.res.xml; sourceTree = "<group>"; };
+		C032CECB194B1FB7003C56B7 /* DeviceBinding.GetEndpointReference.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetEndpointReference.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetEndpointReference.req.xml; sourceTree = "<group>"; };
+		C032CECC194B1FB7003C56B7 /* DeviceBinding.GetEndpointReference.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetEndpointReference.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetEndpointReference.res.xml; sourceTree = "<group>"; };
+		C032CECD194B1FB7003C56B7 /* DeviceBinding.GetHostname.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetHostname.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetHostname.req.xml; sourceTree = "<group>"; };
+		C032CECE194B1FB7003C56B7 /* DeviceBinding.GetHostname.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetHostname.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetHostname.res.xml; sourceTree = "<group>"; };
+		C032CECF194B1FB7003C56B7 /* DeviceBinding.GetIPAddressFilter.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetIPAddressFilter.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetIPAddressFilter.req.xml; sourceTree = "<group>"; };
+		C032CED0194B1FB7003C56B7 /* DeviceBinding.GetIPAddressFilter.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetIPAddressFilter.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetIPAddressFilter.res.xml; sourceTree = "<group>"; };
+		C032CED1194B1FB7003C56B7 /* DeviceBinding.GetNetworkDefaultGateway.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetNetworkDefaultGateway.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetNetworkDefaultGateway.req.xml; sourceTree = "<group>"; };
+		C032CED2194B1FB7003C56B7 /* DeviceBinding.GetNetworkDefaultGateway.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetNetworkDefaultGateway.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetNetworkDefaultGateway.res.xml; sourceTree = "<group>"; };
+		C032CED3194B1FB7003C56B7 /* DeviceBinding.GetNetworkInterfaces.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetNetworkInterfaces.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetNetworkInterfaces.req.xml; sourceTree = "<group>"; };
+		C032CED4194B1FB7003C56B7 /* DeviceBinding.GetNetworkInterfaces.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetNetworkInterfaces.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetNetworkInterfaces.res.xml; sourceTree = "<group>"; };
+		C032CED5194B1FB7003C56B7 /* DeviceBinding.GetNetworkProtocols.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetNetworkProtocols.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetNetworkProtocols.req.xml; sourceTree = "<group>"; };
+		C032CED6194B1FB7003C56B7 /* DeviceBinding.GetNetworkProtocols.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetNetworkProtocols.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetNetworkProtocols.res.xml; sourceTree = "<group>"; };
+		C032CED7194B1FB7003C56B7 /* DeviceBinding.GetNTP.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetNTP.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetNTP.req.xml; sourceTree = "<group>"; };
+		C032CED8194B1FB7003C56B7 /* DeviceBinding.GetNTP.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetNTP.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetNTP.res.xml; sourceTree = "<group>"; };
+		C032CED9194B1FB7003C56B7 /* DeviceBinding.GetPkcs10Request.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetPkcs10Request.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetPkcs10Request.req.xml; sourceTree = "<group>"; };
+		C032CEDA194B1FB7003C56B7 /* DeviceBinding.GetPkcs10Request.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetPkcs10Request.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetPkcs10Request.res.xml; sourceTree = "<group>"; };
+		C032CEDB194B1FB7003C56B7 /* DeviceBinding.GetRelayOutputs.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetRelayOutputs.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetRelayOutputs.req.xml; sourceTree = "<group>"; };
+		C032CEDC194B1FB7003C56B7 /* DeviceBinding.GetRelayOutputs.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetRelayOutputs.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetRelayOutputs.res.xml; sourceTree = "<group>"; };
+		C032CEDD194B1FB7003C56B7 /* DeviceBinding.GetRemoteDiscoveryMode.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetRemoteDiscoveryMode.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetRemoteDiscoveryMode.req.xml; sourceTree = "<group>"; };
+		C032CEDE194B1FB7003C56B7 /* DeviceBinding.GetRemoteDiscoveryMode.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetRemoteDiscoveryMode.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetRemoteDiscoveryMode.res.xml; sourceTree = "<group>"; };
+		C032CEDF194B1FB7003C56B7 /* DeviceBinding.GetRemoteUser.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetRemoteUser.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetRemoteUser.req.xml; sourceTree = "<group>"; };
+		C032CEE0194B1FB7003C56B7 /* DeviceBinding.GetRemoteUser.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetRemoteUser.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetRemoteUser.res.xml; sourceTree = "<group>"; };
+		C032CEE1194B1FB7003C56B7 /* DeviceBinding.GetScopes.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetScopes.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetScopes.req.xml; sourceTree = "<group>"; };
+		C032CEE2194B1FB7003C56B7 /* DeviceBinding.GetScopes.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetScopes.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetScopes.res.xml; sourceTree = "<group>"; };
+		C032CEE3194B1FB7003C56B7 /* DeviceBinding.GetServiceCapabilities.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetServiceCapabilities.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetServiceCapabilities.req.xml; sourceTree = "<group>"; };
+		C032CEE4194B1FB7003C56B7 /* DeviceBinding.GetServiceCapabilities.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetServiceCapabilities.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetServiceCapabilities.res.xml; sourceTree = "<group>"; };
+		C032CEE5194B1FB7003C56B7 /* DeviceBinding.GetServices.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetServices.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetServices.req.xml; sourceTree = "<group>"; };
+		C032CEE6194B1FB7003C56B7 /* DeviceBinding.GetServices.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetServices.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetServices.res.xml; sourceTree = "<group>"; };
+		C032CEE7194B1FB7003C56B7 /* DeviceBinding.GetSystemBackup.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemBackup.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemBackup.req.xml; sourceTree = "<group>"; };
+		C032CEE8194B1FB7003C56B7 /* DeviceBinding.GetSystemBackup.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemBackup.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemBackup.res.xml; sourceTree = "<group>"; };
+		C032CEE9194B1FB7003C56B7 /* DeviceBinding.GetSystemDateAndTime.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemDateAndTime.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemDateAndTime.req.xml; sourceTree = "<group>"; };
+		C032CEEA194B1FB7003C56B7 /* DeviceBinding.GetSystemDateAndTime.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemDateAndTime.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemDateAndTime.res.xml; sourceTree = "<group>"; };
+		C032CEEB194B1FB7003C56B7 /* DeviceBinding.GetSystemLog.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemLog.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemLog.req.xml; sourceTree = "<group>"; };
+		C032CEEC194B1FB7003C56B7 /* DeviceBinding.GetSystemLog.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemLog.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemLog.res.xml; sourceTree = "<group>"; };
+		C032CEED194B1FB7003C56B7 /* DeviceBinding.GetSystemSupportInformation.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemSupportInformation.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemSupportInformation.req.xml; sourceTree = "<group>"; };
+		C032CEEE194B1FB7003C56B7 /* DeviceBinding.GetSystemSupportInformation.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemSupportInformation.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemSupportInformation.res.xml; sourceTree = "<group>"; };
+		C032CEEF194B1FB7003C56B7 /* DeviceBinding.GetSystemUris.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemUris.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemUris.req.xml; sourceTree = "<group>"; };
+		C032CEF0194B1FB7003C56B7 /* DeviceBinding.GetSystemUris.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetSystemUris.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetSystemUris.res.xml; sourceTree = "<group>"; };
+		C032CEF1194B1FB7003C56B7 /* DeviceBinding.GetUsers.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetUsers.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetUsers.req.xml; sourceTree = "<group>"; };
+		C032CEF2194B1FB7003C56B7 /* DeviceBinding.GetUsers.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetUsers.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetUsers.res.xml; sourceTree = "<group>"; };
+		C032CEF3194B1FB7003C56B7 /* DeviceBinding.GetWsdlUrl.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetWsdlUrl.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetWsdlUrl.req.xml; sourceTree = "<group>"; };
+		C032CEF4194B1FB7003C56B7 /* DeviceBinding.GetWsdlUrl.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetWsdlUrl.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetWsdlUrl.res.xml; sourceTree = "<group>"; };
+		C032CEF5194B1FB7003C56B7 /* DeviceBinding.GetZeroConfiguration.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetZeroConfiguration.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetZeroConfiguration.req.xml; sourceTree = "<group>"; };
+		C032CEF6194B1FB7003C56B7 /* DeviceBinding.GetZeroConfiguration.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.GetZeroConfiguration.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.GetZeroConfiguration.res.xml; sourceTree = "<group>"; };
+		C032CEF7194B1FB7003C56B7 /* DeviceBinding.LoadCACertificates.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.LoadCACertificates.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.LoadCACertificates.req.xml; sourceTree = "<group>"; };
+		C032CEF8194B1FB7003C56B7 /* DeviceBinding.LoadCACertificates.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.LoadCACertificates.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.LoadCACertificates.res.xml; sourceTree = "<group>"; };
+		C032CEF9194B1FB7003C56B7 /* DeviceBinding.LoadCertificates.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.LoadCertificates.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.LoadCertificates.req.xml; sourceTree = "<group>"; };
+		C032CEFA194B1FB7003C56B7 /* DeviceBinding.LoadCertificates.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.LoadCertificates.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.LoadCertificates.res.xml; sourceTree = "<group>"; };
+		C032CEFB194B1FB7003C56B7 /* DeviceBinding.LoadCertificateWithPrivateKey.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.LoadCertificateWithPrivateKey.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.LoadCertificateWithPrivateKey.req.xml; sourceTree = "<group>"; };
+		C032CEFC194B1FB7003C56B7 /* DeviceBinding.LoadCertificateWithPrivateKey.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.LoadCertificateWithPrivateKey.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.LoadCertificateWithPrivateKey.res.xml; sourceTree = "<group>"; };
+		C032CEFD194B1FB7003C56B7 /* DeviceBinding.RemoveIPAddressFilter.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.RemoveIPAddressFilter.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.RemoveIPAddressFilter.req.xml; sourceTree = "<group>"; };
+		C032CEFE194B1FB7003C56B7 /* DeviceBinding.RemoveIPAddressFilter.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.RemoveIPAddressFilter.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.RemoveIPAddressFilter.res.xml; sourceTree = "<group>"; };
+		C032CEFF194B1FB7003C56B7 /* DeviceBinding.RemoveScopes.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.RemoveScopes.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.RemoveScopes.req.xml; sourceTree = "<group>"; };
+		C032CF00194B1FB7003C56B7 /* DeviceBinding.RemoveScopes.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.RemoveScopes.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.RemoveScopes.res.xml; sourceTree = "<group>"; };
+		C032CF01194B1FB7003C56B7 /* DeviceBinding.RestoreSystem.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.RestoreSystem.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.RestoreSystem.req.xml; sourceTree = "<group>"; };
+		C032CF02194B1FB7003C56B7 /* DeviceBinding.RestoreSystem.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.RestoreSystem.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.RestoreSystem.res.xml; sourceTree = "<group>"; };
+		C032CF03194B1FB7003C56B7 /* DeviceBinding.ScanAvailableDot11Networks.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.ScanAvailableDot11Networks.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.ScanAvailableDot11Networks.req.xml; sourceTree = "<group>"; };
+		C032CF04194B1FB7003C56B7 /* DeviceBinding.ScanAvailableDot11Networks.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.ScanAvailableDot11Networks.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.ScanAvailableDot11Networks.res.xml; sourceTree = "<group>"; };
+		C032CF05194B1FB7003C56B7 /* DeviceBinding.SendAuxiliaryCommand.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SendAuxiliaryCommand.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SendAuxiliaryCommand.req.xml; sourceTree = "<group>"; };
+		C032CF06194B1FB7003C56B7 /* DeviceBinding.SendAuxiliaryCommand.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SendAuxiliaryCommand.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SendAuxiliaryCommand.res.xml; sourceTree = "<group>"; };
+		C032CF07194B1FB7003C56B7 /* DeviceBinding.SetAccessPolicy.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetAccessPolicy.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetAccessPolicy.req.xml; sourceTree = "<group>"; };
+		C032CF08194B1FB7003C56B7 /* DeviceBinding.SetAccessPolicy.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetAccessPolicy.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetAccessPolicy.res.xml; sourceTree = "<group>"; };
+		C032CF09194B1FB7003C56B7 /* DeviceBinding.SetCertificatesStatus.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetCertificatesStatus.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetCertificatesStatus.req.xml; sourceTree = "<group>"; };
+		C032CF0A194B1FB7003C56B7 /* DeviceBinding.SetCertificatesStatus.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetCertificatesStatus.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetCertificatesStatus.res.xml; sourceTree = "<group>"; };
+		C032CF0B194B1FB7003C56B7 /* DeviceBinding.SetClientCertificateMode.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetClientCertificateMode.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetClientCertificateMode.req.xml; sourceTree = "<group>"; };
+		C032CF0C194B1FB7003C56B7 /* DeviceBinding.SetClientCertificateMode.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetClientCertificateMode.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetClientCertificateMode.res.xml; sourceTree = "<group>"; };
+		C032CF0D194B1FB7003C56B7 /* DeviceBinding.SetDiscoveryMode.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDiscoveryMode.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDiscoveryMode.req.xml; sourceTree = "<group>"; };
+		C032CF0E194B1FB7003C56B7 /* DeviceBinding.SetDiscoveryMode.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDiscoveryMode.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDiscoveryMode.res.xml; sourceTree = "<group>"; };
+		C032CF0F194B1FB7003C56B7 /* DeviceBinding.SetDNS.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDNS.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDNS.req.xml; sourceTree = "<group>"; };
+		C032CF10194B1FB7003C56B7 /* DeviceBinding.SetDNS.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDNS.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDNS.res.xml; sourceTree = "<group>"; };
+		C032CF11194B1FB7003C56B7 /* DeviceBinding.SetDot1XConfiguration.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDot1XConfiguration.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDot1XConfiguration.req.xml; sourceTree = "<group>"; };
+		C032CF12194B1FB7003C56B7 /* DeviceBinding.SetDot1XConfiguration.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDot1XConfiguration.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDot1XConfiguration.res.xml; sourceTree = "<group>"; };
+		C032CF13194B1FB7003C56B7 /* DeviceBinding.SetDPAddresses.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDPAddresses.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDPAddresses.req.xml; sourceTree = "<group>"; };
+		C032CF14194B1FB7003C56B7 /* DeviceBinding.SetDPAddresses.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDPAddresses.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDPAddresses.res.xml; sourceTree = "<group>"; };
+		C032CF15194B1FB7003C56B7 /* DeviceBinding.SetDynamicDNS.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDynamicDNS.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDynamicDNS.req.xml; sourceTree = "<group>"; };
+		C032CF16194B1FB7003C56B7 /* DeviceBinding.SetDynamicDNS.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetDynamicDNS.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetDynamicDNS.res.xml; sourceTree = "<group>"; };
+		C032CF17194B1FB7003C56B7 /* DeviceBinding.SetHostname.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetHostname.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetHostname.req.xml; sourceTree = "<group>"; };
+		C032CF18194B1FB7003C56B7 /* DeviceBinding.SetHostname.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetHostname.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetHostname.res.xml; sourceTree = "<group>"; };
+		C032CF19194B1FB7003C56B7 /* DeviceBinding.SetHostnameFromDHCP.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetHostnameFromDHCP.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetHostnameFromDHCP.req.xml; sourceTree = "<group>"; };
+		C032CF1A194B1FB7003C56B7 /* DeviceBinding.SetHostnameFromDHCP.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetHostnameFromDHCP.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetHostnameFromDHCP.res.xml; sourceTree = "<group>"; };
+		C032CF1B194B1FB7003C56B7 /* DeviceBinding.SetIPAddressFilter.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetIPAddressFilter.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetIPAddressFilter.req.xml; sourceTree = "<group>"; };
+		C032CF1C194B1FB7003C56B7 /* DeviceBinding.SetIPAddressFilter.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetIPAddressFilter.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetIPAddressFilter.res.xml; sourceTree = "<group>"; };
+		C032CF1D194B1FB7003C56B7 /* DeviceBinding.SetNetworkDefaultGateway.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetNetworkDefaultGateway.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetNetworkDefaultGateway.req.xml; sourceTree = "<group>"; };
+		C032CF1E194B1FB7003C56B7 /* DeviceBinding.SetNetworkDefaultGateway.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetNetworkDefaultGateway.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetNetworkDefaultGateway.res.xml; sourceTree = "<group>"; };
+		C032CF1F194B1FB7003C56B7 /* DeviceBinding.SetNetworkInterfaces.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetNetworkInterfaces.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetNetworkInterfaces.req.xml; sourceTree = "<group>"; };
+		C032CF20194B1FB7003C56B7 /* DeviceBinding.SetNetworkInterfaces.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetNetworkInterfaces.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetNetworkInterfaces.res.xml; sourceTree = "<group>"; };
+		C032CF21194B1FB7003C56B7 /* DeviceBinding.SetNetworkProtocols.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetNetworkProtocols.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetNetworkProtocols.req.xml; sourceTree = "<group>"; };
+		C032CF22194B1FB7003C56B7 /* DeviceBinding.SetNetworkProtocols.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetNetworkProtocols.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetNetworkProtocols.res.xml; sourceTree = "<group>"; };
+		C032CF23194B1FB7003C56B7 /* DeviceBinding.SetNTP.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetNTP.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetNTP.req.xml; sourceTree = "<group>"; };
+		C032CF24194B1FB7003C56B7 /* DeviceBinding.SetNTP.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetNTP.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetNTP.res.xml; sourceTree = "<group>"; };
+		C032CF25194B1FB7003C56B7 /* DeviceBinding.SetRelayOutputSettings.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetRelayOutputSettings.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetRelayOutputSettings.req.xml; sourceTree = "<group>"; };
+		C032CF26194B1FB7003C56B7 /* DeviceBinding.SetRelayOutputSettings.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetRelayOutputSettings.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetRelayOutputSettings.res.xml; sourceTree = "<group>"; };
+		C032CF27194B1FB7003C56B7 /* DeviceBinding.SetRelayOutputState.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetRelayOutputState.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetRelayOutputState.req.xml; sourceTree = "<group>"; };
+		C032CF28194B1FB7003C56B7 /* DeviceBinding.SetRelayOutputState.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetRelayOutputState.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetRelayOutputState.res.xml; sourceTree = "<group>"; };
+		C032CF29194B1FB7003C56B7 /* DeviceBinding.SetRemoteDiscoveryMode.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetRemoteDiscoveryMode.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetRemoteDiscoveryMode.req.xml; sourceTree = "<group>"; };
+		C032CF2A194B1FB7003C56B7 /* DeviceBinding.SetRemoteDiscoveryMode.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetRemoteDiscoveryMode.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetRemoteDiscoveryMode.res.xml; sourceTree = "<group>"; };
+		C032CF2B194B1FB7003C56B7 /* DeviceBinding.SetRemoteUser.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetRemoteUser.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetRemoteUser.req.xml; sourceTree = "<group>"; };
+		C032CF2C194B1FB7003C56B7 /* DeviceBinding.SetRemoteUser.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetRemoteUser.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetRemoteUser.res.xml; sourceTree = "<group>"; };
+		C032CF2D194B1FB7003C56B7 /* DeviceBinding.SetScopes.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetScopes.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetScopes.req.xml; sourceTree = "<group>"; };
+		C032CF2E194B1FB7003C56B7 /* DeviceBinding.SetScopes.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetScopes.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetScopes.res.xml; sourceTree = "<group>"; };
+		C032CF2F194B1FB7003C56B7 /* DeviceBinding.SetSystemDateAndTime.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetSystemDateAndTime.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetSystemDateAndTime.req.xml; sourceTree = "<group>"; };
+		C032CF30194B1FB7003C56B7 /* DeviceBinding.SetSystemDateAndTime.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetSystemDateAndTime.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetSystemDateAndTime.res.xml; sourceTree = "<group>"; };
+		C032CF31194B1FB7003C56B7 /* DeviceBinding.SetSystemFactoryDefault.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetSystemFactoryDefault.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetSystemFactoryDefault.req.xml; sourceTree = "<group>"; };
+		C032CF32194B1FB7003C56B7 /* DeviceBinding.SetSystemFactoryDefault.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetSystemFactoryDefault.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetSystemFactoryDefault.res.xml; sourceTree = "<group>"; };
+		C032CF33194B1FB7003C56B7 /* DeviceBinding.SetUser.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetUser.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetUser.req.xml; sourceTree = "<group>"; };
+		C032CF34194B1FB7003C56B7 /* DeviceBinding.SetUser.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetUser.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetUser.res.xml; sourceTree = "<group>"; };
+		C032CF35194B1FB7003C56B7 /* DeviceBinding.SetZeroConfiguration.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetZeroConfiguration.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetZeroConfiguration.req.xml; sourceTree = "<group>"; };
+		C032CF36194B1FB8003C56B7 /* DeviceBinding.SetZeroConfiguration.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SetZeroConfiguration.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SetZeroConfiguration.res.xml; sourceTree = "<group>"; };
+		C032CF37194B1FB8003C56B7 /* DeviceBinding.StartFirmwareUpgrade.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.StartFirmwareUpgrade.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.StartFirmwareUpgrade.req.xml; sourceTree = "<group>"; };
+		C032CF38194B1FB8003C56B7 /* DeviceBinding.StartFirmwareUpgrade.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.StartFirmwareUpgrade.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.StartFirmwareUpgrade.res.xml; sourceTree = "<group>"; };
+		C032CF39194B1FB8003C56B7 /* DeviceBinding.StartSystemRestore.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.StartSystemRestore.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.StartSystemRestore.req.xml; sourceTree = "<group>"; };
+		C032CF3A194B1FB8003C56B7 /* DeviceBinding.StartSystemRestore.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.StartSystemRestore.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.StartSystemRestore.res.xml; sourceTree = "<group>"; };
+		C032CF3B194B1FB8003C56B7 /* DeviceBinding.SystemReboot.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SystemReboot.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SystemReboot.req.xml; sourceTree = "<group>"; };
+		C032CF3C194B1FB8003C56B7 /* DeviceBinding.SystemReboot.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.SystemReboot.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.SystemReboot.res.xml; sourceTree = "<group>"; };
+		C032CF3D194B1FB8003C56B7 /* DeviceBinding.UpgradeSystemFirmware.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.UpgradeSystemFirmware.req.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.UpgradeSystemFirmware.req.xml; sourceTree = "<group>"; };
+		C032CF3E194B1FB8003C56B7 /* DeviceBinding.UpgradeSystemFirmware.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DeviceBinding.UpgradeSystemFirmware.res.xml; path = ../../../libzkonvif/soap/xml/DeviceBinding.UpgradeSystemFirmware.res.xml; sourceTree = "<group>"; };
+		C032CF3F194B1FB8003C56B7 /* PTZBinding.AbsoluteMove.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.AbsoluteMove.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.AbsoluteMove.req.xml; sourceTree = "<group>"; };
+		C032CF40194B1FB8003C56B7 /* PTZBinding.AbsoluteMove.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.AbsoluteMove.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.AbsoluteMove.res.xml; sourceTree = "<group>"; };
+		C032CF41194B1FB8003C56B7 /* PTZBinding.ContinuousMove.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.ContinuousMove.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.ContinuousMove.req.xml; sourceTree = "<group>"; };
+		C032CF42194B1FB8003C56B7 /* PTZBinding.ContinuousMove.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.ContinuousMove.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.ContinuousMove.res.xml; sourceTree = "<group>"; };
+		C032CF43194B1FB8003C56B7 /* PTZBinding.CreatePresetTour.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.CreatePresetTour.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.CreatePresetTour.req.xml; sourceTree = "<group>"; };
+		C032CF44194B1FB8003C56B7 /* PTZBinding.CreatePresetTour.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.CreatePresetTour.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.CreatePresetTour.res.xml; sourceTree = "<group>"; };
+		C032CF45194B1FB8003C56B7 /* PTZBinding.GetCompatibleConfigurations.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetCompatibleConfigurations.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetCompatibleConfigurations.req.xml; sourceTree = "<group>"; };
+		C032CF46194B1FB8003C56B7 /* PTZBinding.GetCompatibleConfigurations.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetCompatibleConfigurations.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetCompatibleConfigurations.res.xml; sourceTree = "<group>"; };
+		C032CF47194B1FB8003C56B7 /* PTZBinding.GetConfiguration.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetConfiguration.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetConfiguration.req.xml; sourceTree = "<group>"; };
+		C032CF48194B1FB8003C56B7 /* PTZBinding.GetConfiguration.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetConfiguration.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetConfiguration.res.xml; sourceTree = "<group>"; };
+		C032CF49194B1FB8003C56B7 /* PTZBinding.GetConfigurationOptions.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetConfigurationOptions.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetConfigurationOptions.req.xml; sourceTree = "<group>"; };
+		C032CF4A194B1FB8003C56B7 /* PTZBinding.GetConfigurationOptions.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetConfigurationOptions.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetConfigurationOptions.res.xml; sourceTree = "<group>"; };
+		C032CF4B194B1FB8003C56B7 /* PTZBinding.GetConfigurations.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetConfigurations.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetConfigurations.req.xml; sourceTree = "<group>"; };
+		C032CF4C194B1FB8003C56B7 /* PTZBinding.GetConfigurations.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetConfigurations.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetConfigurations.res.xml; sourceTree = "<group>"; };
+		C032CF4D194B1FB8003C56B7 /* PTZBinding.GetNode.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetNode.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetNode.req.xml; sourceTree = "<group>"; };
+		C032CF4E194B1FB8003C56B7 /* PTZBinding.GetNode.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetNode.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetNode.res.xml; sourceTree = "<group>"; };
+		C032CF4F194B1FB8003C56B7 /* PTZBinding.GetNodes.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetNodes.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetNodes.req.xml; sourceTree = "<group>"; };
+		C032CF50194B1FB8003C56B7 /* PTZBinding.GetNodes.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetNodes.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetNodes.res.xml; sourceTree = "<group>"; };
+		C032CF51194B1FB8003C56B7 /* PTZBinding.GetPresets.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetPresets.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetPresets.req.xml; sourceTree = "<group>"; };
+		C032CF52194B1FB8003C56B7 /* PTZBinding.GetPresets.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetPresets.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetPresets.res.xml; sourceTree = "<group>"; };
+		C032CF53194B1FB8003C56B7 /* PTZBinding.GetPresetTour.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetPresetTour.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetPresetTour.req.xml; sourceTree = "<group>"; };
+		C032CF54194B1FB8003C56B7 /* PTZBinding.GetPresetTour.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetPresetTour.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetPresetTour.res.xml; sourceTree = "<group>"; };
+		C032CF55194B1FB8003C56B7 /* PTZBinding.GetPresetTourOptions.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetPresetTourOptions.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetPresetTourOptions.req.xml; sourceTree = "<group>"; };
+		C032CF56194B1FB8003C56B7 /* PTZBinding.GetPresetTourOptions.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetPresetTourOptions.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetPresetTourOptions.res.xml; sourceTree = "<group>"; };
+		C032CF57194B1FB8003C56B7 /* PTZBinding.GetPresetTours.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetPresetTours.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetPresetTours.req.xml; sourceTree = "<group>"; };
+		C032CF58194B1FB8003C56B7 /* PTZBinding.GetPresetTours.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetPresetTours.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetPresetTours.res.xml; sourceTree = "<group>"; };
+		C032CF59194B1FB8003C56B7 /* PTZBinding.GetServiceCapabilities.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetServiceCapabilities.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetServiceCapabilities.req.xml; sourceTree = "<group>"; };
+		C032CF5A194B1FB8003C56B7 /* PTZBinding.GetServiceCapabilities.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetServiceCapabilities.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetServiceCapabilities.res.xml; sourceTree = "<group>"; };
+		C032CF5B194B1FB8003C56B7 /* PTZBinding.GetStatus.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetStatus.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetStatus.req.xml; sourceTree = "<group>"; };
+		C032CF5C194B1FB8003C56B7 /* PTZBinding.GetStatus.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GetStatus.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GetStatus.res.xml; sourceTree = "<group>"; };
+		C032CF5D194B1FB8003C56B7 /* PTZBinding.GotoHomePosition.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GotoHomePosition.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GotoHomePosition.req.xml; sourceTree = "<group>"; };
+		C032CF5E194B1FB8003C56B7 /* PTZBinding.GotoHomePosition.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GotoHomePosition.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GotoHomePosition.res.xml; sourceTree = "<group>"; };
+		C032CF5F194B1FB8003C56B7 /* PTZBinding.GotoPreset.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GotoPreset.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GotoPreset.req.xml; sourceTree = "<group>"; };
+		C032CF60194B1FB8003C56B7 /* PTZBinding.GotoPreset.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.GotoPreset.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.GotoPreset.res.xml; sourceTree = "<group>"; };
+		C032CF61194B1FB8003C56B7 /* PTZBinding.ModifyPresetTour.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.ModifyPresetTour.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.ModifyPresetTour.req.xml; sourceTree = "<group>"; };
+		C032CF62194B1FB8003C56B7 /* PTZBinding.ModifyPresetTour.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.ModifyPresetTour.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.ModifyPresetTour.res.xml; sourceTree = "<group>"; };
+		C032CF63194B1FB8003C56B7 /* PTZBinding.OperatePresetTour.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.OperatePresetTour.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.OperatePresetTour.req.xml; sourceTree = "<group>"; };
+		C032CF64194B1FB8003C56B7 /* PTZBinding.OperatePresetTour.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.OperatePresetTour.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.OperatePresetTour.res.xml; sourceTree = "<group>"; };
+		C032CF65194B1FB8003C56B7 /* PTZBinding.RelativeMove.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.RelativeMove.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.RelativeMove.req.xml; sourceTree = "<group>"; };
+		C032CF66194B1FB8003C56B7 /* PTZBinding.RelativeMove.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.RelativeMove.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.RelativeMove.res.xml; sourceTree = "<group>"; };
+		C032CF67194B1FB8003C56B7 /* PTZBinding.RemovePreset.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.RemovePreset.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.RemovePreset.req.xml; sourceTree = "<group>"; };
+		C032CF68194B1FB8003C56B7 /* PTZBinding.RemovePreset.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.RemovePreset.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.RemovePreset.res.xml; sourceTree = "<group>"; };
+		C032CF69194B1FB8003C56B7 /* PTZBinding.RemovePresetTour.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.RemovePresetTour.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.RemovePresetTour.req.xml; sourceTree = "<group>"; };
+		C032CF6A194B1FB8003C56B7 /* PTZBinding.RemovePresetTour.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.RemovePresetTour.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.RemovePresetTour.res.xml; sourceTree = "<group>"; };
+		C032CF6B194B1FB8003C56B7 /* PTZBinding.SendAuxiliaryCommand.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.SendAuxiliaryCommand.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.SendAuxiliaryCommand.req.xml; sourceTree = "<group>"; };
+		C032CF6C194B1FB8003C56B7 /* PTZBinding.SendAuxiliaryCommand.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.SendAuxiliaryCommand.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.SendAuxiliaryCommand.res.xml; sourceTree = "<group>"; };
+		C032CF6D194B1FB8003C56B7 /* PTZBinding.SetConfiguration.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.SetConfiguration.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.SetConfiguration.req.xml; sourceTree = "<group>"; };
+		C032CF6E194B1FB8003C56B7 /* PTZBinding.SetConfiguration.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.SetConfiguration.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.SetConfiguration.res.xml; sourceTree = "<group>"; };
+		C032CF6F194B1FB8003C56B7 /* PTZBinding.SetHomePosition.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.SetHomePosition.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.SetHomePosition.req.xml; sourceTree = "<group>"; };
+		C032CF70194B1FB8003C56B7 /* PTZBinding.SetHomePosition.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.SetHomePosition.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.SetHomePosition.res.xml; sourceTree = "<group>"; };
+		C032CF71194B1FB8003C56B7 /* PTZBinding.SetPreset.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.SetPreset.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.SetPreset.req.xml; sourceTree = "<group>"; };
+		C032CF72194B1FB8003C56B7 /* PTZBinding.SetPreset.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.SetPreset.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.SetPreset.res.xml; sourceTree = "<group>"; };
+		C032CF73194B1FB8003C56B7 /* PTZBinding.Stop.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.Stop.req.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.Stop.req.xml; sourceTree = "<group>"; };
+		C032CF74194B1FB8003C56B7 /* PTZBinding.Stop.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PTZBinding.Stop.res.xml; path = ../../../libzkonvif/soap/xml/PTZBinding.Stop.res.xml; sourceTree = "<group>"; };
+		C032CF75194B1FB8003C56B7 /* PullPointSubscriptionBinding.CreatePullPoint.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.CreatePullPoint.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.CreatePullPoint.req.xml; sourceTree = "<group>"; };
+		C032CF76194B1FB8003C56B7 /* PullPointSubscriptionBinding.CreatePullPoint.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.CreatePullPoint.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.CreatePullPoint.res.xml; sourceTree = "<group>"; };
+		C032CF77194B1FB8003C56B7 /* PullPointSubscriptionBinding.CreatePullPointSubscription.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.CreatePullPointSubscription.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.CreatePullPointSubscription.req.xml; sourceTree = "<group>"; };
+		C032CF78194B1FB8003C56B7 /* PullPointSubscriptionBinding.CreatePullPointSubscription.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.CreatePullPointSubscription.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.CreatePullPointSubscription.res.xml; sourceTree = "<group>"; };
+		C032CF79194B1FB8003C56B7 /* PullPointSubscriptionBinding.DestroyPullPoint.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.DestroyPullPoint.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.DestroyPullPoint.req.xml; sourceTree = "<group>"; };
+		C032CF7A194B1FB8003C56B7 /* PullPointSubscriptionBinding.DestroyPullPoint.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.DestroyPullPoint.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.DestroyPullPoint.res.xml; sourceTree = "<group>"; };
+		C032CF7B194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetCurrentMessage.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.GetCurrentMessage.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.GetCurrentMessage.req.xml; sourceTree = "<group>"; };
+		C032CF7C194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetCurrentMessage.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.GetCurrentMessage.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.GetCurrentMessage.res.xml; sourceTree = "<group>"; };
+		C032CF7D194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetEventProperties.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.GetEventProperties.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.GetEventProperties.req.xml; sourceTree = "<group>"; };
+		C032CF7E194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetEventProperties.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.GetEventProperties.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.GetEventProperties.res.xml; sourceTree = "<group>"; };
+		C032CF7F194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetMessages.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.GetMessages.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.GetMessages.req.xml; sourceTree = "<group>"; };
+		C032CF80194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetMessages.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.GetMessages.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.GetMessages.res.xml; sourceTree = "<group>"; };
+		C032CF81194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetServiceCapabilities.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.GetServiceCapabilities.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.GetServiceCapabilities.req.xml; sourceTree = "<group>"; };
+		C032CF82194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetServiceCapabilities.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.GetServiceCapabilities.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.GetServiceCapabilities.res.xml; sourceTree = "<group>"; };
+		C032CF83194B1FB8003C56B7 /* PullPointSubscriptionBinding.Notify.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.Notify.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.Notify.req.xml; sourceTree = "<group>"; };
+		C032CF84194B1FB8003C56B7 /* PullPointSubscriptionBinding.PauseSubscription.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.PauseSubscription.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.PauseSubscription.req.xml; sourceTree = "<group>"; };
+		C032CF85194B1FB8003C56B7 /* PullPointSubscriptionBinding.PauseSubscription.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.PauseSubscription.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.PauseSubscription.res.xml; sourceTree = "<group>"; };
+		C032CF86194B1FB8003C56B7 /* PullPointSubscriptionBinding.PullMessages.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.PullMessages.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.PullMessages.req.xml; sourceTree = "<group>"; };
+		C032CF87194B1FB8003C56B7 /* PullPointSubscriptionBinding.PullMessages.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.PullMessages.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.PullMessages.res.xml; sourceTree = "<group>"; };
+		C032CF88194B1FB8003C56B7 /* PullPointSubscriptionBinding.Renew.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.Renew.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.Renew.req.xml; sourceTree = "<group>"; };
+		C032CF89194B1FB8003C56B7 /* PullPointSubscriptionBinding.Renew.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.Renew.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.Renew.res.xml; sourceTree = "<group>"; };
+		C032CF8A194B1FB8003C56B7 /* PullPointSubscriptionBinding.ResumeSubscription.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.ResumeSubscription.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.ResumeSubscription.req.xml; sourceTree = "<group>"; };
+		C032CF8B194B1FB8003C56B7 /* PullPointSubscriptionBinding.ResumeSubscription.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.ResumeSubscription.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.ResumeSubscription.res.xml; sourceTree = "<group>"; };
+		C032CF8C194B1FB8003C56B7 /* PullPointSubscriptionBinding.Seek.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.Seek.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.Seek.req.xml; sourceTree = "<group>"; };
+		C032CF8D194B1FB8003C56B7 /* PullPointSubscriptionBinding.Seek.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.Seek.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.Seek.res.xml; sourceTree = "<group>"; };
+		C032CF8E194B1FB8003C56B7 /* PullPointSubscriptionBinding.SetSynchronizationPoint.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.SetSynchronizationPoint.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.SetSynchronizationPoint.req.xml; sourceTree = "<group>"; };
+		C032CF8F194B1FB8003C56B7 /* PullPointSubscriptionBinding.SetSynchronizationPoint.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.SetSynchronizationPoint.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.SetSynchronizationPoint.res.xml; sourceTree = "<group>"; };
+		C032CF90194B1FB8003C56B7 /* PullPointSubscriptionBinding.Subscribe.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.Subscribe.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.Subscribe.req.xml; sourceTree = "<group>"; };
+		C032CF91194B1FB8003C56B7 /* PullPointSubscriptionBinding.Subscribe.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.Subscribe.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.Subscribe.res.xml; sourceTree = "<group>"; };
+		C032CF92194B1FB8003C56B7 /* PullPointSubscriptionBinding.Unsubscribe.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.Unsubscribe.req.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.Unsubscribe.req.xml; sourceTree = "<group>"; };
+		C032CF93194B1FB8003C56B7 /* PullPointSubscriptionBinding.Unsubscribe.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PullPointSubscriptionBinding.Unsubscribe.res.xml; path = ../../../libzkonvif/soap/xml/PullPointSubscriptionBinding.Unsubscribe.res.xml; sourceTree = "<group>"; };
+		C032CF94194B1FB8003C56B7 /* RemoteDiscoveryBinding.Bye.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = RemoteDiscoveryBinding.Bye.req.xml; path = ../../../libzkonvif/soap/xml/RemoteDiscoveryBinding.Bye.req.xml; sourceTree = "<group>"; };
+		C032CF95194B1FB8003C56B7 /* RemoteDiscoveryBinding.Bye.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = RemoteDiscoveryBinding.Bye.res.xml; path = ../../../libzkonvif/soap/xml/RemoteDiscoveryBinding.Bye.res.xml; sourceTree = "<group>"; };
+		C032CF96194B1FB8003C56B7 /* RemoteDiscoveryBinding.Hello.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = RemoteDiscoveryBinding.Hello.req.xml; path = ../../../libzkonvif/soap/xml/RemoteDiscoveryBinding.Hello.req.xml; sourceTree = "<group>"; };
+		C032CF97194B1FB8003C56B7 /* RemoteDiscoveryBinding.Hello.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = RemoteDiscoveryBinding.Hello.res.xml; path = ../../../libzkonvif/soap/xml/RemoteDiscoveryBinding.Hello.res.xml; sourceTree = "<group>"; };
+		C032CF98194B1FB8003C56B7 /* RemoteDiscoveryBinding.Probe.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = RemoteDiscoveryBinding.Probe.req.xml; path = ../../../libzkonvif/soap/xml/RemoteDiscoveryBinding.Probe.req.xml; sourceTree = "<group>"; };
+		C032CF99194B1FB8003C56B7 /* RemoteDiscoveryBinding.Probe.res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = RemoteDiscoveryBinding.Probe.res.xml; path = ../../../libzkonvif/soap/xml/RemoteDiscoveryBinding.Probe.res.xml; sourceTree = "<group>"; };
+		C032CF9A194B1FB8003C56B7 /* wsdd.Bye.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.Bye.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.Bye.req.xml; sourceTree = "<group>"; };
+		C032CF9B194B1FB8003C56B7 /* wsdd.Hello.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.Hello.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.Hello.req.xml; sourceTree = "<group>"; };
+		C032CF9C194B1FB8003C56B7 /* wsdd.Probe.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.Probe.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.Probe.req.xml; sourceTree = "<group>"; };
+		C032CF9D194B1FB8003C56B7 /* wsdd.ProbeMatches.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.ProbeMatches.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.ProbeMatches.req.xml; sourceTree = "<group>"; };
+		C032CF9E194B1FB8003C56B7 /* wsdd.Resolve.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.Resolve.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.Resolve.req.xml; sourceTree = "<group>"; };
+		C032CF9F194B1FB8003C56B7 /* wsdd.ResolveMatches.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.ResolveMatches.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.ResolveMatches.req.xml; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C032CE55194B1DD5003C56B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C032CE4F194B1DD5003C56B7 = {
+			isa = PBXGroup;
+			children = (
+				C032CE99194B1F68003C56B7 /* xmls */,
+				C032CE5F194B1EFE003C56B7 /* soap_gen */,
+				C032CE59194B1DD5003C56B7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C032CE59194B1DD5003C56B7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C032CE58194B1DD5003C56B7 /* libzkonvif.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C032CE5F194B1EFE003C56B7 /* soap_gen */ = {
+			isa = PBXGroup;
+			children = (
+				C032CE60194B1F4F003C56B7 /* duration.cpp */,
+				C032CE61194B1F4F003C56B7 /* duration.h */,
+				C032CE62194B1F4F003C56B7 /* nsmap.cpp */,
+				C032CE63194B1F4F003C56B7 /* soapC.cpp */,
+				C032CE64194B1F4F003C56B7 /* soapDeviceBindingProxy.cpp */,
+				C032CE65194B1F4F003C56B7 /* soapDeviceBindingProxy.h */,
+				C032CE66194B1F4F003C56B7 /* soapDeviceBindingService.cpp */,
+				C032CE67194B1F4F003C56B7 /* soapDeviceBindingService.h */,
+				C032CE68194B1F4F003C56B7 /* soapH.h */,
+				C032CE69194B1F4F003C56B7 /* soapPTZBindingProxy.cpp */,
+				C032CE6A194B1F4F003C56B7 /* soapPTZBindingProxy.h */,
+				C032CE6B194B1F4F003C56B7 /* soapPTZBindingService.cpp */,
+				C032CE6C194B1F4F003C56B7 /* soapPTZBindingService.h */,
+				C032CE6D194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.cpp */,
+				C032CE6E194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.h */,
+				C032CE6F194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.cpp */,
+				C032CE70194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.h */,
+				C032CE71194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.cpp */,
+				C032CE72194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.h */,
+				C032CE73194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.cpp */,
+				C032CE74194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.h */,
+				C032CE75194B1F4F003C56B7 /* soapStub.h */,
+				C032CE76194B1F4F003C56B7 /* soapwsddProxy.cpp */,
+				C032CE77194B1F4F003C56B7 /* soapwsddProxy.h */,
+				C032CE78194B1F4F003C56B7 /* soapwsddService.cpp */,
+				C032CE79194B1F4F003C56B7 /* soapwsddService.h */,
+				C032CE7A194B1F4F003C56B7 /* stdsoap2.cpp */,
+				C032CE7B194B1F4F003C56B7 /* stdsoap2.h */,
+				C032CE7C194B1F4F003C56B7 /* wsdd.nsmap */,
+			);
+			name = soap_gen;
+			sourceTree = "<group>";
+		};
+		C032CE99194B1F68003C56B7 /* xmls */ = {
+			isa = PBXGroup;
+			children = (
+				C032CE9B194B1FB7003C56B7 /* DeviceBinding.AddIPAddressFilter.req.xml */,
+				C032CE9C194B1FB7003C56B7 /* DeviceBinding.AddIPAddressFilter.res.xml */,
+				C032CE9D194B1FB7003C56B7 /* DeviceBinding.AddScopes.req.xml */,
+				C032CE9E194B1FB7003C56B7 /* DeviceBinding.AddScopes.res.xml */,
+				C032CE9F194B1FB7003C56B7 /* DeviceBinding.CreateCertificate.req.xml */,
+				C032CEA0194B1FB7003C56B7 /* DeviceBinding.CreateCertificate.res.xml */,
+				C032CEA1194B1FB7003C56B7 /* DeviceBinding.CreateDot1XConfiguration.req.xml */,
+				C032CEA2194B1FB7003C56B7 /* DeviceBinding.CreateDot1XConfiguration.res.xml */,
+				C032CEA3194B1FB7003C56B7 /* DeviceBinding.CreateUsers.req.xml */,
+				C032CEA4194B1FB7003C56B7 /* DeviceBinding.CreateUsers.res.xml */,
+				C032CEA5194B1FB7003C56B7 /* DeviceBinding.DeleteCertificates.req.xml */,
+				C032CEA6194B1FB7003C56B7 /* DeviceBinding.DeleteCertificates.res.xml */,
+				C032CEA7194B1FB7003C56B7 /* DeviceBinding.DeleteDot1XConfiguration.req.xml */,
+				C032CEA8194B1FB7003C56B7 /* DeviceBinding.DeleteDot1XConfiguration.res.xml */,
+				C032CEA9194B1FB7003C56B7 /* DeviceBinding.DeleteUsers.req.xml */,
+				C032CEAA194B1FB7003C56B7 /* DeviceBinding.DeleteUsers.res.xml */,
+				C032CEAB194B1FB7003C56B7 /* DeviceBinding.GetAccessPolicy.req.xml */,
+				C032CEAC194B1FB7003C56B7 /* DeviceBinding.GetAccessPolicy.res.xml */,
+				C032CEAD194B1FB7003C56B7 /* DeviceBinding.GetCACertificates.req.xml */,
+				C032CEAE194B1FB7003C56B7 /* DeviceBinding.GetCACertificates.res.xml */,
+				C032CEAF194B1FB7003C56B7 /* DeviceBinding.GetCapabilities.req.xml */,
+				C032CEB0194B1FB7003C56B7 /* DeviceBinding.GetCapabilities.res.xml */,
+				C032CEB1194B1FB7003C56B7 /* DeviceBinding.GetCertificateInformation.req.xml */,
+				C032CEB2194B1FB7003C56B7 /* DeviceBinding.GetCertificateInformation.res.xml */,
+				C032CEB3194B1FB7003C56B7 /* DeviceBinding.GetCertificates.req.xml */,
+				C032CEB4194B1FB7003C56B7 /* DeviceBinding.GetCertificates.res.xml */,
+				C032CEB5194B1FB7003C56B7 /* DeviceBinding.GetCertificatesStatus.req.xml */,
+				C032CEB6194B1FB7003C56B7 /* DeviceBinding.GetCertificatesStatus.res.xml */,
+				C032CEB7194B1FB7003C56B7 /* DeviceBinding.GetClientCertificateMode.req.xml */,
+				C032CEB8194B1FB7003C56B7 /* DeviceBinding.GetClientCertificateMode.res.xml */,
+				C032CEB9194B1FB7003C56B7 /* DeviceBinding.GetDeviceInformation.req.xml */,
+				C032CEBA194B1FB7003C56B7 /* DeviceBinding.GetDeviceInformation.res.xml */,
+				C032CEBB194B1FB7003C56B7 /* DeviceBinding.GetDiscoveryMode.req.xml */,
+				C032CEBC194B1FB7003C56B7 /* DeviceBinding.GetDiscoveryMode.res.xml */,
+				C032CEBD194B1FB7003C56B7 /* DeviceBinding.GetDNS.req.xml */,
+				C032CEBE194B1FB7003C56B7 /* DeviceBinding.GetDNS.res.xml */,
+				C032CEBF194B1FB7003C56B7 /* DeviceBinding.GetDot11Capabilities.req.xml */,
+				C032CEC0194B1FB7003C56B7 /* DeviceBinding.GetDot11Capabilities.res.xml */,
+				C032CEC1194B1FB7003C56B7 /* DeviceBinding.GetDot11Status.req.xml */,
+				C032CEC2194B1FB7003C56B7 /* DeviceBinding.GetDot11Status.res.xml */,
+				C032CEC3194B1FB7003C56B7 /* DeviceBinding.GetDot1XConfiguration.req.xml */,
+				C032CEC4194B1FB7003C56B7 /* DeviceBinding.GetDot1XConfiguration.res.xml */,
+				C032CEC5194B1FB7003C56B7 /* DeviceBinding.GetDot1XConfigurations.req.xml */,
+				C032CEC6194B1FB7003C56B7 /* DeviceBinding.GetDot1XConfigurations.res.xml */,
+				C032CEC7194B1FB7003C56B7 /* DeviceBinding.GetDPAddresses.req.xml */,
+				C032CEC8194B1FB7003C56B7 /* DeviceBinding.GetDPAddresses.res.xml */,
+				C032CEC9194B1FB7003C56B7 /* DeviceBinding.GetDynamicDNS.req.xml */,
+				C032CECA194B1FB7003C56B7 /* DeviceBinding.GetDynamicDNS.res.xml */,
+				C032CECB194B1FB7003C56B7 /* DeviceBinding.GetEndpointReference.req.xml */,
+				C032CECC194B1FB7003C56B7 /* DeviceBinding.GetEndpointReference.res.xml */,
+				C032CECD194B1FB7003C56B7 /* DeviceBinding.GetHostname.req.xml */,
+				C032CECE194B1FB7003C56B7 /* DeviceBinding.GetHostname.res.xml */,
+				C032CECF194B1FB7003C56B7 /* DeviceBinding.GetIPAddressFilter.req.xml */,
+				C032CED0194B1FB7003C56B7 /* DeviceBinding.GetIPAddressFilter.res.xml */,
+				C032CED1194B1FB7003C56B7 /* DeviceBinding.GetNetworkDefaultGateway.req.xml */,
+				C032CED2194B1FB7003C56B7 /* DeviceBinding.GetNetworkDefaultGateway.res.xml */,
+				C032CED3194B1FB7003C56B7 /* DeviceBinding.GetNetworkInterfaces.req.xml */,
+				C032CED4194B1FB7003C56B7 /* DeviceBinding.GetNetworkInterfaces.res.xml */,
+				C032CED5194B1FB7003C56B7 /* DeviceBinding.GetNetworkProtocols.req.xml */,
+				C032CED6194B1FB7003C56B7 /* DeviceBinding.GetNetworkProtocols.res.xml */,
+				C032CED7194B1FB7003C56B7 /* DeviceBinding.GetNTP.req.xml */,
+				C032CED8194B1FB7003C56B7 /* DeviceBinding.GetNTP.res.xml */,
+				C032CED9194B1FB7003C56B7 /* DeviceBinding.GetPkcs10Request.req.xml */,
+				C032CEDA194B1FB7003C56B7 /* DeviceBinding.GetPkcs10Request.res.xml */,
+				C032CEDB194B1FB7003C56B7 /* DeviceBinding.GetRelayOutputs.req.xml */,
+				C032CEDC194B1FB7003C56B7 /* DeviceBinding.GetRelayOutputs.res.xml */,
+				C032CEDD194B1FB7003C56B7 /* DeviceBinding.GetRemoteDiscoveryMode.req.xml */,
+				C032CEDE194B1FB7003C56B7 /* DeviceBinding.GetRemoteDiscoveryMode.res.xml */,
+				C032CEDF194B1FB7003C56B7 /* DeviceBinding.GetRemoteUser.req.xml */,
+				C032CEE0194B1FB7003C56B7 /* DeviceBinding.GetRemoteUser.res.xml */,
+				C032CEE1194B1FB7003C56B7 /* DeviceBinding.GetScopes.req.xml */,
+				C032CEE2194B1FB7003C56B7 /* DeviceBinding.GetScopes.res.xml */,
+				C032CEE3194B1FB7003C56B7 /* DeviceBinding.GetServiceCapabilities.req.xml */,
+				C032CEE4194B1FB7003C56B7 /* DeviceBinding.GetServiceCapabilities.res.xml */,
+				C032CEE5194B1FB7003C56B7 /* DeviceBinding.GetServices.req.xml */,
+				C032CEE6194B1FB7003C56B7 /* DeviceBinding.GetServices.res.xml */,
+				C032CEE7194B1FB7003C56B7 /* DeviceBinding.GetSystemBackup.req.xml */,
+				C032CEE8194B1FB7003C56B7 /* DeviceBinding.GetSystemBackup.res.xml */,
+				C032CEE9194B1FB7003C56B7 /* DeviceBinding.GetSystemDateAndTime.req.xml */,
+				C032CEEA194B1FB7003C56B7 /* DeviceBinding.GetSystemDateAndTime.res.xml */,
+				C032CEEB194B1FB7003C56B7 /* DeviceBinding.GetSystemLog.req.xml */,
+				C032CEEC194B1FB7003C56B7 /* DeviceBinding.GetSystemLog.res.xml */,
+				C032CEED194B1FB7003C56B7 /* DeviceBinding.GetSystemSupportInformation.req.xml */,
+				C032CEEE194B1FB7003C56B7 /* DeviceBinding.GetSystemSupportInformation.res.xml */,
+				C032CEEF194B1FB7003C56B7 /* DeviceBinding.GetSystemUris.req.xml */,
+				C032CEF0194B1FB7003C56B7 /* DeviceBinding.GetSystemUris.res.xml */,
+				C032CEF1194B1FB7003C56B7 /* DeviceBinding.GetUsers.req.xml */,
+				C032CEF2194B1FB7003C56B7 /* DeviceBinding.GetUsers.res.xml */,
+				C032CEF3194B1FB7003C56B7 /* DeviceBinding.GetWsdlUrl.req.xml */,
+				C032CEF4194B1FB7003C56B7 /* DeviceBinding.GetWsdlUrl.res.xml */,
+				C032CEF5194B1FB7003C56B7 /* DeviceBinding.GetZeroConfiguration.req.xml */,
+				C032CEF6194B1FB7003C56B7 /* DeviceBinding.GetZeroConfiguration.res.xml */,
+				C032CEF7194B1FB7003C56B7 /* DeviceBinding.LoadCACertificates.req.xml */,
+				C032CEF8194B1FB7003C56B7 /* DeviceBinding.LoadCACertificates.res.xml */,
+				C032CEF9194B1FB7003C56B7 /* DeviceBinding.LoadCertificates.req.xml */,
+				C032CEFA194B1FB7003C56B7 /* DeviceBinding.LoadCertificates.res.xml */,
+				C032CEFB194B1FB7003C56B7 /* DeviceBinding.LoadCertificateWithPrivateKey.req.xml */,
+				C032CEFC194B1FB7003C56B7 /* DeviceBinding.LoadCertificateWithPrivateKey.res.xml */,
+				C032CEFD194B1FB7003C56B7 /* DeviceBinding.RemoveIPAddressFilter.req.xml */,
+				C032CEFE194B1FB7003C56B7 /* DeviceBinding.RemoveIPAddressFilter.res.xml */,
+				C032CEFF194B1FB7003C56B7 /* DeviceBinding.RemoveScopes.req.xml */,
+				C032CF00194B1FB7003C56B7 /* DeviceBinding.RemoveScopes.res.xml */,
+				C032CF01194B1FB7003C56B7 /* DeviceBinding.RestoreSystem.req.xml */,
+				C032CF02194B1FB7003C56B7 /* DeviceBinding.RestoreSystem.res.xml */,
+				C032CF03194B1FB7003C56B7 /* DeviceBinding.ScanAvailableDot11Networks.req.xml */,
+				C032CF04194B1FB7003C56B7 /* DeviceBinding.ScanAvailableDot11Networks.res.xml */,
+				C032CF05194B1FB7003C56B7 /* DeviceBinding.SendAuxiliaryCommand.req.xml */,
+				C032CF06194B1FB7003C56B7 /* DeviceBinding.SendAuxiliaryCommand.res.xml */,
+				C032CF07194B1FB7003C56B7 /* DeviceBinding.SetAccessPolicy.req.xml */,
+				C032CF08194B1FB7003C56B7 /* DeviceBinding.SetAccessPolicy.res.xml */,
+				C032CF09194B1FB7003C56B7 /* DeviceBinding.SetCertificatesStatus.req.xml */,
+				C032CF0A194B1FB7003C56B7 /* DeviceBinding.SetCertificatesStatus.res.xml */,
+				C032CF0B194B1FB7003C56B7 /* DeviceBinding.SetClientCertificateMode.req.xml */,
+				C032CF0C194B1FB7003C56B7 /* DeviceBinding.SetClientCertificateMode.res.xml */,
+				C032CF0D194B1FB7003C56B7 /* DeviceBinding.SetDiscoveryMode.req.xml */,
+				C032CF0E194B1FB7003C56B7 /* DeviceBinding.SetDiscoveryMode.res.xml */,
+				C032CF0F194B1FB7003C56B7 /* DeviceBinding.SetDNS.req.xml */,
+				C032CF10194B1FB7003C56B7 /* DeviceBinding.SetDNS.res.xml */,
+				C032CF11194B1FB7003C56B7 /* DeviceBinding.SetDot1XConfiguration.req.xml */,
+				C032CF12194B1FB7003C56B7 /* DeviceBinding.SetDot1XConfiguration.res.xml */,
+				C032CF13194B1FB7003C56B7 /* DeviceBinding.SetDPAddresses.req.xml */,
+				C032CF14194B1FB7003C56B7 /* DeviceBinding.SetDPAddresses.res.xml */,
+				C032CF15194B1FB7003C56B7 /* DeviceBinding.SetDynamicDNS.req.xml */,
+				C032CF16194B1FB7003C56B7 /* DeviceBinding.SetDynamicDNS.res.xml */,
+				C032CF17194B1FB7003C56B7 /* DeviceBinding.SetHostname.req.xml */,
+				C032CF18194B1FB7003C56B7 /* DeviceBinding.SetHostname.res.xml */,
+				C032CF19194B1FB7003C56B7 /* DeviceBinding.SetHostnameFromDHCP.req.xml */,
+				C032CF1A194B1FB7003C56B7 /* DeviceBinding.SetHostnameFromDHCP.res.xml */,
+				C032CF1B194B1FB7003C56B7 /* DeviceBinding.SetIPAddressFilter.req.xml */,
+				C032CF1C194B1FB7003C56B7 /* DeviceBinding.SetIPAddressFilter.res.xml */,
+				C032CF1D194B1FB7003C56B7 /* DeviceBinding.SetNetworkDefaultGateway.req.xml */,
+				C032CF1E194B1FB7003C56B7 /* DeviceBinding.SetNetworkDefaultGateway.res.xml */,
+				C032CF1F194B1FB7003C56B7 /* DeviceBinding.SetNetworkInterfaces.req.xml */,
+				C032CF20194B1FB7003C56B7 /* DeviceBinding.SetNetworkInterfaces.res.xml */,
+				C032CF21194B1FB7003C56B7 /* DeviceBinding.SetNetworkProtocols.req.xml */,
+				C032CF22194B1FB7003C56B7 /* DeviceBinding.SetNetworkProtocols.res.xml */,
+				C032CF23194B1FB7003C56B7 /* DeviceBinding.SetNTP.req.xml */,
+				C032CF24194B1FB7003C56B7 /* DeviceBinding.SetNTP.res.xml */,
+				C032CF25194B1FB7003C56B7 /* DeviceBinding.SetRelayOutputSettings.req.xml */,
+				C032CF26194B1FB7003C56B7 /* DeviceBinding.SetRelayOutputSettings.res.xml */,
+				C032CF27194B1FB7003C56B7 /* DeviceBinding.SetRelayOutputState.req.xml */,
+				C032CF28194B1FB7003C56B7 /* DeviceBinding.SetRelayOutputState.res.xml */,
+				C032CF29194B1FB7003C56B7 /* DeviceBinding.SetRemoteDiscoveryMode.req.xml */,
+				C032CF2A194B1FB7003C56B7 /* DeviceBinding.SetRemoteDiscoveryMode.res.xml */,
+				C032CF2B194B1FB7003C56B7 /* DeviceBinding.SetRemoteUser.req.xml */,
+				C032CF2C194B1FB7003C56B7 /* DeviceBinding.SetRemoteUser.res.xml */,
+				C032CF2D194B1FB7003C56B7 /* DeviceBinding.SetScopes.req.xml */,
+				C032CF2E194B1FB7003C56B7 /* DeviceBinding.SetScopes.res.xml */,
+				C032CF2F194B1FB7003C56B7 /* DeviceBinding.SetSystemDateAndTime.req.xml */,
+				C032CF30194B1FB7003C56B7 /* DeviceBinding.SetSystemDateAndTime.res.xml */,
+				C032CF31194B1FB7003C56B7 /* DeviceBinding.SetSystemFactoryDefault.req.xml */,
+				C032CF32194B1FB7003C56B7 /* DeviceBinding.SetSystemFactoryDefault.res.xml */,
+				C032CF33194B1FB7003C56B7 /* DeviceBinding.SetUser.req.xml */,
+				C032CF34194B1FB7003C56B7 /* DeviceBinding.SetUser.res.xml */,
+				C032CF35194B1FB7003C56B7 /* DeviceBinding.SetZeroConfiguration.req.xml */,
+				C032CF36194B1FB8003C56B7 /* DeviceBinding.SetZeroConfiguration.res.xml */,
+				C032CF37194B1FB8003C56B7 /* DeviceBinding.StartFirmwareUpgrade.req.xml */,
+				C032CF38194B1FB8003C56B7 /* DeviceBinding.StartFirmwareUpgrade.res.xml */,
+				C032CF39194B1FB8003C56B7 /* DeviceBinding.StartSystemRestore.req.xml */,
+				C032CF3A194B1FB8003C56B7 /* DeviceBinding.StartSystemRestore.res.xml */,
+				C032CF3B194B1FB8003C56B7 /* DeviceBinding.SystemReboot.req.xml */,
+				C032CF3C194B1FB8003C56B7 /* DeviceBinding.SystemReboot.res.xml */,
+				C032CF3D194B1FB8003C56B7 /* DeviceBinding.UpgradeSystemFirmware.req.xml */,
+				C032CF3E194B1FB8003C56B7 /* DeviceBinding.UpgradeSystemFirmware.res.xml */,
+				C032CF3F194B1FB8003C56B7 /* PTZBinding.AbsoluteMove.req.xml */,
+				C032CF40194B1FB8003C56B7 /* PTZBinding.AbsoluteMove.res.xml */,
+				C032CF41194B1FB8003C56B7 /* PTZBinding.ContinuousMove.req.xml */,
+				C032CF42194B1FB8003C56B7 /* PTZBinding.ContinuousMove.res.xml */,
+				C032CF43194B1FB8003C56B7 /* PTZBinding.CreatePresetTour.req.xml */,
+				C032CF44194B1FB8003C56B7 /* PTZBinding.CreatePresetTour.res.xml */,
+				C032CF45194B1FB8003C56B7 /* PTZBinding.GetCompatibleConfigurations.req.xml */,
+				C032CF46194B1FB8003C56B7 /* PTZBinding.GetCompatibleConfigurations.res.xml */,
+				C032CF47194B1FB8003C56B7 /* PTZBinding.GetConfiguration.req.xml */,
+				C032CF48194B1FB8003C56B7 /* PTZBinding.GetConfiguration.res.xml */,
+				C032CF49194B1FB8003C56B7 /* PTZBinding.GetConfigurationOptions.req.xml */,
+				C032CF4A194B1FB8003C56B7 /* PTZBinding.GetConfigurationOptions.res.xml */,
+				C032CF4B194B1FB8003C56B7 /* PTZBinding.GetConfigurations.req.xml */,
+				C032CF4C194B1FB8003C56B7 /* PTZBinding.GetConfigurations.res.xml */,
+				C032CF4D194B1FB8003C56B7 /* PTZBinding.GetNode.req.xml */,
+				C032CF4E194B1FB8003C56B7 /* PTZBinding.GetNode.res.xml */,
+				C032CF4F194B1FB8003C56B7 /* PTZBinding.GetNodes.req.xml */,
+				C032CF50194B1FB8003C56B7 /* PTZBinding.GetNodes.res.xml */,
+				C032CF51194B1FB8003C56B7 /* PTZBinding.GetPresets.req.xml */,
+				C032CF52194B1FB8003C56B7 /* PTZBinding.GetPresets.res.xml */,
+				C032CF53194B1FB8003C56B7 /* PTZBinding.GetPresetTour.req.xml */,
+				C032CF54194B1FB8003C56B7 /* PTZBinding.GetPresetTour.res.xml */,
+				C032CF55194B1FB8003C56B7 /* PTZBinding.GetPresetTourOptions.req.xml */,
+				C032CF56194B1FB8003C56B7 /* PTZBinding.GetPresetTourOptions.res.xml */,
+				C032CF57194B1FB8003C56B7 /* PTZBinding.GetPresetTours.req.xml */,
+				C032CF58194B1FB8003C56B7 /* PTZBinding.GetPresetTours.res.xml */,
+				C032CF59194B1FB8003C56B7 /* PTZBinding.GetServiceCapabilities.req.xml */,
+				C032CF5A194B1FB8003C56B7 /* PTZBinding.GetServiceCapabilities.res.xml */,
+				C032CF5B194B1FB8003C56B7 /* PTZBinding.GetStatus.req.xml */,
+				C032CF5C194B1FB8003C56B7 /* PTZBinding.GetStatus.res.xml */,
+				C032CF5D194B1FB8003C56B7 /* PTZBinding.GotoHomePosition.req.xml */,
+				C032CF5E194B1FB8003C56B7 /* PTZBinding.GotoHomePosition.res.xml */,
+				C032CF5F194B1FB8003C56B7 /* PTZBinding.GotoPreset.req.xml */,
+				C032CF60194B1FB8003C56B7 /* PTZBinding.GotoPreset.res.xml */,
+				C032CF61194B1FB8003C56B7 /* PTZBinding.ModifyPresetTour.req.xml */,
+				C032CF62194B1FB8003C56B7 /* PTZBinding.ModifyPresetTour.res.xml */,
+				C032CF63194B1FB8003C56B7 /* PTZBinding.OperatePresetTour.req.xml */,
+				C032CF64194B1FB8003C56B7 /* PTZBinding.OperatePresetTour.res.xml */,
+				C032CF65194B1FB8003C56B7 /* PTZBinding.RelativeMove.req.xml */,
+				C032CF66194B1FB8003C56B7 /* PTZBinding.RelativeMove.res.xml */,
+				C032CF67194B1FB8003C56B7 /* PTZBinding.RemovePreset.req.xml */,
+				C032CF68194B1FB8003C56B7 /* PTZBinding.RemovePreset.res.xml */,
+				C032CF69194B1FB8003C56B7 /* PTZBinding.RemovePresetTour.req.xml */,
+				C032CF6A194B1FB8003C56B7 /* PTZBinding.RemovePresetTour.res.xml */,
+				C032CF6B194B1FB8003C56B7 /* PTZBinding.SendAuxiliaryCommand.req.xml */,
+				C032CF6C194B1FB8003C56B7 /* PTZBinding.SendAuxiliaryCommand.res.xml */,
+				C032CF6D194B1FB8003C56B7 /* PTZBinding.SetConfiguration.req.xml */,
+				C032CF6E194B1FB8003C56B7 /* PTZBinding.SetConfiguration.res.xml */,
+				C032CF6F194B1FB8003C56B7 /* PTZBinding.SetHomePosition.req.xml */,
+				C032CF70194B1FB8003C56B7 /* PTZBinding.SetHomePosition.res.xml */,
+				C032CF71194B1FB8003C56B7 /* PTZBinding.SetPreset.req.xml */,
+				C032CF72194B1FB8003C56B7 /* PTZBinding.SetPreset.res.xml */,
+				C032CF73194B1FB8003C56B7 /* PTZBinding.Stop.req.xml */,
+				C032CF74194B1FB8003C56B7 /* PTZBinding.Stop.res.xml */,
+				C032CF75194B1FB8003C56B7 /* PullPointSubscriptionBinding.CreatePullPoint.req.xml */,
+				C032CF76194B1FB8003C56B7 /* PullPointSubscriptionBinding.CreatePullPoint.res.xml */,
+				C032CF77194B1FB8003C56B7 /* PullPointSubscriptionBinding.CreatePullPointSubscription.req.xml */,
+				C032CF78194B1FB8003C56B7 /* PullPointSubscriptionBinding.CreatePullPointSubscription.res.xml */,
+				C032CF79194B1FB8003C56B7 /* PullPointSubscriptionBinding.DestroyPullPoint.req.xml */,
+				C032CF7A194B1FB8003C56B7 /* PullPointSubscriptionBinding.DestroyPullPoint.res.xml */,
+				C032CF7B194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetCurrentMessage.req.xml */,
+				C032CF7C194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetCurrentMessage.res.xml */,
+				C032CF7D194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetEventProperties.req.xml */,
+				C032CF7E194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetEventProperties.res.xml */,
+				C032CF7F194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetMessages.req.xml */,
+				C032CF80194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetMessages.res.xml */,
+				C032CF81194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetServiceCapabilities.req.xml */,
+				C032CF82194B1FB8003C56B7 /* PullPointSubscriptionBinding.GetServiceCapabilities.res.xml */,
+				C032CF83194B1FB8003C56B7 /* PullPointSubscriptionBinding.Notify.req.xml */,
+				C032CF84194B1FB8003C56B7 /* PullPointSubscriptionBinding.PauseSubscription.req.xml */,
+				C032CF85194B1FB8003C56B7 /* PullPointSubscriptionBinding.PauseSubscription.res.xml */,
+				C032CF86194B1FB8003C56B7 /* PullPointSubscriptionBinding.PullMessages.req.xml */,
+				C032CF87194B1FB8003C56B7 /* PullPointSubscriptionBinding.PullMessages.res.xml */,
+				C032CF88194B1FB8003C56B7 /* PullPointSubscriptionBinding.Renew.req.xml */,
+				C032CF89194B1FB8003C56B7 /* PullPointSubscriptionBinding.Renew.res.xml */,
+				C032CF8A194B1FB8003C56B7 /* PullPointSubscriptionBinding.ResumeSubscription.req.xml */,
+				C032CF8B194B1FB8003C56B7 /* PullPointSubscriptionBinding.ResumeSubscription.res.xml */,
+				C032CF8C194B1FB8003C56B7 /* PullPointSubscriptionBinding.Seek.req.xml */,
+				C032CF8D194B1FB8003C56B7 /* PullPointSubscriptionBinding.Seek.res.xml */,
+				C032CF8E194B1FB8003C56B7 /* PullPointSubscriptionBinding.SetSynchronizationPoint.req.xml */,
+				C032CF8F194B1FB8003C56B7 /* PullPointSubscriptionBinding.SetSynchronizationPoint.res.xml */,
+				C032CF90194B1FB8003C56B7 /* PullPointSubscriptionBinding.Subscribe.req.xml */,
+				C032CF91194B1FB8003C56B7 /* PullPointSubscriptionBinding.Subscribe.res.xml */,
+				C032CF92194B1FB8003C56B7 /* PullPointSubscriptionBinding.Unsubscribe.req.xml */,
+				C032CF93194B1FB8003C56B7 /* PullPointSubscriptionBinding.Unsubscribe.res.xml */,
+				C032CF94194B1FB8003C56B7 /* RemoteDiscoveryBinding.Bye.req.xml */,
+				C032CF95194B1FB8003C56B7 /* RemoteDiscoveryBinding.Bye.res.xml */,
+				C032CF96194B1FB8003C56B7 /* RemoteDiscoveryBinding.Hello.req.xml */,
+				C032CF97194B1FB8003C56B7 /* RemoteDiscoveryBinding.Hello.res.xml */,
+				C032CF98194B1FB8003C56B7 /* RemoteDiscoveryBinding.Probe.req.xml */,
+				C032CF99194B1FB8003C56B7 /* RemoteDiscoveryBinding.Probe.res.xml */,
+				C032CF9A194B1FB8003C56B7 /* wsdd.Bye.req.xml */,
+				C032CF9B194B1FB8003C56B7 /* wsdd.Hello.req.xml */,
+				C032CF9C194B1FB8003C56B7 /* wsdd.Probe.req.xml */,
+				C032CF9D194B1FB8003C56B7 /* wsdd.ProbeMatches.req.xml */,
+				C032CF9E194B1FB8003C56B7 /* wsdd.Resolve.req.xml */,
+				C032CF9F194B1FB8003C56B7 /* wsdd.ResolveMatches.req.xml */,
+			);
+			name = xmls;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		C032CE56194B1DD5003C56B7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C032CE85194B1F4F003C56B7 /* soapH.h in Headers */,
+				C032CE96194B1F4F003C56B7 /* soapwsddService.h in Headers */,
+				C032CE8B194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.h in Headers */,
+				C032CE92194B1F4F003C56B7 /* soapStub.h in Headers */,
+				C032CE8D194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.h in Headers */,
+				C032CE94194B1F4F003C56B7 /* soapwsddProxy.h in Headers */,
+				C032CE82194B1F4F003C56B7 /* soapDeviceBindingProxy.h in Headers */,
+				C032CE91194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.h in Headers */,
+				C032CE8F194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.h in Headers */,
+				C032CE89194B1F4F003C56B7 /* soapPTZBindingService.h in Headers */,
+				C032CE7E194B1F4F003C56B7 /* duration.h in Headers */,
+				C032CE87194B1F4F003C56B7 /* soapPTZBindingProxy.h in Headers */,
+				C032CE98194B1F4F003C56B7 /* stdsoap2.h in Headers */,
+				C032CE84194B1F4F003C56B7 /* soapDeviceBindingService.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		C032CE57194B1DD5003C56B7 /* zkonvif */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C032CE5C194B1DD5003C56B7 /* Build configuration list for PBXNativeTarget "zkonvif" */;
+			buildPhases = (
+				C032CE54194B1DD5003C56B7 /* Sources */,
+				C032CE55194B1DD5003C56B7 /* Frameworks */,
+				C032CE56194B1DD5003C56B7 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = zkonvif;
+			productName = zkonvif;
+			productReference = C032CE58194B1DD5003C56B7 /* libzkonvif.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C032CE50194B1DD5003C56B7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = sunkw;
+			};
+			buildConfigurationList = C032CE53194B1DD5003C56B7 /* Build configuration list for PBXProject "zkonvif" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C032CE4F194B1DD5003C56B7;
+			productRefGroup = C032CE59194B1DD5003C56B7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C032CE57194B1DD5003C56B7 /* zkonvif */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C032CE54194B1DD5003C56B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C032CE7D194B1F4F003C56B7 /* duration.cpp in Sources */,
+				C032CE80194B1F4F003C56B7 /* soapC.cpp in Sources */,
+				C032CE86194B1F4F003C56B7 /* soapPTZBindingProxy.cpp in Sources */,
+				C032CE88194B1F4F003C56B7 /* soapPTZBindingService.cpp in Sources */,
+				C032CE8E194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.cpp in Sources */,
+				C032CE90194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.cpp in Sources */,
+				C032CE8C194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.cpp in Sources */,
+				C032CE7F194B1F4F003C56B7 /* nsmap.cpp in Sources */,
+				C032CE83194B1F4F003C56B7 /* soapDeviceBindingService.cpp in Sources */,
+				C032CE93194B1F4F003C56B7 /* soapwsddProxy.cpp in Sources */,
+				C032CE8A194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.cpp in Sources */,
+				C032CE97194B1F4F003C56B7 /* stdsoap2.cpp in Sources */,
+				C032CE95194B1F4F003C56B7 /* soapwsddService.cpp in Sources */,
+				C032CE81194B1F4F003C56B7 /* soapDeviceBindingProxy.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C032CE5A194B1DD5003C56B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C032CE5B194B1DD5003C56B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		C032CE5D194B1DD5003C56B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					WITH_PURE_VIRTUAL,
+					ZONEKEY_SOURCE,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C032CE5E194B1DD5003C56B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					WITH_PURE_VIRTUAL,
+					ZONEKEY_SOURCE,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C032CE53194B1DD5003C56B7 /* Build configuration list for PBXProject "zkonvif" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C032CE5A194B1DD5003C56B7 /* Debug */,
+				C032CE5B194B1DD5003C56B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C032CE5C194B1DD5003C56B7 /* Build configuration list for PBXNativeTarget "zkonvif" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C032CE5D194B1DD5003C56B7 /* Debug */,
+				C032CE5E194B1DD5003C56B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C032CE50194B1DD5003C56B7 /* Project object */;
+}

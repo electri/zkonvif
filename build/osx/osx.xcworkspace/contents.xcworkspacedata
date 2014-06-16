@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:test_zkwsdd/test_zkwsdd.xcodeproj">
+      location = "group:test_zkonvif/test_zkonvif.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:zkwsdd/zkwsdd.xcodeproj">
+      location = "group:zkonvif/zkonvif.xcodeproj">
    </FileRef>
 </Workspace>

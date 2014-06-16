@@ -28,11 +28,11 @@ int MyEvent::GetServiceCapabilities(_tev__GetServiceCapabilities *tev__GetServic
 	tev__GetServiceCapabilitiesResponse->Capabilities = (tev__Capabilities*)soap_malloc(soap, sizeof(tev__Capabilities));
 	memset(&tev__GetServiceCapabilitiesResponse->Capabilities, 0, sizeof(tev__Capabilities));
 
-	// ²»Ö§³Ö basic notification interface .
+	// ä¸æ”¯æŒ basic notification interface .
 	tev__GetServiceCapabilitiesResponse->Capabilities->MaxNotificationProducers = (int*)soap_malloc(soap, sizeof(int));
 	*tev__GetServiceCapabilitiesResponse->Capabilities->MaxNotificationProducers = 0;
 
-	// ²»Ö§³Ö seeking
+	// ä¸æ”¯æŒ seeking
 	tev__GetServiceCapabilitiesResponse->Capabilities->PersistentNotificationStorage = (bool*)soap_malloc(soap, sizeof(bool));
 	*tev__GetServiceCapabilitiesResponse->Capabilities->PersistentNotificationStorage = false;
 

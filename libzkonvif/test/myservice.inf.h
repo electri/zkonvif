@@ -1,11 +1,11 @@
 #pragma once
 
-/** Õâ¸öÓÃÓÚ·½±ã MyDevice Ö§³Ö¸ü¶àµÄ·şÎñ ...
-×¢Òâ£º ÕâÀïµÄ½Ó¿Ú£¬ĞèÒª¸ù¾İ MyDevice µÄ GetServices Êµ¼ÊĞèÒª½øĞĞÀ©Õ¹ .....
+/** è¿™ä¸ªç”¨äºæ–¹ä¾¿ MyDevice æ”¯æŒæ›´å¤šçš„æœåŠ¡ ...
+æ³¨æ„ï¼š è¿™é‡Œçš„æ¥å£ï¼Œéœ€è¦æ ¹æ® MyDevice çš„ GetServices å®é™…éœ€è¦è¿›è¡Œæ‰©å±• .....
 */
 class ServiceInf
 {
 public:
-	virtual const char *url() const = 0;	// ËùÓĞµÄ·şÎñ£¬¶¼±ØĞëÓĞ¸ö url .
-	virtual const char *desc() const { return ""; }	// ¿ÉÑ¡ÓĞ¸öÃèÊöĞÅÏ¢ ..
+	virtual const char *url() const = 0;	// æ‰€æœ‰çš„æœåŠ¡ï¼Œéƒ½å¿…é¡»æœ‰ä¸ª url .
+	virtual const char *desc() const { return ""; }	// å¯é€‰æœ‰ä¸ªæè¿°ä¿¡æ¯ ..
 };
