@@ -13,38 +13,39 @@
 #include "../../common/log.h"
 #include "myservice.inf.h"
 #include "MyEvent.h"
+#include "MyPtz.h"
 
-/** 云台接口 
- */
-class MyPtz : PTZBindingService
-		    , ost::Thread
-			, public ServiceInf
-{
-	std::string url_;
-	int port_;
-
-public:
-	MyPtz(int listen_port)
-	{
-		port_ = listen_port;
-
-		char buf[128];
-		snprintf(buf, sizeof(buf), "http://%s:%d", util_get_myip(), listen_port);
-
-		url_ = buf;
-
-		start();
-	}
-
-private:
-	void run()
-	{
-		PTZBindingService::run(port_);
-	}
-
-private:
-	const char *url() const { return url_.c_str(); }
-};
+///** 云台接口 
+// */
+//class MyPtz : PTZBindingService
+//		    , ost::Thread
+//			, public ServiceInf
+//{
+//	std::string url_;
+//	int port_;
+//
+//public:
+//	MyPtz(int listen_port)
+//	{
+//		port_ = listen_port;
+//
+//		char buf[128];
+//		snprintf(buf, sizeof(buf), "http://%s:%d", util_get_myip(), listen_port);
+//
+//		url_ = buf;
+//
+//		start();
+//	}
+//
+//private:
+//	void run()
+//	{
+//		PTZBindingService::run(port_);
+//	}
+//
+//private:
+//	const char *url() const { return url_.c_str(); }
+//};
 
 /** rtmp 服务接口，这个仅仅为了演示如何使用 ServiceInf 
  */
