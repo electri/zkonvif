@@ -44,5 +44,8 @@
     <ClInclude Include="..\..\..\libzkonvif\test\MyPtz.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\test\MyDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -96,6 +96,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\common\log.h" />
     <ClInclude Include="..\..\..\common\utils.h" />
+    <ClInclude Include="..\..\..\libzkonvif\test\MyDevice.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\MyEvent.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\MyPtz.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\myservice.inf.h" />
