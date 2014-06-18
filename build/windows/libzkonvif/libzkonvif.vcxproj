@@ -98,7 +98,6 @@
     <ClCompile Include="..\..\..\libzkonvif\soap\soapwsddProxy.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapwsddService.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\stdsoap2.cpp" />
-    <ClCompile Include="..\..\..\libzkonvif\test\MyDevice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\libzkonvif\soap\duration.h" />

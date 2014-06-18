@@ -51,7 +51,7 @@ int MyDeviceDiscovery::Probe(struct wsdd__ProbeType *probe)
 	if (!strcmp("tds:Device", probe->Types) || !strcmp("tdn:NetworkVideoTransmitter", probe->Types)) {
 		wsdd__ProbeMatchesType pms;
 		pms.__sizeProbeMatch = 1;
-		pms.ProbeMatch = (wsdd__ProbeMatchType*)soap_malloc(soap, pms.__sizeProbeMatch * sizeof(wsdd__ProbeMatchType));
+		pms.ProbeMatch = soap_new_wsdd__ProbeMatchType(soap, pms.__sizeProbeMatch);
 		wsdd__ProbeMatchType *pm = &pms.ProbeMatch[0];
 
 		// 填空 ..
@@ -66,7 +66,7 @@ int MyDeviceDiscovery::Probe(struct wsdd__ProbeType *probe)
 
 		pm->Types = soap_strdup(soap, "tdn:NetworkVideoTransmitter");
 
-		pm->Scopes = (wsdd__ScopesType*)soap_malloc(soap, sizeof(wsdd__ScopesType));
+		pm->Scopes = soap_new_wsdd__ScopesType(soap);
 		pm->Scopes->MatchBy = 0;
 		pm->Scopes->__item = soap_strdup(soap, "onvif://www.onvif.org/type/NetworkVideoTransmitter");
 
@@ -79,7 +79,7 @@ int MyDeviceDiscovery::Probe(struct wsdd__ProbeType *probe)
 		assert(header);
 
 		// XXX: 必须的，否则 client 不知道这个 PM 是对应着那个 P
-		header->wsa__RelatesTo = (wsa__Relationship *)soap_malloc(soap, sizeof(wsa__Relationship));
+		header->wsa__RelatesTo = soap_new_wsa__Relationship(soap);
 		header->wsa__RelatesTo->__item = soap_strdup(soap, header->wsa__MessageID);
 		header->wsa__RelatesTo->__anyAttribute = 0;
 		header->wsa__RelatesTo->RelationshipType = 0;

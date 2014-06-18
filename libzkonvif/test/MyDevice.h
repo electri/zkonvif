@@ -4,6 +4,7 @@
 #include <cc++/thread.h>
 #include "../../common/utils.h"
 #include "myservice.inf.h"
+#include "../../common/log.h"
 
 /** 实现一个接口,本质就是重载 gsoap 生成的 xxxService类, 然后具体实现所有"纯虚函数"
  */
@@ -13,16 +14,20 @@ class MyDevice : DeviceBindingService
 	int listen_port_;
 	std::string url_;
 	std::string id_;
-	const std::vector<ServiceInf *> services_; // 这个设备上, 聚合的所有服务的列表 ...
+	std::vector<ServiceInf *> services_; // 这个设备上, 聚合的所有服务的列表 ...
 
 public:
 	MyDevice(int listen_port, const std::vector<ServiceInf *> &services)
 	{
+		services_ = services;
+
 		listen_port_ = listen_port;
 		char buf[128];
 
 		snprintf(buf, sizeof(buf), "http://%s:%d", util_get_myip(), listen_port_);
 		url_ = buf;
+
+		log(LOG_INFO, "%s: device mgrt using url='%s'\n", __func__, url_.c_str());
 
 		/** 使用 mac 地址作为 id */
 		snprintf(buf, sizeof(buf), "urn:uuid:%s", util_get_mymac());

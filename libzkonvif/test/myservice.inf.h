@@ -9,6 +9,7 @@ class ServiceInf
 public:
 	virtual const char *url() const = 0;	// 所有的服务，都必须有个 url .
 	virtual const char *desc() const { return ""; }	// 可选有个描述信息 ..
+	virtual const char *ns() const = 0;	// 必须返回 namespace .
 };
 
 /** rtmp 服务接口, 这个仅仅为了演示如何使用 ServiceInf
@@ -26,6 +27,11 @@ public:
 private:
 	const char *url() const { return url_.c_str(); }
 	const char *desc() const { return "zonekey RTMP living cast ...!"; }
+	const char *ns() const 
+	{
+		// FIXME: 这里应该照着规矩来 ...
+		return "media";
+	}
 
 private:
 	static const char* my_messageid()

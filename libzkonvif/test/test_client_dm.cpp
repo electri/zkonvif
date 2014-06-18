@@ -24,8 +24,8 @@ static void test_ptz(const tds__Service *);
 static void test_event(const tds__Service *);
 
 static TestServiceFunc _test_service_func_table[] = {
-		{ "http://....", test_ptz, },
-		{ "https://...", test_event, },
+		{ "ptz", test_ptz, },	// FIXME: 
+		{ "event", test_event, }, // FIXME: 
 		{ 0, 0 },
 };
 
@@ -85,9 +85,12 @@ int main(int argc, char **argv)
 // ²âÊÔÔÆÌ¨ ...
 static void test_ptz(const tds__Service *service)
 {
+	fprintf(stdout, "%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
+
 }
 
 // ²âÊÔÊÂ¼ş ...
 static void test_event(const tds__Service *service)
 {
+	fprintf(stdout, "%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
 }

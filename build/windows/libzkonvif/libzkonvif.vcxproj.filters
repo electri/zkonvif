@@ -66,9 +66,6 @@
     <ClCompile Include="..\..\..\libzkonvif\soap\soapPTZBindingService.cpp">
       <Filter>gsoap_gen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\libzkonvif\test\MyDevice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.h">

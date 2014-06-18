@@ -33,6 +33,9 @@
     <ClCompile Include="..\..\..\common\KVConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\test\MyDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\common\utils.h">

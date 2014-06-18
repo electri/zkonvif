@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\common\KVConfig.cpp" />
     <ClCompile Include="..\..\..\common\utils.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\MyDevice.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyEvent.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyPtz.cpp" />

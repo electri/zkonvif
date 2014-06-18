@@ -21,6 +21,12 @@ public:
 
 private:
 	const char *url() const { return url_.c_str(); }
+	const char *ns() const
+	{
+		// FIXME: 这里应该照着规矩来 ...
+		return "event";
+	}
+
 	void run();
 
 private:
