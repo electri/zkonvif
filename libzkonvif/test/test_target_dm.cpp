@@ -10,7 +10,7 @@
 #include "MyDeviceDiscovery.h"
 
 #ifdef _POSIX_THREADS 
-# include < pthread.h > 
+# include <pthread.h>
 #endif 
 #if defined(WIN32) 
 # define MUTEX_TYPE HANDLE 

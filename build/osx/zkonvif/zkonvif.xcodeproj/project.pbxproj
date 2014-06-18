@@ -329,6 +329,8 @@
 		C032CF9D194B1FB8003C56B7 /* wsdd.ProbeMatches.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.ProbeMatches.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.ProbeMatches.req.xml; sourceTree = "<group>"; };
 		C032CF9E194B1FB8003C56B7 /* wsdd.Resolve.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.Resolve.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.Resolve.req.xml; sourceTree = "<group>"; };
 		C032CF9F194B1FB8003C56B7 /* wsdd.ResolveMatches.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.ResolveMatches.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.ResolveMatches.req.xml; sourceTree = "<group>"; };
+		C04CF1321951AEA900A4B371 /* libcrypto.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.1.0.0.dylib; path = ../../../../../../../../opt/local/lib/libcrypto.1.0.0.dylib; sourceTree = "<group>"; };
+		C04CF1331951AEA900A4B371 /* libssl.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.1.0.0.dylib; path = ../../../../../../../../opt/local/lib/libssl.1.0.0.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -345,6 +347,8 @@
 		C032CE4F194B1DD5003C56B7 = {
 			isa = PBXGroup;
 			children = (
+				C04CF1321951AEA900A4B371 /* libcrypto.1.0.0.dylib */,
+				C04CF1331951AEA900A4B371 /* libssl.1.0.0.dylib */,
 				C032CE99194B1F68003C56B7 /* xmls */,
 				C032CE5F194B1EFE003C56B7 /* soap_gen */,
 				C032CE59194B1DD5003C56B7 /* Products */,
@@ -835,6 +839,11 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					WITH_PURE_VIRTUAL,
 					ZONEKEY_SOURCE,
+					WITH_OPENSSL,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -847,6 +856,11 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					WITH_PURE_VIRTUAL,
 					ZONEKEY_SOURCE,
+					WITH_OPENSSL,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -871,6 +885,7 @@
 				C032CE5E194B1DD5003C56B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

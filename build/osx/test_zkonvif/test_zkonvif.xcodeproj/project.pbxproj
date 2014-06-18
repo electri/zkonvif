@@ -12,6 +12,12 @@
 		C032CFBC194B21FB003C56B7 /* libzkonvif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C032CFBB194B21FB003C56B7 /* libzkonvif.a */; };
 		C032CFBE194B227F003C56B7 /* libccgnu2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C032CFBD194B227F003C56B7 /* libccgnu2.a */; };
 		C032CFC3194B22C2003C56B7 /* utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CFC1194B22C2003C56B7 /* utils.cpp */; };
+		C04CF12F1951AD7E00A4B371 /* MyDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04CF1291951AD7D00A4B371 /* MyDevice.cpp */; };
+		C04CF1301951AD7E00A4B371 /* MyDeviceDiscovery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04CF12B1951AD7D00A4B371 /* MyDeviceDiscovery.cpp */; };
+		C04CF1311951AD7E00A4B371 /* MyPtz.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04CF12D1951AD7E00A4B371 /* MyPtz.cpp */; };
+		C04CF1381951AF1E00A4B371 /* libcrypto.1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C04CF1361951AF1E00A4B371 /* libcrypto.1.0.0.dylib */; };
+		C04CF1391951AF1E00A4B371 /* libssl.1.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C04CF1371951AF1E00A4B371 /* libssl.1.0.0.dylib */; };
+		C04CF13C1951AF4700A4B371 /* KVConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04CF13A1951AF4700A4B371 /* KVConfig.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +43,16 @@
 		C032CFC0194B22C2003C56B7 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
 		C032CFC1194B22C2003C56B7 /* utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utils.cpp; sourceTree = "<group>"; };
 		C032CFC2194B22C2003C56B7 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		C04CF1291951AD7D00A4B371 /* MyDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyDevice.cpp; path = ../../../../libzkonvif/test/MyDevice.cpp; sourceTree = "<group>"; };
+		C04CF12A1951AD7D00A4B371 /* MyDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyDevice.h; path = ../../../../libzkonvif/test/MyDevice.h; sourceTree = "<group>"; };
+		C04CF12B1951AD7D00A4B371 /* MyDeviceDiscovery.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyDeviceDiscovery.cpp; path = ../../../../libzkonvif/test/MyDeviceDiscovery.cpp; sourceTree = "<group>"; };
+		C04CF12C1951AD7D00A4B371 /* MyDeviceDiscovery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyDeviceDiscovery.h; path = ../../../../libzkonvif/test/MyDeviceDiscovery.h; sourceTree = "<group>"; };
+		C04CF12D1951AD7E00A4B371 /* MyPtz.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MyPtz.cpp; path = ../../../../libzkonvif/test/MyPtz.cpp; sourceTree = "<group>"; };
+		C04CF12E1951AD7E00A4B371 /* MyPtz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyPtz.h; path = ../../../../libzkonvif/test/MyPtz.h; sourceTree = "<group>"; };
+		C04CF1361951AF1E00A4B371 /* libcrypto.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.1.0.0.dylib; path = ../../../../../../../../opt/local/lib/libcrypto.1.0.0.dylib; sourceTree = "<group>"; };
+		C04CF1371951AF1E00A4B371 /* libssl.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.1.0.0.dylib; path = ../../../../../../../../opt/local/lib/libssl.1.0.0.dylib; sourceTree = "<group>"; };
+		C04CF13A1951AF4700A4B371 /* KVConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = KVConfig.cpp; path = ../../../../common/KVConfig.cpp; sourceTree = "<group>"; };
+		C04CF13B1951AF4700A4B371 /* KVConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KVConfig.h; path = ../../../../common/KVConfig.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +60,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C04CF1381951AF1E00A4B371 /* libcrypto.1.0.0.dylib in Frameworks */,
+				C04CF1391951AF1E00A4B371 /* libssl.1.0.0.dylib in Frameworks */,
 				C032CFBE194B227F003C56B7 /* libccgnu2.a in Frameworks */,
 				C032CFBC194B21FB003C56B7 /* libzkonvif.a in Frameworks */,
 			);
@@ -55,6 +73,8 @@
 		C032CFA0194B21B2003C56B7 = {
 			isa = PBXGroup;
 			children = (
+				C04CF1361951AF1E00A4B371 /* libcrypto.1.0.0.dylib */,
+				C04CF1371951AF1E00A4B371 /* libssl.1.0.0.dylib */,
 				C032CFBD194B227F003C56B7 /* libccgnu2.a */,
 				C032CFBB194B21FB003C56B7 /* libzkonvif.a */,
 				C032CFAB194B21B2003C56B7 /* test_zkonvif */,
@@ -73,6 +93,14 @@
 		C032CFAB194B21B2003C56B7 /* test_zkonvif */ = {
 			isa = PBXGroup;
 			children = (
+				C04CF13A1951AF4700A4B371 /* KVConfig.cpp */,
+				C04CF13B1951AF4700A4B371 /* KVConfig.h */,
+				C04CF1291951AD7D00A4B371 /* MyDevice.cpp */,
+				C04CF12A1951AD7D00A4B371 /* MyDevice.h */,
+				C04CF12B1951AD7D00A4B371 /* MyDeviceDiscovery.cpp */,
+				C04CF12C1951AD7D00A4B371 /* MyDeviceDiscovery.h */,
+				C04CF12D1951AD7E00A4B371 /* MyPtz.cpp */,
+				C04CF12E1951AD7E00A4B371 /* MyPtz.h */,
 				C032CFBF194B22C2003C56B7 /* common */,
 				C032CFB5194B21E2003C56B7 /* MyEvent.cpp */,
 				C032CFB6194B21E2003C56B7 /* MyEvent.h */,
@@ -144,9 +172,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C04CF1311951AD7E00A4B371 /* MyPtz.cpp in Sources */,
 				C032CFC3194B22C2003C56B7 /* utils.cpp in Sources */,
+				C04CF1301951AD7E00A4B371 /* MyDeviceDiscovery.cpp in Sources */,
+				C04CF13C1951AF4700A4B371 /* KVConfig.cpp in Sources */,
 				C032CFB9194B21E2003C56B7 /* MyEvent.cpp in Sources */,
 				C032CFBA194B21E2003C56B7 /* test_target_dm.cpp in Sources */,
+				C04CF12F1951AD7E00A4B371 /* MyDevice.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,7 +258,10 @@
 		C032CFB3194B21B2003C56B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = ZONEKEY_SOURCE;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					ZONEKEY_SOURCE,
+					WITH_OPENSSL,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -244,7 +279,10 @@
 		C032CFB4194B21B2003C56B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = ZONEKEY_SOURCE;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					ZONEKEY_SOURCE,
+					WITH_OPENSSL,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -278,6 +316,7 @@
 				C032CFB4194B21B2003C56B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
