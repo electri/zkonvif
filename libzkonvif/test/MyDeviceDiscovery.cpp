@@ -10,7 +10,7 @@ void MyDeviceDiscovery::run()
 #define PORT 3702
 #define ADDR "239.255.255.250"
 
-	soap->bind_flags != SO_REUSEADDR;
+	soap->bind_flags |= SO_REUSEADDR;
 	if (!soap_valid_socket(bind(0, PORT, 100))) {
 		log(LOG_FAULT, "%s: bind %d err\n", __func__, PORT);
 		::exit(-1);
