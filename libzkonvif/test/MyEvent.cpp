@@ -58,8 +58,7 @@ void MyEvent::run()
 int MyEvent::GetServiceCapabilities(_tev__GetServiceCapabilities *tev__GetServiceCapabilities,
 									_tev__GetServiceCapabilitiesResponse *tev__GetServiceCapabilitiesResponse)
 {
-	tev__GetServiceCapabilitiesResponse->Capabilities = (tev__Capabilities*)soap_malloc(soap, sizeof(tev__Capabilities));
-	memset(&tev__GetServiceCapabilitiesResponse->Capabilities, 0, sizeof(tev__Capabilities));
+	tev__GetServiceCapabilitiesResponse->Capabilities = soap_new_tev__Capabilities(soap);
 
 	// 不支持 basic notification interface .
 	tev__GetServiceCapabilitiesResponse->Capabilities->MaxNotificationProducers = (int*)soap_malloc(soap, sizeof(int));
