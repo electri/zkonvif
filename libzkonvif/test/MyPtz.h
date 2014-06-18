@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../soap/soapPTZBindingService.h"
 #include <cc++/thread.h>
 #include "myservice.inf.h"

@@ -27,6 +27,9 @@
     <ClCompile Include="..\..\..\libzkonvif\test\MyPtz.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\common\utils.h">
@@ -42,6 +45,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\libzkonvif\test\MyPtz.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\test\MyDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

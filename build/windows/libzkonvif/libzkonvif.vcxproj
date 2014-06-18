@@ -39,7 +39,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;../../../libzkonvif/soap/;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;../../../libzkwsdd/soap/;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
@@ -87,6 +92,7 @@
     <ClCompile Include="..\..\..\libzkonvif\soap\soapwsddProxy.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapwsddService.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\stdsoap2.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\MyDevice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\libzkonvif\soap\duration.h" />
@@ -366,6 +372,9 @@
     <Xml Include="..\..\..\libzkonvif\soap\xml\wsdd.ProbeMatches.req.xml" />
     <Xml Include="..\..\..\libzkonvif\soap\xml\wsdd.Resolve.req.xml" />
     <Xml Include="..\..\..\libzkonvif\soap\xml\wsdd.ResolveMatches.req.xml" />
+    <ProjectReference Include="..\ccgnu2\ccgnu2.vcxproj">
+      <Project>{399a07de-0289-40cb-abf6-2aa4499b7049}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

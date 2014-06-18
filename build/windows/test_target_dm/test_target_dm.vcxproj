@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\common\utils.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyEvent.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyPtz.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\test_target_dm.cpp" />
@@ -96,6 +97,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\common\log.h" />
     <ClInclude Include="..\..\..\common\utils.h" />
+    <ClInclude Include="..\..\..\libzkonvif\test\MyDevice.h" />
+    <ClInclude Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\MyEvent.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\MyPtz.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\myservice.inf.h" />
