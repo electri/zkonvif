@@ -30,6 +30,9 @@
     <ClCompile Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\common\KVConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\common\utils.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\common\KVConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

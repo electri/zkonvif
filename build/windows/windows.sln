@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libzkonvif", "libzkonvif\li
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_target_dm", "test_target_dm\test_target_dm.vcxproj", "{55A03E01-1CB2-42B2-ADC3-009779648320}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_client_dm", "test_client_dm\test_client_dm.vcxproj", "{6FE93B4F-6CE0-4ED3-87F6-5507543594B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -39,6 +41,10 @@ Global
 		{55A03E01-1CB2-42B2-ADC3-009779648320}.Debug|Win32.Build.0 = Debug|Win32
 		{55A03E01-1CB2-42B2-ADC3-009779648320}.Release|Win32.ActiveCfg = Release|Win32
 		{55A03E01-1CB2-42B2-ADC3-009779648320}.Release|Win32.Build.0 = Release|Win32
+		{6FE93B4F-6CE0-4ED3-87F6-5507543594B3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6FE93B4F-6CE0-4ED3-87F6-5507543594B3}.Debug|Win32.Build.0 = Debug|Win32
+		{6FE93B4F-6CE0-4ED3-87F6-5507543594B3}.Release|Win32.ActiveCfg = Release|Win32
+		{6FE93B4F-6CE0-4ED3-87F6-5507543594B3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

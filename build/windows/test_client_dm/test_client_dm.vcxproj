@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{55A03E01-1CB2-42B2-ADC3-009779648320}</ProjectGuid>
+    <ProjectGuid>{6FE93B4F-6CE0-4ED3-87F6-5507543594B3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>test_target_dm</RootNamespace>
+    <RootNamespace>test_client_dm</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,11 +41,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\OpenSSL-Win32\include</IncludePath>
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>../../../3rd/commoncpp2-1.8.1/inc;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -53,12 +53,11 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x600;_DEBUG;_CONSOLE;_LIB;WITH_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -69,23 +68,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x600;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\common\KVConfig.cpp" />
-    <ClCompile Include="..\..\..\common\utils.cpp" />
-    <ClCompile Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.cpp" />
-    <ClCompile Include="..\..\..\libzkonvif\test\MyEvent.cpp" />
-    <ClCompile Include="..\..\..\libzkonvif\test\MyPtz.cpp" />
-    <ClCompile Include="..\..\..\libzkonvif\test\test_target_dm.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\test_client_dm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ccgnu2\ccgnu2.vcxproj">
@@ -94,16 +87,6 @@
     <ProjectReference Include="..\libzkonvif\libzkonvif.vcxproj">
       <Project>{8aac020d-c865-4881-bbfa-336fc48a3b9e}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\common\KVConfig.h" />
-    <ClInclude Include="..\..\..\common\log.h" />
-    <ClInclude Include="..\..\..\common\utils.h" />
-    <ClInclude Include="..\..\..\libzkonvif\test\MyDevice.h" />
-    <ClInclude Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.h" />
-    <ClInclude Include="..\..\..\libzkonvif\test\MyEvent.h" />
-    <ClInclude Include="..\..\..\libzkonvif\test\MyPtz.h" />
-    <ClInclude Include="..\..\..\libzkonvif\test\myservice.inf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
