@@ -331,7 +331,7 @@ const char* soap_wsa_rand_uuid(struct soap *soap)
 	int r1, r2, r3, r4;
 #ifdef WITH_OPENSSL
 	r1 = soap_random;
-	r2 = soap_randome;
+	r2 = soap_random;
 #else
 	static int k = 0xFACEB00B;
 	int lo = k % 127773;
