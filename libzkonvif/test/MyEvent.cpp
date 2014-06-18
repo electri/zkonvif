@@ -36,7 +36,7 @@ int MyEvent::GetServiceCapabilities(_tev__GetServiceCapabilities *tev__GetServic
 	tev__GetServiceCapabilitiesResponse->Capabilities->PersistentNotificationStorage = (bool*)soap_malloc(soap, sizeof(bool));
 	*tev__GetServiceCapabilitiesResponse->Capabilities->PersistentNotificationStorage = false;
 
-
+	tev__GetServiceCapabilitiesResponse->Capabilities->MaxPullPoints = 0;
 
 	return SOAP_OK;
 }

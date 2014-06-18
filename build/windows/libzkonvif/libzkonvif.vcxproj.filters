@@ -19,6 +19,9 @@
     <Filter Include="gsoap_gen">
       <UniqueIdentifier>{9a36125c-0b04-42a1-84c6-666de44d41c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gsoap_gen\xml">
+      <UniqueIdentifier>{32530a30-20ff-4e03-b043-6c161e991359}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\libzkonvif\soap\soapC.cpp">
@@ -107,5 +110,790 @@
     <ClInclude Include="..\..\..\libzkonvif\soap\soapPTZBindingService.h">
       <Filter>gsoap_gen</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.AddIPAddressFilter.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.AddIPAddressFilter.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.AddScopes.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.AddScopes.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.CreateCertificate.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.CreateCertificate.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.CreateDot1XConfiguration.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.CreateDot1XConfiguration.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.CreateUsers.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.CreateUsers.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.DeleteCertificates.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.DeleteCertificates.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.DeleteDot1XConfiguration.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.DeleteDot1XConfiguration.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.DeleteUsers.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.DeleteUsers.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetAccessPolicy.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetAccessPolicy.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCACertificates.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCACertificates.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCapabilities.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCapabilities.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCertificateInformation.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCertificateInformation.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCertificates.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCertificates.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCertificatesStatus.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetCertificatesStatus.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetClientCertificateMode.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetClientCertificateMode.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDeviceInformation.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDeviceInformation.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDiscoveryMode.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDiscoveryMode.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDNS.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDNS.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDot1XConfiguration.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDot1XConfiguration.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDot1XConfigurations.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDot1XConfigurations.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDot11Capabilities.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDot11Capabilities.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDot11Status.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDot11Status.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDPAddresses.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDPAddresses.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDynamicDNS.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetDynamicDNS.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetEndpointReference.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetEndpointReference.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetHostname.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetHostname.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetIPAddressFilter.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetIPAddressFilter.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetNetworkDefaultGateway.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetNetworkDefaultGateway.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetNetworkInterfaces.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetNetworkInterfaces.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetNetworkProtocols.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetNetworkProtocols.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetNTP.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetNTP.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetPkcs10Request.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetPkcs10Request.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetRelayOutputs.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetRelayOutputs.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetRemoteDiscoveryMode.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetRemoteDiscoveryMode.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetRemoteUser.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetRemoteUser.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetScopes.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetScopes.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetServiceCapabilities.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetServiceCapabilities.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetServices.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetServices.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemBackup.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemBackup.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemDateAndTime.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemDateAndTime.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemLog.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemLog.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemSupportInformation.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemSupportInformation.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemUris.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetSystemUris.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetUsers.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetUsers.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetWsdlUrl.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetWsdlUrl.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetZeroConfiguration.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.GetZeroConfiguration.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.LoadCACertificates.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.LoadCACertificates.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.LoadCertificates.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.LoadCertificates.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.LoadCertificateWithPrivateKey.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.LoadCertificateWithPrivateKey.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.RemoveIPAddressFilter.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.RemoveIPAddressFilter.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.RemoveScopes.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.RemoveScopes.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.RestoreSystem.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.RestoreSystem.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.ScanAvailableDot11Networks.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.ScanAvailableDot11Networks.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SendAuxiliaryCommand.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SendAuxiliaryCommand.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetAccessPolicy.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetAccessPolicy.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetCertificatesStatus.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetCertificatesStatus.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetClientCertificateMode.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetClientCertificateMode.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDiscoveryMode.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDiscoveryMode.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDNS.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDNS.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDot1XConfiguration.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDot1XConfiguration.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDPAddresses.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDPAddresses.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDynamicDNS.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetDynamicDNS.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetHostname.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetHostname.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetHostnameFromDHCP.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetHostnameFromDHCP.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetIPAddressFilter.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetIPAddressFilter.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetNetworkDefaultGateway.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetNetworkDefaultGateway.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetNetworkInterfaces.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetNetworkInterfaces.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetNetworkProtocols.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetNetworkProtocols.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetNTP.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetNTP.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetRelayOutputSettings.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetRelayOutputSettings.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetRelayOutputState.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetRelayOutputState.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetRemoteDiscoveryMode.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetRemoteDiscoveryMode.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetRemoteUser.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetRemoteUser.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetScopes.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetScopes.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetSystemDateAndTime.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetSystemDateAndTime.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetSystemFactoryDefault.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetSystemFactoryDefault.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetUser.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetUser.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetZeroConfiguration.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SetZeroConfiguration.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.StartFirmwareUpgrade.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.StartFirmwareUpgrade.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.StartSystemRestore.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.StartSystemRestore.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SystemReboot.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.SystemReboot.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.UpgradeSystemFirmware.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.UpgradeSystemFirmware.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.AbsoluteMove.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.AbsoluteMove.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.ContinuousMove.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.ContinuousMove.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.CreatePresetTour.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.CreatePresetTour.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetCompatibleConfigurations.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetCompatibleConfigurations.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetConfiguration.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetConfiguration.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetConfigurationOptions.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetConfigurationOptions.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetConfigurations.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetConfigurations.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetNode.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetNode.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetNodes.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetNodes.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetPresets.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetPresets.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetPresetTour.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetPresetTour.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetPresetTourOptions.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetPresetTourOptions.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetPresetTours.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetPresetTours.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetServiceCapabilities.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetServiceCapabilities.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetStatus.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GetStatus.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GotoHomePosition.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GotoHomePosition.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GotoPreset.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.GotoPreset.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.ModifyPresetTour.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.ModifyPresetTour.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.OperatePresetTour.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.OperatePresetTour.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.RelativeMove.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.RelativeMove.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.RemovePreset.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.RemovePreset.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.RemovePresetTour.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.RemovePresetTour.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.SendAuxiliaryCommand.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.SendAuxiliaryCommand.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.SetConfiguration.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.SetConfiguration.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.SetHomePosition.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.SetHomePosition.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.SetPreset.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.SetPreset.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.Stop.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PTZBinding.Stop.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.CreatePullPoint.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.CreatePullPoint.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.CreatePullPointSubscription.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.CreatePullPointSubscription.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.DestroyPullPoint.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.DestroyPullPoint.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetCurrentMessage.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetCurrentMessage.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetEventProperties.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetEventProperties.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetMessages.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetMessages.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetServiceCapabilities.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetServiceCapabilities.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Notify.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.PauseSubscription.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.PauseSubscription.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.PullMessages.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.PullMessages.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Renew.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Renew.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.ResumeSubscription.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.ResumeSubscription.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Seek.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Seek.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.SetSynchronizationPoint.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.SetSynchronizationPoint.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Subscribe.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Subscribe.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Unsubscribe.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Unsubscribe.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\RemoteDiscoveryBinding.Bye.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\RemoteDiscoveryBinding.Bye.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\RemoteDiscoveryBinding.Hello.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\RemoteDiscoveryBinding.Hello.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\RemoteDiscoveryBinding.Probe.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\RemoteDiscoveryBinding.Probe.res.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\wsdd.Bye.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\wsdd.Hello.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\wsdd.Probe.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\wsdd.ProbeMatches.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\wsdd.Resolve.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
+    <Xml Include="..\..\..\libzkonvif\soap\xml\wsdd.ResolveMatches.req.xml">
+      <Filter>gsoap_gen\xml</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
