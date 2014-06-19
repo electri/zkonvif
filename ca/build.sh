@@ -9,6 +9,14 @@ else
 	openssl x509 -outform der -in ca-cert.pem -out ca-cert.crt
 fi
 
+# 生成 cacerts.pem，为了给 client 使用 :)
+if [ -f cacerts.pem ]; then
+	echo 'ca-certs exist ...'
+else
+	echo " == self reg ca ==" > cacerts.pem
+	cat ca-cert.pem >> cacerts.pem
+fi
+
 # 生成 server 端证书，使用ca-cert 签名 ...
 
 if [ -f server.pem ]; then

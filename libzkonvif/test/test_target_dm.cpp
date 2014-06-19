@@ -96,6 +96,39 @@ void CRYPTO_thread_cleanup()
 	mutex_buf = NULL;
 }
 
+/** rtmp 服务接口, 这个仅仅为了演示如何使用 ServiceInf
+*/
+class MyMediaStream : public ServiceInf
+{
+	std::string url_;
+
+public:
+	MyMediaStream()
+	{
+		url_ = "rtmp://0.0.0.0:0"; // FIXME: 一个非法的 url :)
+	}
+
+private:
+	const char *url() const { return url_.c_str(); }
+	const char *desc() const { return "zonekey RTMP living cast ...!"; }
+	const char *ns() const
+	{
+		// FIXME: 这里应该照着规矩来 ...
+		return "media";
+	}
+
+private:
+	static const char* my_messageid()
+	{
+		static int _i = 0;
+		static char buf[64];
+
+		snprintf(buf, sizeof(buf), "id:%u", _i++);
+
+		return buf;
+	}
+};
+
 int main(int argc, char **argv)
 {
 	log_init();
@@ -106,14 +139,16 @@ int main(int argc, char **argv)
 
 	std::vector<ServiceInf *> services;
 
+	MyEvent evt(10000);	// 事件服务 ...
+	services.push_back(&evt);
+
 	MyPtz ptz(10001);	// 云台服务 ..
+	ptz.set_eventsink(&evt);
 	services.push_back(&ptz);
 
 	MyMediaStream ms;	// 直播服务 ..
+	ms.set_eventsink(&evt);
 	services.push_back(&ms);
-
-	MyEvent evt(10000);	// 事件服务 ...
-	services.push_back(&evt);
 
 	MyDevice device(9999, services);
 	MyDeviceDiscovery discovery(&device);

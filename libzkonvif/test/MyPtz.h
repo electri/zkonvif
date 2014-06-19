@@ -39,5 +39,7 @@ private:
 		// FIXME: 这里应该照着规矩来 ...
 		return "ptz";
 	}
+
 	virtual	int GetConfigurations(_tptz__GetConfigurations *tptz__GetConfigurations, _tptz__GetConfigurationsResponse *tptz__GetConfigurationsResponse);
+	virtual	int SetConfiguration(const char *endpoint, const char *soap_action, _tptz__SetConfiguration *tptz__SetConfiguration, _tptz__SetConfigurationResponse *tptz__SetConfigurationResponse);
 };

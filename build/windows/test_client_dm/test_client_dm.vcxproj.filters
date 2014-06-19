@@ -18,5 +18,8 @@
     <ClCompile Include="..\..\..\libzkonvif\test\test_client_dm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\common\KVConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

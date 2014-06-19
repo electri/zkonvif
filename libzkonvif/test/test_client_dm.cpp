@@ -117,3 +117,4 @@ void test_ptz_GetConfigurations()
 
 	fprintf(stderr, "%s end ...\n", __FUNCTION__);
 }
+
