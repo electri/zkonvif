@@ -39,4 +39,5 @@ private:
 		// FIXME: 这里应该照着规矩来 ...
 		return "ptz";
 	}
+	virtual	int GetConfigurations(_tptz__GetConfigurations *tptz__GetConfigurations, _tptz__GetConfigurationsResponse *tptz__GetConfigurationsResponse);
 };

@@ -94,3 +94,26 @@ static void test_event(const tds__Service *service)
 {
 	fprintf(stdout, "%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
 }
+
+void test_ptz_GetConfigurations()
+{
+	PTZBindingProxy pbp;
+	fprintf(stderr, "%s start ...\n", __FUNCTION__);
+	_tptz__GetConfigurations tptz__GetConfigurations;
+	_tptz__GetConfigurationsResponse tptz__GetConfigurationsResponse;
+	pbp.GetConfigurations(&tptz__GetConfigurations, &tptz__GetConfigurationsResponse);
+
+
+	std::vector<tt__PTZConfiguration *> v_pc = tptz__GetConfigurationsResponse.PTZConfiguration;
+
+	std::vector<tt__PTZConfiguration *>::const_iterator it;
+	for (it = v_pc.begin(); it != v_pc.end(); ++it) {
+		fprintf(stderr, "NodeToken = %s\n", (*it)->NodeToken.c_str());
+		if ((*it)->DefaultAbsolutePantTiltPositionSpace != NULL)
+			fprintf(stderr, "DefaultAbsolutePantTiltPositionSpace = %s\n", (*it)->DefaultAbsolutePantTiltPositionSpace->c_str());
+		if ((*it)->DefaultAbsoluteZoomPositionSpace != NULL)
+			fprintf(stderr, "DefualtAbsoluteZoomPostionSpace  = %s \n", (*it)->DefaultAbsoluteZoomPositionSpace->c_str());
+		}
+
+	fprintf(stderr, "%s end ...\n", __FUNCTION__);
+}
