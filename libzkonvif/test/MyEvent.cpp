@@ -48,11 +48,33 @@ void MyEvent::run()
 #else
 			serve();
 #endif
-
-			soap_destroy(this->soap);
-			soap_end(this->soap);
+			destroy();
 		}
 	}
+
+	soap_done(soap);
+}
+
+void MyEvent::post(ServiceInf *service, int code, const char *info)
+{
+	// 将通知发送到匹配的 PullPoint ...
+	// XXX: 这里将 ns() == "*" 作为全匹配 .
+	ost::MutexLock al(cs_pull_points_);
+	PULLPOINTS::iterator it;
+	for (it = pull_points_.begin(); it != pull_points_.end(); ++it) {
+		const char *ns = ((ServiceInf*)(*it))->ns();
+		if (!strcmp(ns, "*") || !strcmp(service->ns(), ns)) {
+			(*it)->append(code, info);
+		}
+	}
+
+	/** 删除“死亡列表”中的所有对象 .. 
+	 */
+	for (it = death_list_.begin(); it != death_list_.end(); ++it) {
+		delete (*it);
+	}
+
+	death_list_.clear();
 }
 
 int MyEvent::GetServiceCapabilities(_tev__GetServiceCapabilities *tev__GetServiceCapabilities,
@@ -83,6 +105,104 @@ int MyEvent::CreatePullPointSubscription(_tev__CreatePullPointSubscription *tev_
 										 _tev__CreatePullPointSubscriptionResponse *tev__CreatePullPointSubscriptionResponse)
 {
 	/** 启动一个新的 socket，接收 PullMessageRequest, UnsubscribeRequest 等 */
+	// FIXME: 应该支持 Filter ...
+	// 这里假设没有设置 filter，则支持所有 ..
+	MyPullPoint *pp = new MyPullPoint(this, "*");
+
+	tev__CreatePullPointSubscriptionResponse->wsnt__CurrentTime = time(0);
+	tev__CreatePullPointSubscriptionResponse->wsnt__TerminationTime = tev__CreatePullPointSubscriptionResponse->wsnt__CurrentTime + 365 * 24 * 60 * 60; // 呵呵，一年后结束 .
+	tev__CreatePullPointSubscriptionResponse->SubscriptionReference.Address = soap_strdup(soap, pp->url());
+	tev__CreatePullPointSubscriptionResponse->SubscriptionReference.ReferenceParameters = 0;
+	tev__CreatePullPointSubscriptionResponse->SubscriptionReference.Metadata = 0;
+	tev__CreatePullPointSubscriptionResponse->SubscriptionReference.__any = 0;
+	tev__CreatePullPointSubscriptionResponse->SubscriptionReference.__size = 0;
+	tev__CreatePullPointSubscriptionResponse->SubscriptionReference.__anyAttribute = 0;
+
+	ost::MutexLock al(cs_pull_points_);
+	pull_points_.push_back(pp);
 
 	return SOAP_OK;
+}
+
+void MyPullPoint::run()
+{
+	log(LOG_DEBUG, "%s: oooh, PullPoint %s started\n", __func__, url_.c_str());
+
+	/** 处理此连接点 ....
+	*/
+	while (!quit_) {
+		if (!soap_valid_socket(accept())) {
+			log(LOG_ERROR, "%s: accept err???\n", __func__);
+			continue;
+		}
+
+		serve();
+		destroy();
+	}
+
+	soap_done(soap);	// 对应着构造函数 ..
+	evt_->remove_pullpoint(this); // 从 MyEvent 的队列中删除 ....
+
+	log(LOG_DEBUG, "%s: ok, PullPoint %s terminated!\n", __func__, url_.c_str());
+}
+
+int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullMessagesResponse *tev__PullMessagesResponse)
+{
+	log(LOG_DEBUG, "%s: calling ...\n", __func__);
+
+	/** 直到 pending_message 有消息，才返回 ..
+
+		FIXME: 没有处理 _tev__PullMessages 中的 MessageLimit ...
+		*/
+
+	int timeout = (int)tev__PullMessages->Timeout;  // XXX: 这个 Timeout 参数是什么单位？秒，分？ ..
+	//		这里按照 秒 来算吧 :(
+
+	bool t = false;
+	std::vector<NotifyMessage> msgs;
+	while (!curr_msgs(msgs)) {
+		if (!sem_.wait(timeout * 1000)) {
+			t = true;
+			break;
+		}
+	}
+
+	// FIXME: 如果超时，如果返回 Fault Message ???
+
+	// response
+	tev__PullMessagesResponse->CurrentTime = time(0);
+	tev__PullMessagesResponse->TerminationTime = tev__PullMessagesResponse->CurrentTime + 365 * 24 * 60 * 60; // 呵呵，增加一年 .
+
+	std::vector<NotifyMessage>::iterator it;
+	for (it = msgs.begin(); it != msgs.end(); ++it) {
+		/** XXX: 照理说，需要分清楚： When: 何时发生, Who: 谁的事件, What: 事件的内容 ....
+				但看 onvif 文档和 ws-topics，看的一头雾水 ...
+		 */
+		wsnt__NotificationMessageHolderType *mht = soap_new_wsnt__NotificationMessageHolderType(soap);
+		mht->Message.__any = soap_strdup(soap, it->desc());
+	}
+
+	return SOAP_OK;
+}
+
+int MyPullPoint::Unsubscribe(_wsnt__Unsubscribe *wsnt__Unsubscribe, _wsnt__UnsubscribeResponse *wsnt__UnsubscribeResponse)
+{
+	// XXX: 这里无需做啥工作，只需要通知线程下个循环退出即可 :)
+	quit_ = true;
+	log(LOG_DEBUG, "%s: calling ...\n", __func__);
+	return SOAP_OK;
+}
+
+int MyPullPoint::append(int code, const char *info)
+{
+	ost::MutexLock al(cs_pending_messages);
+
+	NotifyMessage nm;
+	nm.code = code;
+	nm.info = info;
+
+	pending_messages.push_back(nm);
+	sem_.post();
+
+	return 0;
 }

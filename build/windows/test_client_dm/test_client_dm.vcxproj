@@ -78,6 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\common\KVConfig.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\test_client_dm.cpp" />
   </ItemGroup>
   <ItemGroup>
