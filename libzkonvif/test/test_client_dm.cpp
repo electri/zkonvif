@@ -4,6 +4,8 @@
 		3. 对 url 进行测试 ...
  */
 
+#define WITH_OPENSSL
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -51,6 +53,10 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
+#ifdef WITH_OPENSSL
+	soap_ssl_init();
+#endif // openssl 
+
 	const char *url = argv[1];
 
 	fprintf(stdout, "using device mgrt url: '%s'\n", url);
@@ -93,4 +99,10 @@ static void test_ptz(const tds__Service *service)
 static void test_event(const tds__Service *service)
 {
 	fprintf(stdout, "%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
+#ifdef WITH_OPENSSL
+	// 使用 tls ..
+
+#endif
+
+
 }
