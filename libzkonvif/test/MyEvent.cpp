@@ -64,7 +64,7 @@ void MyEvent::post(ServiceInf *service, int code, const char *info)
 	for (it = pull_points_.begin(); it != pull_points_.end(); ++it) {
 		const char *ns = ((ServiceInf*)(*it))->ns();
 		if (!strcmp(ns, "*") || !strcmp(service->ns(), ns)) {
-			(*it)->append(code, info);
+			(*it)->append(service->ns(), code, info);
 		}
 	}
 
@@ -177,9 +177,14 @@ int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullM
 	for (it = msgs.begin(); it != msgs.end(); ++it) {
 		/** XXX: 照理说，需要分清楚： When: 何时发生, Who: 谁的事件, What: 事件的内容 ....
 				但看 onvif 文档和 ws-topics，看的一头雾水 ...
+
+			FIXME: 不知是否正确，强制修改 onvif.h 中的 wsnt__NoitficationMessageHolderType->Message 中的 __any 对象为 _tt__Message* 类型，方便格式化消息 ???
 		 */
 		wsnt__NotificationMessageHolderType *mht = soap_new_wsnt__NotificationMessageHolderType(soap);
-		mht->Message.__any = soap_strdup(soap, it->desc());
+		mht->Message.message.who = soap_strdup(soap, it->who.c_str());
+		mht->Message.message.code = it->code;
+		mht->Message.message.level = 0;	// FIXME: 需要来自 NotifyMessage ...
+		mht->Message.message.info = soap_strdup(soap, it->info.c_str());
 	}
 
 	return SOAP_OK;
@@ -193,11 +198,12 @@ int MyPullPoint::Unsubscribe(_wsnt__Unsubscribe *wsnt__Unsubscribe, _wsnt__Unsub
 	return SOAP_OK;
 }
 
-int MyPullPoint::append(int code, const char *info)
+int MyPullPoint::append(const char *who, int code, const char *info)
 {
 	ost::MutexLock al(cs_pending_messages);
 
 	NotifyMessage nm;
+	nm.who = who;
 	nm.code = code;
 	nm.info = info;
 

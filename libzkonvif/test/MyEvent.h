@@ -30,21 +30,9 @@ class MyPullPoint : PullPointSubscriptionBindingService
 
 	struct NotifyMessage
 	{
+		std::string who;	// 
 		int code;
 		std::string info;
-
-		/** FIXME: 这里将 code 和 info 合并一下，返回返回 :(
-		 */
-		const char *desc()
-		{
-			std::stringstream ss;
-			ss << code << "," << info;
-			internal_ = ss.str();
-			return internal_.c_str();
-		}
-
-	private:
-		std::string internal_;
 	};
 
 	typedef std::deque<NotifyMessage> MESSAGES;
@@ -75,7 +63,7 @@ public:
 	}
 
 	// 通知消息 ...
-	int append(int code, const char *info);
+	int append(const char *who, int code, const char *info);
 	
 	const char *url() const 
 	{
