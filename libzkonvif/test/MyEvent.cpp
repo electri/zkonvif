@@ -164,7 +164,6 @@ int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullM
 	// response
 	tev__PullMessagesResponse->CurrentTime = time(0);
 	tev__PullMessagesResponse->TerminationTime = tev__PullMessagesResponse->CurrentTime + 365 * 24 * 60 * 60; // 呵呵，增加一年 .
-
 	std::vector<NotifyMessage>::iterator it;
 	for (it = msgs.begin(); it != msgs.end(); ++it) {
 		/** XXX: 照理说，需要分清楚： When: 何时发生, Who: 谁的事件, What: 事件的内容 ....
@@ -177,6 +176,8 @@ int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullM
 		mht->Message.message.code = it->code;
 		mht->Message.message.level = it->level;
 		mht->Message.message.info = soap_strdup(soap, it->info.c_str());
+
+		tev__PullMessagesResponse->wsnt__NotificationMessage.push_back(mht);
 	}
 
 	return SOAP_OK;
