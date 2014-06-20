@@ -1,4 +1,5 @@
 #include "../soap/soapPullPointSubscriptionBindingProxy.h"
+#include "../soap/wsseapi.h"
 #include "../../common/log.h"
 #include "../../common/utils.h"
 #include "../../common/KVConfig.h"
@@ -10,6 +11,9 @@ void test_event(const tds__Service *service)
 	fprintf(stdout, "\n\n%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
 
 	PullPointSubscriptionBindingProxy pps, pps_p;	// pps 用于 CreatePullPointSubscription, pps_p 用于 PullMessage, ...
+
+	// 使用 WS-usernameToken，参考 wsseapi.h 
+	soap_wsse_add_UsernameTokenDigest(pps.soap, "id", "zonekey", "yekenoz");
 
 #ifdef WITH_OPENSSL
 	// 使用 tls ..

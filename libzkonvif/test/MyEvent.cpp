@@ -2,6 +2,7 @@
 #include "../../common/utils.h"
 #include "../../common/log.h"
 #include "../../common/KVConfig.h"
+#include "../soap/wsseapi.h"
 
 MyEvent::MyEvent(int port)
 {
@@ -96,6 +97,24 @@ int MyEvent::GetEventProperties(_tev__GetEventProperties *tev__GetEventPropertie
 int MyEvent::CreatePullPointSubscription(_tev__CreatePullPointSubscription *tev__CreatePullPointSubscription,
 										 _tev__CreatePullPointSubscriptionResponse *tev__CreatePullPointSubscriptionResponse)
 {
+	// 此处进行 WS-UsernameToken 检查，参考 wsseapi.h
+	const char *username = soap_wsse_get_Username(soap);
+	if (!username) {
+		log(LOG_WARNING, "%s: username needed!!!\n", __func__);
+		return 401;	// FIXME: 直接返回 http 的错误么 ? 
+	}
+
+	log(LOG_DEBUG, "%s: username='%s'\n", __func__, username);
+
+	const char *passwd = "yekenoz";  // TODO: 应该根据 username，从数据看库中检索 ...
+	if (soap_wsse_verify_Password(soap, passwd)) {
+		log(LOG_WARNING, "%s: passwd chk failure !\n", __func__);
+		// 失败，返回 403?
+		return 403;
+	}
+
+	log(LOG_DEBUG, "%s: auth chk passwd\n", __func__);
+
 	/** 启动一个新的 socket，接收 PullMessageRequest, UnsubscribeRequest 等 */
 	// FIXME: 应该支持 Filter ...
 	// 这里假设没有设置 filter，则支持所有 ..
