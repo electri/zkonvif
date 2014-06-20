@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\common\KVConfig.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\test_client_dm.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\test_client_dm.event.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ccgnu2\ccgnu2.vcxproj">
