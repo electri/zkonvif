@@ -51,7 +51,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;WITH_PURE_VIRTUAL;WITH_OPENSSL;ZONEKEY_SOURCE;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WITH_PURE_VIRTUAL;WITH_OPENSSL;WITH_DOM;ZONEKEY_SOURCE;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -70,7 +70,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;WITH_PURE_VIRTUAL;WITH_OPENSSL;ZONEKEY_SOURCE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WITH_PURE_VIRTUAL;WITH_OPENSSL;WITH_DOM;ZONEKEY_SOURCE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
@@ -84,8 +84,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\libzkonvif\gsoap\dom.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\duration.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\soap\mecevp.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\nsmap.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\soap\smdevp.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapC.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapDeviceBindingService.cpp" />
@@ -98,9 +101,14 @@
     <ClCompile Include="..\..\..\libzkonvif\soap\soapwsddProxy.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapwsddService.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\stdsoap2.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\soap\threads.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\soap\wsaapi.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\soap\wsseapi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\libzkonvif\soap\duration.h" />
+    <ClInclude Include="..\..\..\libzkonvif\soap\mecevp.h" />
+    <ClInclude Include="..\..\..\libzkonvif\soap\smdevp.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingService.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapH.h" />
@@ -114,6 +122,9 @@
     <ClInclude Include="..\..\..\libzkonvif\soap\soapwsddProxy.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapwsddService.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\stdsoap2.h" />
+    <ClInclude Include="..\..\..\libzkonvif\soap\threads.h" />
+    <ClInclude Include="..\..\..\libzkonvif\soap\wsaapi.h" />
+    <ClInclude Include="..\..\..\libzkonvif\soap\wsseapi.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\..\libzkonvif\soap\xml\DeviceBinding.AddIPAddressFilter.req.xml" />

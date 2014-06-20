@@ -11,7 +11,7 @@ else
 	echo 'exec wsdl2h ...'
 #v: verbose output; j: don't generate SOAP_ENV__HEADER and SOAP_ENV__Detail 
 #definitions; p: don't create polymorphic types inherited from xsd__anyType
-	wsdl2h -vjP -o onvif.h -t wsdl/typemap.dat \
+	wsdl2h -vjP -o onvif0.h -t wsdl/typemap.dat \
 		http://www.onvif.org/onvif/ver10/event/wsdl/event.wsdl	\
 		http://www.onvif.org/onvif/ver10/device/wsdl/devicemgmt.wsdl \
 		http://www.onvif.org/onvif/ver20/ptz/wsdl/ptz.wsdl \
@@ -26,6 +26,9 @@ else
 #http://www.onvif.org/onvif/ver10/Recording.wsdl
 #http://www.onvif.org/onvif/ver10/Replay.wsdl
 #http://www.onvif.org/onvif/ver10/Search.wsdl
+	echo '#import "wsse.h"' > onvif.h
+	cat onvif0.h >> onvif.h
+	rm -f onvif0.h
 
 fi
 
@@ -46,6 +49,17 @@ mv soap/*.xml soap/xml
 cp gsoap/* soap/
 cp $GSOAP/custom/duration.c soap/duration.cpp
 cp $GSOAP/custom/duration.h soap/
+cp $GSOAP/plugin/threads.c soap/threads.cpp
+cp $GSOAP/plugin/threads.h soap/
+cp $GSOAP/plugin/wsaapi.h soap/
+cp $GSOAP/plugin/wsaapi.c soap/wsaapi.cpp
+cp $GSOAP/plugin/wsseapi.h soap/
+cp $GSOAP/plugin/wsseapi.c soap/wsseapi.cpp
+cp $GSOAP/plugin/mecevp.h soap/
+cp $GSOAP/plugin/mecevp.c soap/mecevp.cpp
+cp $GSOAP/plugin/smdevp.h soap/
+cp $GSOAP/plugin/smdevp.c soap/smdevp.cpp
+
 
 echo '#include "wsdd.nsmap"' > soap/nsmap.cpp
 
