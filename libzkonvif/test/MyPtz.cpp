@@ -3,7 +3,7 @@
 #include "../../common/log.h"
 
 std::vector<tt__PTZConfiguration *> pConfigurations;
-tt__PTZConfiguration* create_soap_tt__PTZConfiguration(tt__PTZConfiguration *tpc);
+tt__PTZConfiguration* create_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc);
 //
 //	PTZ Configuration
 //
@@ -14,25 +14,8 @@ int MyPtz::GetConfigurations(_tptz__GetConfigurations *tptz__GetConfigurations, 
 	std::vector<tt__PTZConfiguration *>::iterator c_it;
 	tptz__GetConfigurationsResponse->PTZConfiguration.clear();
 	for (c_it = pConfigurations.begin(); c_it != pConfigurations.end(); ++c_it) {
-		
-		tt__PTZConfiguration *pc = soap_new_tt__PTZConfiguration(sp);
-		*pc = **c_it;
-
-		if ((*c_it)->DefaultAbsolutePantTiltPositionSpace != NULL) {
-			pc->DefaultAbsolutePantTiltPositionSpace = soap_new_std__string(sp);
-			*pc->DefaultAbsolutePantTiltPositionSpace = *(*c_it)->DefaultAbsolutePantTiltPositionSpace;
-		}
-		if ((*c_it)->DefaultAbsoluteZoomPositionSpace != NULL) {
-			pc->DefaultAbsoluteZoomPositionSpace = soap_new_std__string(sp);
-			*pc->DefaultAbsoluteZoomPositionSpace = *(*c_it)->DefaultAbsoluteZoomPositionSpace;
-		}
-		if ((*c_it)->DefaultContinuousPanTiltVelocitySpace != NULL) {
-			pc->DefaultContinuousPanTiltVelocitySpace = soap_new_std__string(sp);
-			*pc->DefaultContinuousPanTiltVelocitySpace = *(*c_it)->DefaultContinuousPanTiltVelocitySpace;
-		}
-		// TODO: continue ...
-
-
+		tt__PTZConfiguration *pc = create_soap_tt__PTZConfiguration(tptz__GetConfigurationsResponse->soap, *c_it);
+		tptz__GetConfigurationsResponse->PTZConfiguration.push_back(pc);
 	}
 	return SOAP_OK;
 	
@@ -92,11 +75,35 @@ int MyPtz::SetConfiguration(const char *endpoint, const char *soap_action, _tptz
 
 int MyPtz::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfiguration, _tptz__GetConfigurationResponse *tptz__GetConfigurationResponse)
 {	
+	std::vector<tt__PTZConfiguration *>::const_iterator c_it;
+	for (c_it = pConfigurations.begin(); c_it != pConfigurations.end(); ++c_it) {
+		if ((*c_it)->NodeToken == tptz__GetConfiguration->PTZConfigurationToken) {
+			tptz__GetConfigurationResponse->PTZConfiguration = create_soap_tt__PTZConfiguration(tptz__GetConfigurationResponse->soap, *c_it);
+			return SOAP_OK;
+		}
+	}
 
-	return SOAP_OK;
+	return SOAP_ERR;	//	FIXME: ...
 }
 
-tt__PTZConfiguration* create_soap_tt__PTZConfiguration(tt__PTZConfiguration *tpc)
+tt__PTZConfiguration* create_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc)
 {
-	;
+	tt__PTZConfiguration *pc = soap_new_tt__PTZConfiguration(soap);
+	*pc = *tpc;
+
+	if (tpc->DefaultAbsolutePantTiltPositionSpace != NULL) {
+		pc->DefaultAbsolutePantTiltPositionSpace = soap_new_std__string(sp);
+		*pc->DefaultAbsolutePantTiltPositionSpace = *tpc->DefaultAbsolutePantTiltPositionSpace;
+	}
+	if (tpc->DefaultAbsoluteZoomPositionSpace != NULL) {
+		pc->DefaultAbsoluteZoomPositionSpace = soap_new_std__string(sp);
+		*pc->DefaultAbsoluteZoomPositionSpace = *tpc->DefaultAbsoluteZoomPositionSpace;
+	}
+	if (tpc->DefaultContinuousPanTiltVelocitySpace != NULL) {
+		pc->DefaultContinuousPanTiltVelocitySpace = soap_new_std__string(sp);
+		*pc->DefaultContinuousPanTiltVelocitySpace = *tpc->DefaultContinuousPanTiltVelocitySpace;
+	}
+	// TODO: continue ...
+	
+	return pc;
 }
