@@ -1,6 +1,7 @@
 #include "../soap/soapPullPointSubscriptionBindingProxy.h"
 #include "../../common/log.h"
 #include "../../common/utils.h"
+#include "../../common/KVConfig.h"
 
 // ²âÊÔÊÂ¼þ ...
 void test_event(const tds__Service *service)
