@@ -31,7 +31,7 @@ class MyPullPoint : PullPointSubscriptionBindingService
 	struct NotifyMessage
 	{
 		std::string who;	// 
-		int code;
+		int code, level;
 		std::string info;
 	};
 
@@ -63,7 +63,7 @@ public:
 	}
 
 	// 通知消息 ...
-	int append(const char *who, int code, const char *info);
+	int append(const char *who, int code, int level, const char *info);
 	
 	const char *url() const 
 	{
@@ -110,7 +110,7 @@ class MyEvent : PullPointSubscriptionBindingService
 	int port_;
 	std::string url_;
 	typedef std::list<MyPullPoint*> PULLPOINTS;
-	PULLPOINTS pull_points_, death_list_;
+	PULLPOINTS pull_points_;
 	ost::Mutex cs_pull_points_;
 
 	friend class MyPullPoint;
@@ -128,7 +128,7 @@ private:
 	}
 
 	/// 将消息发送到匹配的通知点 ...
-	void post(ServiceInf *service, int code, const char *info);
+	void post(const char *ns, int code, int level, const char *info);
 
 	void run();
 
@@ -137,7 +137,6 @@ private:
 		ost::MutexLock al(cs_pull_points_);
 		PULLPOINTS::iterator itf = std::find(pull_points_.begin(), pull_points_.end(), p);
 		if (itf != pull_points_.end()) {
-			death_list_.push_back(*itf);	// 保存到“死亡列表”中，等下次 post() 删除 ...
 			pull_points_.erase(itf);
 		}
 	}

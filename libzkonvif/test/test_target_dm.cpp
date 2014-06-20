@@ -99,6 +99,7 @@ void CRYPTO_thread_cleanup()
 /** rtmp 服务接口, 这个仅仅为了演示如何使用 ServiceInf
 */
 class MyMediaStream : public ServiceInf
+				    , ost::Thread
 {
 	std::string url_;
 
@@ -106,6 +107,7 @@ public:
 	MyMediaStream()
 	{
 		url_ = "rtmp://0.0.0.0:0"; // FIXME: 一个非法的 url :)
+		start();
 	}
 
 private:
@@ -115,6 +117,18 @@ private:
 	{
 		// FIXME: 这里应该照着规矩来 ...
 		return "media";
+	}
+
+private:
+	void run()
+	{
+		int code = 0;
+
+		/// 测试：每隔100豪秒，发出一个通知 ...
+		while (1) {
+			sink_->post(this->ns(), code++, 0, "...");
+			sleep(100);
+		}
 	}
 
 private:

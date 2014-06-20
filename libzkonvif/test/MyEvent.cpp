@@ -55,7 +55,7 @@ void MyEvent::run()
 	soap_done(soap);
 }
 
-void MyEvent::post(ServiceInf *service, int code, const char *info)
+void MyEvent::post(const char *s_ns, int code, int level, const char *info)
 {
 	// 将通知发送到匹配的 PullPoint ...
 	// XXX: 这里将 ns() == "*" 作为全匹配 .
@@ -63,18 +63,10 @@ void MyEvent::post(ServiceInf *service, int code, const char *info)
 	PULLPOINTS::iterator it;
 	for (it = pull_points_.begin(); it != pull_points_.end(); ++it) {
 		const char *ns = ((ServiceInf*)(*it))->ns();
-		if (!strcmp(ns, "*") || !strcmp(service->ns(), ns)) {
-			(*it)->append(service->ns(), code, info);
+		if (!strcmp(ns, "*") || !strcmp(s_ns, ns)) {
+			(*it)->append(s_ns, code, level, info);
 		}
 	}
-
-	/** 删除“死亡列表”中的所有对象 .. 
-	 */
-	for (it = death_list_.begin(); it != death_list_.end(); ++it) {
-		delete (*it);
-	}
-
-	death_list_.clear();
 }
 
 int MyEvent::GetServiceCapabilities(_tev__GetServiceCapabilities *tev__GetServiceCapabilities,
@@ -183,7 +175,7 @@ int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullM
 		wsnt__NotificationMessageHolderType *mht = soap_new_wsnt__NotificationMessageHolderType(soap);
 		mht->Message.message.who = soap_strdup(soap, it->who.c_str());
 		mht->Message.message.code = it->code;
-		mht->Message.message.level = 0;	// FIXME: 需要来自 NotifyMessage ...
+		mht->Message.message.level = it->level;
 		mht->Message.message.info = soap_strdup(soap, it->info.c_str());
 	}
 
@@ -198,7 +190,7 @@ int MyPullPoint::Unsubscribe(_wsnt__Unsubscribe *wsnt__Unsubscribe, _wsnt__Unsub
 	return SOAP_OK;
 }
 
-int MyPullPoint::append(const char *who, int code, const char *info)
+int MyPullPoint::append(const char *who, int code, int level, const char *info)
 {
 	ost::MutexLock al(cs_pending_messages);
 
@@ -206,6 +198,7 @@ int MyPullPoint::append(const char *who, int code, const char *info)
 	nm.who = who;
 	nm.code = code;
 	nm.info = info;
+	nm.level = level;
 
 	pending_messages.push_back(nm);
 	sem_.post();

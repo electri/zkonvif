@@ -32,12 +32,12 @@ protected:
 		比如 ptz 服务：可以考虑投递一个转动到位的通知 :
 
 			if (sink_)
-				sink_->post(this, 2, "set_pos ok ....");
+				sink_->post(this->ns(), 2, 0, "set_pos ok ....");
 
 		FIXME: 嗯，这里没有考虑 onvif 的 Topics, 直接简单点吧 :)
  */
 class ServiceEventSinkInf
 {
 public:
-	virtual void post(ServiceInf *service, int code, const char *info) = 0;
+	virtual void post(const char *ns, int code, int level, const char *info) = 0;
 };

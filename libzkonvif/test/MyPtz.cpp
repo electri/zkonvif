@@ -21,7 +21,8 @@ int MyPtz::GetConfigurations(_tptz__GetConfigurations *tptz__GetConfigurations, 
 	
 }
 
-int MyPtz::SetConfiguration(const char *endpoint, const char *soap_action, _tptz__SetConfiguration *tptz__SetConfiguration, _tptz__SetConfigurationResponse *tptz__SetConfigurationResponse)
+int MyPtz::SetConfiguration(_tptz__SetConfiguration *tptz__SetConfiguration, 
+							_tptz__SetConfigurationResponse *tptz__SetConfigurationResponse)
 {
 	tt__PTZConfiguration *pPtzConfiguration = tptz__SetConfiguration->PTZConfiguration;
 	tt__PTZConfiguration *pConfiguration = new tt__PTZConfiguration(*pPtzConfiguration);
@@ -50,7 +51,7 @@ int MyPtz::SetConfiguration(const char *endpoint, const char *soap_action, _tptz
 	}
 
 	if (pPtzConfiguration->DefaultPTZTimeout != NULL)
-		pConfiguration->DefaultPTZTimeout = new (LONG64)(*pPtzConfiguration->DefaultPTZTimeout);.
+		pConfiguration->DefaultPTZTimeout = new (LONG64)(*pPtzConfiguration->DefaultPTZTimeout);
 
 	if (pPtzConfiguration->DefaultRelativePanTiltTranslationSpace != NULL)
 		pConfiguration->DefaultRelativePanTiltTranslationSpace = new std::string(*pPtzConfiguration->DefaultRelativePanTiltTranslationSpace);
@@ -92,15 +93,15 @@ tt__PTZConfiguration* create_soap_tt__PTZConfiguration(struct soap *soap, tt__PT
 	*pc = *tpc;
 
 	if (tpc->DefaultAbsolutePantTiltPositionSpace != NULL) {
-		pc->DefaultAbsolutePantTiltPositionSpace = soap_new_std__string(sp);
+		pc->DefaultAbsolutePantTiltPositionSpace = soap_new_std__string(soap);
 		*pc->DefaultAbsolutePantTiltPositionSpace = *tpc->DefaultAbsolutePantTiltPositionSpace;
 	}
 	if (tpc->DefaultAbsoluteZoomPositionSpace != NULL) {
-		pc->DefaultAbsoluteZoomPositionSpace = soap_new_std__string(sp);
+		pc->DefaultAbsoluteZoomPositionSpace = soap_new_std__string(soap);
 		*pc->DefaultAbsoluteZoomPositionSpace = *tpc->DefaultAbsoluteZoomPositionSpace;
 	}
 	if (tpc->DefaultContinuousPanTiltVelocitySpace != NULL) {
-		pc->DefaultContinuousPanTiltVelocitySpace = soap_new_std__string(sp);
+		pc->DefaultContinuousPanTiltVelocitySpace = soap_new_std__string(soap);
 		*pc->DefaultContinuousPanTiltVelocitySpace = *tpc->DefaultContinuousPanTiltVelocitySpace;
 	}
 	// TODO: continue ...
