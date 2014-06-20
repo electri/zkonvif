@@ -66,6 +66,24 @@
     <ClCompile Include="..\..\..\libzkonvif\soap\soapPTZBindingService.cpp">
       <Filter>gsoap_gen</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\mecevp.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\smdevp.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\threads.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\wsaapi.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\wsseapi.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\gsoap\dom.cpp">
+      <Filter>gsoap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.h">
@@ -108,6 +126,21 @@
       <Filter>gsoap_gen</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\libzkonvif\soap\soapPTZBindingService.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\mecevp.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\smdevp.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\threads.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\wsaapi.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\wsseapi.h">
       <Filter>gsoap_gen</Filter>
     </ClInclude>
   </ItemGroup>

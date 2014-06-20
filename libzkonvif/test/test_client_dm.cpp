@@ -9,7 +9,6 @@
 #include <assert.h>
 #include <cc++/thread.h>
 #include "../soap/soapDeviceBindingProxy.h"
-#include "../soap/soapPullPointSubscriptionBindingProxy.h"
 #include "../soap/soapPTZBindingProxy.h"
 
 typedef void(*pfn_test_service)(const tds__Service *service);
@@ -21,7 +20,7 @@ struct TestServiceFunc
 };
 
 static void test_ptz(const tds__Service *);
-static void test_event(const tds__Service *);
+extern void test_event(const tds__Service *);
 
 static TestServiceFunc _test_service_func_table[] = {
 		{ "ptz", test_ptz, },	// FIXME: 
@@ -87,12 +86,6 @@ static void test_ptz(const tds__Service *service)
 {
 	fprintf(stdout, "%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
 
-}
-
-// ²âÊÔÊÂ¼þ ...
-static void test_event(const tds__Service *service)
-{
-	fprintf(stdout, "%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
 }
 
 void test_ptz_GetConfigurations()

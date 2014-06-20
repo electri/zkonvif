@@ -53,7 +53,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WITH_OPENSSL;ZONEKEY_SOURCE;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -68,7 +68,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WITH_OPENSSL;ZONEKEY_SOURCE;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\common\KVConfig.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\test_client_dm.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\test_client_dm.event.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ccgnu2\ccgnu2.vcxproj">
