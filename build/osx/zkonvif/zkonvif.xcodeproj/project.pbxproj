@@ -35,6 +35,17 @@
 		C032CE96194B1F4F003C56B7 /* soapwsddService.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE79194B1F4F003C56B7 /* soapwsddService.h */; };
 		C032CE97194B1F4F003C56B7 /* stdsoap2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C032CE7A194B1F4F003C56B7 /* stdsoap2.cpp */; };
 		C032CE98194B1F4F003C56B7 /* stdsoap2.h in Headers */ = {isa = PBXBuildFile; fileRef = C032CE7B194B1F4F003C56B7 /* stdsoap2.h */; };
+		C03F6305195586BA00E65B4C /* dom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C03F62FA195586BA00E65B4C /* dom.cpp */; };
+		C03F6306195586BA00E65B4C /* mecevp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C03F62FB195586BA00E65B4C /* mecevp.cpp */; };
+		C03F6307195586BA00E65B4C /* mecevp.h in Headers */ = {isa = PBXBuildFile; fileRef = C03F62FC195586BA00E65B4C /* mecevp.h */; };
+		C03F6308195586BA00E65B4C /* smdevp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C03F62FD195586BA00E65B4C /* smdevp.cpp */; };
+		C03F6309195586BA00E65B4C /* smdevp.h in Headers */ = {isa = PBXBuildFile; fileRef = C03F62FE195586BA00E65B4C /* smdevp.h */; };
+		C03F630A195586BA00E65B4C /* threads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C03F62FF195586BA00E65B4C /* threads.cpp */; };
+		C03F630B195586BA00E65B4C /* threads.h in Headers */ = {isa = PBXBuildFile; fileRef = C03F6300195586BA00E65B4C /* threads.h */; };
+		C03F630C195586BA00E65B4C /* wsaapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C03F6301195586BA00E65B4C /* wsaapi.cpp */; };
+		C03F630D195586BA00E65B4C /* wsaapi.h in Headers */ = {isa = PBXBuildFile; fileRef = C03F6302195586BA00E65B4C /* wsaapi.h */; };
+		C03F630E195586BA00E65B4C /* wsseapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C03F6303195586BA00E65B4C /* wsseapi.cpp */; };
+		C03F630F195586BA00E65B4C /* wsseapi.h in Headers */ = {isa = PBXBuildFile; fileRef = C03F6304195586BA00E65B4C /* wsseapi.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -329,6 +340,17 @@
 		C032CF9D194B1FB8003C56B7 /* wsdd.ProbeMatches.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.ProbeMatches.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.ProbeMatches.req.xml; sourceTree = "<group>"; };
 		C032CF9E194B1FB8003C56B7 /* wsdd.Resolve.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.Resolve.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.Resolve.req.xml; sourceTree = "<group>"; };
 		C032CF9F194B1FB8003C56B7 /* wsdd.ResolveMatches.req.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = wsdd.ResolveMatches.req.xml; path = ../../../libzkonvif/soap/xml/wsdd.ResolveMatches.req.xml; sourceTree = "<group>"; };
+		C03F62FA195586BA00E65B4C /* dom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dom.cpp; path = ../../../libzkonvif/soap/dom.cpp; sourceTree = "<group>"; };
+		C03F62FB195586BA00E65B4C /* mecevp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mecevp.cpp; path = ../../../libzkonvif/soap/mecevp.cpp; sourceTree = "<group>"; };
+		C03F62FC195586BA00E65B4C /* mecevp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mecevp.h; path = ../../../libzkonvif/soap/mecevp.h; sourceTree = "<group>"; };
+		C03F62FD195586BA00E65B4C /* smdevp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = smdevp.cpp; path = ../../../libzkonvif/soap/smdevp.cpp; sourceTree = "<group>"; };
+		C03F62FE195586BA00E65B4C /* smdevp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smdevp.h; path = ../../../libzkonvif/soap/smdevp.h; sourceTree = "<group>"; };
+		C03F62FF195586BA00E65B4C /* threads.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = threads.cpp; path = ../../../libzkonvif/soap/threads.cpp; sourceTree = "<group>"; };
+		C03F6300195586BA00E65B4C /* threads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = threads.h; path = ../../../libzkonvif/soap/threads.h; sourceTree = "<group>"; };
+		C03F6301195586BA00E65B4C /* wsaapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wsaapi.cpp; path = ../../../libzkonvif/soap/wsaapi.cpp; sourceTree = "<group>"; };
+		C03F6302195586BA00E65B4C /* wsaapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wsaapi.h; path = ../../../libzkonvif/soap/wsaapi.h; sourceTree = "<group>"; };
+		C03F6303195586BA00E65B4C /* wsseapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wsseapi.cpp; path = ../../../libzkonvif/soap/wsseapi.cpp; sourceTree = "<group>"; };
+		C03F6304195586BA00E65B4C /* wsseapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wsseapi.h; path = ../../../libzkonvif/soap/wsseapi.h; sourceTree = "<group>"; };
 		C04CF1321951AEA900A4B371 /* libcrypto.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.1.0.0.dylib; path = ../../../../../../../../opt/local/lib/libcrypto.1.0.0.dylib; sourceTree = "<group>"; };
 		C04CF1331951AEA900A4B371 /* libssl.1.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.1.0.0.dylib; path = ../../../../../../../../opt/local/lib/libssl.1.0.0.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -366,6 +388,17 @@
 		C032CE5F194B1EFE003C56B7 /* soap_gen */ = {
 			isa = PBXGroup;
 			children = (
+				C03F62FA195586BA00E65B4C /* dom.cpp */,
+				C03F62FB195586BA00E65B4C /* mecevp.cpp */,
+				C03F62FC195586BA00E65B4C /* mecevp.h */,
+				C03F62FD195586BA00E65B4C /* smdevp.cpp */,
+				C03F62FE195586BA00E65B4C /* smdevp.h */,
+				C03F62FF195586BA00E65B4C /* threads.cpp */,
+				C03F6300195586BA00E65B4C /* threads.h */,
+				C03F6301195586BA00E65B4C /* wsaapi.cpp */,
+				C03F6302195586BA00E65B4C /* wsaapi.h */,
+				C03F6303195586BA00E65B4C /* wsseapi.cpp */,
+				C03F6304195586BA00E65B4C /* wsseapi.h */,
 				C032CE60194B1F4F003C56B7 /* duration.cpp */,
 				C032CE61194B1F4F003C56B7 /* duration.h */,
 				C032CE62194B1F4F003C56B7 /* nsmap.cpp */,
@@ -675,17 +708,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				C032CE85194B1F4F003C56B7 /* soapH.h in Headers */,
+				C03F630D195586BA00E65B4C /* wsaapi.h in Headers */,
 				C032CE96194B1F4F003C56B7 /* soapwsddService.h in Headers */,
 				C032CE8B194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.h in Headers */,
 				C032CE92194B1F4F003C56B7 /* soapStub.h in Headers */,
 				C032CE8D194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.h in Headers */,
+				C03F630B195586BA00E65B4C /* threads.h in Headers */,
 				C032CE94194B1F4F003C56B7 /* soapwsddProxy.h in Headers */,
 				C032CE82194B1F4F003C56B7 /* soapDeviceBindingProxy.h in Headers */,
 				C032CE91194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.h in Headers */,
 				C032CE8F194B1F4F003C56B7 /* soapRemoteDiscoveryBindingProxy.h in Headers */,
+				C03F6307195586BA00E65B4C /* mecevp.h in Headers */,
 				C032CE89194B1F4F003C56B7 /* soapPTZBindingService.h in Headers */,
 				C032CE7E194B1F4F003C56B7 /* duration.h in Headers */,
 				C032CE87194B1F4F003C56B7 /* soapPTZBindingProxy.h in Headers */,
+				C03F630F195586BA00E65B4C /* wsseapi.h in Headers */,
+				C03F6309195586BA00E65B4C /* smdevp.h in Headers */,
 				C032CE98194B1F4F003C56B7 /* stdsoap2.h in Headers */,
 				C032CE84194B1F4F003C56B7 /* soapDeviceBindingService.h in Headers */,
 			);
@@ -750,10 +788,16 @@
 				C032CE90194B1F4F003C56B7 /* soapRemoteDiscoveryBindingService.cpp in Sources */,
 				C032CE8C194B1F4F003C56B7 /* soapPullPointSubscriptionBindingService.cpp in Sources */,
 				C032CE7F194B1F4F003C56B7 /* nsmap.cpp in Sources */,
+				C03F630E195586BA00E65B4C /* wsseapi.cpp in Sources */,
 				C032CE83194B1F4F003C56B7 /* soapDeviceBindingService.cpp in Sources */,
+				C03F6305195586BA00E65B4C /* dom.cpp in Sources */,
+				C03F6308195586BA00E65B4C /* smdevp.cpp in Sources */,
 				C032CE93194B1F4F003C56B7 /* soapwsddProxy.cpp in Sources */,
+				C03F6306195586BA00E65B4C /* mecevp.cpp in Sources */,
 				C032CE8A194B1F4F003C56B7 /* soapPullPointSubscriptionBindingProxy.cpp in Sources */,
+				C03F630C195586BA00E65B4C /* wsaapi.cpp in Sources */,
 				C032CE97194B1F4F003C56B7 /* stdsoap2.cpp in Sources */,
+				C03F630A195586BA00E65B4C /* threads.cpp in Sources */,
 				C032CE95194B1F4F003C56B7 /* soapwsddService.cpp in Sources */,
 				C032CE81194B1F4F003C56B7 /* soapDeviceBindingProxy.cpp in Sources */,
 			);

@@ -5,19 +5,19 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>4B654743-FF10-469F-BE52-72B8059BD5B2</string>
+	<string>B463A1CE-0AF0-4F25-A9A3-C4E8688B5112</string>
 	<key>IDESourceControlProjectName</key>
 	<string>osx</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>B324D326-221A-4060-9530-6CA8C457F174</key>
+		<key>85DC6F60-D534-47BA-B035-CB24BC0CB84B</key>
 		<string>https://github.com/zonekey/zkonvif</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>build/osx/osx.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>B324D326-221A-4060-9530-6CA8C457F174</key>
+		<key>85DC6F60-D534-47BA-B035-CB24BC0CB84B</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -25,14 +25,14 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>B324D326-221A-4060-9530-6CA8C457F174</string>
+	<string>85DC6F60-D534-47BA-B035-CB24BC0CB84B</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>B324D326-221A-4060-9530-6CA8C457F174</string>
+			<string>85DC6F60-D534-47BA-B035-CB24BC0CB84B</string>
 			<key>IDESourceControlWCCName</key>
 			<string>zkonvif</string>
 		</dict>
