@@ -69,12 +69,24 @@ int MyDevice::GetUsers(_tds__GetUsers *tds__GetUsers, _tds__GetUsersResponse *td
 int MyDevice::CreateUsers(_tds__CreateUsers *tds__CreateUsers, _tds__CreateUsersResponse *tds__CreateUsersResponse)
 {
 	std::vector<tt__User*>::const_iterator it;
+	SOAP_ENV__Fault * fault = tds__CreateUsersResponse->soap->fault;
 	for (it = tds__CreateUsers->User.begin(); it != tds__CreateUsers->User.end(); ++it) {
 		std::vector<tt__User*>::const_iterator it_1;
 		for (it_1 = users_.begin(); it_1 != users_.end(); ++it_1){
 			if ((*it)->Username == (*it_1)->Username){
+				fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
+				fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:OperationProhibited");
+				fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:UsernameClash");
+				fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "Username already exists");
 				return SOAP_USER_ERROR;
 			}
+		}
+		if ((*(*it)->Password).size()>30){
+			fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
+			fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:OperationProhibited");
+			fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:PasswordTooLong");
+			fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The password is too long");
+			return SOAP_USER_ERROR;
 		}
 		users_.push_back(*it);
 	}
