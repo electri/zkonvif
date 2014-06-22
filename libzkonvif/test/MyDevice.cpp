@@ -49,3 +49,45 @@ int MyDevice::GetDeviceInformation(_tds__GetDeviceInformation *tds__GetDeviceInf
 
 	return SOAP_OK;
 }
+
+int MyDevice::GetUsers(_tds__GetUsers *tds__GetUsers, _tds__GetUsersResponse *tds__GetUsersResponse)
+{
+	log(LOG_DEBUG, "%s: calling, en, there %u users...\n", __func__, users_.size());
+
+	//password is not included into the response
+	std::vector<tt__User*>::const_iterator it;
+	for (it = users_.begin(); it != users_.end(); ++it) {
+		tt__User *u = soap_new_tt__User(soap);
+		u->Username = (*it)->Username;
+		u->UserLevel = (*it)->UserLevel;
+		tds__GetUsersResponse->User.push_back(u);
+	}	
+
+	return SOAP_OK;
+}
+
+int MyDevice::CreateUsers(_tds__CreateUsers *tds__CreateUsers, _tds__CreateUsersResponse *tds__CreateUsersResponse)
+{
+	std::vector<tt__User*>::const_iterator it;
+	for (it = tds__CreateUsers->User.begin(); it != tds__CreateUsers->User.end(); ++it) {
+		std::vector<tt__User*>::const_iterator it_1;
+		for (it_1 = users_.begin(); it_1 != users_.end(); ++it_1){
+			if ((*it)->Username == (*it_1)->Username){
+				return SOAP_USER_ERROR;
+			}
+		}
+		users_.push_back(*it);
+	}
+
+	return SOAP_OK;
+}
+
+int MyDevice::DeleteUsers(_tds__DeleteUsers *tds__DeleteUsers, _tds__DeleteUsersResponse *tds__DeleteUsersResponse)
+{
+	return SOAP_OK;
+}
+
+int MyDevice::SetUser(_tds__SetUser *tds__SetUser, _tds__SetUserResponse *tds__SetUserResponse)
+{
+	return SOAP_OK;
+}
