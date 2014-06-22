@@ -21,10 +21,12 @@ struct TestServiceFunc
 
 static void test_ptz(const tds__Service *);
 extern void test_event(const tds__Service *);
+extern void test_devicemgrt(const tds__Service*);
 
 static TestServiceFunc _test_service_func_table[] = {
 		{ "ptz", test_ptz, },	// FIXME: 
 		{ "event", test_event, }, // FIXME: 
+		{ "devicemgrt",test_devicemgrt, },//FIXME
 		{ 0, 0 },
 };
 

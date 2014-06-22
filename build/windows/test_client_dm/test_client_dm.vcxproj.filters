@@ -24,5 +24,8 @@
     <ClCompile Include="..\..\..\libzkonvif\test\test_client_dm.event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\test\test_client_devicemgrt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
