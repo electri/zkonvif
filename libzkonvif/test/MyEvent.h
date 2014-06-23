@@ -27,6 +27,8 @@ class MyPullPoint : PullPointSubscriptionBindingService
 	std::string ns_, url_;
 	bool quit_;
 	int port_;
+	unsigned timeout_without_connection_;	// 当持续此秒后，如果没有新的 pull message，则主动结束 ..
+	time_t time_to_end_;	// 当前时间 + timeout
 
 	struct NotifyMessage
 	{
@@ -42,10 +44,13 @@ class MyPullPoint : PullPointSubscriptionBindingService
 
 public:
 	// FIXME: 根据 ns 构造通知点的匹配属性 ...
-	MyPullPoint(MyEvent *evt, const char *ns)
+	MyPullPoint(MyEvent *evt, const char *ns, unsigned timeout = 30)
 	{
 		evt_ = evt;
 		ns_ = ns;
+
+		timeout_without_connection_ = timeout;
+		time_to_end_ = time(0) + timeout;
 
 		bind(0, 0, 100);
 		

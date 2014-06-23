@@ -9,8 +9,12 @@ MyEvent::MyEvent(int port)
 	char buf[64];
 	port_ = port;
 
+#ifdef WITH_OPENSSL
 	// 注意使用了 https !
 	snprintf(buf, sizeof(buf), "https://%s:%d", util_get_myip(), port_);
+#else
+	snprintf(buf, sizeof(buf), "http://%s:%d", util_get_myip(), port_);
+#endif
 	url_ = buf;
 
 	start();
@@ -141,14 +145,19 @@ void MyPullPoint::run()
 
 	/** 处理此连接点 ....
 	*/
-	while (!quit_) {
-		if (!soap_valid_socket(accept())) {
-			log(LOG_ERROR, "%s: accept err???\n", __func__);
-			continue;
+	time_t now = time(0);
+
+	soap->accept_timeout = 1;	// 1 秒超时
+
+	while (!quit_ && now < time_to_end_) {
+		if (soap_valid_socket(accept())) {
+			serve();
+			destroy();
+
+			time_to_end_ = time(0) + timeout_without_connection_;
 		}
 
-		serve();
-		destroy();
+		now = time(0);
 	}
 
 	soap_done(soap);	// 对应着构造函数 ..

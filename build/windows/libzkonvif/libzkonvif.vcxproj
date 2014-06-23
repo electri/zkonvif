@@ -359,7 +359,9 @@
     <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetMessages.res.xml" />
     <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetServiceCapabilities.req.xml" />
     <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.GetServiceCapabilities.res.xml" />
-    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Notify.req.xml" />
+    <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.Notify.req.xml">
+      <SubType>Designer</SubType>
+    </Xml>
     <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.PauseSubscription.req.xml" />
     <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.PauseSubscription.res.xml" />
     <Xml Include="..\..\..\libzkonvif\soap\xml\PullPointSubscriptionBinding.PullMessages.req.xml" />
