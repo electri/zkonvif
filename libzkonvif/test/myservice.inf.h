@@ -39,5 +39,5 @@ protected:
 class ServiceEventSinkInf
 {
 public:
-	virtual void post(const char *ns, int code, int level, const char *info) = 0;
+	virtual void post(const char *ns, const char *sid, int code, const char *info) = 0;
 };

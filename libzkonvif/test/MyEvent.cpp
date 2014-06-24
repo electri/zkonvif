@@ -3,6 +3,7 @@
 #include "../../common/log.h"
 #include "../../common/KVConfig.h"
 #include "../soap/wsseapi.h"
+#include "../soap/soapPullPointSubscriptionBindingProxy.h"
 
 MyEvent::MyEvent(int port)
 {
@@ -17,7 +18,12 @@ MyEvent::MyEvent(int port)
 #endif
 	url_ = buf;
 
+	KVConfig cfg("event.config");
+	local_recver_ = new MyLocalEventRecver(atoi(cfg.get_value("local_udp_listen_port", "10001")), this);
+
 	start();
+
+	evt_PostEvent("event", "000001010101", -99, "en, a test event msg");
 }
 
 MyEvent::~MyEvent()
@@ -60,7 +66,7 @@ void MyEvent::run()
 	soap_done(soap);
 }
 
-void MyEvent::post(const char *s_ns, int code, int level, const char *info)
+void MyEvent::post(const char *s_ns, const char *sid, int code, const char *info)
 {
 	// 将通知发送到匹配的 PullPoint ...
 	// XXX: 这里将 ns() == "*" 作为全匹配 .
@@ -69,7 +75,7 @@ void MyEvent::post(const char *s_ns, int code, int level, const char *info)
 	for (it = pull_points_.begin(); it != pull_points_.end(); ++it) {
 		const char *ns = ((ServiceInf*)(*it))->ns();
 		if (!strcmp(ns, "*") || !strcmp(s_ns, ns)) {
-			(*it)->append(s_ns, code, level, info);
+			(*it)->append(s_ns, sid, code, info);
 		}
 	}
 }
@@ -187,7 +193,7 @@ int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullM
 		}
 	}
 
-	// FIXME: 如果超时，如果返回 Fault Message ???
+	// FIXME: 如果超时，如果返回 Fault Message ??? 
 
 	// response
 	tev__PullMessagesResponse->CurrentTime = time(0);
@@ -200,12 +206,21 @@ int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullM
 			FIXME: 不知是否正确，强制修改 onvif.h 中的 wsnt__NoitficationMessageHolderType->Message 中的 __any 对象为 _tt__Message* 类型，方便格式化消息 ???
 		 */
 		wsnt__NotificationMessageHolderType *mht = soap_new_wsnt__NotificationMessageHolderType(soap);
-		mht->Message.message.who = soap_strdup(soap, it->who.c_str());
+		mht->Message.message.ns = soap_strdup(soap, it->ns.c_str());
+		mht->Message.message.sid = soap_strdup(soap, it->sid.c_str());
 		mht->Message.message.code = it->code;
-		mht->Message.message.level = it->level;
 		mht->Message.message.info = soap_strdup(soap, it->info.c_str());
 
 		tev__PullMessagesResponse->wsnt__NotificationMessage.push_back(mht);
+	}
+
+	return SOAP_OK;
+}
+
+int MyPullPoint::Renew(_wsnt__Renew *wsnt__Renew, _wsnt__RenewResponse *wsnt__RenewResponse)
+{
+	if (wsnt__Renew->TerminationTime) {
+		// TODO: 设置结束时间 ...
 	}
 
 	return SOAP_OK;
@@ -219,18 +234,35 @@ int MyPullPoint::Unsubscribe(_wsnt__Unsubscribe *wsnt__Unsubscribe, _wsnt__Unsub
 	return SOAP_OK;
 }
 
-int MyPullPoint::append(const char *who, int code, int level, const char *info)
+int MyPullPoint::append(const char *ns, const char *sid, int code, const char *info)
 {
 	ost::MutexLock al(cs_pending_messages);
 
 	NotifyMessage nm;
-	nm.who = who;
+	nm.ns = ns;
+	nm.sid = sid;
 	nm.code = code;
 	nm.info = info;
-	nm.level = level;
 
 	pending_messages.push_back(nm);
 	sem_.post();
+
+	return 0;
+}
+
+int evt_PostEvent(const char *ns, const char *sid, int code, const char *info)
+{
+	/** 通过 udp 模式，投递事件 ... */
+
+	PullPointSubscriptionBindingProxy caller("soap.udp://127.0.0.1:10001");
+
+	zonekey__NotifyMessageType msg;
+	msg.ns = soap_strdup(caller.soap, ns);
+	msg.sid = soap_strdup(caller.soap, sid);
+	msg.code = code;
+	msg.info = soap_strdup(caller.soap, info);
+
+	caller.PostEvent(&msg);
 
 	return 0;
 }

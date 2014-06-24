@@ -45,7 +45,7 @@ rm -rf soap/*
 mkdir -p soap/xml/
 
 soapcpp2 -2jLd soap/ onvif.h -I.:$GSOAP/import:$GSOAP
-mv soap/*.xml soap/xml
+mv -f soap/*.xml soap/xml
 cp gsoap/* soap/
 cp $GSOAP/custom/duration.c soap/duration.cpp
 cp $GSOAP/custom/duration.h soap/

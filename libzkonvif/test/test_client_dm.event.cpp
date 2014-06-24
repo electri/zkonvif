@@ -93,8 +93,8 @@ void test_event(const tds__Service *service)
 					log(LOG_DEBUG, "\t en there are %u messages\n", res.wsnt__NotificationMessage.size());
 					std::vector<class wsnt__NotificationMessageHolderType * >::const_iterator it;
 					for (it = res.wsnt__NotificationMessage.begin(); it != res.wsnt__NotificationMessage.end(); ++it) {
-						log(LOG_DEBUG, "\t\t: %s: <%d>, code=%d, info=%s\n", (*it)->Message.message.who,
-							(*it)->Message.message.level, (*it)->Message.message.code, (*it)->Message.message.info);
+						log(LOG_DEBUG, "\t\t: %s/%s: code=%d, info=%s\n", (*it)->Message.message.ns,
+							(*it)->Message.message.sid,	(*it)->Message.message.code, (*it)->Message.message.info);
 					}
 				}
 			}

@@ -30,8 +30,7 @@ void MyDeviceDiscovery::run()
 
 	while (1) {
 		serve();
-		soap_destroy(soap);
-		soap_end(soap);
+		destroy();
 	}
 }
 

@@ -4,8 +4,10 @@
 #include "../soap/soapPullPointSubscriptionBindingService.h"
 #include "myservice.inf.h"
 #include <cc++/thread.h>
+#include <assert.h>
 #include <algorithm>
 #include "../../common/utils.h"
+#include "../../common/log.h"
 #include <vector>
 #include <string>
 #include <list>
@@ -32,8 +34,9 @@ class MyPullPoint : PullPointSubscriptionBindingService
 
 	struct NotifyMessage
 	{
-		std::string who;	// 
-		int code, level;
+		std::string ns;	// ptz, media, ...
+		std::string sid; // uuid ...
+		int code;
 		std::string info;
 	};
 
@@ -68,7 +71,7 @@ public:
 	}
 
 	// 通知消息 ...
-	int append(const char *who, int code, int level, const char *info);
+	int append(const char *ns, const char *sid, int code, const char *info);
 	
 	const char *url() const 
 	{
@@ -104,6 +107,68 @@ private:
 private:
 	virtual int PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullMessagesResponse *tev__PullMessagesResponse);
 	virtual int Unsubscribe(_wsnt__Unsubscribe *wsnt__Unsubscribe, _wsnt__UnsubscribeResponse *wsnt__UnsubscribeResponse);
+	virtual int Renew(_wsnt__Renew *wsnt__Renew, _wsnt__RenewResponse *wsnt__RenewResponse);
+};
+
+/** 实现 udp 本地接收事件服务，启动后，接收 localhost 发出的 udp 消息 (PostEvent)，然后通过 ServiceEventSinkInf 接口发出通知 .
+
+		典型的 servive 使用模式：
+
+
+ */
+class MyLocalEventRecver : PullPointSubscriptionBindingService
+						 , ost::Thread
+						 , public ServiceInf
+{
+	int port_;	// udp listen port
+	ServiceEventSinkInf *sink_;
+
+public:
+	MyLocalEventRecver(int port, ServiceEventSinkInf *sink)
+		: PullPointSubscriptionBindingService(SOAP_IO_UDP)
+	{
+		port_ = port;
+		sink_ = sink;
+
+		detach();	// 
+	}
+
+private:
+	const char *url() const 
+	{
+		return "";
+	}
+
+	const char *ns() const
+	{
+		return "";
+	}
+
+	void run()
+	{
+		// 作为 udp 模式启动 ...
+		soap->accept_flags = SO_REUSEADDR;
+		int rc = bind(0, port_, 100);
+		if (!soap_valid_socket(rc)) {
+			log(LOG_FAULT, "%s: Ohhhh, udp local bind error for port %d\n", __func__, port_);
+			::exit(-1);
+		}
+
+		while (1) {
+			serve();
+			destroy();
+		}
+
+		soap_done(soap);
+	}
+
+	virtual int PostEvent(zonekey__NotifyMessageType *msg)
+	{
+		assert(sink_);
+		sink_->post(msg->ns, msg->sid, msg->code, msg->info);
+
+		return SOAP_OK;
+	}
 };
 
 /** 实现 Real-time Pull-Point Notification Interface 模型  (core 9.2)  */
@@ -117,6 +182,7 @@ class MyEvent : PullPointSubscriptionBindingService
 	typedef std::list<MyPullPoint*> PULLPOINTS;
 	PULLPOINTS pull_points_;
 	ost::Mutex cs_pull_points_;
+	MyLocalEventRecver *local_recver_;	// 用于 udp 本地监听 ..
 
 	friend class MyPullPoint;
 
@@ -133,7 +199,7 @@ private:
 	}
 
 	/// 将消息发送到匹配的通知点 ...
-	void post(const char *ns, int code, int level, const char *info);
+	void post(const char *ns, const char *sid, int code, const char *info);
 
 	void run();
 
@@ -156,3 +222,5 @@ private:
 	virtual	int CreatePullPointSubscription(_tev__CreatePullPointSubscription *tev__CreatePullPointSubscription,
 											_tev__CreatePullPointSubscriptionResponse *tev__CreatePullPointSubscriptionResponse);
 };
+
+extern int evt_PostEvent(const char *ns, const char *sid, int code, const char *info);
