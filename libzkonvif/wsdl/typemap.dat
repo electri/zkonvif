@@ -391,3 +391,6 @@ aws	= "urn:PI/DevCentral/SoapService"
 #	Prefix binding for Mappoint Web services:
 
 mpt	= "http://s.mappoint.net/mappoint-30/"
+
+#	zonekey
+zonekey = "http://www.zonekey.com.cn/schema"

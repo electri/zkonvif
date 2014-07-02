@@ -26,14 +26,14 @@ This document and the information contained herein is provided on an "AS IS" bas
 <!-- ========================== Imports =========================== -->
  <wsdl:import
        namespace="http://docs.oasis-open.org/wsrf/rw-2"
-       location="http://docs.oasis-open.org/wsrf/rw-2.wsdl"/>
+       location="./rw-2.wsdl"/>
 
 <!-- ===================== Types Definitions ====================== -->
    <wsdl:types>
      <xsd:schema>
        <xsd:import
          namespace="http://docs.oasis-open.org/wsn/b-2"
-         schemaLocation="http://docs.oasis-open.org/wsn/b-2.xsd"/>
+         schemaLocation="./b-2.xsd"/>
      </xsd:schema>
    </wsdl:types>
 

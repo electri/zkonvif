@@ -22,20 +22,15 @@ This document and the information contained herein is provided on an "AS IS" bas
   xmlns:wsrf-bf="http://docs.oasis-open.org/wsrf/bf-2"
   xmlns:wstop="http://docs.oasis-open.org/wsn/t-1"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:zonekey="http://www.zonekey.com.cn/schema"
   elementFormDefault="qualified"  attributeFormDefault="unqualified">
 
 <!-- ======================== Imports  ============================ -->
 
-  <xsd:import namespace="http://www.w3.org/2005/08/addressing"
-              schemaLocation="http://www.w3.org/2005/08/addressing/ws-addr.xsd"
-  />
-
-  <xsd:import namespace="http://docs.oasis-open.org/wsrf/bf-2"
-              schemaLocation="http://docs.oasis-open.org/wsrf/bf-2.xsd"
-  />
-  <xsd:import namespace="http://docs.oasis-open.org/wsn/t-1"
-              schemaLocation="http://docs.oasis-open.org/wsn/t-1.xsd"
-  />
+  <xsd:import namespace="http://www.w3.org/2005/08/addressing" schemaLocation="./ws-addr.xsd" />
+  <xsd:import namespace="http://docs.oasis-open.org/wsrf/bf-2" schemaLocation="./bf-2.xsd" />
+  <xsd:import namespace="http://docs.oasis-open.org/wsn/t-1" schemaLocation="./t-1.xsd" />
+  <xsd:import namespace="http://www.zonekey.com.cn/schema" schemaLocation="./zonekey.xsd"/>
 
 <!-- ===================== Misc. Helper Types ===================== -->
 
@@ -131,8 +126,12 @@ This document and the information contained herein is provided on an "AS IS" bas
       <xsd:element name="Message">
         <xsd:complexType>
           <xsd:sequence>
+	    <!-- 此处替换为 ZonekeyPostMessageType -->
+		<xsd:element name="Message" type="zonekey:ZonekeyPostMessageType"/>
+	    <!--
             <xsd:any namespace="##any" processContents="lax"
                      minOccurs="1" maxOccurs="1"/>
+	    -->
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>

@@ -203,13 +203,13 @@ int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullM
 		/** XXX: 照理说，需要分清楚： When: 何时发生, Who: 谁的事件, What: 事件的内容 ....
 				但看 onvif 文档和 ws-topics，看的一头雾水 ...
 
-			FIXME: 不知是否正确，强制修改 onvif.h 中的 wsnt__NoitficationMessageHolderType->Message 中的 __any 对象为 _tt__Message* 类型，方便格式化消息 ???
+			FIXME: 不知是否正确，强制修改 onvif.h 中的 wsnt__NoitficationMessageHolderType->Message 中的 __any 对象为 Zonekey... 类型，方便格式化消息 ??? 
 		 */
 		wsnt__NotificationMessageHolderType *mht = soap_new_wsnt__NotificationMessageHolderType(soap);
-		mht->Message.message.ns = soap_strdup(soap, it->ns.c_str());
-		mht->Message.message.sid = soap_strdup(soap, it->sid.c_str());
-		mht->Message.message.code = it->code;
-		mht->Message.message.info = soap_strdup(soap, it->info.c_str());
+		mht->Message.Message->ns = soap_strdup(soap, it->ns.c_str());
+		mht->Message.Message->sid = soap_strdup(soap, it->sid.c_str());
+		mht->Message.Message->code = ""; // FIXME: it->code;
+		mht->Message.Message->info = soap_strdup(soap, it->info.c_str());
 
 		tev__PullMessagesResponse->wsnt__NotificationMessage.push_back(mht);
 	}
@@ -255,7 +255,7 @@ int evt_PostEvent(const char *ns, const char *sid, int code, const char *info)
 	/** 通过 udp 模式，投递事件 ... */
 
 	PullPointSubscriptionBindingProxy caller("soap.udp://127.0.0.1:10001");
-
+#if 0
 	zonekey__NotifyMessageType msg;
 	msg.ns = soap_strdup(caller.soap, ns);
 	msg.sid = soap_strdup(caller.soap, sid);
@@ -263,6 +263,6 @@ int evt_PostEvent(const char *ns, const char *sid, int code, const char *info)
 	msg.info = soap_strdup(caller.soap, info);
 
 	caller.PostEvent(&msg);
-
+#endif
 	return 0;
 }
