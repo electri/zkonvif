@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- zonekey schema
+-->
+
+<xs:schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  targetNamespace="http://www.zonekey.com.cn/schema">
+
+  <!-- 对应 event.wsdl 中传递的消息的详细类型 -->
+  <xs:complexType name="ZonekeyPostMessageType">
+  	<xs:sequence>
+		<xs:element name="ns" type="xs:string"/>
+		<xs:element name="sid" type="xs:string"/>
+		<xs:element name="code" type="xs:int"/>
+		<xs:element name="info" type="xs:string"/>
+	</xs:sequence>
+  </xs:complexType>
+</xs:schema>

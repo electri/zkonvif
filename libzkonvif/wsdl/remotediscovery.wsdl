@@ -11,7 +11,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 <wsdl:definitions xmlns:dn="http://www.onvif.org/ver10/network/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.onvif.org/ver10/network/wsdl">
 	<wsdl:types>
 		<xs:schema targetNamespace="http://www.onvif.org/ver10/network/wsdl" xmlns:d="http://schemas.xmlsoap.org/ws/2005/04/discovery" elementFormDefault="qualified">
-			<xs:import namespace="http://schemas.xmlsoap.org/ws/2005/04/discovery" schemaLocation="http://schemas.xmlsoap.org/ws/2005/04/discovery/ws-discovery.xsd"/>
+			<xs:import namespace="http://schemas.xmlsoap.org/ws/2005/04/discovery" schemaLocation="./ws-discovery.xsd"/>
 			<!--  Message Request/Responses elements  -->
 			<!--===============================-->
 			<xs:element name="Hello" type="d:HelloType"/>
