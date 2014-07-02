@@ -208,7 +208,7 @@ int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullM
 		wsnt__NotificationMessageHolderType *mht = soap_new_wsnt__NotificationMessageHolderType(soap);
 		mht->Message.Message->ns = soap_strdup(soap, it->ns.c_str());
 		mht->Message.Message->sid = soap_strdup(soap, it->sid.c_str());
-		mht->Message.Message->code = ""; // FIXME: it->code;
+		mht->Message.Message->code = it->code;
 		mht->Message.Message->info = soap_strdup(soap, it->info.c_str());
 
 		tev__PullMessagesResponse->wsnt__NotificationMessage.push_back(mht);
@@ -255,14 +255,12 @@ int evt_PostEvent(const char *ns, const char *sid, int code, const char *info)
 	/** 通过 udp 模式，投递事件 ... */
 
 	PullPointSubscriptionBindingProxy caller("soap.udp://127.0.0.1:10001");
-#if 0
-	zonekey__NotifyMessageType msg;
+	zonekey__ZonekeyPostMessageType msg;
 	msg.ns = soap_strdup(caller.soap, ns);
 	msg.sid = soap_strdup(caller.soap, sid);
 	msg.code = code;
 	msg.info = soap_strdup(caller.soap, info);
 
-	caller.PostEvent(&msg);
-#endif
+	caller.LocalPostEvent(&msg);
 	return 0;
 }

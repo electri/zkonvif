@@ -165,7 +165,7 @@ private:
 	virtual int PostEvent(zonekey__ZonekeyPostMessageType *msg)
 	{
 		assert(sink_);
-		sink_->post(msg->ns.c_str(), msg->sid.c_str(), (int)msg->code.c_str(), msg->info.c_str());
+		sink_->post(msg->ns.c_str(), msg->sid.c_str(), msg->code, msg->info.c_str());
 
 		return SOAP_OK;
 	}

@@ -94,7 +94,7 @@ void test_event(const tds__Service *service)
 					std::vector<class wsnt__NotificationMessageHolderType * >::const_iterator it;
 					for (it = res.wsnt__NotificationMessage.begin(); it != res.wsnt__NotificationMessage.end(); ++it) {
 						log(LOG_DEBUG, "\t\t: %s/%s: code=%d, info=%s\n", (*it)->Message.Message->ns.c_str(),
-							(*it)->Message.Message->sid.c_str(),	atoi((*it)->Message.Message->code.c_str()), (*it)->Message.Message->info.c_str());
+							(*it)->Message.Message->sid.c_str(), (int)(*it)->Message.Message->code, (*it)->Message.Message->info.c_str());
 					}
 				}
 			}
