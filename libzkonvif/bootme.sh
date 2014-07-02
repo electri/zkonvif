@@ -16,21 +16,29 @@ else
 		http://www.onvif.org/onvif/ver10/device/wsdl/devicemgmt.wsdl \
 		http://www.onvif.org/onvif/ver20/ptz/wsdl/ptz.wsdl \
 		http://www.onvif.org/onvif/ver10/network/wsdl/remotediscovery.wsdl
-#http://www.onvif.org/onvif/ver10/deviceio.wsdl
-#http://www.onvif.org/onvif/ver20/analytics/wsdl/analytics.wsdl
-#http://www.onvif.org/onvif/ver10/analyticsdevice.wsdl
-#http://www.onvif.org/onvif/ver10/display.wsdl
-#http://www.onvif.org/onvif/ver20/imaging/wsdl/imaging.wsdl
-#http://www.onvif.org/onvif/ver10/media/wsdl/media.wsdl
-#http://www.onvif.org/onvif/ver10/Receiver.wsdl
-#http://www.onvif.org/onvif/ver10/Recording.wsdl
-#http://www.onvif.org/onvif/ver10/Replay.wsdl
-#http://www.onvif.org/onvif/ver10/Search.wsdl
 	echo '#import "wsse.h"' > onvif.h
 	cat onvif0.h >> onvif.h
 	rm -f onvif0.h
 
 fi
+
+if [ -f onvif2.h ]; then
+	echo 'onvif2.h exist!'
+else
+	wsdl2h -vgdy -o onvif2.h -t wsdl/typemap.dat -r127.0.0.1:8087 \
+	       'http://www.onvif.org/onvif/ver10/event/wsdl/event.wsdl' \
+	       'http://www.onvif.org/onvif/ver10/device/wsdl/devicemgmt.wsdl' \
+	       'http://www.onvif.org/onvif/ver20/ptz/wsdl/ptz.wsdl' \
+	       'http://www.onvif.org/onvif/ver10/network/wsdl/remotediscovery.wsdl'
+	       if [ $? -eq 0 ]; then
+			echo 'OK'
+	       else
+		       echo 'wsdl2h err ...'
+	       fi
+fi
+     
+
+exit
 
 # 貌似 wsa5.h 中 SOAP_ENV__Fault 重复定义
 if [ -f wsa5.h ]; then
@@ -43,9 +51,13 @@ fi
 rm -rf soap/*
 
 mkdir -p soap/xml/
+mkdir -p soap/wsdl/
 
 soapcpp2 -2jLd soap/ onvif.h -I.:$GSOAP/import:$GSOAP
 mv -f soap/*.xml soap/xml
+mv -f soap/*.wsdl soap/wsdl
+mv -f soap/*.xsd soap/wsdl
+
 cp gsoap/* soap/
 cp $GSOAP/custom/duration.c soap/duration.cpp
 cp $GSOAP/custom/duration.h soap/

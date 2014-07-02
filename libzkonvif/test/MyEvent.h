@@ -162,7 +162,7 @@ private:
 		soap_done(soap);
 	}
 
-	virtual int PostEvent(zonekey__NotifyMessageType *msg)
+	virtual int PostEvent(_tev__NotifyEventType *msg)
 	{
 		assert(sink_);
 		sink_->post(msg->ns, msg->sid, msg->code, msg->info);
