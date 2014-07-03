@@ -53,7 +53,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x600;_DEBUG;_CONSOLE;_LIB;WITH_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DLL_EXPORTS;WIN32;_WIN32_WINNT=0x600;_DEBUG;_CONSOLE;_LIB;WITH_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -80,13 +80,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\3rd\libvisca-1.1.0\visca\libvisca.c" />
+    <ClCompile Include="..\..\..\3rd\libvisca-1.1.0\visca\libvisca_win32.c" />
     <ClCompile Include="..\..\..\common\KVConfig.cpp" />
     <ClCompile Include="..\..\..\common\utils.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyDevice.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyEvent.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyPtz.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\polyfit.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\test_target_dm.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\ZoomValueConvert.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ccgnu2\ccgnu2.vcxproj">
@@ -97,6 +101,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\3rd\libvisca-1.1.0\visca\libvisca.h" />
     <ClInclude Include="..\..\..\common\KVConfig.h" />
     <ClInclude Include="..\..\..\common\log.h" />
     <ClInclude Include="..\..\..\common\utils.h" />
@@ -105,6 +110,8 @@
     <ClInclude Include="..\..\..\libzkonvif\test\MyEvent.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\MyPtz.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\myservice.inf.h" />
+    <ClInclude Include="..\..\..\libzkonvif\test\polyfit.h" />
+    <ClInclude Include="..\..\..\libzkonvif\test\ZoomValueConvert.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
