@@ -51,7 +51,6 @@ int ZoomValueConvert::load_factors()
 		pzs[i++] = *it;
 
 	polyfit(vs.size(), pzs, pvs, 5, factors_);
-	polyfit(vs.size(), pvs, pzs, 5, factors2_);
 
 	return 6;
 }
@@ -66,16 +65,4 @@ double ZoomValueConvert::mp_zoom(int value)
 	}
 
 	return x;
-}
-
-int ZoomValueConvert::pm_zoom(double scale)
-{
-	double x = 0.0;
-	double v = scale;
-
-	for (int i = 0; i < 6; i++) {
-		x += factors2_[i] * pow(v, i);
-	}
-
-	return (int)x;
 }

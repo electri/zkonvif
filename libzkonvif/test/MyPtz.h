@@ -40,7 +40,7 @@ private:
 		return "ptz";
 	}
 	//ptz Node
-	virtual int GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodeResponse *tptz__GetNodesResponse);
+	virtual int GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse *tptz__GetNodesResponse);
 	virtual int GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz_GetNodeResponse);
 
 	// PTZ Configuration

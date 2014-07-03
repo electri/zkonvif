@@ -56,8 +56,6 @@ _VISCA_write_packet_data(VISCAInterface_t *iface, VISCACamera_t *camera, VISCAPa
       return VISCA_SUCCESS;
 }
 
-
-
 uint32_t
 _VISCA_send_packet(VISCAInterface_t *iface, VISCACamera_t *camera, VISCAPacket_t *packet)
 {
@@ -212,6 +210,8 @@ VISCA_open_serial(VISCAInterface_t *iface, const char *device_name)
       CloseHandle(m_hCom);
       return VISCA_FAILURE;
   }
+
+  // FIXME: 这里需要修改 ...
   cto.ReadIntervalTimeout = 100;		     /* 20ms would be good, but 100 are for usb-rs232 */
   cto.ReadTotalTimeoutConstant = 2000;	     /* 2s  */
   cto.ReadTotalTimeoutMultiplier = 50;	     /* 50ms for each char */

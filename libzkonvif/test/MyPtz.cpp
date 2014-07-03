@@ -3,12 +3,15 @@
 #include "../../common/log.h"
 
 std::vector<tt__PTZConfiguration *> pConfigurations;
-tt__PTZConfiguration* create_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc);
+
+tt__PTZConfiguration* new_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc);
+
+void delete_tt__PTZConfigurations(std::vector<tt__PTZConfiguration *> pConfigurations);
 
 //
 //ptz Node
 //
-int MyPtz::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodeResponse *tptz__GetNodesResponse)
+int MyPtz::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse *tptz__GetNodesResponse)
 {
 	//TODO:
 	return SOAP_OK;
@@ -29,7 +32,7 @@ int MyPtz::GetConfigurations(_tptz__GetConfigurations *tptz__GetConfigurations, 
 	std::vector<tt__PTZConfiguration *>::iterator c_it;
 	tptz__GetConfigurationsResponse->PTZConfiguration.clear();
 	for (c_it = pConfigurations.begin(); c_it != pConfigurations.end(); ++c_it) {
-		tt__PTZConfiguration *pc = create_soap_tt__PTZConfiguration(tptz__GetConfigurationsResponse->soap, *c_it);
+		tt__PTZConfiguration *pc = new_soap_tt__PTZConfiguration(tptz__GetConfigurationsResponse->soap, *c_it);
 		tptz__GetConfigurationsResponse->PTZConfiguration.push_back(pc);
 	}
 	return SOAP_OK;
@@ -94,7 +97,7 @@ int MyPtz::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfiguration, _tp
 	std::vector<tt__PTZConfiguration *>::const_iterator c_it;
 	for (c_it = pConfigurations.begin(); c_it != pConfigurations.end(); ++c_it) {
 		if ((*c_it)->NodeToken == tptz__GetConfiguration->PTZConfigurationToken) {
-			tptz__GetConfigurationResponse->PTZConfiguration = create_soap_tt__PTZConfiguration(tptz__GetConfigurationResponse->soap, *c_it);
+			tptz__GetConfigurationResponse->PTZConfiguration = new_soap_tt__PTZConfiguration(tptz__GetConfigurationResponse->soap, *c_it);
 			return SOAP_OK;
 		}
 	}
@@ -157,7 +160,7 @@ int MyPtz::RemovePreset(_tptz__RemovePreset *tptz__RemovePreset, _tptz__RemovePr
 	return SOAP_OK;
 }
 
-tt__PTZConfiguration* create_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc)
+tt__PTZConfiguration* new_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc)
 {
 	tt__PTZConfiguration *pc = soap_new_tt__PTZConfiguration(soap);
 	*pc = *tpc;
@@ -178,4 +181,10 @@ tt__PTZConfiguration* create_soap_tt__PTZConfiguration(struct soap *soap, tt__PT
 	
 	return pc;
 }
+
+void delete_tt__PTZConfigurations(std::vector<tt__PTZConfiguration *> pConfigurations)
+{
+	//TODO:当关机时,需要释放掉 configurations
+}
+
 

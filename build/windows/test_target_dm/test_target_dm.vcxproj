@@ -89,6 +89,7 @@
     <ClCompile Include="..\..\..\libzkonvif\test\MyEvent.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyPtz.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\polyfit.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\test\PtzControling.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\test_target_dm.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\ZoomValueConvert.cpp" />
   </ItemGroup>
@@ -111,6 +112,7 @@
     <ClInclude Include="..\..\..\libzkonvif\test\MyPtz.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\myservice.inf.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\polyfit.h" />
+    <ClInclude Include="..\..\..\libzkonvif\test\PtzControling.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\ZoomValueConvert.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
