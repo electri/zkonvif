@@ -308,9 +308,10 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 		</xs:schema>
 	</wsdl:types>
 
-  <wsdl:message name="PostEventRequest">
-    <wsdl:part name="parameters" element="tev:ZonekeyPostMessageType" />
-  </wsdl:message>
+	<!-- 本地消息 -->
+	<wsdl:message name="PostEventRequest">
+		<wsdl:part name="parameters" element="tev:ZonekeyPostMessageType" />
+	</wsdl:message>
 
 	<wsdl:message name="GetServiceCapabilitiesRequest">
 		<wsdl:part name="parameters" element="tev:GetServiceCapabilities"/>
@@ -388,15 +389,16 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 		</wsdl:operation>
 	</wsdl:portType>
 
-  <wsdl:portType name="LocalPostEventType">
+	<!-- 本地通知消息 -->
+	<wsdl:portType name="LocalPostEventType">
 		<wsdl:operation name="LocalPostEvent">
-      <wsdl:documation>
-        This one-way method send notify message to localhost 10001(udp).
-      </wsdl:documation>
-			<wsdl:input message="tev:PostEventRequest" wsaw:Action="soap-udp://localhost:10001"/>
+			<wsdl:documation>
+				This one-way method send notify message to localhost 10001(tcp).
+			</wsdl:documation>
+			<wsdl:input message="tev:PostEventRequest" wsaw:Action="http://localhost:10001"/>
 		</wsdl:operation>
 	</wsdl:portType>
-	
+
 	<wsdl:portType name="PullPointSubscription">
 		<wsdl:operation name="PullMessages">
 			<wsdl:documentation>
@@ -472,10 +474,11 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 		</wsdl:operation>
 	</wsdl:binding>
 
-  <wsdl:binding name="PostEventBinding" type="tev:LocalPostEventType">
+	<!-- 本地发送消息通知，照理说，使用 udp 方式更好，但实在找不到 c#, java 的实现方式，只好使用 http 了 :( -->
+	<wsdl:binding name="PostEventBinding" type="tev:LocalPostEventType">
 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 		<wsdl:operation name="LocalPostEvent">
-			<soap:operation soapAction="http://..."/>
+			<soap:operation soapAction="http://127.0.0.1:10001"/>
 			<wsdl:input>
 				<soap:body use="literal"/>
 			</wsdl:input>
