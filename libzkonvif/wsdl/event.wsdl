@@ -32,6 +32,8 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 
 			<!--  Message Request/Responses elements  -->
 			<xs:element name="ZonekeyPostMessageType" type="zonekey:ZonekeyPostMessageType"/>
+			<xs:element name="ZonekeyPostMessageResponseType">
+			</xs:element>
 
 			<!--===============================-->
 
@@ -312,6 +314,9 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 	<wsdl:message name="PostEventRequest">
 		<wsdl:part name="parameters" element="tev:ZonekeyPostMessageType" />
 	</wsdl:message>
+	<wsdl:message name="PostEventResponse">
+		<wsdl:part name="parameters" element="tev:ZonekeyPostMessageResponseType"/>
+	</wsdl:message>
 
 	<wsdl:message name="GetServiceCapabilitiesRequest">
 		<wsdl:part name="parameters" element="tev:GetServiceCapabilities"/>
@@ -392,10 +397,8 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 	<!-- 本地通知消息 -->
 	<wsdl:portType name="LocalPostEventType">
 		<wsdl:operation name="LocalPostEvent">
-			<wsdl:documation>
-				This one-way method send notify message to localhost 10001(tcp).
-			</wsdl:documation>
 			<wsdl:input message="tev:PostEventRequest" wsaw:Action="http://localhost:10001"/>
+			<wsdl:output message="tev:PostEventResponse" wsaw:Action="http://localhost:10001"/>
 		</wsdl:operation>
 	</wsdl:portType>
 
@@ -482,6 +485,9 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<wsdl:input>
 				<soap:body use="literal"/>
 			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
 		</wsdl:operation>
 	</wsdl:binding>
 

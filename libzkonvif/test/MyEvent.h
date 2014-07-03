@@ -125,7 +125,7 @@ class MyLocalEventRecver : PullPointSubscriptionBindingService
 
 public:
 	MyLocalEventRecver(int port, ServiceEventSinkInf *sink)
-		: PullPointSubscriptionBindingService(SOAP_IO_UDP)
+		: PullPointSubscriptionBindingService()
 	{
 		port_ = port;
 		sink_ = sink;
@@ -146,8 +146,6 @@ private:
 
 	void run()
 	{
-		// 作为 udp 模式启动 ...
-		soap->accept_flags = SO_REUSEADDR;
 		int rc = bind(0, port_, 100);
 		if (!soap_valid_socket(rc)) {
 			log(LOG_FAULT, "%s: Ohhhh, udp local bind error for port %d\n", __func__, port_);
@@ -155,17 +153,22 @@ private:
 		}
 
 		while (1) {
-			serve();
-			destroy();
+			if (soap_valid_socket(accept())) {
+				serve();
+				destroy();
+			}
 		}
 
 		soap_done(soap);
 	}
 
-	virtual int PostEvent(zonekey__ZonekeyPostMessageType *msg)
+	virtual int LocalPostEvent(zonekey__ZonekeyPostMessageType *msg, char *&res)
 	{
 		assert(sink_);
+		log(LOG_DEBUG, "%s: ns='%s', sid='%s', code='%d', info='%s'\n", __func__,
+			msg->ns.c_str(), msg->sid.c_str(), msg->code, msg->info.c_str());
 		sink_->post(msg->ns.c_str(), msg->sid.c_str(), msg->code, msg->info.c_str());
+		res = soap_strdup(soap, "");
 
 		return SOAP_OK;
 	}

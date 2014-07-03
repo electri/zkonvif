@@ -19,11 +19,9 @@ MyEvent::MyEvent(int port)
 	url_ = buf;
 
 	KVConfig cfg("event.config");
-	local_recver_ = new MyLocalEventRecver(atoi(cfg.get_value("local_udp_listen_port", "10001")), this);
+	local_recver_ = new MyLocalEventRecver(atoi(cfg.get_value("local_listen_port", "10001")), this);
 
 	start();
-
-	evt_PostEvent("event", "000001010101", -99, "en, a test event msg");
 }
 
 MyEvent::~MyEvent()
@@ -206,11 +204,7 @@ int MyPullPoint::PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullM
 			FIXME: 不知是否正确，强制修改 onvif.h 中的 wsnt__NoitficationMessageHolderType->Message 中的 __any 对象为 Zonekey... 类型，方便格式化消息 ??? 
 		 */
 		wsnt__NotificationMessageHolderType *mht = soap_new_wsnt__NotificationMessageHolderType(soap);
-		mht->Message.Message->ns = soap_strdup(soap, it->ns.c_str());
-		mht->Message.Message->sid = soap_strdup(soap, it->sid.c_str());
-		mht->Message.Message->code = it->code;
-		mht->Message.Message->info = soap_strdup(soap, it->info.c_str());
-
+		mht->Message.Message = soap_new_req_zonekey__ZonekeyPostMessageType(soap, it->ns, it->sid, it->code, it->info);
 		tev__PullMessagesResponse->wsnt__NotificationMessage.push_back(mht);
 	}
 
@@ -254,13 +248,14 @@ int evt_PostEvent(const char *ns, const char *sid, int code, const char *info)
 {
 	/** 通过 udp 模式，投递事件 ... */
 
-	PullPointSubscriptionBindingProxy caller("soap.udp://127.0.0.1:10001");
+	PullPointSubscriptionBindingProxy caller("http://127.0.0.1:10001");
 	zonekey__ZonekeyPostMessageType msg;
-	msg.ns = soap_strdup(caller.soap, ns);
-	msg.sid = soap_strdup(caller.soap, sid);
+	msg.ns = ns;
+	msg.sid = sid;
 	msg.code = code;
-	msg.info = soap_strdup(caller.soap, info);
+	msg.info = info;
 
-	caller.LocalPostEvent(&msg);
+	char *res;
+	caller.LocalPostEvent(&msg, res);
 	return 0;
 }

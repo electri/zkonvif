@@ -126,7 +126,7 @@ private:
 
 		/// 测试：每隔100豪秒，发出一个通知 ...
 		while (1) {
-			sink_->post(this->ns(), "test", code++, "...");
+			//sink_->post(this->ns(), "test", code++, "...");
 			sleep(100);
 		}
 	}
@@ -153,10 +153,10 @@ int main(int argc, char **argv)
 
 	std::vector<ServiceInf *> services;
 
-	MyEvent evt(10000);	// 事件服务 ...
+	MyEvent evt(10002);	// 事件服务 ...
 	services.push_back(&evt);
 
-	MyPtz ptz(10001);	// 云台服务 ..
+	MyPtz ptz(10003);	// 云台服务 ..
 	ptz.set_eventsink(&evt);
 	services.push_back(&ptz);
 
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
 	ms.set_eventsink(&evt);
 	services.push_back(&ms);
 
-	MyDevice device(9999, services);
+	MyDevice device(10000, services);
 	MyDeviceDiscovery discovery(&device);
 
 	while (1) {
