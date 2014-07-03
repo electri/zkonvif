@@ -4,6 +4,21 @@
 
 std::vector<tt__PTZConfiguration *> pConfigurations;
 tt__PTZConfiguration* create_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc);
+
+//
+//ptz Node
+//
+int MyPtz::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodeResponse *tptz__GetNodesResponse)
+{
+	//TODO:
+	return SOAP_OK;
+}
+
+int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz_GetNodeResponse)
+{
+	//TODO:
+	return SOAP_OK;
+}
 //
 //	PTZ Configuration
 //
@@ -87,6 +102,61 @@ int MyPtz::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfiguration, _tp
 	return SOAP_ERR;	//	FIXME: ...
 }
 
+//
+//PTZ Move
+//
+int MyPtz::RelativeMove(_tptz__RelativeMove *tptz__RelativeMove, _tptz__RelativeMoveResponse *tptz__RelativeMoveResponse)
+{
+	//TODO:
+	return SOAP_OK;
+}
+
+int MyPtz::AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tptz__AbsoluteMoveResponse *tptz__AbsoluteMoveResponse)
+{
+	//TODO:
+	return SOAP_OK;
+}
+
+int MyPtz::GetStatus(_tptz__GetStatus *tptz__GetStatus, _tptz__GetStatusResponse *tptz_GetStatusResponse)
+{
+	//TODO:
+	return SOAP_OK;
+}
+
+int MyPtz::Stop(_tptz__Stop *tptz__Stop, _tptz__StopResponse *tptz__StopResponse)
+{
+	//TODO:
+	return SOAP_OK;
+}
+
+//
+//PTZ Preset
+//
+
+int MyPtz::GetPresets(_tptz__GetPresets *tptz__GetPresets, _tptz__GetPresetsResponse *tptz__GetPresetsResponse)
+{
+	//TODO:
+	return SOAP_OK;
+}
+
+int MyPtz::SetPreset(_tptz__SetPreset *tptz__SetPreset, _tptz__SetPresetResponse *tptz__SetPresetResponse)
+{
+	//TODO:
+	return SOAP_OK;
+}
+
+int MyPtz::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__GotoPresetResponse *tptz__GotoPresetResponse)
+{
+	//TODO:
+	return SOAP_OK;
+}
+
+int MyPtz::RemovePreset(_tptz__RemovePreset *tptz__RemovePreset, _tptz__RemovePresetResponse * tptz__RemovePresetResponse)
+{
+	//.TODO:
+	return SOAP_OK;
+}
+
 tt__PTZConfiguration* create_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc)
 {
 	tt__PTZConfiguration *pc = soap_new_tt__PTZConfiguration(soap);
@@ -108,3 +178,4 @@ tt__PTZConfiguration* create_soap_tt__PTZConfiguration(struct soap *soap, tt__PT
 	
 	return pc;
 }
+
