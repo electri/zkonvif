@@ -255,7 +255,7 @@ int evt_PostEvent(const char *ns, const char *sid, int code, const char *info)
 	msg.code = code;
 	msg.info = info;
 
-	char *res;
-	caller.LocalPostEvent(&msg, res);
+	_tev__ZonekeyPostMessageResponseType res;
+	caller.LocalPostEvent(&msg, &res);
 	return 0;
 }

@@ -11,7 +11,7 @@
 // 
 // 此源代码由 wsdl 自动生成, Version=4.0.30319.1。
 // 
-namespace zonvif_evt {
+namespace zonvif {
     using System.Diagnostics;
     using System;
     using System.Xml.Serialization;

@@ -33,6 +33,9 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<!--  Message Request/Responses elements  -->
 			<xs:element name="ZonekeyPostMessageType" type="zonekey:ZonekeyPostMessageType"/>
 			<xs:element name="ZonekeyPostMessageResponseType">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
 			</xs:element>
 
 			<!--===============================-->
