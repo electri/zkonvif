@@ -45,7 +45,8 @@ namespace test_cs_client
             zonvif_ptz.PTZNode []nodes = ptz.GetNodes();
             Console.WriteLine(string.Format("There are {0} ptzs", nodes.Length));
             foreach (zonvif_ptz.PTZNode node in nodes) {
-                test_ptz_0(ptz, node);
+                zonvif_ptz.PTZNode n = ptz.GetNode(node.token);
+                test_ptz_0(ptz, n);
             }
 
             Console.WriteLine("------------ end -------------");
@@ -55,6 +56,7 @@ namespace test_cs_client
         {
             Console.WriteLine(string.Format("INFO: testing ptz: token '{0}', name '{1}'", node.token, node.Name));
 
+            /*
             // Configuration 
             zonvif_ptz.PTZConfiguration cfg = ptz.GetConfiguration(node.token);
             Console.WriteLine(string.Format("\tConfiguration: of token '{0}'", cfg.NodeToken));
@@ -65,9 +67,33 @@ namespace test_cs_client
             if (cfg.DefaultAbsolutePantTiltPositionSpace != null) {
                 Console.WriteLine(string.Format("\t\tDefaultAbsolutePanTiltPositionSpace: {0}", cfg.DefaultAbsolutePantTiltPositionSpace));
             }
+             */
+
+            zonvif_ptz.PTZSpeed speed = new zonvif_ptz.PTZSpeed();
+            speed.PanTilt = new zonvif_ptz.Vector2D();
+            speed.PanTilt.x = 10;
+            speed.PanTilt.y = 10;
+            speed.Zoom = new zonvif_ptz.Vector1D();
+            speed.Zoom.x = 1;
+
+            zonvif_ptz.PTZVector pos = new zonvif_ptz.PTZVector();
+            pos.PanTilt = new zonvif_ptz.Vector2D();
+            pos.PanTilt.x = (float)100.0;
+            pos.PanTilt.y = (float)100.0;
 
             // 设置云台指向：
-            zonvif_ptz.PTZVector pos = new zonvif_ptz.PTZVector();
+            ptz.AbsoluteMove(node.token, pos, speed);
+
+            // 连续数次调用 ...
+            for (int i = 0; i < 3; i++)
+            {
+                zonvif_ptz.PTZStatus status = ptz.GetStatus(node.token);
+                Console.WriteLine(string.Format("\t\t[#{0}]: pos={1}, {2}, {3}", i, status.Position.PanTilt.x, status.Position.PanTilt.y, status.Position.Zoom.x));
+
+                System.Threading.Thread.Sleep(100);
+            }
+
+
         }
 
         static void test_event(string url)

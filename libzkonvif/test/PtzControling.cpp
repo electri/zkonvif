@@ -35,13 +35,8 @@ int PtzControllingVisca::open()
 		visca_.broadcast = 0;
 		if (VISCA_set_address(&visca_, &m) == VISCA_SUCCESS) {
 			cam_.address = m;
-			if (VISCA_clear(&visca_, &cam_) == VISCA_SUCCESS) {
-				return 0;
-			}
-			else {
-				log(LOG_ERROR, "ERR: %s: VISCA_clear for %s:%d err\n", __func__, serial_name, m);
-				return -1;
-			}
+			VISCA_clear(&visca_, &cam_);
+			return 0;
 		} 
 		else {
 			log(LOG_ERROR, "ERR: %s: VISCA_set_address for %s err\n", __func__, serial_name);

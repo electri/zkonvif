@@ -20,9 +20,10 @@ int MyPtz::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse *tp
 {
 	struct soap *pSoap = tptz__GetNodesResponse->soap;
 
-	KVConfig ptzKVC(getenv("ptz_nodes"));
+	KVConfig ptzKVC("../config/ptz_nodes");
 	std::vector<std::string> tokenList = ptzKVC.keys();
 	
+
 	std::vector<std::string>::const_iterator c_it;
 	for (c_it = tokenList.begin(); c_it != tokenList.end(); ++c_it) {
 		tt__PTZNode *ptzNode = soap_new_tt__PTZNode(pSoap);
@@ -31,13 +32,14 @@ int MyPtz::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse *tp
 
 		const char *value = ptzKVC.get_value(c_it->c_str());
 		pName->assign(value, strlen(value));
-		ptzNode->Name = soap_new_std__string(soap);
+		ptzNode->Name = pName;
 		ptzNode->Extension = NULL;
 		ptzNode->FixedHomePosition = 0;
 		ptzNode->HomeSupported = true;
 		ptzNode->MaximumNumberOfPresets = 4;
+		tptz__GetNodesResponse->PTZNode.push_back(ptzNode);
 	}
-	
+
 	return SOAP_OK;
 }
 
@@ -46,7 +48,7 @@ int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz__
 	//TODO:
 	struct soap *pSoap = tptz__GetNodeResponse->soap;
 
-	KVConfig ptzKVC(getenv("ptz_nodes"));
+	KVConfig ptzKVC("../config/ptz_nodes");
 	std::vector<std::string> tokenList = ptzKVC.keys();
 
 	std::vector<std::string>::const_iterator c_it;
@@ -59,7 +61,7 @@ int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz__
 			std::string *pName = soap_new_std__string(soap);
 			
 			//为返回值 赋值
-			const char *value = ptzKVC.get_value(c_it->c_str());
+			const char *value = ptzKVC.get_value(c_it->c_str(), "teacher");
 			pName->assign(value, strlen(value));
 			ptzNode->Name = pName;
 			ptzNode->Extension = NULL;
@@ -68,8 +70,11 @@ int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz__
 			ptzNode->MaximumNumberOfPresets = 4;
 			tptz__GetNodeResponse->PTZNode = ptzNode;
 
+			char name[255] = "\0";
+			_snprintf(name, 255, "../config/%s", value);
+
 			// 创建 ptz, 保存至 ptz 列表
-			KVConfig comKVC(ptzKVC.get_value(c_it->c_str()));
+			KVConfig comKVC(name);
 			PtzControlling * ptzVisca = new PtzControllingVisca(&comKVC);
 			ptzes.insert(ptz_pair(*c_it, ptzVisca));
 			ptzVisca->open();
@@ -174,12 +179,31 @@ int MyPtz::RelativeMove(_tptz__RelativeMove *tptz__RelativeMove, _tptz__Relative
 int MyPtz::AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tptz__AbsoluteMoveResponse *tptz__AbsoluteMoveResponse)
 {
 	std::string key = tptz__AbsoluteMove->ProfileToken;
-	int x = tptz__AbsoluteMove->Position->PanTilt->x;
-	int y = tptz__AbsoluteMove->Position->PanTilt->y;
-	int speedx = tptz__AbsoluteMove->Position->Zoom->x;
-	int speedy = tptz__AbsoluteMove->Position->Zoom->x;
 
-	ptzes[key]->setpos(x, y, speedx, speedy);
+	int speedx = 32;
+	int speedy = 32;
+	int speedz = 7;
+
+	if (tptz__AbsoluteMove->Speed) {
+		if (tptz__AbsoluteMove->Speed->PanTilt) {
+			speedx = tptz__AbsoluteMove->Speed->PanTilt->x;
+			speedy = tptz__AbsoluteMove->Speed->PanTilt->y;
+		}
+		if (tptz__AbsoluteMove->Speed->Zoom)
+			speedz = tptz__AbsoluteMove->Speed->Zoom->x;
+	}
+
+	if (tptz__AbsoluteMove->Position) {
+		if (tptz__AbsoluteMove->Position->PanTilt) {
+			int x = tptz__AbsoluteMove->Position->PanTilt->x;
+			int y = tptz__AbsoluteMove->Position->PanTilt->y;
+			ptzes[key]->setpos(x, y, speedx, speedy);
+		}
+
+		if (tptz__AbsoluteMove->Position->Zoom) {
+			ptzes[key]->zoom_set(tptz__AbsoluteMove->Position->Zoom->x);
+		}
+	}
 
 	return SOAP_OK;
 }
@@ -214,7 +238,10 @@ int MyPtz::GetStatus(_tptz__GetStatus *tptz__GetStatus, _tptz__GetStatusResponse
 	tt__PTZVector *position = soap_new_tt__PTZVector(soap);
 
 	tt__Vector2D *panTilt = soap_new_tt__Vector2D(soap);
-	ptzes[key]->getpos((int&)panTilt->x, (int&)panTilt->y);
+
+	int x, y;
+	ptzes[key]->getpos(x, y); 
+	panTilt->x = x, panTilt->y = y;
 	
 	position->PanTilt = panTilt;
 
