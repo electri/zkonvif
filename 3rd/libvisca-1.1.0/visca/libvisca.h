@@ -24,11 +24,15 @@
 
 #if 1
 #if defined(_WIN32)||defined(WIN32)||defined(__WIN32__)||defined(_MSC_VER)
+#	ifdef DLL
 #  ifdef DLL_EXPORTS
 #    define VISCA_API __declspec(dllexport)
 #  else
 #    define VISCA_API __declspec(dllimport)
 #  endif
+#else
+#	define VISCA_API
+#endif
 #  define VISCA_WIN
 #else
 #  define VISCA_API
@@ -584,6 +588,8 @@ VISCA_set_zoom_wide_speed(VISCAInterface_t *iface, VISCACamera_t *camera, uint32
 
 VISCA_API uint32_t
 VISCA_set_zoom_value(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t zoom);
+VISCA_API uint32_t
+VISCA_set_zoom_value_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t zoom);
 
 VISCA_API uint32_t
 VISCA_set_zoom_and_focus_value(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t zoom, uint32_t focus);
@@ -818,30 +824,48 @@ VISCA_set_irreceive_onoff(VISCAInterface_t *iface, VISCACamera_t *camera);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_up(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
+VISCA_API uint32_t
+VISCA_set_pantilt_up_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_down(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
+VISCA_API uint32_t
+VISCA_set_pantilt_down_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_left(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
+VISCA_API uint32_t 
+VISCA_set_pantilt_left_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_right(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
+VISCA_API uint32_t
+VISCA_set_pantilt_right_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_upleft(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
+VISCA_API uint32_t
+VISCA_set_pantilt_upleft_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_upright(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
+VISCA_API uint32_t
+VISCA_set_pantilt_upright_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_downleft(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
+VISCA_API uint32_t
+VISCA_set_pantilt_downleft_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_downright(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
+VISCA_API uint32_t
+VISCA_set_pantilt_downright_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_stop(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
+VISCA_API uint32_t
+VISCA_set_pantilt_stop_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed);
 
 /*  pan_speed should be in the range 01 - 18.
     tilt_speed should be in the range 01 - 14
@@ -849,6 +873,8 @@ VISCA_set_pantilt_stop(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t 
     tilt_position should be in range -300 - 300 (0xFED4 - 0x12C)  */
 VISCA_API uint32_t
 VISCA_set_pantilt_absolute_position(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed, int pan_position, int tilt_position);
+VISCA_API uint32_t
+VISCA_set_pantilt_absolute_position_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed, int pan_position, int tilt_position);
 
 VISCA_API uint32_t
 VISCA_set_pantilt_relative_position(VISCAInterface_t *iface, VISCACamera_t *camera, uint32_t pan_speed, uint32_t tilt_speed, int pan_position, int tilt_position);

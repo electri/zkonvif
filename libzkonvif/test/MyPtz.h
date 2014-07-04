@@ -4,6 +4,7 @@
 #include <cc++/thread.h>
 #include "myservice.inf.h"
 #include "../../common/utils.h"
+#include "PtzControling.h"
 
 /** ÔÆÌ¨½Ó¿Ú
  */
@@ -27,6 +28,8 @@ public:
 		start();
 	}
 
+	virtual ~MyPtz();
+
 private:
 	void run()
 	{
@@ -40,7 +43,7 @@ private:
 		return "ptz";
 	}
 	//ptz Node
-	virtual int GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodeResponse *tptz__GetNodesResponse);
+	virtual int GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse *tptz__GetNodesResponse);
 	virtual int GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz_GetNodeResponse);
 
 	// PTZ Configuration
@@ -51,6 +54,7 @@ private:
 	//PTZ Move
 	virtual int RelativeMove(_tptz__RelativeMove *tptz__RelativeMove, _tptz__RelativeMoveResponse *tptz__RelativeMoveResponse);
 	virtual int AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tptz__AbsoluteMoveResponse *tptz__AbsoluteMoveResponse);
+	virtual int ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__ContinuousMoveResponse *tptz__ContinuousMoveResponse);
 	virtual int GetStatus(_tptz__GetStatus *tptz__GetStatus, _tptz__GetStatusResponse *tptz_GetStatusResponse);
 	virtual int Stop(_tptz__Stop *tptz__Stop, _tptz__StopResponse *tptz__StopResponse);
 
@@ -62,8 +66,6 @@ private:
 
 	//PTZ Other
 	//setAbsolutionPosition();
-
-
 
 
 
