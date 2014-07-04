@@ -1,0 +1,17 @@
+digraph sys_device {
+	subgraph cluster_device {
+		label = "Device"
+		labelloc = "t"
+		bgcolor = "gray55"
+		node [ style = "filled", color = "white"]
+
+		evt -> dm
+		ptz -> dm
+		media -> dm
+	}
+
+	sys:e -> dm:w [label = "GetServices()"]
+	dm:w -> sys:e [label = "Supported services list"]
+
+
+}
