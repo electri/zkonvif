@@ -98,46 +98,57 @@ struct NetInf
  */
 bool get_all_netinfs(std::vector<NetInf> &nis)
 {
-	nis.clear();
+	static bool first = true;
+	static std::vector<NetInf> _nis;
+
+	if (first) {
+		first = false;
+		nis.clear();
 #ifdef WIN32
-	ULONG len = 16 * 1024;
-	IP_ADAPTER_ADDRESSES *adapter = (IP_ADAPTER_ADDRESSES*)malloc(len);
-    
-	// 仅仅 ipv4
-	DWORD rc = GetAdaptersAddresses(AF_INET, 0, 0, adapter, &len);
-	if (rc == ERROR_BUFFER_OVERFLOW) {
-		adapter = (IP_ADAPTER_ADDRESSES*)realloc(adapter, len);
-		rc = GetAdaptersAddresses(AF_INET, 0, 0, adapter, &len);
-	}
-    
-	if (rc == 0) {
-		IP_ADAPTER_ADDRESSES *p = adapter;
-		while (p) {
-			if ((p->IfType == IF_TYPE_ETHERNET_CSMACD || p->IfType == IF_TYPE_IEEE80211) &&
-				(p->OperStatus == IfOperStatusUp)) {
-				// 仅仅考虑 ethernet 或者 wifi，并且活动的.
-				// 不包括虚拟机的 mac.
-				std::string mac = conv_mac(p->PhysicalAddress, p->PhysicalAddressLength);
-				if (!is_vm_mac(mac.c_str())) {
-					NetInf ni;
-					ni.macaddr = mac;
-                    
-					IP_ADAPTER_UNICAST_ADDRESS *ip = p->FirstUnicastAddress;
-					while (ip) {
-						assert(ip->Address.lpSockaddr->sa_family == AF_INET);
-						sockaddr_in *addr = (sockaddr_in*)ip->Address.lpSockaddr;
-						ni.ips.push_back(inet_ntoa(addr->sin_addr));
-                        
-						ip = ip->Next;
-					}
-                    
-					nis.push_back(ni);
-				}
-			}
-			p = p->Next;
+		ULONG len = 16 * 1024;
+		IP_ADAPTER_ADDRESSES *adapter = (IP_ADAPTER_ADDRESSES*)malloc(len);
+
+		// 仅仅 ipv4
+		DWORD rc = GetAdaptersAddresses(AF_INET, 0, 0, adapter, &len);
+		if (rc == ERROR_BUFFER_OVERFLOW) {
+			adapter = (IP_ADAPTER_ADDRESSES*)realloc(adapter, len);
+			rc = GetAdaptersAddresses(AF_INET, 0, 0, adapter, &len);
 		}
-        
-		free(adapter);
+
+		if (rc == 0) {
+			IP_ADAPTER_ADDRESSES *p = adapter;
+			while (p) {
+				if ((p->IfType == IF_TYPE_ETHERNET_CSMACD || p->IfType == IF_TYPE_IEEE80211) &&
+					(p->OperStatus == IfOperStatusUp)) {
+					// 仅仅考虑 ethernet 或者 wifi，并且活动的.
+					// 不包括虚拟机的 mac.
+					std::string mac = conv_mac(p->PhysicalAddress, p->PhysicalAddressLength);
+					if (!is_vm_mac(mac.c_str())) {
+						NetInf ni;
+						ni.macaddr = mac;
+
+						IP_ADAPTER_UNICAST_ADDRESS *ip = p->FirstUnicastAddress;
+						while (ip) {
+							assert(ip->Address.lpSockaddr->sa_family == AF_INET);
+							sockaddr_in *addr = (sockaddr_in*)ip->Address.lpSockaddr;
+							ni.ips.push_back(inet_ntoa(addr->sin_addr));
+
+							ip = ip->Next;
+						}
+
+						nis.push_back(ni);
+					}
+				}
+				p = p->Next;
+			}
+
+			free(adapter);
+		}
+
+		_nis = nis;
+	}
+	else {
+		nis = _nis;
 	}
     
 #elif __APPLE__
