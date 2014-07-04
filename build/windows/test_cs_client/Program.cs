@@ -68,6 +68,40 @@ namespace test_cs_client
 
             // 设置云台指向：
             zonvif_ptz.PTZVector pos = new zonvif_ptz.PTZVector();
+            pos.PanTilt.x = 100;
+            pos.PanTilt.y = 0;
+            pos.Zoom = null;
+
+            // 速度 ...
+            zonvif_ptz.PTZSpeed speed = new zonvif_ptz.PTZSpeed();
+            speed.PanTilt.x = (float)30.0;
+            speed.PanTilt.y = (float)30.0;
+            speed.Zoom.x = (float)1.0;
+            ptz.AbsoluteMove(node.token, pos, speed);
+
+            Console.WriteLine(string.Format("\tAbsoluteMove: pos={0}, {1}", pos.PanTilt.x, pos.PanTilt.y));
+
+            // 循环获取云台指向，多遍
+            for (int i = 0; i < 3; i++) {
+                zonvif_ptz.PTZStatus status = ptz.GetStatus(node.token);
+                Console.WriteLine(string.Format("\t[#{3}] GetStatus: pos={0}, {1}, {2}", status.Position.PanTilt.x, status.Position.PanTilt.y, status.Position.Zoom.x, i));
+                System.Threading.Thread.Sleep(100);  // FIXME: 让 AbsoluteMove 执行完成？ .
+            }
+
+            // 设置 zoom
+            pos.PanTilt = null;
+            pos.Zoom.x = (float)5000.0;
+            ptz.AbsoluteMove(node.token, pos, speed);
+
+            // 循环获取 zoom
+            for (int i = 0; i < 10; i++) {
+                zonvif_ptz.PTZStatus status = ptz.GetStatus(node.token);
+                Console.WriteLine(string.Format("\t[#{3}] GetStatus: pos={0}, {1}, {2}", status.Position.PanTilt.x, status.Position.PanTilt.y, status.Position.Zoom.x, i));
+                System.Threading.Thread.Sleep(100);  // FIXME: 让 AbsoluteMove 执行完成？ .
+            }
+
+            // 上下左右转动
+            
         }
 
         static void test_event(string url)
