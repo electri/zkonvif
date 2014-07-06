@@ -76,6 +76,12 @@ void MyEvent::post(const char *s_ns, const char *sid, int code, const char *info
 			(*it)->append(s_ns, sid, code, info);
 		}
 	}
+
+	/** FIXME: 这里考虑缓存，
+	 * 		目的：
+	 * 			1. 如果网络不通，可以作为日志记录？
+	 * 			2. 为管理员提供过往消息的查询 ..
+	 */
 }
 
 int MyEvent::GetServiceCapabilities(_tev__GetServiceCapabilities *tev__GetServiceCapabilities,
