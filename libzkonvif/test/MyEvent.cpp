@@ -66,6 +66,10 @@ void MyEvent::run()
 
 void MyEvent::post(const char *s_ns, const char *sid, int code, const char *info)
 {
+	time_t stamp = time(0);
+
+	save(stamp, s_ns, sid, code, info);
+
 	// 将通知发送到匹配的 PullPoint ...
 	// XXX: 这里将 ns() == "*" 作为全匹配 .
 	ost::MutexLock al(cs_pull_points_);
@@ -73,15 +77,25 @@ void MyEvent::post(const char *s_ns, const char *sid, int code, const char *info
 	for (it = pull_points_.begin(); it != pull_points_.end(); ++it) {
 		const char *ns = ((ServiceInf*)(*it))->ns();
 		if (!strcmp(ns, "*") || !strcmp(s_ns, ns)) {
-			(*it)->append(s_ns, sid, code, info);
+			(*it)->append(stamp, s_ns, sid, code, info);
 		}
 	}
+}
 
-	/** FIXME: 这里考虑缓存，
-	 * 		目的：
-	 * 			1. 如果网络不通，可以作为日志记录？
-	 * 			2. 为管理员提供过往消息的查询 ..
-	 */
+void MyEvent::save(time_t t, const char *ns, const char *sid, int code, const char *info)
+{
+	ost::MutexLock al(cs_storage_);
+	NotifyMessageWithStamp m;
+	m.stamp = t;
+	m.ns = ns ? ns : "*";
+	m.sid = sid ? sid : "*";
+	m.code = code;
+	m.info = info ? info : "";
+
+	storage_.push_back(m);
+
+	while (storage_.size() > MAX_ITEMS_STORAGE)
+		storage_.pop_front();
 }
 
 int MyEvent::GetServiceCapabilities(_tev__GetServiceCapabilities *tev__GetServiceCapabilities,
@@ -93,9 +107,9 @@ int MyEvent::GetServiceCapabilities(_tev__GetServiceCapabilities *tev__GetServic
 	tev__GetServiceCapabilitiesResponse->Capabilities->MaxNotificationProducers = (int*)soap_malloc(soap, sizeof(int));
 	*tev__GetServiceCapabilitiesResponse->Capabilities->MaxNotificationProducers = 0;
 
-	// 不支持 seeking
+	// 支持 Persistent notification storage
 	tev__GetServiceCapabilitiesResponse->Capabilities->PersistentNotificationStorage = (bool*)soap_malloc(soap, sizeof(bool));
-	*tev__GetServiceCapabilitiesResponse->Capabilities->PersistentNotificationStorage = false;
+	*tev__GetServiceCapabilitiesResponse->Capabilities->PersistentNotificationStorage = true;
 
 	tev__GetServiceCapabilitiesResponse->Capabilities->MaxPullPoints = 0;
 
@@ -145,6 +159,13 @@ int MyEvent::CreatePullPointSubscription(_tev__CreatePullPointSubscription *tev_
 
 	ost::MutexLock al(cs_pull_points_);
 	pull_points_.push_back(pp);
+
+	// 支持 persister storage 么 :)
+	ost::MutexLock al2(cs_storage_);
+	for (std::deque<NotifyMessageWithStamp>::const_iterator it = storage_.begin(); it != storage_.end(); ++it) {
+		// FIXME: 应该根据 filter/topic 来，但没看懂 topic 啊 ....
+		pp->append(it->stamp, it->ns.c_str(), it->sid.c_str(), it->code, it->info.c_str());
+	}
 
 	return SOAP_OK;
 }
@@ -226,6 +247,24 @@ int MyPullPoint::Renew(_wsnt__Renew *wsnt__Renew, _wsnt__RenewResponse *wsnt__Re
 	return SOAP_OK;
 }
 
+int MyPullPoint::Seek(_tev__Seek *tev__Seek, _tev__SeekResponse *tev__SeekResponse)
+{
+	// 从缓冲中删除所有超时的 ...
+	ost::MutexLock al(cs_pending_messages);
+	MESSAGES::iterator it1, it2;
+	for (it1 = pending_messages.begin(); it1 != pending_messages.end();) {
+		it2 = it1;
+		it2++;
+
+		if (it1->stamp < tev__Seek->UtcTime)
+			pending_messages.erase(it1);
+
+		it1 = it2;
+	}
+
+	return SOAP_OK;
+}
+
 int MyPullPoint::Unsubscribe(_wsnt__Unsubscribe *wsnt__Unsubscribe, _wsnt__UnsubscribeResponse *wsnt__UnsubscribeResponse)
 {
 	// XXX: 这里无需做啥工作，只需要通知线程下个循环退出即可 :)
@@ -234,11 +273,12 @@ int MyPullPoint::Unsubscribe(_wsnt__Unsubscribe *wsnt__Unsubscribe, _wsnt__Unsub
 	return SOAP_OK;
 }
 
-int MyPullPoint::append(const char *ns, const char *sid, int code, const char *info)
+int MyPullPoint::append(time_t t, const char *ns, const char *sid, int code, const char *info)
 {
 	ost::MutexLock al(cs_pending_messages);
 
 	NotifyMessage nm;
+	nm.stamp = t;
 	nm.ns = ns;
 	nm.sid = sid;
 	nm.code = code;
