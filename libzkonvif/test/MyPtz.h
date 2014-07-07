@@ -3,8 +3,6 @@
 #include "../soap/soapPTZBindingService.h"
 #include <cc++/thread.h>
 #include "myservice.inf.h"
-#include "../../common/utils.h"
-#include "PtzControling.h"
 
 /** ÔÆÌ¨½Ó¿Ú
  */
@@ -16,18 +14,7 @@ class MyPtz : PTZBindingService
 	int port_;
 
 public:
-	MyPtz(int listen_port)
-	{
-		port_ = listen_port;
-
-		char buf[128];
-		snprintf(buf, sizeof(buf), "http://%s:%d", util_get_myip(), listen_port);
-
-		url_ = buf;
-
-		start();
-	}
-
+	MyPtz(int listen_port);
 	virtual ~MyPtz();
 
 private:

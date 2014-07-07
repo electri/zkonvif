@@ -1,6 +1,7 @@
 #include "MyPtz.h"
 #include <assert.h>
 #include "../../common/log.h"
+#include "../../common/utils.h"
 #include "PtzControling.h"
 #include <map>
 
@@ -12,6 +13,37 @@ std::vector<tt__PTZConfiguration *> pConfigurations;
 tt__PTZConfiguration* new_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc);
 
 void delete_tt__PTZConfigurations(std::vector<tt__PTZConfiguration *> pConfigurations);
+
+MyPtz::MyPtz(int listen_port)
+{
+	port_ = listen_port;
+
+	char buf[128];
+	snprintf(buf, sizeof(buf), "http://%s:%d", util_get_myip(), listen_port);
+
+	url_ = buf;
+
+	start();
+
+	//
+	// 打开 所有云台节点
+	//
+	KVConfig ptzKVC("../config/ptz_nodes");
+	std::vector<std::string> tokenList = ptzKVC.keys();
+	std::vector<std::string>::const_iterator c_it;
+	for (c_it = tokenList.begin(); c_it != tokenList.end(); ++c_it) {
+		//为返回值 赋值
+		const char *value = ptzKVC.get_value(c_it->c_str(), "teacher");
+		char name[255] = "\0";
+		_snprintf(name, 255, "../config/%s", value);
+
+		// 创建 ptz, 保存至 ptz 列表
+		KVConfig comKVC(name);
+		PtzControlling * ptzVisca = new PtzControllingVisca(&comKVC);
+		ptzes.insert(ptz_pair(*c_it, ptzVisca));
+		ptzVisca->open();
+	}
+}
 
 //
 //ptz Node
@@ -201,7 +233,7 @@ int MyPtz::AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tptz__Absolute
 		}
 
 		if (tptz__AbsoluteMove->Position->Zoom) {
-			ptzes[key]->zoom_set(tptz__AbsoluteMove->Position->Zoom->x);
+			ptzes[key]->zoom_set(speedz);
 		}
 	}
 
@@ -212,17 +244,24 @@ int MyPtz::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__Co
 {
 	std::string key = tptz__ContinuousMove->ProfileToken;
 
-	int pan = tptz__ContinuousMove->Velocity->PanTilt->x;
-	if (pan < 0)
-		ptzes[key]->left(-pan);
-	else
-		ptzes[key]->right(pan);
+	int speedx = 32;
+	int speedy = 32;
+	int speedz = 7;
+	
+	if (tptz__ContinuousMove->Velocity->PanTilt) {
+		speedx = tptz__ContinuousMove->Velocity->PanTilt->x;
+		speedy = tptz__ContinuousMove->Velocity->PanTilt->y;
+	}
 
-	int tilt = tptz__ContinuousMove->Velocity->PanTilt->y;
-	if (tilt > 0)
-		ptzes[key]->up(tilt);
+	if (speedx < 0)
+		ptzes[key]->left(-speedx);
 	else
-		ptzes[key]->down(-tilt);
+		ptzes[key]->right(speedx);
+
+	if (speedy > 0)
+		ptzes[key]->up(speedy);
+	else
+		ptzes[key]->down(-speedy);
 
 	return SOAP_OK;	
 }
