@@ -60,35 +60,42 @@ namespace test_cs_client
             Console.WriteLine(string.Format("INFO: testing ptz move"));
             zonvif_ptz.PTZSpeed speed = new zonvif_ptz.PTZSpeed();
             speed.PanTilt = new zonvif_ptz.Vector2D();
-            speed.PanTilt.x = 40;
-            speed.PanTilt.y = 0;
+
             speed.Zoom = new zonvif_ptz.Vector1D();
             speed.Zoom.x = (float)7.0;
             long timeout = 1000;
             TimeSpan ts = new TimeSpan(timeout);
+
+            speed.PanTilt.x = 40;
+            speed.PanTilt.y = 0;
             ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
-            System.Threading.Thread.Sleep(5000);
+            System.Threading.Thread.Sleep(200);
             ptz.Stop(node.token, false, false, false, false);
 
-            System.Threading.Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(200);
 
-            //speed.PanTilt.x = -40;
-            //speed.PanTilt.y = 0;
-            //ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
-            //System.Threading.Thread.Sleep(200);
-            //ptz.Stop(node.token, false, false, false, false);
+            speed.PanTilt.x = -40;
+            speed.PanTilt.y = 0;
+            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
+            System.Threading.Thread.Sleep(200);
+            ptz.Stop(node.token, false, false, false, false);
 
-            //speed.PanTilt.x = 0;
-            //speed.PanTilt.y = 40;
-            //ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
-            //System.Threading.Thread.Sleep(5000);
-            //ptz.Stop(node.token, false, false, false, false);
+            System.Threading.Thread.Sleep(200);
 
-            //speed.PanTilt.x = 0;
-            //speed.PanTilt.y = -40;
-            //ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
-            //System.Threading.Thread.Sleep(5000);
-            //ptz.Stop(node.token, false, false, false, false);
+            speed.PanTilt.x = 0;
+            speed.PanTilt.y = 40;
+            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
+            System.Threading.Thread.Sleep(200);
+            ptz.Stop(node.token, false, false, false, false);
+
+            System.Threading.Thread.Sleep(200);
+
+            speed.PanTilt.x = 0;
+            speed.PanTilt.y = -40;
+            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
+            System.Threading.Thread.Sleep(200);
+            ptz.Stop(node.token, false, false, false, false);
+            System.Threading.Thread.Sleep(200);
         }
 
         static void test_ptz_AbsoluteMove(zonvif_ptz.PTZBinding ptz, zonvif_ptz.PTZNode node)

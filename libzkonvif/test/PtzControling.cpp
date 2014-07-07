@@ -89,31 +89,31 @@ void PtzControllingVisca::stop()
 
 void PtzControllingVisca::left(int s)
 {
-	VISCA_set_pantilt_left(&visca_, &cam_, s, s);
+	VISCA_set_pantilt_left_without_reply(&visca_, &cam_, s, s);
 	changed_pos_ = true;
 }
 
 void PtzControllingVisca::up(int s)
 {
-	VISCA_set_pantilt_up(&visca_, &cam_, s, s);
+	VISCA_set_pantilt_up_without_reply(&visca_, &cam_, s, s);
 	changed_pos_ = true;
 }
 
 void PtzControllingVisca::down(int s)
 {
-	VISCA_set_pantilt_down(&visca_, &cam_, s, s);
+	VISCA_set_pantilt_down_without_reply(&visca_, &cam_, s, s);
 	changed_pos_ = true;
 }
 
 void PtzControllingVisca::right(int s)
 {
-	VISCA_set_pantilt_right(&visca_, &cam_, s, s);
+	VISCA_set_pantilt_right_without_reply(&visca_, &cam_, s, s);
 	changed_pos_ = true;
 }
 
 void PtzControllingVisca::zoom_set(int z)
 {
-	VISCA_set_zoom_value(&visca_, &cam_, z);
+	VISCA_set_zoom_value_without_reply(&visca_, &cam_, z);
 	changed_zoom_ = true;
 }
 
