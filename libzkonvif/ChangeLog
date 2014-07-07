@@ -1,0 +1,3 @@
+2014-7-7: sunkw:
+	不应该轻易扩展 onvif 的 wsdl，对于扩展方法，如 LocalPostEvent()，应该另外编写一个 wsdl 更合适.
+

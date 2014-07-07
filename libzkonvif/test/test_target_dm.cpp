@@ -124,10 +124,10 @@ private:
 	{
 		int code = 0;
 
-		/// 测试：每隔100豪秒，发出一个通知 ...
+		/// 测试：每隔1000豪秒，发出一个通知 ...
 		while (1) {
-			//sink_->post(this->ns(), "test", code++, "...");
-			sleep(100);
+			sink_->post(this->ns(), "test", code++, "...");
+			sleep(1000);
 		}
 	}
 

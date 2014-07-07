@@ -1,4 +1,7 @@
-/** 实现 event 接口 */
+/** 实现 event 接口 
+
+	MyEvent 启动后，缓冲所有收到的本地事件（最大一千条？？） ....
+ */
 
 #pragma once
 #include "../soap/soapPullPointSubscriptionBindingService.h"
@@ -34,6 +37,7 @@ class MyPullPoint : PullPointSubscriptionBindingService
 
 	struct NotifyMessage
 	{
+		time_t stamp;
 		std::string ns;	// ptz, media, ...
 		std::string sid; // uuid ...
 		int code;
@@ -71,7 +75,7 @@ public:
 	}
 
 	// 通知消息 ...
-	int append(const char *ns, const char *sid, int code, const char *info);
+	int append(time_t stamp, const char *ns, const char *sid, int code, const char *info);
 	
 	const char *url() const 
 	{
@@ -108,6 +112,8 @@ private:
 	virtual int PullMessages(_tev__PullMessages *tev__PullMessages, _tev__PullMessagesResponse *tev__PullMessagesResponse);
 	virtual int Unsubscribe(_wsnt__Unsubscribe *wsnt__Unsubscribe, _wsnt__UnsubscribeResponse *wsnt__UnsubscribeResponse);
 	virtual int Renew(_wsnt__Renew *wsnt__Renew, _wsnt__RenewResponse *wsnt__RenewResponse);
+	virtual int Seek(_tev__Seek *tev__Seek, _tev__SeekResponse *tev__SeekResponse);
+
 };
 
 /** 实现 udp 本地接收事件服务，启动后，接收 localhost 发出的 udp 消息 (PostEvent)，然后通过 ServiceEventSinkInf 接口发出通知 .
@@ -174,6 +180,10 @@ private:
 	}
 };
 
+#ifndef MAX_ITEMS_STORAGE
+#	define MAX_ITEMS_STORAGE 1000
+#endif // 
+
 /** 实现 Real-time Pull-Point Notification Interface 模型  (core 9.2)  */
 class MyEvent : PullPointSubscriptionBindingService
 			  , ost::Thread
@@ -189,6 +199,16 @@ class MyEvent : PullPointSubscriptionBindingService
 
 	friend class MyPullPoint;
 
+	struct NotifyMessageWithStamp
+	{
+		time_t stamp;
+		std::string ns, sid, info;
+		int code;
+	};
+
+	std::deque<NotifyMessageWithStamp> storage_;	// 缓冲启动后收到的消息
+	ost::Mutex cs_storage_;
+
 public:
 	MyEvent(int port);
 	virtual ~MyEvent();
@@ -203,6 +223,7 @@ private:
 
 	/// 将消息发送到匹配的通知点 ...
 	void post(const char *ns, const char *sid, int code, const char *info);
+	void save(time_t t, const char *ns, const char *sid, int code, const char *info);
 
 	void run();
 
