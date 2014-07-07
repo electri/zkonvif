@@ -246,7 +246,6 @@ int MyPtz::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__Co
 
 	int speedx = 32;
 	int speedy = 32;
-	int speedz = 7;
 	
 	if (tptz__ContinuousMove->Velocity->PanTilt) {
 		speedx = tptz__ContinuousMove->Velocity->PanTilt->x;
@@ -255,13 +254,19 @@ int MyPtz::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__Co
 
 	if (speedx < 0)
 		ptzes[key]->left(-speedx);
-	else
+	if (speedx > 0)
 		ptzes[key]->right(speedx);
 
 	if (speedy > 0)
 		ptzes[key]->up(speedy);
-	else
+	if (speedy < 0)
 		ptzes[key]->down(-speedy);
+
+	if (tptz__ContinuousMove->Velocity->Zoom) {
+		float speedz = tptz__ContinuousMove->Velocity->Zoom->x;
+		ptzes[key]->zoom_set(speedz);
+	}
+	
 
 	return SOAP_OK;	
 }
@@ -284,8 +289,10 @@ int MyPtz::GetStatus(_tptz__GetStatus *tptz__GetStatus, _tptz__GetStatusResponse
 	
 	position->PanTilt = panTilt;
 
+	int z;
 	position->Zoom = soap_new_tt__Vector1D(soap);
-	position->Zoom->x = ptzes[key]->getScales();
+	ptzes[key]->zoom_get(z);
+	position->Zoom->x = z;
 
 	ptzStatus->Position = position;
 	ptzStatus->Error = NULL;
