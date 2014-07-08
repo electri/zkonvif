@@ -12,7 +12,7 @@ namespace test_cs_client
     {
         static void Main(string[] args)
         {
-            string dm_url = "http://172.16.1.111:10000";
+            string dm_url = "http://localhost:10000";
             if (args.Length > 0)
                 dm_url = args[0];
 
@@ -62,39 +62,40 @@ namespace test_cs_client
             speed.PanTilt = new zonvif_ptz.Vector2D();
 
             speed.Zoom = new zonvif_ptz.Vector1D();
-            speed.Zoom.x = 2;
+            speed.Zoom.x = (float)7.0;
+            long timeout = 1000;
+            TimeSpan ts = new TimeSpan(timeout);
 
-
-            speed.PanTilt.x = 32;
+            speed.PanTilt.x = 40;
             speed.PanTilt.y = 0;
-            ptz.ContinuousMove(node.token, speed, null);
-            System.Threading.Thread.Sleep(2000);
-            ptz.Stop(node.token, true, true, true, true);
-
-            speed.PanTilt.x = -32;
-            speed.PanTilt.y = 0;
-            ptz.ContinuousMove(node.token, speed, null);
-            System.Threading.Thread.Sleep(2000);
-            zonvif_ptz.PTZStatus ps = ptz.GetStatus(node.token);
-            Console.WriteLine("scale is" + ps.Position.Zoom.x.ToString());
+            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
+            System.Threading.Thread.Sleep(200);
             ptz.Stop(node.token, false, false, false, false);
 
-            ps = ptz.GetStatus(node.token);
-            Console.WriteLine("scale is" + ps.Position.Zoom.x.ToString());
-            
-            ptz.GetStatus(node.token);
+            System.Threading.Thread.Sleep(200);
+
+            speed.PanTilt.x = -40;
+            speed.PanTilt.y = 0;
+            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
+            System.Threading.Thread.Sleep(200);
+            ptz.Stop(node.token, false, false, false, false);
+
+            System.Threading.Thread.Sleep(200);
 
             speed.PanTilt.x = 0;
-            speed.PanTilt.y = 32;
-            ptz.ContinuousMove(node.token, speed, null);
-            System.Threading.Thread.Sleep(2000);
+            speed.PanTilt.y = 40;
+            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
+            System.Threading.Thread.Sleep(200);
             ptz.Stop(node.token, false, false, false, false);
 
+            System.Threading.Thread.Sleep(200);
+
             speed.PanTilt.x = 0;
-            speed.PanTilt.y = -32;
-            ptz.ContinuousMove(node.token, speed, null);
-            System.Threading.Thread.Sleep(2000);
+            speed.PanTilt.y = -40;
+            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
+            System.Threading.Thread.Sleep(200);
             ptz.Stop(node.token, false, false, false, false);
+            System.Threading.Thread.Sleep(200);
         }
 
         static void test_ptz_AbsoluteMove(zonvif_ptz.PTZBinding ptz, zonvif_ptz.PTZNode node)
@@ -120,18 +121,21 @@ namespace test_cs_client
             speed.PanTilt.y = 10;
             speed.Zoom = new zonvif_ptz.Vector1D();
             speed.Zoom.x = 1;
-         
+
             zonvif_ptz.PTZVector pos = new zonvif_ptz.PTZVector();
             pos.PanTilt = new zonvif_ptz.Vector2D();
             pos.PanTilt.x = (float)300.0;
             pos.PanTilt.y = (float)300.0;
 
             // 设置云台指向：
-            Console.WriteLine("before time: {0}", DateTime.Now.TimeOfDay.ToString());
             ptz.AbsoluteMove(node.token, pos, speed);
-            Console.WriteLine("after time: {0}", DateTime.Now.TimeOfDay.ToString());
-
             System.Threading.Thread.Sleep(200);
+            double scale = ptz.GetScales(node.token);
+            Console.WriteLine("Scale : {0}", scale.ToString());
+            double ccd_heghit, ccd_width, f, pan_max_va,  pan_min_angle, tilt_max_va, tilt_min_angle;
+            ptz.GetPtzParams(node.token, out ccd_width, out ccd_heghit, out pan_min_angle, out tilt_min_angle, out pan_max_va, out tilt_max_va);
+            Console.WriteLine("PtzParams : ccd_width {0}; ccd_height {1}; pan_min_angle {2}; tilt_min_angle {3}, pan_max_va {4}, tilt_max_va {5}",
+                ccd_width, ccd_heghit, pan_min_angle, tilt_min_angle, pan_max_va, tilt_max_va);
 
             // 连续数次调用 ...
             for (int i = 0; i < 3; i++)
