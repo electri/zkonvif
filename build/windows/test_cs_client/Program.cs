@@ -48,8 +48,8 @@ namespace test_cs_client
             Console.WriteLine(string.Format("There are {0} ptzs", nodes.Length));
             foreach (zonvif_ptz.PTZNode node in nodes) {
                 zonvif_ptz.PTZNode n = ptz.GetNode(node.token);
-                //test_ptz_AbsoluteMove(ptz, n);
-                test_ptz_move(ptz, n);
+                test_ptz_AbsoluteMove(ptz, n);
+                //test_ptz_move(ptz, n);
             }
 
             Console.WriteLine("------------ end -------------");
@@ -129,8 +129,13 @@ namespace test_cs_client
 
             // 设置云台指向：
             ptz.AbsoluteMove(node.token, pos, speed);
-
             System.Threading.Thread.Sleep(200);
+            double scale = ptz.GetScales(node.token);
+            Console.WriteLine("Scale : {0}", scale.ToString());
+            double ccd_heghit, ccd_width, f, pan_max_va,  pan_min_angle, tilt_max_va, tilt_min_angle;
+            ptz.GetPtzParams(node.token, out ccd_width, out ccd_heghit, out pan_min_angle, out tilt_min_angle, out pan_max_va, out tilt_max_va);
+            Console.WriteLine("PtzParams : ccd_width {0}; ccd_height {1}; pan_min_angle {2}; tilt_min_angle {3}, pan_max_va {4}, tilt_max_va {5}",
+                ccd_width, ccd_heghit, pan_min_angle, tilt_min_angle, pan_max_va, tilt_max_va);
 
             // 连续数次调用 ...
             for (int i = 0; i < 3; i++)

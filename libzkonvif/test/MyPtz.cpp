@@ -333,10 +333,10 @@ int MyPtz::RemovePreset(_tptz__RemovePreset *tptz__RemovePreset, _tptz__RemovePr
 	return SOAP_OK;
 }
 
-int MyPtz::GetScales(_tptz__GetScalesType *tptz__GetScales, _tptz__GetScalesResponseType &tptz__GetScalesResponse)
+int MyPtz::GetScales(_tptz__GetScales *tptz__GetScales, double &tptz__GetScalesResponse)
 {
 	std::string key = tptz__GetScales->ProfileToken;
-	tptz__GetScalesResponse.Scales = ptzes[key]->getScales();
+	tptz__GetScalesResponse = ptzes[key]->getScales();
 
 	return SOAP_OK;
 }
