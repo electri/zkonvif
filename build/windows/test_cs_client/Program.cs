@@ -12,7 +12,7 @@ namespace test_cs_client
     {
         static void Main(string[] args)
         {
-            string dm_url = "http://localhost:10000";
+            string dm_url = "http://172.16.1.111:10000";
             if (args.Length > 0)
                 dm_url = args[0];
 
@@ -48,8 +48,8 @@ namespace test_cs_client
             Console.WriteLine(string.Format("There are {0} ptzs", nodes.Length));
             foreach (zonvif_ptz.PTZNode node in nodes) {
                 zonvif_ptz.PTZNode n = ptz.GetNode(node.token);
-                //test_ptz_AbsoluteMove(ptz, n);
-                test_ptz_move(ptz, n);
+                test_ptz_AbsoluteMove(ptz, n);
+                //test_ptz_move(ptz, n);
             }
 
             Console.WriteLine("------------ end -------------");
@@ -62,40 +62,39 @@ namespace test_cs_client
             speed.PanTilt = new zonvif_ptz.Vector2D();
 
             speed.Zoom = new zonvif_ptz.Vector1D();
-            speed.Zoom.x = (float)7.0;
-            long timeout = 1000;
-            TimeSpan ts = new TimeSpan(timeout);
+            speed.Zoom.x = 2;
 
-            speed.PanTilt.x = 40;
+
+            speed.PanTilt.x = 32;
             speed.PanTilt.y = 0;
-            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
-            System.Threading.Thread.Sleep(200);
+            ptz.ContinuousMove(node.token, speed, null);
+            System.Threading.Thread.Sleep(2000);
+            ptz.Stop(node.token, true, true, true, true);
+
+            speed.PanTilt.x = -32;
+            speed.PanTilt.y = 0;
+            ptz.ContinuousMove(node.token, speed, null);
+            System.Threading.Thread.Sleep(2000);
+            zonvif_ptz.PTZStatus ps = ptz.GetStatus(node.token);
+            Console.WriteLine("scale is" + ps.Position.Zoom.x.ToString());
             ptz.Stop(node.token, false, false, false, false);
 
-            System.Threading.Thread.Sleep(200);
-
-            speed.PanTilt.x = -40;
-            speed.PanTilt.y = 0;
-            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
-            System.Threading.Thread.Sleep(200);
-            ptz.Stop(node.token, false, false, false, false);
-
-            System.Threading.Thread.Sleep(200);
+            ps = ptz.GetStatus(node.token);
+            Console.WriteLine("scale is" + ps.Position.Zoom.x.ToString());
+            
+            ptz.GetStatus(node.token);
 
             speed.PanTilt.x = 0;
-            speed.PanTilt.y = 40;
-            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
-            System.Threading.Thread.Sleep(200);
+            speed.PanTilt.y = 32;
+            ptz.ContinuousMove(node.token, speed, null);
+            System.Threading.Thread.Sleep(2000);
             ptz.Stop(node.token, false, false, false, false);
-
-            System.Threading.Thread.Sleep(200);
 
             speed.PanTilt.x = 0;
-            speed.PanTilt.y = -40;
-            ptz.ContinuousMove(node.token, speed, SoapDuration.ToString(ts));
-            System.Threading.Thread.Sleep(200);
+            speed.PanTilt.y = -32;
+            ptz.ContinuousMove(node.token, speed, null);
+            System.Threading.Thread.Sleep(2000);
             ptz.Stop(node.token, false, false, false, false);
-            System.Threading.Thread.Sleep(200);
         }
 
         static void test_ptz_AbsoluteMove(zonvif_ptz.PTZBinding ptz, zonvif_ptz.PTZNode node)
@@ -121,14 +120,16 @@ namespace test_cs_client
             speed.PanTilt.y = 10;
             speed.Zoom = new zonvif_ptz.Vector1D();
             speed.Zoom.x = 1;
-
+         
             zonvif_ptz.PTZVector pos = new zonvif_ptz.PTZVector();
             pos.PanTilt = new zonvif_ptz.Vector2D();
             pos.PanTilt.x = (float)300.0;
             pos.PanTilt.y = (float)300.0;
 
             // 设置云台指向：
+            Console.WriteLine("before time: {0}", DateTime.Now.TimeOfDay.ToString());
             ptz.AbsoluteMove(node.token, pos, speed);
+            Console.WriteLine("after time: {0}", DateTime.Now.TimeOfDay.ToString());
 
             System.Threading.Thread.Sleep(200);
 
