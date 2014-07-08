@@ -26,7 +26,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<!--  Message Request/Responses elements  -->
 			<!--===============================-->
 			<!-- Zonekey GetScales -->
-			<xs:element	name="GetScales">
+			<xs:element	name="GetScalesType">
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="ProfileToken" type="tt:ReferenceToken">
@@ -34,8 +34,14 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="GetScalesResponse" type="xs:double">
+			<xs:element name="GetScalesResponseType">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Scales" type="xs:double"/>
+					</xs:sequence>
+				</xs:complexType>
 			</xs:element>
+
 			<!-- Zonekey GetPtzParams -->
 			<xs:element name="GetPtzParams">
 				<xs:complexType>
@@ -45,8 +51,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="GetPtzParamsResponse" type="zonekey:ZonekeyPtzParamType">
-			</xs:element>
+			<xs:element name="GetPtzParamsResponse" type="zonekey:ZonekeyPtzParamType"/>
 
 			<xs:element name="GetServiceCapabilities">
 				<xs:complexType>
@@ -840,10 +845,10 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 		<wsdl:part name="parameters" element="tptz:GetCompatibleConfigurationsResponse"/>
 	</wsdl:message>
 	<wsdl:message name="GetScalesRequest">
-		<wsdl:part name="parameters" element="tptz:GetScales"/>
+		<wsdl:part name="parameters" element="tptz:GetScalesType"/>
 	</wsdl:message>
 	<wsdl:message name="GetScalesResponse">
-		<wsdl:part name="parameters" element="tptz:GetScalesResponse"/>
+		<wsdl:part name="parameters" element="tptz:GetScalesResponseType"/>
 	</wsdl:message>
 	<wsdl:message name="GetPtzParamsRequest">
 		<wsdl:part name="parameters" element="tptz:GetPtzParams"/>
@@ -858,6 +863,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<wsdl:input message="tptz:GetServiceCapabilitiesRequest"/>
 			<wsdl:output message="tptz:GetServiceCapabilitiesResponse"/>
 		</wsdl:operation>
+		
 		<wsdl:operation name="GetScales">
 			<wsdl:input message="tptz:GetScalesRequest"/>
 			<wsdl:output message="tptz:GetScalesResponse"/>
@@ -866,6 +872,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<wsdl:input message="tptz:GetPtzParamsRequest"/>
 			<wsdl:output message="tptz:GetPtzParamsResponse"/>
 		</wsdl:operation>
+
 		<wsdl:operation name="GetNodes">
 			<wsdl:documentation>
 				Get the descriptions of the available PTZ Nodes.
