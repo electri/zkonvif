@@ -839,7 +839,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 	<wsdl:message name="GetCompatibleConfigurationsResponse">
 		<wsdl:part name="parameters" element="tptz:GetCompatibleConfigurationsResponse"/>
 	</wsdl:message>
-	<wsdl:message name="GetScalseRequest">
+	<wsdl:message name="GetScalesRequest">
 		<wsdl:part name="parameters" element="tptz:GetScales"/>
 	</wsdl:message>
 	<wsdl:message name="GetScalesResponse">
@@ -859,7 +859,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			<wsdl:output message="tptz:GetServiceCapabilitiesResponse"/>
 		</wsdl:operation>
 		<wsdl:operation name="GetScales">
-			<wsdl:input message="tptz:GetScalesResponse"/>
+			<wsdl:input message="tptz:GetScalesRequest"/>
 			<wsdl:output message="tptz:GetScalesResponse"/>
 		</wsdl:operation>
 		<wsdl:operation name="GetPtzParams">
