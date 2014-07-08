@@ -333,26 +333,27 @@ int MyPtz::RemovePreset(_tptz__RemovePreset *tptz__RemovePreset, _tptz__RemovePr
 	return SOAP_OK;
 }
 
-int MyPtz::GetScales(_tptz__GetScales *tptz__GetScales, double &tptz__GetScalesResponse)
+int MyPtz::GetScales(_tptz__GetScales *tptz__GetScales, _tptz__GetScalesResponse *res)
 {
 	std::string key = tptz__GetScales->ProfileToken;
-	tptz__GetScalesResponse = ptzes[key]->getScales();
+	res->Scales = ptzes[key]->getScales();
 
 	return SOAP_OK;
 }
 
-int MyPtz::GetPtzParams(_tptz__GetPtzParams *tptz__GetPtzParams, zonekey__ZonekeyPtzParamType *tptz__GetPtzParamsResponse)
+int MyPtz::GetPtzParams(_tptz__GetPtzParams *tptz__GetPtzParams, _tptz__GetPtzParamsResponse *res)
 {
 	std::string key = tptz__GetPtzParams->ProfileToken;
-	tptz__GetPtzParamsResponse->ccd_USCOREsize_USCOREheight;
 	PtzControlling::PtzParam params = ptzes[key]->getPtzParam();
-	tptz__GetPtzParamsResponse->ccd_USCOREsize_USCOREheight = params.ccd_size_height;
-	tptz__GetPtzParamsResponse->ccd_USCOREsize_USCOREwidth = params.ccd_size_width;
-	tptz__GetPtzParamsResponse->f = params.f;
-	tptz__GetPtzParamsResponse->pan_USCOREmax_USCOREva = params.pan_max_va;
-	tptz__GetPtzParamsResponse->pan_USCOREmin_USCOREangle = params.pan_min_angle;
-	tptz__GetPtzParamsResponse->tilt_USCOREmax_USCOREva = params.tilt_max_va;
-	tptz__GetPtzParamsResponse->tilt_USCOREmin_USCOREangle = params.tilt_min_angle;
+	res->PtzParams = soap_new_zonekey__ZonekeyPtzParamType(soap);
+
+	res->PtzParams->ccd_USCOREsize_USCOREheight = params.ccd_size_height;
+	res->PtzParams->ccd_USCOREsize_USCOREwidth = params.ccd_size_width;
+	res->PtzParams->f = params.f;
+	res->PtzParams->pan_USCOREmax_USCOREva = params.pan_max_va;
+	res->PtzParams->pan_USCOREmin_USCOREangle = params.pan_min_angle;
+	res->PtzParams->tilt_USCOREmax_USCOREva = params.tilt_max_va;
+	res->PtzParams->tilt_USCOREmin_USCOREangle = params.tilt_min_angle;
 
 	return SOAP_OK;
 }

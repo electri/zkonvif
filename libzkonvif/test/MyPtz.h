@@ -53,8 +53,8 @@ private:
 
 	//PTZ Other
 	//setAbsolutionPosition();
-	virtual int GetScales(_tptz__GetScales *tptz__GetScales, double &ScalesResponse);
-	virtual int GetPtzParams(_tptz__GetPtzParams *tptz__GetPtzParams, zonekey__ZonekeyPtzParamType *tptz__GetPtzParamsResponse);
+	virtual int GetScales(_tptz__GetScales *tptz__GetScales, _tptz__GetScalesResponse *tptz__GetScalesResponse);
+	virtual int GetPtzParams(_tptz__GetPtzParams *tptz__GetPtzParams, _tptz__GetPtzParamsResponse *tptz__GetPtzParamsResponse);
 
 
 
