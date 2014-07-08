@@ -84,6 +84,7 @@ void PtzControllingVisca::reset()
 
 void PtzControllingVisca::stop()
 {
+	fprintf(stderr, "===>ENTER STOP\n");
 	VISCA_set_pantilt_stop(&visca_, &cam_, 0, 0);
 }
 
@@ -107,6 +108,7 @@ void PtzControllingVisca::down(int s)
 
 void PtzControllingVisca::right(int s)
 {
+	fprintf(stderr, "===>ENTER RIGHT\n");
 	VISCA_set_pantilt_right_without_reply(&visca_, &cam_, s, s);
 	changed_pos_ = true;
 }
