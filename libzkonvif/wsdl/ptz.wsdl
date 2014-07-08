@@ -22,9 +22,32 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 			elementFormDefault="qualified" version="2.4">
 			<xs:import namespace="http://www.onvif.org/ver10/schema" schemaLocation="./onvif.xsd"/>
-			<xs:import namespace="http://www.zonekey.com.cn/schema" schemaLocation=".zonekey.xsd"/>
+			<xs:import namespace="http://www.zonekey.com.cn/schema" schemaLocation="./zonekey.xsd"/>
 			<!--  Message Request/Responses elements  -->
 			<!--===============================-->
+			<!-- Zonekey GetScales -->
+			<xs:element	name="GetScales">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ProfileToken" type="tt:ReferenceToken">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetScalesResponse" type="xs:double">
+			</xs:element>
+			<!-- Zonekey GetPtzParams -->
+			<xs:element name="GetPtzParams">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="ProfileToken" type="tt:ReferenceToken">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetPtzParamsResponse" type="zonekey:ZonekeyPtzParamType">
+			</xs:element>
+
 			<xs:element name="GetServiceCapabilities">
 				<xs:complexType>
 					<xs:sequence/>
@@ -40,10 +63,7 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 						</xs:element>
 					</xs:sequence>
 				</xs:complexType>
-			</xs:element>
-			<!--===============================-->
-			<xs:complexType name="Capabilities">
-				<xs:sequence>
+			</xs:element> <!--===============================--> <xs:complexType name="Capabilities"> <xs:sequence>
 					<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 				<xs:attribute name="EFlip" type="xs:boolean">
@@ -819,11 +839,32 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 	<wsdl:message name="GetCompatibleConfigurationsResponse">
 		<wsdl:part name="parameters" element="tptz:GetCompatibleConfigurationsResponse"/>
 	</wsdl:message>
+	<wsdl:message name="GetScalseRequest">
+		<wsdl:part name="parameters" element="tptz:GetScales"/>
+	</wsdl:message>
+	<wsdl:message name="GetScalesResponse">
+		<wsdl:part name="parameters" element="tptz:GetScalesResponse"/>
+	</wsdl:message>
+	<wsdl:message name="GetPtzParamsRequest">
+		<wsdl:part name="parameters" element="tptz:GetPtzParams"/>
+	</wsdl:message>
+	<wsdl:message name="GetPtzParamsResponse">
+		<wsdl:part name="parameters" element="tptz:GetPtzParamsResponse"/>
+	</wsdl:message>
+	
 	<wsdl:portType name="PTZ">
 		<wsdl:operation name="GetServiceCapabilities">
 			<wsdl:documentation>Returns the capabilities of the PTZ service. The result is returned in a typed answer.</wsdl:documentation>
 			<wsdl:input message="tptz:GetServiceCapabilitiesRequest"/>
 			<wsdl:output message="tptz:GetServiceCapabilitiesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetScales">
+			<wsdl:input message="tptz:GetScalesResponse"/>
+			<wsdl:output message="tptz:GetScalesResponse"/>
+		</wsdl:operation>
+		<wsdl:operation name="GetPtzParams">
+			<wsdl:input message="tptz:GetPtzParamsRequest"/>
+			<wsdl:output message="tptz:GetPtzParamsResponse"/>
 		</wsdl:operation>
 		<wsdl:operation name="GetNodes">
 			<wsdl:documentation>
@@ -1057,6 +1098,25 @@ If no stop argument for pan, tilt or zoom is set, the device will stop all ongoi
 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 		<wsdl:operation name="GetServiceCapabilities">
 			<soap:operation soapAction="http://www.onvif.org/ver20/ptz/wsdl/GetServiceCapabilities"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="GetScales">
+			<soap:operation soapAction="http://www.onvif.org/ver20/ptz/wsdl/GetScales"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		
+		</wsdl:operation>
+		<wsdl:operation name="GetPtzParams">
+			<soap:operation soapAction="http://www.onvif.org/ver20/ptz/wsdl/GetPtzParams"/>
 			<wsdl:input>
 				<soap:body use="literal"/>
 			</wsdl:input>

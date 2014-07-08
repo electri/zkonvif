@@ -215,7 +215,7 @@ int MyPtz::AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tptz__Absolute
 	int speedx = 32;
 	int speedy = 32;
 	int speedz = 7;
-
+	
 	if (tptz__AbsoluteMove->Speed) {
 		if (tptz__AbsoluteMove->Speed->PanTilt) {
 			speedx = tptz__AbsoluteMove->Speed->PanTilt->x;
@@ -261,13 +261,7 @@ int MyPtz::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__Co
 		ptzes[key]->up(speedy);
 	if (speedy < 0)
 		ptzes[key]->down(-speedy);
-
-	if (tptz__ContinuousMove->Velocity->Zoom) {
-		float speedz = tptz__ContinuousMove->Velocity->Zoom->x;
-		ptzes[key]->zoom_set(speedz);
-	}
 	
-
 	return SOAP_OK;	
 }
 

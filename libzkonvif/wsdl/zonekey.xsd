@@ -18,4 +18,18 @@
 		<xs:element name="info" type="xs:string"/>
 	</xs:sequence>
   </xs:complexType>
+
+  <!-- 对应 ptz.wsdl 中的 PtzParam 结构 -->
+  <xs:complexType name = "ZonekeyPtzParamType">
+  	<xs:sequence>
+		<xs:element name="f" type="xs:double"/>
+		<xs:element name="ccd_size_width" type="xs:double"/>
+		<xs:element name="ccd_size_height" type="xs:double"/>
+		<xs:element name="pan_min_angle" type="xs:double"/>
+		<xs:element name="tilt_min_angle" type="xs:double"/>
+		<xs:element name="pan_max_va" type="xs:double"/>
+		<xs:element name="tilt_max_va" type="xs:double"/>
+  	</xs:sequence>
+  </xs:complexType>
 </xs:schema>
+
