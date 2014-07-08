@@ -12,7 +12,7 @@ namespace test_cs_client
     {
         static void Main(string[] args)
         {
-            string dm_url = "http://localhost:10000";
+            string dm_url = "http://172.16.1.111:10000";
             if (args.Length > 0)
                 dm_url = args[0];
 
@@ -102,6 +102,7 @@ namespace test_cs_client
         {
             Console.WriteLine(string.Format("INFO: testing ptz: token '{0}', name '{1}'", node.token, node.Name));
 
+            double scale = ptz.GetScales(node.token);
             /*
             // Configuration 
             zonvif_ptz.PTZConfiguration cfg = ptz.GetConfiguration(node.token);
@@ -130,12 +131,10 @@ namespace test_cs_client
             // 设置云台指向：
             ptz.AbsoluteMove(node.token, pos, speed);
             System.Threading.Thread.Sleep(200);
-            double scale = ptz.GetScales(node.token);
-            Console.WriteLine("Scale : {0}", scale.ToString());
-            double ccd_heghit, ccd_width, f, pan_max_va,  pan_min_angle, tilt_max_va, tilt_min_angle;
-            ptz.GetPtzParams(node.token, out ccd_width, out ccd_heghit, out pan_min_angle, out tilt_min_angle, out pan_max_va, out tilt_max_va);
-            Console.WriteLine("PtzParams : ccd_width {0}; ccd_height {1}; pan_min_angle {2}; tilt_min_angle {3}, pan_max_va {4}, tilt_max_va {5}",
-                ccd_width, ccd_heghit, pan_min_angle, tilt_min_angle, pan_max_va, tilt_max_va);
+            //Console.WriteLine("Scale : {0}", scale.ToString());
+            zonvif_ptz.ZonekeyPtzParamType ptzParams = ptz.GetPtzParams(node.token);
+            Console.WriteLine(string.Format("PtzParams: {0}, {1}, {2}, {3}, {4}", ptzParams.f,
+                ptzParams.pan_max_va, ptzParams.pan_min_angle, ptzParams.tilt_max_va, ptzParams.tilt_min_angle));
 
             // 连续数次调用 ...
             for (int i = 0; i < 3; i++)
