@@ -64,11 +64,19 @@ void PtzControllingVisca::setpos(int x, int y, int speed_x, int speed_y)
 
 int PtzControllingVisca::getpos(int &x, int &y)
 {
-	if (VISCA_get_pantilt_position(&visca_, &cam_, &x, &y) == VISCA_FAILURE) {
-		log(LOG_ERROR, "ERR: %s: VISCA_get_pantilt_position failure!\n", __func__);
-		return -1;
+	if (changed_pos_) {
+		if (VISCA_get_pantilt_position(&visca_, &cam_, &x, &y) == VISCA_FAILURE) {
+			log(LOG_ERROR, "ERR: %s: VISCA_get_pantilt_position failure!\n", __func__);
+			return -1;
+		}
+		else {
+			last_x_ = x, last_y_ = y;
+			changed_pos_ = false;
+			return 0;
+		}
 	}
 	else {
+		x = last_x_, y = last_y_;
 		return 0;
 	}
 }
@@ -84,7 +92,6 @@ void PtzControllingVisca::reset()
 
 void PtzControllingVisca::stop()
 {
-	fprintf(stderr, "===>ENTER STOP\n");
 	VISCA_set_pantilt_stop(&visca_, &cam_, 0, 0);
 }
 
@@ -108,7 +115,6 @@ void PtzControllingVisca::down(int s)
 
 void PtzControllingVisca::right(int s)
 {
-	fprintf(stderr, "===>ENTER RIGHT\n");
 	VISCA_set_pantilt_right_without_reply(&visca_, &cam_, s, s);
 	changed_pos_ = true;
 }
