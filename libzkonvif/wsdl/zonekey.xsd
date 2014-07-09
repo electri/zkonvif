@@ -18,6 +18,17 @@
 		<xs:element name="info" type="xs:string"/>
 	</xs:sequence>
   </xs:complexType>
+    <!-- 对应 devicemgmt.wsdl 中传递的消息的详细类型 -->
+  <xs:complexType name="ZonekeyDMSysStatusType">
+  	<xs:sequence>
+		<xs:element name="cpu" type="xs:double"/>
+		<xs:element name="mem" type="xs:double"/>
+		<xs:element name="netrecv" type="xs:double"/>
+		<xs:element name="netsend" type="xs:double"/>
+		<xs:element name="disktotal" type="xs:double"/>
+		<xs:element name="diskfree" type="xs:double"/>
+	</xs:sequence>
+  </xs:complexType>
 
   <!-- 对应 ptz.wsdl 中的 PtzParam 结构 -->
   <xs:complexType name = "ZonekeyPtzParamType">
