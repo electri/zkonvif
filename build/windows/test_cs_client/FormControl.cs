@@ -12,29 +12,12 @@ namespace test_cs_client
 {
     public partial class FormControl : Form
     {
-        public FormControl()
+        string url_ = null;
+
+        public FormControl(string url)
         {
+            url_ = url;
             InitializeComponent();
-        }
-
-        private void test_ptz(string url)
-        {
-            Console.WriteLine("===== test ptz interface =====");
-
-            zonvif_ptz.PTZBinding ptz = new zonvif_ptz.PTZBinding();
-            ptz.Url = url;
-
-            // GetNodes
-            zonvif_ptz.PTZNode[] nodes = ptz.GetNodes();
-            Console.WriteLine(string.Format("There are {0} ptzs", nodes.Length));
-            foreach (zonvif_ptz.PTZNode node in nodes)
-            {
-                zonvif_ptz.PTZNode n = ptz.GetNode(node.token);
-                test_ptz_AbsoluteMove(ptz, n);
-                //test_ptz_move(ptz, n);
-            }
-
-            Console.WriteLine("------------ end -------------");
         }
 
         private void test_ptz_move(zonvif_ptz.PTZBinding ptz, zonvif_ptz.PTZNode node)
@@ -128,13 +111,30 @@ namespace test_cs_client
             }
         }
 
-        private void test_event(string url)
+        private void FormControl_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("==== test event interface ====");
+            zonvif_ptz.PTZBinding ptz = new zonvif_ptz.PTZBinding();
+            ptz.Url = url_;
 
-            /// TODO: 测试事件接口 ...
+            // GetNodes
+            zonvif_ptz.PTZNode[] nodes = ptz.GetNodes();
+            Console.WriteLine(string.Format("There are {0} ptzs", nodes.Length));
 
-            Console.WriteLine("------------ end -------------");
+            if (nodes.Length == 0) {
+                MessageBox.Show("没有找到需要测试的云台服务 ....");
+            }
+            else {
+                foreach (zonvif_ptz.PTZNode node in nodes) {
+                    TabPage tc = new TabPage(node.token);
+                    tc.Tag = node;
+
+                    ucPtzControl pc = new ucPtzControl(ptz, node.token);
+                    tc.Controls.Add(pc);
+                    pc.Dock = DockStyle.Fill;
+
+                    tabCont.TabPages.Add(tc);
+                }
+            }
         }
     }
 }

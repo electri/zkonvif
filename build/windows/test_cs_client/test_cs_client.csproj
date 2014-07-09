@@ -55,6 +55,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ptz.cs" />
+    <Compile Include="ucPtzControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ucPtzControl.Designer.cs">
+      <DependentUpon>ucPtzControl.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -62,6 +68,9 @@
   <ItemGroup>
     <EmbeddedResource Include="FormControl.resx">
       <DependentUpon>FormControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ucPtzControl.resx">
+      <DependentUpon>ucPtzControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
