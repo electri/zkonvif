@@ -33,7 +33,7 @@ void MyEvent::run()
 	KVConfig cfg("event.config");	// 事件服务配置 ..
 
 #ifdef WITH_OPENSSL
-	if (soap_ssl_server_context(soap, SOAP_SSL_DEFAULT, cfg.get_value("server-key", "server.pem"), 0, cfg.get_value("ca-cert", 0), 0, 0, 0, 0)) {
+	if (soap_ssl_server_context(soap, SOAP_SSL_DEFAULT, cfg.get_value("server-key", "ca/server.pem"), 0, cfg.get_value("ca-cert", 0), 0, 0, 0, 0)) {
 		log(LOG_FAULT, "%s: soap_ssl_server_context failure!\n", __func__);
 		soap_print_fault(stderr);
 		::exit(-1);

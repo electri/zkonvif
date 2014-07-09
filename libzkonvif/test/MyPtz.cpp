@@ -4,15 +4,11 @@
 #include "../../common/utils.h"
 #include "PtzControling.h"
 #include <map>
+#include <algorithm>
 
 typedef std::pair<std::string, PtzControlling *> ptz_pair;
-std::map<std::string,PtzControlling*> ptzes;
-
-std::vector<tt__PTZConfiguration *> pConfigurations;
-
-tt__PTZConfiguration* new_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc);
-
-void delete_tt__PTZConfigurations(std::vector<tt__PTZConfiguration *> pConfigurations);
+static std::map<std::string,PtzControlling*> ptzes;
+static KVConfig *ptzKVC;
 
 MyPtz::MyPtz(int listen_port)
 {
@@ -23,26 +19,27 @@ MyPtz::MyPtz(int listen_port)
 
 	url_ = buf;
 
-	start();
-
 	//
 	// 打开 所有云台节点
 	//
-	KVConfig ptzKVC("../config/ptz_nodes");
-	std::vector<std::string> tokenList = ptzKVC.keys();
+	ptzKVC = new KVConfig("config/ptz_nodes");
+	std::vector<std::string> tokenList = ptzKVC->keys();
 	std::vector<std::string>::const_iterator c_it;
 	for (c_it = tokenList.begin(); c_it != tokenList.end(); ++c_it) {
 		//为返回值 赋值
-		const char *value = ptzKVC.get_value(c_it->c_str(), "teacher");
+		const char *value = ptzKVC->get_value(c_it->c_str(), "teacher");
 		char name[255] = "\0";
-		_snprintf(name, 255, "../config/%s", value);
+		_snprintf(name, 255, "config/%s", value);
 
 		// 创建 ptz, 保存至 ptz 列表
-		KVConfig comKVC(name);
-		PtzControlling * ptzVisca = new PtzControllingVisca(&comKVC);
-		ptzes.insert(ptz_pair(*c_it, ptzVisca));
+		KVConfig *comKVC = new KVConfig(name);
+		PtzControlling * ptzVisca = new PtzControllingVisca(comKVC);
+		//ptzes.insert(ptz_pair(*c_it, ptzVisca));
+		ptzes[*c_it] = ptzVisca;
 		ptzVisca->open();
 	}
+
+	start();
 }
 
 //
@@ -52,17 +49,15 @@ int MyPtz::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse *tp
 {
 	struct soap *pSoap = tptz__GetNodesResponse->soap;
 
-	KVConfig ptzKVC("../config/ptz_nodes");
-	std::vector<std::string> tokenList = ptzKVC.keys();
+	std::vector<std::string> tokenList = ptzKVC->keys();
 	
-
 	std::vector<std::string>::const_iterator c_it;
 	for (c_it = tokenList.begin(); c_it != tokenList.end(); ++c_it) {
 		tt__PTZNode *ptzNode = soap_new_tt__PTZNode(pSoap);
 		ptzNode->token = *c_it;
 		std::string *pName = soap_new_std__string(soap);
 
-		const char *value = ptzKVC.get_value(c_it->c_str());
+		const char *value = ptzKVC->get_value(c_it->c_str());
 		pName->assign(value, strlen(value));
 		ptzNode->Name = pName;
 		ptzNode->Extension = NULL;
@@ -80,8 +75,7 @@ int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz__
 	//TODO:
 	struct soap *pSoap = tptz__GetNodeResponse->soap;
 
-	KVConfig ptzKVC("../config/ptz_nodes");
-	std::vector<std::string> tokenList = ptzKVC.keys();
+	std::vector<std::string> tokenList = ptzKVC->keys();
 
 	std::vector<std::string>::const_iterator c_it;
 
@@ -93,7 +87,7 @@ int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz__
 			std::string *pName = soap_new_std__string(soap);
 			
 			//为返回值 赋值
-			const char *value = ptzKVC.get_value(c_it->c_str(), "teacher");
+			const char *value = ptzKVC->get_value(c_it->c_str(), "teacher");
 			pName->assign(value, strlen(value));
 			ptzNode->Name = pName;
 			ptzNode->Extension = NULL;
@@ -102,101 +96,11 @@ int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz__
 			ptzNode->MaximumNumberOfPresets = 4;
 			tptz__GetNodeResponse->PTZNode = ptzNode;
 
-			char name[255] = "\0";
-			_snprintf(name, 255, "../config/%s", value);
-
-			// 创建 ptz, 保存至 ptz 列表
-			KVConfig comKVC(name);
-			PtzControlling * ptzVisca = new PtzControllingVisca(&comKVC);
-			ptzes.insert(ptz_pair(*c_it, ptzVisca));
-			ptzVisca->open();
 			return SOAP_OK;
 		}
 	}
 
 	return SOAP_ERR;
-}
-//
-//	PTZ Configuration
-//
-
-int MyPtz::GetConfigurations(_tptz__GetConfigurations *tptz__GetConfigurations, _tptz__GetConfigurationsResponse *tptz__GetConfigurationsResponse)
-{
-	struct soap *sp = tptz__GetConfigurationsResponse->soap;
-	std::vector<tt__PTZConfiguration *>::iterator c_it;
-	tptz__GetConfigurationsResponse->PTZConfiguration.clear();
-	for (c_it = pConfigurations.begin(); c_it != pConfigurations.end(); ++c_it) {
-		tt__PTZConfiguration *pc = new_soap_tt__PTZConfiguration(tptz__GetConfigurationsResponse->soap, *c_it);
-		tptz__GetConfigurationsResponse->PTZConfiguration.push_back(pc);
-	}
-	return SOAP_OK;
-	
-}
-
-int MyPtz::SetConfiguration(_tptz__SetConfiguration *tptz__SetConfiguration, 
-							_tptz__SetConfigurationResponse *tptz__SetConfigurationResponse)
-{
-	tt__PTZConfiguration *pPtzConfiguration = tptz__SetConfiguration->PTZConfiguration;
-	tt__PTZConfiguration *pConfiguration = new tt__PTZConfiguration(*pPtzConfiguration);
-	pConfiguration->NodeToken = pPtzConfiguration->NodeToken;
-
-	if (pPtzConfiguration->DefaultAbsolutePantTiltPositionSpace != NULL)
-		pConfiguration->DefaultAbsolutePantTiltPositionSpace = new std::string(*pPtzConfiguration->DefaultAbsolutePantTiltPositionSpace);
-
-	if (pPtzConfiguration->DefaultAbsoluteZoomPositionSpace != NULL)
-		pConfiguration->DefaultAbsoluteZoomPositionSpace = new std::string(*pPtzConfiguration->DefaultAbsoluteZoomPositionSpace);
-
-
-	if (pPtzConfiguration->DefaultContinuousPanTiltVelocitySpace != NULL)
-		pConfiguration->DefaultContinuousPanTiltVelocitySpace = new std::string(*pPtzConfiguration->DefaultContinuousPanTiltVelocitySpace);
-
-
-	if (pPtzConfiguration->DefaultContinuousZoomVelocitySpace != NULL)
-		pConfiguration->DefaultContinuousZoomVelocitySpace = new std::string(*pPtzConfiguration->DefaultContinuousZoomVelocitySpace);
-
-	if (pPtzConfiguration->DefaultPTZSpeed != NULL) {
-		pConfiguration->DefaultPTZSpeed = new tt__PTZSpeed(*pPtzConfiguration->DefaultPTZSpeed);
-		if (pPtzConfiguration->DefaultPTZSpeed->PanTilt != NULL)
-			pConfiguration->DefaultPTZSpeed->PanTilt = new tt__Vector2D(*pPtzConfiguration->DefaultPTZSpeed->PanTilt);
-		if (pPtzConfiguration->DefaultPTZSpeed->Zoom != NULL)
-			pConfiguration->DefaultPTZSpeed->Zoom = new tt__Vector1D(*pPtzConfiguration->DefaultPTZSpeed->Zoom);
-	}
-
-	if (pPtzConfiguration->DefaultPTZTimeout != NULL)
-		pConfiguration->DefaultPTZTimeout = new (LONG64)(*pPtzConfiguration->DefaultPTZTimeout);
-
-	if (pPtzConfiguration->DefaultRelativePanTiltTranslationSpace != NULL)
-		pConfiguration->DefaultRelativePanTiltTranslationSpace = new std::string(*pPtzConfiguration->DefaultRelativePanTiltTranslationSpace);
-
-	if (pPtzConfiguration->DefaultRelativeZoomTranslationSpace != NULL)
-		pConfiguration->DefaultRelativeZoomTranslationSpace = new std::string(*pPtzConfiguration->DefaultRelativeZoomTranslationSpace);
-
-	if (pPtzConfiguration->Extension != NULL) {
-		//	TODO:
-		;
-	}
-	
-	if (pPtzConfiguration->PanTiltLimits != NULL) {
-		//	TODO:
-		;
-	}
-
-	pConfigurations.push_back(pConfiguration);
-
-	return SOAP_OK;
-}
-
-int MyPtz::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfiguration, _tptz__GetConfigurationResponse *tptz__GetConfigurationResponse)
-{	
-	std::vector<tt__PTZConfiguration *>::const_iterator c_it;
-	for (c_it = pConfigurations.begin(); c_it != pConfigurations.end(); ++c_it) {
-		if ((*c_it)->NodeToken == tptz__GetConfiguration->PTZConfigurationToken) {
-			tptz__GetConfigurationResponse->PTZConfiguration = new_soap_tt__PTZConfiguration(tptz__GetConfigurationResponse->soap, *c_it);
-			return SOAP_OK;
-		}
-	}
-
-	return SOAP_ERR;	//	FIXME: ...
 }
 
 //
@@ -211,6 +115,13 @@ int MyPtz::RelativeMove(_tptz__RelativeMove *tptz__RelativeMove, _tptz__Relative
 int MyPtz::AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tptz__AbsoluteMoveResponse *tptz__AbsoluteMoveResponse)
 {
 	std::string key = tptz__AbsoluteMove->ProfileToken;
+	std::vector<std::string> tokenList = ptzKVC->keys();
+	
+	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
+		soap_print_fault(stderr);
+		return SOAP_ERR;
+	}
+
 
 	int speedx = 32;
 	int speedy = 32;
@@ -393,4 +304,93 @@ MyPtz::~MyPtz()
 		delete(c_it->second);
 	}
 }
+
+//std::vector<tt__PTZConfiguration *> pConfigurations;
+
+//tt__PTZConfiguration* new_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc);
+
+//void delete_tt__PTZConfigurations(std::vector<tt__PTZConfiguration *> pConfigurations);
+
+//
+//	PTZ Configuration
+//
+
+//int MyPtz::GetConfigurations(_tptz__GetConfigurations *tptz__GetConfigurations, _tptz__GetConfigurationsResponse *tptz__GetConfigurationsResponse)
+//{
+//	struct soap *sp = tptz__GetConfigurationsResponse->soap;
+//	std::vector<tt__PTZConfiguration *>::iterator c_it;
+//	tptz__GetConfigurationsResponse->PTZConfiguration.clear();
+//	for (c_it = pConfigurations.begin(); c_it != pConfigurations.end(); ++c_it) {
+//		tt__PTZConfiguration *pc = new_soap_tt__PTZConfiguration(tptz__GetConfigurationsResponse->soap, *c_it);
+//		tptz__GetConfigurationsResponse->PTZConfiguration.push_back(pc);
+//	}
+//	return SOAP_OK;
+//	
+//}
+//
+//int MyPtz::SetConfiguration(_tptz__SetConfiguration *tptz__SetConfiguration, 
+//							_tptz__SetConfigurationResponse *tptz__SetConfigurationResponse)
+//{
+//	tt__PTZConfiguration *pPtzConfiguration = tptz__SetConfiguration->PTZConfiguration;
+//	tt__PTZConfiguration *pConfiguration = new tt__PTZConfiguration(*pPtzConfiguration);
+//	pConfiguration->NodeToken = pPtzConfiguration->NodeToken;
+//
+//	if (pPtzConfiguration->DefaultAbsolutePantTiltPositionSpace != NULL)
+//		pConfiguration->DefaultAbsolutePantTiltPositionSpace = new std::string(*pPtzConfiguration->DefaultAbsolutePantTiltPositionSpace);
+//
+//	if (pPtzConfiguration->DefaultAbsoluteZoomPositionSpace != NULL)
+//		pConfiguration->DefaultAbsoluteZoomPositionSpace = new std::string(*pPtzConfiguration->DefaultAbsoluteZoomPositionSpace);
+//
+//
+//	if (pPtzConfiguration->DefaultContinuousPanTiltVelocitySpace != NULL)
+//		pConfiguration->DefaultContinuousPanTiltVelocitySpace = new std::string(*pPtzConfiguration->DefaultContinuousPanTiltVelocitySpace);
+//
+//
+//	if (pPtzConfiguration->DefaultContinuousZoomVelocitySpace != NULL)
+//		pConfiguration->DefaultContinuousZoomVelocitySpace = new std::string(*pPtzConfiguration->DefaultContinuousZoomVelocitySpace);
+//
+//	if (pPtzConfiguration->DefaultPTZSpeed != NULL) {
+//		pConfiguration->DefaultPTZSpeed = new tt__PTZSpeed(*pPtzConfiguration->DefaultPTZSpeed);
+//		if (pPtzConfiguration->DefaultPTZSpeed->PanTilt != NULL)
+//			pConfiguration->DefaultPTZSpeed->PanTilt = new tt__Vector2D(*pPtzConfiguration->DefaultPTZSpeed->PanTilt);
+//		if (pPtzConfiguration->DefaultPTZSpeed->Zoom != NULL)
+//			pConfiguration->DefaultPTZSpeed->Zoom = new tt__Vector1D(*pPtzConfiguration->DefaultPTZSpeed->Zoom);
+//	}
+//
+//	if (pPtzConfiguration->DefaultPTZTimeout != NULL)
+//		pConfiguration->DefaultPTZTimeout = new (LONG64)(*pPtzConfiguration->DefaultPTZTimeout);
+//
+//	if (pPtzConfiguration->DefaultRelativePanTiltTranslationSpace != NULL)
+//		pConfiguration->DefaultRelativePanTiltTranslationSpace = new std::string(*pPtzConfiguration->DefaultRelativePanTiltTranslationSpace);
+//
+//	if (pPtzConfiguration->DefaultRelativeZoomTranslationSpace != NULL)
+//		pConfiguration->DefaultRelativeZoomTranslationSpace = new std::string(*pPtzConfiguration->DefaultRelativeZoomTranslationSpace);
+//
+//	if (pPtzConfiguration->Extension != NULL) {
+//		//	TODO:
+//		;
+//	}
+//	
+//	if (pPtzConfiguration->PanTiltLimits != NULL) {
+//		//	TODO:
+//		;
+//	}
+//
+//	pConfigurations.push_back(pConfiguration);
+//
+//	return SOAP_OK;
+//}
+//
+//int MyPtz::GetConfiguration(_tptz__GetConfiguration *tptz__GetConfiguration, _tptz__GetConfigurationResponse *tptz__GetConfigurationResponse)
+//{	
+//	std::vector<tt__PTZConfiguration *>::const_iterator c_it;
+//	for (c_it = pConfigurations.begin(); c_it != pConfigurations.end(); ++c_it) {
+//		if ((*c_it)->NodeToken == tptz__GetConfiguration->PTZConfigurationToken) {
+//			tptz__GetConfigurationResponse->PTZConfiguration = new_soap_tt__PTZConfiguration(tptz__GetConfigurationResponse->soap, *c_it);
+//			return SOAP_OK;
+//		}
+//	}
+//
+//	return SOAP_ERR;	//	FIXME: ...
+//}
 
