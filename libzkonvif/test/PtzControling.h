@@ -25,6 +25,10 @@ public:
 	virtual void zoom_set(int z) = 0;
 	virtual int zoom_get(int &z) = 0;
 
+	virtual void preset_set(int n) = 0;
+	virtual void preset_get(int n) = 0;
+	virtual void preset_del(int n) = 0;
+
 	struct PtzParam
 	{
 		double f; // 焦距
@@ -63,6 +67,10 @@ class PtzControllingDummy : public PtzControlling
 	const PtzParam &getPtzParam() const { return param_; }
 
 	double getScales() { return 1.0; }
+
+	void preset_set(int n) {}
+	void preset_get(int n) {}
+	void preset_del(int n) {}
 };
 
 /** 封装云台的基本操作 ...
@@ -102,6 +110,10 @@ public:
 	const PtzParam &getPtzParam() const { return param_; }
 
 	double getScales();	// 获取当前倍率 ..
+
+	void preset_set(int n);
+	void preset_get(int n);
+	void preset_del(int n);
 
 protected:
 	KVConfig *cfg() { return cfg_; }
