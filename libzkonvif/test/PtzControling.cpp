@@ -152,3 +152,18 @@ double PtzControllingVisca::getScales()
 	else
 		return 1.0;
 }
+
+void PtzControllingVisca::preset_set(int n)
+{
+	VISCA_memory_set_without_reply(&visca_, &cam_, n);
+}
+
+void PtzControllingVisca::preset_get(int n)
+{
+	VISCA_memory_recall_without_reply(&visca_, &cam_, n);
+}
+
+void PtzControllingVisca::preset_del(int n)
+{
+	VISCA_memory_reset_without_reply(&visca_, &cam_, n);
+}

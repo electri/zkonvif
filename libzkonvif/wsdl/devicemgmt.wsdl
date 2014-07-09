@@ -8,10 +8,28 @@ Recipients of this document may copy, distribute, publish, or display this docum
 THIS DOCUMENT IS PROVIDED "AS IS," AND THE CORPORATION AND ITS MEMBERS AND THEIR AFFILIATES, MAKE NO REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, OR TITLE; THAT THE CONTENTS OF THIS DOCUMENT ARE SUITABLE FOR ANY PURPOSE; OR THAT THE IMPLEMENTATION OF SUCH CONTENTS WILL NOT INFRINGE ANY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
 IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, PUNITIVE OR CONSEQUENTIAL DAMAGES, ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT, WHETHER OR NOT (1) THE CORPORATION, MEMBERS OR THEIR AFFILIATES HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, OR (2) SUCH DAMAGES WERE REASONABLY FORESEEABLE, AND ARISING OUT OF OR RELATING TO ANY USE OR DISTRIBUTION OF THIS DOCUMENT.  THE FOREGOING DISCLAIMER AND LIMITATION ON LIABILITY DO NOT APPLY TO, INVALIDATE, OR LIMIT REPRESENTATIONS AND WARRANTIES MADE BY THE MEMBERS AND THEIR RESPECTIVE AFFILIATES TO THE CORPORATION AND OTHER MEMBERS IN CERTAIN WRITTEN POLICIES OF THE CORPORATION.
 -->
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" targetNamespace="http://www.onvif.org/ver10/device/wsdl">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" 
+xmlns:zonekey="http://www.zonekey.com.cn/schema"
+targetNamespace="http://www.onvif.org/ver10/device/wsdl">
 	<wsdl:types>
 		<xs:schema targetNamespace="http://www.onvif.org/ver10/device/wsdl" xmlns:tt="http://www.onvif.org/ver10/schema" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" elementFormDefault="qualified" version="2.4.1">
 			<xs:import namespace="http://www.onvif.org/ver10/schema" schemaLocation="./onvif.xsd"/>
+			<xs:import namespace="http://www.zonekey.com.cn/schema" schemaLocation="./zonekey.xsd"/>
+			<!--===============zonekey================-->
+			<xs:element name="SysPerfGetStatus">
+				<xs:complexType>
+					<xs:sequence>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SysPerfGetStatusResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Status" type="zonekey:ZonekeyDMSysStatusType">
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<!--===============================-->
 			<xs:element name="GetServices">
 				<xs:complexType>
@@ -1839,6 +1857,14 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			</xs:element>
 		</xs:schema>
 	</wsdl:types>
+	<!-- zonkey -->
+	<wsdl:message name="SysPerfGetStatusRequest">
+		<wsdl:part name="parameters" element="tds:SysPerfGetStatus"/>
+	</wsdl:message>
+	<wsdl:message name="SysPerfGetStatusResponse">
+		<wsdl:part name="parameters" element="tds:SysPerfGetStatusResponse"/>
+	</wsdl:message>
+	<!-- zonkey -->
 	<wsdl:message name="GetServicesRequest">
 		<wsdl:part name="parameters" element="tds:GetServices"/>
 	</wsdl:message>
@@ -2331,6 +2357,15 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 	<wsdl:message name="StartSystemRestoreResponse">
 		<wsdl:part name="parameters" element="tds:StartSystemRestoreResponse"/>
 	</wsdl:message>
+
+	<!-- Zonekey portType -->
+	<wsdl:portType name="DMSysPerfMon">
+		<wsdl:operation name="GetStatus">
+			<wsdl:input message="tds:SysPerfGetStatusRequest"/>
+			<wsdl:output message="tds:SysPerfGetStatusResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+
 	<wsdl:portType name="Device">
 		<wsdl:operation name="GetServices">
 			<wsdl:documentation>Returns information about services on the device.</wsdl:documentation>
@@ -3776,6 +3811,19 @@ IN NO EVENT WILL THE CORPORATION OR ITS MEMBERS OR THEIR AFFILIATES BE LIABLE FO
 			</wsdl:output>
 		</wsdl:operation>
 	</wsdl:binding>
-	<!--===============================-->
-	<!--===============================-->
+
+	<!-- Zonekey binding -->
+	<wsdl:binding name="DMSysPerfMonBinding" type="tds:DMSysPerfMon">
+		<soap:binding style="document" transport="http://localhost:10004"/>
+		<wsdl:operation name="GetStatus">
+			<soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SysPerfGetStatus"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<!--==============zonekey=================-->
 </wsdl:definitions>

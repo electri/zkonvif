@@ -787,6 +787,15 @@ VISCA_API uint32_t
 VISCA_memory_reset(VISCAInterface_t *iface, VISCACamera_t *camera, uint8_t channel);
 
 VISCA_API uint32_t
+VISCA_memory_set_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint8_t channel);
+
+VISCA_API uint32_t
+VISCA_memory_recall_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint8_t channel);
+
+VISCA_API uint32_t
+VISCA_memory_reset_without_reply(VISCAInterface_t *iface, VISCACamera_t *camera, uint8_t channel);
+
+VISCA_API uint32_t
 VISCA_set_display(VISCAInterface_t *iface, VISCACamera_t *camera, uint8_t power);
 
 VISCA_API uint32_t
