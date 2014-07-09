@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_cs_postevent", "test_c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test_cs_client", "test_cs_client\test_cs_client.csproj", "{BCF73C68-AD71-40DC-9724-29A3B1791C29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsTestPtz", "WindowsFormsTestPtz\WindowsFormsTestPtz.csproj", "{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,16 @@ Global
 		{BCF73C68-AD71-40DC-9724-29A3B1791C29}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BCF73C68-AD71-40DC-9724-29A3B1791C29}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BCF73C68-AD71-40DC-9724-29A3B1791C29}.Release|Win32.ActiveCfg = Release|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2586E735-46EB-43FA-A7BC-6D0C399A7B0C}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
