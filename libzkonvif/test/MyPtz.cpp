@@ -10,6 +10,8 @@ typedef std::pair<std::string, PtzControlling *> ptz_pair;
 static std::map<std::string,PtzControlling*> _ptzes;
 static KVConfig *_ptzKVC;
 
+void set_SOAP_ENV__Fault(soap *soap, char *env, char *ter0, char *ter1, char *text);
+
 MyPtz::MyPtz(int listen_port)
 {
 	port_ = listen_port;
@@ -70,12 +72,7 @@ int MyPtz::GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse *tp
 	if (tokenList.size() == 0) {
 		
 		soap_print_fault(stderr);
-
-		SOAP_ENV__Fault *fault = tptz__GetNodesResponse->soap->fault;
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Receiver");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:ActionNotSupported");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:PTZNotSupported");
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "PTZ is not supported by the device");
+		set_SOAP_ENV__Fault(soap, "env:Receiver", "ter:ActionNotSupported", "ter:PTZNotSupported", "PTZ is not supported by the device");
 		return SOAP_ERR;
 	}
 
@@ -112,12 +109,7 @@ int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz__
 		}
 	}
 	soap_print_fault(stderr);
-
-	SOAP_ENV__Fault *fault = tptz__GetNodeResponse->soap->fault;
-	fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-	fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InvalidArgVal");
-	fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoEntity");
-	fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "No such PTZNode on the device");
+	set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "No such PTZNode on the device");
 
 	return SOAP_ERR;
 }
@@ -138,13 +130,8 @@ int MyPtz::AbsoluteMove(_tptz__AbsoluteMove *tptz__AbsoluteMove, _tptz__Absolute
 	
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
-
-		SOAP_ENV__Fault *fault = tptz__AbsoluteMoveResponse->soap->fault;
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "the requested profile token ProfileToken does not exist");
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
+		
 		return SOAP_ERR;
 	}
 
@@ -186,23 +173,8 @@ int MyPtz::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__Co
 
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
-
-		soap->fault = soap_new_SOAP_ENV__Fault(soap);
-		memset(soap->fault, 0, sizeof(SOAP_ENV__Fault));
-		SOAP_ENV__Fault *fault = soap->fault;
-
-		fault->SOAP_ENV__Code = soap_new_SOAP_ENV__Code(soap);
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode = soap_new_SOAP_ENV__Code(soap);
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode = soap_new_SOAP_ENV__Code(soap);
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Subcode = 0;
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
 		
-		fault->SOAP_ENV__Reason = soap_new_SOAP_ENV__Reason(soap);
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The requested profile token ProfileToken does not exist");
 		return SOAP_ERR;
 	}
 
@@ -235,13 +207,8 @@ int MyPtz::GetStatus(_tptz__GetStatus *tptz__GetStatus, _tptz__GetStatusResponse
 
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
 
-		SOAP_ENV__Fault *fault = tptz_GetStatusResponse->soap->fault;
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The requested profile token ProfileToken does not exist");
 		return SOAP_ERR;
 	}
 	struct soap *pSoap = tptz_GetStatusResponse->soap;
@@ -279,13 +246,8 @@ int MyPtz::Stop(_tptz__Stop *tptz__Stop, _tptz__StopResponse *tptz__StopResponse
 
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
 
-		SOAP_ENV__Fault *fault = tptz__StopResponse->soap->fault;
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The requested profile token ProfileToken does not exist");
 		return SOAP_ERR;
 	}
 
@@ -310,23 +272,15 @@ int MyPtz::SetPreset(_tptz__SetPreset *tptz__SetPreset, _tptz__SetPresetResponse
 
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
 
-		SOAP_ENV__Fault *fault = tptz__SetPresetResponse->soap->fault;
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The requested profile token ProfileToken does not exist");
 		return SOAP_ERR;
 	}
 	else {
 		if (tptz__SetPreset->PresetToken == NULL) {
-			SOAP_ENV__Fault *fault = tptz__SetPresetResponse->soap->fault;
+			soap_print_fault(stderr);
+			set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoProfile", "The requested preset profile token ProfileToken does not exist");
 
-			fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-			fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-			fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-			fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The requested preset profile token ProfileToken does not exist");
 			return SOAP_ERR;
 		}
 		_ptzes[key]->preset_set(atoi(tptz__SetPreset->PresetToken->c_str()));
@@ -343,13 +297,8 @@ int MyPtz::GotoPreset(_tptz__GotoPreset *tptz__GotoPreset, _tptz__GotoPresetResp
 	
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
 
-		SOAP_ENV__Fault *fault = soap->fault;
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The requested profile token ProfileToken does not exist");
 		return SOAP_ERR;
 	}
 	else {
@@ -366,13 +315,8 @@ int MyPtz::RemovePreset(_tptz__RemovePreset *tptz__RemovePreset, _tptz__RemovePr
 
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
 
-		SOAP_ENV__Fault *fault = tptz__RemovePresetResponse->soap->fault;
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The requested profile token ProfileToken does not exist");
 		return SOAP_ERR;
 	}
 	else {
@@ -389,13 +333,8 @@ int MyPtz::GetScales(_tptz__GetScales *tptz__GetScales, _tptz__GetScalesResponse
 
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
 
-		SOAP_ENV__Fault *fault = res->soap->fault;
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The requested profile token ProfileToken does not exist");
 		return SOAP_ERR;
 	}
 	res->Scales = _ptzes[key]->getScales();
@@ -410,13 +349,8 @@ int MyPtz::GetPtzParams(_tptz__GetPtzParams *tptz__GetPtzParams, _tptz__GetPtzPa
 
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
-
-		SOAP_ENV__Fault *fault = res->soap->fault;
-
-		fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, "env:Sender");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:InValidArgVal");
-		fault->SOAP_ENV__Code->SOAP_ENV__Subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, "ter:NoProfile");
-		fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, "The requested profile token ProfileToken does not exist");
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
+		
 		return SOAP_ERR;
 	}
 	PtzControlling::PtzParam params = _ptzes[key]->getPtzParam();
@@ -459,6 +393,29 @@ void MyPtz::run()
 	}
 }
 
+void set_SOAP_ENV__Fault(soap *soap, char *env, char *ter0, char *ter1, char *text)
+{
+	//FIXME:利用 memset, soap_type的值变为 0, 不知可否 ????
+	soap->fault = soap_new_SOAP_ENV__Fault(soap);
+	memset(soap->fault, 0, sizeof(SOAP_ENV__Fault));
+
+	soap->fault->SOAP_ENV__Code = soap_new_SOAP_ENV__Code(soap);
+	memset(soap->fault->SOAP_ENV__Code, 0, sizeof(SOAP_ENV__Fault));
+	soap->fault->SOAP_ENV__Code->SOAP_ENV__Value = soap_strdup(soap, env);
+
+	soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode = soap_new_SOAP_ENV__Code(soap);
+	SOAP_ENV__Code *subcode = soap->fault->SOAP_ENV__Code->SOAP_ENV__Subcode;
+	memset(subcode, 0, sizeof(SOAP_ENV__Code));
+	subcode->SOAP_ENV__Value = soap_strdup(soap, ter0);
+	subcode->SOAP_ENV__Subcode = soap_new_SOAP_ENV__Code(soap);
+	memset(subcode->SOAP_ENV__Subcode, 0, sizeof(SOAP_ENV__Code));
+	subcode->SOAP_ENV__Subcode->SOAP_ENV__Value = soap_strdup(soap, ter1);
+
+	soap->fault->SOAP_ENV__Reason = soap_new_SOAP_ENV__Reason(soap);
+	memset(soap->fault->SOAP_ENV__Reason, 0, sizeof(SOAP_ENV__Reason));
+	soap->fault->SOAP_ENV__Reason->SOAP_ENV__Text = soap_strdup(soap, text);
+
+}
 //std::vector<tt__PTZConfiguration *> pConfigurations;
 
 //tt__PTZConfiguration* new_soap_tt__PTZConfiguration(struct soap *soap, tt__PTZConfiguration *tpc);

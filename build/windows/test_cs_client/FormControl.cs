@@ -29,11 +29,14 @@ namespace test_cs_client
             zonvif_ptz.PTZNode[] nodes = ptz.GetNodes();
             Console.WriteLine(string.Format("There are {0} ptzs", nodes.Length));
 
-            if (nodes.Length == 0) {
+            if (nodes.Length == 0)
+            {
                 MessageBox.Show("没有找到需要测试的云台服务 ....");
             }
-            else {
-                foreach (zonvif_ptz.PTZNode node in nodes) {
+            else
+            {
+                foreach (zonvif_ptz.PTZNode node in nodes)
+                {
                     TabPage tc = new TabPage(node.token);
                     tc.Tag = node;
 
@@ -46,3 +49,4 @@ namespace test_cs_client
             }
         }
     }
+}
