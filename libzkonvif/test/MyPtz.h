@@ -18,10 +18,7 @@ public:
 	virtual ~MyPtz();
 
 private:
-	void run()
-	{
-		PTZBindingService::run(port_);
-	}
+	void run();
 
 	const char *url() const { return url_.c_str(); }
 	const char *ns() const
