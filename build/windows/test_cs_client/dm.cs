@@ -8,7 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// CODEGEN: 命名空间“http://www.onvif.org/ver10/device/wsdl”中的绑定“DMSysPerfMonBinding”已被忽略。没有能够理解传输“http://localhost:10004”的 SoapTransportImporter。
 // 
 // 此源代码由 wsdl 自动生成, Version=4.0.30319.1。
 // 
@@ -22,7 +21,6 @@ namespace zonvif_dm {
     
     
     /// <remarks/>
-    // CODEGEN: 命名空间“http://www.onvif.org/ver10/device/wsdl”中的绑定“DMSysPerfMonBinding”已被忽略。没有能够理解传输“http://localhost:10004”的 SoapTransportImporter。
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -3778,6 +3776,220 @@ namespace zonvif_dm {
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Web.Services.WebServiceBindingAttribute(Name="DMSysPerfMonBinding", Namespace="http://www.onvif.org/ver10/device/wsdl")]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(DeviceEntity))]
+    public partial class DMSysPerfMonBinding : System.Web.Services.Protocols.SoapHttpClientProtocol {
+        
+        private System.Threading.SendOrPostCallback GetStatusOperationCompleted;
+        
+        /// <remarks/>
+        public DMSysPerfMonBinding() {
+            this.SoapVersion = System.Web.Services.Protocols.SoapProtocolVersion.Soap12;
+        }
+        
+        /// <remarks/>
+        public event GetStatusCompletedEventHandler GetStatusCompleted;
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/SysPerfGetStatus", RequestElementName="SysPerfGetStatus", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="SysPerfGetStatusResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("Status")]
+        public ZonekeyDMSysStatusType GetStatus() {
+            object[] results = this.Invoke("GetStatus", new object[0]);
+            return ((ZonekeyDMSysStatusType)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginGetStatus(System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("GetStatus", new object[0], callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public ZonekeyDMSysStatusType EndGetStatus(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((ZonekeyDMSysStatusType)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetStatusAsync() {
+            this.GetStatusAsync(null);
+        }
+        
+        /// <remarks/>
+        public void GetStatusAsync(object userState) {
+            if ((this.GetStatusOperationCompleted == null)) {
+                this.GetStatusOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetStatusOperationCompleted);
+            }
+            this.InvokeAsync("GetStatus", new object[0], this.GetStatusOperationCompleted, userState);
+        }
+        
+        private void OnGetStatusOperationCompleted(object arg) {
+            if ((this.GetStatusCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetStatusCompleted(this, new GetStatusCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        public new void CancelAsync(object userState) {
+            base.CancelAsync(userState);
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Web.Services.WebServiceBindingAttribute(Name="LocalServiceMgrtBinding", Namespace="http://www.onvif.org/ver10/device/wsdl")]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(DeviceEntity))]
+    public partial class LocalServiceMgrtBinding : System.Web.Services.Protocols.SoapHttpClientProtocol {
+        
+        private System.Threading.SendOrPostCallback RegServiceOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback UnregServiceOperationCompleted;
+        
+        private System.Threading.SendOrPostCallback HeartbeatOperationCompleted;
+        
+        /// <remarks/>
+        public LocalServiceMgrtBinding() {
+            this.SoapVersion = System.Web.Services.Protocols.SoapProtocolVersion.Soap12;
+        }
+        
+        /// <remarks/>
+        public event RegServiceCompletedEventHandler RegServiceCompleted;
+        
+        /// <remarks/>
+        public event UnregServiceCompletedEventHandler UnregServiceCompleted;
+        
+        /// <remarks/>
+        public event HeartbeatCompletedEventHandler HeartbeatCompleted;
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/SysPerfRegService", RequestElementName="SysPerfRegService", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="SysPerfRegServiceResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void RegService(ZonekeyDMSysRegisterType Register) {
+            this.Invoke("RegService", new object[] {
+                        Register});
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginRegService(ZonekeyDMSysRegisterType Register, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("RegService", new object[] {
+                        Register}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public void EndRegService(System.IAsyncResult asyncResult) {
+            this.EndInvoke(asyncResult);
+        }
+        
+        /// <remarks/>
+        public void RegServiceAsync(ZonekeyDMSysRegisterType Register) {
+            this.RegServiceAsync(Register, null);
+        }
+        
+        /// <remarks/>
+        public void RegServiceAsync(ZonekeyDMSysRegisterType Register, object userState) {
+            if ((this.RegServiceOperationCompleted == null)) {
+                this.RegServiceOperationCompleted = new System.Threading.SendOrPostCallback(this.OnRegServiceOperationCompleted);
+            }
+            this.InvokeAsync("RegService", new object[] {
+                        Register}, this.RegServiceOperationCompleted, userState);
+        }
+        
+        private void OnRegServiceOperationCompleted(object arg) {
+            if ((this.RegServiceCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.RegServiceCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/SysPerfUnregService", RequestElementName="SysPerfUnregService", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="SysPerfUnregServiceResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void UnregService(ZonekeyDMSysUnregisterType Unregister) {
+            this.Invoke("UnregService", new object[] {
+                        Unregister});
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginUnregService(ZonekeyDMSysUnregisterType Unregister, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("UnregService", new object[] {
+                        Unregister}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public void EndUnregService(System.IAsyncResult asyncResult) {
+            this.EndInvoke(asyncResult);
+        }
+        
+        /// <remarks/>
+        public void UnregServiceAsync(ZonekeyDMSysUnregisterType Unregister) {
+            this.UnregServiceAsync(Unregister, null);
+        }
+        
+        /// <remarks/>
+        public void UnregServiceAsync(ZonekeyDMSysUnregisterType Unregister, object userState) {
+            if ((this.UnregServiceOperationCompleted == null)) {
+                this.UnregServiceOperationCompleted = new System.Threading.SendOrPostCallback(this.OnUnregServiceOperationCompleted);
+            }
+            this.InvokeAsync("UnregService", new object[] {
+                        Unregister}, this.UnregServiceOperationCompleted, userState);
+        }
+        
+        private void OnUnregServiceOperationCompleted(object arg) {
+            if ((this.UnregServiceCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.UnregServiceCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/SysPerfHeartbeat", RequestElementName="SysPerfHeartbeat", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="SysPerfHeartbeatResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void Heartbeat([System.Xml.Serialization.XmlElementAttribute("Heartbeat")] ZonekeyDMSysHeartbeatType Heartbeat1) {
+            this.Invoke("Heartbeat", new object[] {
+                        Heartbeat1});
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginHeartbeat(ZonekeyDMSysHeartbeatType Heartbeat1, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("Heartbeat", new object[] {
+                        Heartbeat1}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public void EndHeartbeat(System.IAsyncResult asyncResult) {
+            this.EndInvoke(asyncResult);
+        }
+        
+        /// <remarks/>
+        public void HeartbeatAsync(ZonekeyDMSysHeartbeatType Heartbeat1) {
+            this.HeartbeatAsync(Heartbeat1, null);
+        }
+        
+        /// <remarks/>
+        public void HeartbeatAsync(ZonekeyDMSysHeartbeatType Heartbeat1, object userState) {
+            if ((this.HeartbeatOperationCompleted == null)) {
+                this.HeartbeatOperationCompleted = new System.Threading.SendOrPostCallback(this.OnHeartbeatOperationCompleted);
+            }
+            this.InvokeAsync("Heartbeat", new object[] {
+                        Heartbeat1}, this.HeartbeatOperationCompleted, userState);
+        }
+        
+        private void OnHeartbeatOperationCompleted(object arg) {
+            if ((this.HeartbeatCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.HeartbeatCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
+        public new void CancelAsync(object userState) {
+            base.CancelAsync(userState);
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -3890,6 +4102,186 @@ namespace zonvif_dm {
             }
             set {
                 this.minorField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMSysHeartbeatType {
+        
+        private string urlField;
+        
+        /// <remarks/>
+        public string url {
+            get {
+                return this.urlField;
+            }
+            set {
+                this.urlField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMSysUnregisterType {
+        
+        private string urlField;
+        
+        /// <remarks/>
+        public string url {
+            get {
+                return this.urlField;
+            }
+            set {
+                this.urlField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMSysRegisterType {
+        
+        private string urlField;
+        
+        private string descField;
+        
+        private string nsField;
+        
+        private string addrField;
+        
+        /// <remarks/>
+        public string url {
+            get {
+                return this.urlField;
+            }
+            set {
+                this.urlField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string desc {
+            get {
+                return this.descField;
+            }
+            set {
+                this.descField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string ns {
+            get {
+                return this.nsField;
+            }
+            set {
+                this.nsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string addr {
+            get {
+                return this.addrField;
+            }
+            set {
+                this.addrField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMSysStatusType {
+        
+        private double cpuField;
+        
+        private double memField;
+        
+        private double netrecvField;
+        
+        private double netsendField;
+        
+        private double disktotalField;
+        
+        private double diskfreeField;
+        
+        /// <remarks/>
+        public double cpu {
+            get {
+                return this.cpuField;
+            }
+            set {
+                this.cpuField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public double mem {
+            get {
+                return this.memField;
+            }
+            set {
+                this.memField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public double netrecv {
+            get {
+                return this.netrecvField;
+            }
+            set {
+                this.netrecvField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public double netsend {
+            get {
+                return this.netsendField;
+            }
+            set {
+                this.netsendField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public double disktotal {
+            get {
+                return this.disktotalField;
+            }
+            set {
+                this.disktotalField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public double diskfree {
+            get {
+                return this.diskfreeField;
+            }
+            set {
+                this.diskfreeField = value;
             }
         }
     }
@@ -17278,4 +17670,42 @@ namespace zonvif_dm {
             }
         }
     }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    public delegate void GetStatusCompletedEventHandler(object sender, GetStatusCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetStatusCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetStatusCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public ZonekeyDMSysStatusType Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((ZonekeyDMSysStatusType)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    public delegate void RegServiceCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    public delegate void UnregServiceCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    public delegate void HeartbeatCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
 }

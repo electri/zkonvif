@@ -81,5 +81,28 @@ namespace test_cs_client
         {
             ptz_.Stop(token_, true, false, true, false);
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            // 设置预置位 1
+
+            string t = "1";
+            ptz_.SetPreset(token_, null, ref t);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            // 到预置位 1
+
+            string t = "1";
+            ptz_.GotoPreset(token_, t, null);
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            // 删除预置位 1
+            string t = "1";
+            ptz_.RemovePreset(token_, t);
+        }
     }
 }
