@@ -37,7 +37,7 @@ namespace test_cs_client
                     TabPage tc = new TabPage(node.token);
                     tc.Tag = node;
 
-                    ucPtzControl pc = new ucPtzControl(ptz, node.token+"xxx");
+                    ucPtzControl pc = new ucPtzControl(ptz, node.token);
                     tc.Controls.Add(pc);
                     pc.Dock = DockStyle.Fill;
 
