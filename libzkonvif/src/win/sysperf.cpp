@@ -159,6 +159,9 @@ void SysPerf::update_net(IWbemServices *s)
 	//		而 GetAdapterInfo 得到的，是
 	//		"Intel(R) Centrino(R) Advanced-N 6205" 
 	//		直接到 util_get_nic_name() 设置环境变量吧，！！！！！！ 
+	//		
+	//		感觉这里是：intel 的驱动名字设置了一份，但写入性能计数器，有用了另一套名字，狗屎 ....
+	// 
 	char query[512];
 	//snprintf(query, sizeof(query), "select BytesReceivedPersec, BytesSentPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='%s'", nic_);
 	snprintf(query, sizeof(query), "select BytesReceivedPersec,BytesSentPersec,Name from Win32_PerfFormattedData_Tcpip_NetworkInterface");
