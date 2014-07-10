@@ -46,4 +46,3 @@ namespace test_cs_client
             }
         }
     }
-}
