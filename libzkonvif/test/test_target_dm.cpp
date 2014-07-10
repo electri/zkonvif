@@ -8,6 +8,10 @@
 #include "MyPtz.h"
 #include "MyDevice.h"
 #include "MyDeviceDiscovery.h"
+#ifdef WIN32
+#	include "../src/win/sysperf.h"
+#else
+#endif // 
 
 #ifdef _POSIX_THREADS 
 # include <pthread.h>
@@ -150,6 +154,8 @@ int main(int argc, char **argv)
 	// 初始化 openssl ...
 	soap_ssl_init();
 	CRYPTO_thread_setup();
+
+	SysPerf sp;
 
 	std::vector<ServiceInf *> services;
 
