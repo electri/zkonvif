@@ -17,8 +17,10 @@ class SysPerf : ost::Thread
 
 	bool quit_;
 
+	char *dp_, *nic_;
+
 public:
-	SysPerf();
+	SysPerf(const char *dp, const char *nic_name);	// 指定磁盘分区名字，如 "c:"，指定网卡名字 ...
 	~SysPerf();
 
 	double cpu() const 

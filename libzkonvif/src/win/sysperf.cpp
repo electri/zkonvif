@@ -7,9 +7,14 @@
 
 #pragma comment(lib, "comsuppw.lib")
 
-SysPerf::SysPerf()
+SysPerf::SysPerf(const char *dp, const char *nic)
 {
+	dp_ = strdup(dp);
+	nic_ = strdup(nic);
+
 	quit_ = false;
+	disk_tot_ = 1000000000000.0, disk_used_ = 0.1;
+	net_sr_ = net_rr_ = 0.0;
 	start();
 }
 
@@ -17,6 +22,8 @@ SysPerf::~SysPerf()
 {
 	quit_ = true;
 	join();
+	free(dp_);
+	free(nic_);
 }
 
 void SysPerf::run()
@@ -130,10 +137,15 @@ void SysPerf::update_mem(IWbemServices *s)
 		assert(val.vt == VT_BSTR);
 		mem_used_ = atof((char*)bstr_t(val.bstrVal));
 
+		VariantInit(&val);
 		hr = obj->Get(L"CommitLimit", 0, &val, 0, 0);
 		assert(val.vt == VT_BSTR);
 		mem_tot_ = atof((char*)bstr_t(val.bstrVal));
+
+		obj->Release();
 	}
+
+	em->Release();
 }
 
 void SysPerf::update_net(IWbemServices *s)
@@ -142,7 +154,40 @@ void SysPerf::update_net(IWbemServices *s)
 	IWbemClassObject *obj = 0;
 
 	// TODO: 需要指定网卡名字， ....
+	// XXX：崩溃了，在 Win32_PerfFormattedData_Tcpip_NetworkInterface 中的 name 是
+	//		"Intel[R] Centrino[R] Advanced-N 6205"
+	//		而 GetAdapterInfo 得到的，是
+	//		"Intel(R) Centrino(R) Advanced-N 6205" 
+	//		直接到 util_get_nic_name() 设置环境变量吧，！！！！！！ 
+	char query[512];
+	//snprintf(query, sizeof(query), "select BytesReceivedPersec, BytesSentPersec from Win32_PerfFormattedData_Tcpip_NetworkInterface where Name='%s'", nic_);
+	snprintf(query, sizeof(query), "select BytesReceivedPersec,BytesSentPersec,Name from Win32_PerfFormattedData_Tcpip_NetworkInterface");
+	HRESULT hr = s->ExecQuery(bstr_t("WQL"), bstr_t(query), WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, 0, &em);
+	while (1) {
+		ULONG got;
+		hr = em->Next(WBEM_INFINITE, 1, &obj, &got);
+		if (got == 0)
+			break;
 
+		VARIANT val;
+		VariantInit(&val);
+
+		hr = obj->Get(L"Name", 0, &val, 0, 0);
+		if (hr == S_OK) {
+			assert(val.vt == VT_BSTR);
+
+			std::string p = (char*)bstr_t(val.bstrVal);
+			if (strcmp(p.c_str(), nic_) == 0) {
+				VariantInit(&val);
+				hr = obj->Get(L"BytesReceivedPersec", 0, &val, 0, 0);
+
+				hr = obj->Get(L"BytesSentPersec", 0, &val, 0, 0);
+			}
+		}
+
+		obj->Release();
+	}
+	em->Release();
 }
 
 void SysPerf::update_disk(IWbemServices *s)

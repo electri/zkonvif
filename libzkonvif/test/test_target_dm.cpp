@@ -155,7 +155,7 @@ int main(int argc, char **argv)
 	soap_ssl_init();
 	CRYPTO_thread_setup();
 
-	SysPerf sp;
+	SysPerf sp("c:", util_get_nic_name());
 
 	std::vector<ServiceInf *> services;
 
