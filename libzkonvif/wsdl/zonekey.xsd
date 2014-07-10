@@ -18,7 +18,8 @@
 		<xs:element name="info" type="xs:string"/>
 	</xs:sequence>
   </xs:complexType>
-    <!-- 对应 devicemgmt.wsdl 中传递的消息的详细类型 -->
+
+ <!-- 对应 devicemgmt.wsdl 中传递的消息的详细类型 -->
   <xs:complexType name="ZonekeyDMSysStatusType">
   	<xs:sequence>
 		<xs:element name="cpu" type="xs:double"/>
@@ -27,6 +28,24 @@
 		<xs:element name="netsend" type="xs:double"/>
 		<xs:element name="disktotal" type="xs:double"/>
 		<xs:element name="diskfree" type="xs:double"/>
+	</xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ZonekeyDMSysRegisterType">
+  	<xs:sequence>
+		<xs:element name="url" type="xs:string"/>
+		<xs:element name="desc" type="xs:string"/>
+		<xs:element name="ns" type="xs:string"/>
+		<xs:element name="addr" type="xs:string"/>
+	</xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ZonekeyDMSysUnregisterType">
+  	<xs:sequence>
+		<xs:element name="url" type="xs:string"/>
+	</xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ZonekeyDMSysHeartbeatType">
+  	<xs:sequence>
+		<xs:element name="url" type="xs:string"/>
 	</xs:sequence>
   </xs:complexType>
 
