@@ -129,6 +129,8 @@ static bool get_all_netinfs(std::vector<NetInf> &nis)
 					if (!is_vm_mac(mac.c_str())) {
 						NetInf ni;
 						ni.macaddr = mac;
+
+						// FIXME: 到底用哪个 :( .... 这里真混乱 ....
 						//ni.name = p->AdapterName;
 						//ni.name = (char*)bstr_t(p->FriendlyName);
 						ni.name = (char*)bstr_t(p->Description);
