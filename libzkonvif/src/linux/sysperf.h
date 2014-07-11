@@ -43,6 +43,9 @@ private:
 	void update_mem();
 	void update_disk();
 	void update_net();
+
+	long last_r_, last_s_;
+	double last_stamp_;
 };
 
 #endif // 
