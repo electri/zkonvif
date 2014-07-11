@@ -84,7 +84,9 @@ void SysPerf::once(IWbemServices *s)
 	update_disk(s);
 	update_net(s);
 
-	fprintf(stderr, "cpu: %%%.3f, mem: tot=%.3f, used=%.3f\n", cpurate_, mem_tot_ / 1000000.0, mem_used_ / 1000000.0);
+	fprintf(stderr, "cpu: %%%.3f, mem: tot=%.3f, used=%.3f, disk: tot=%.3f, used=%.3f\n", cpurate_, 
+			mem_tot_ / 1000000.0, mem_used_ / 1000000.0,
+			disk_tot_ / 1000000.0, disk_used_ / 1000000.0);
 }
 
 void SysPerf::update_cpu(IWbemServices *s)
@@ -196,7 +198,12 @@ void SysPerf::update_net(IWbemServices *s)
 void SysPerf::update_disk(IWbemServices *s)
 {
 	// 检查哪个分区？
-	// 
+	char query[512];
+	ULARGE_INTEGER tot, freed;
+	if (GetDiskFreeSpaceEx(this->dp_, 0, &tot, &freed)) {
+		disk_tot_ = tot.QuadPart;
+		disk_used_ = tot.QuadPart - freed.QuadPart;
+	}
 }
 
 #endif // 
