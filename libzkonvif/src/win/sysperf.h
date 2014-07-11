@@ -47,6 +47,8 @@ private:
 	void update_mem(IWbemServices *s);
 	void update_disk(IWbemServices *s);
 	void update_net(IWbemServices *s);
+
+	double last_r_, last_s_, last_stamp_;	// 用于计算网络发送速率
 };
 
 #endif // 

@@ -4,6 +4,7 @@
 #include "../../../common/log.h"
 #include <comutil.h>
 #include <assert.h>
+#include <stdio.h>
 
 #pragma comment(lib, "comsuppw.lib")
 
@@ -11,6 +12,8 @@ SysPerf::SysPerf(const char *dp, const char *nic)
 {
 	dp_ = strdup(dp);
 	nic_ = strdup(nic);
+
+	last_stamp_ = -1;
 
 	quit_ = false;
 	disk_tot_ = 1000000000000.0, disk_used_ = 0.1;
@@ -84,9 +87,10 @@ void SysPerf::once(IWbemServices *s)
 	update_disk(s);
 	update_net(s);
 
-	fprintf(stderr, "cpu: %%%.3f, mem: tot=%.3f, used=%.3f, disk: tot=%.3f, used=%.3f\n", cpurate_, 
+	fprintf(stderr, "cpu: %%%.3f, mem: tot=%.3f, used=%.3f\n, \tdisk: tot=%.3f, used=%.3f\n, \tnet: sr=%.3f, rr=%.3f\n", cpurate_, 
 			mem_tot_ / 1000000.0, mem_used_ / 1000000.0,
-			disk_tot_ / 1000000.0, disk_used_ / 1000000.0);
+			disk_tot_ / 1000000.0, disk_used_ / 1000000.0,
+			net_sr_, net_rr_);
 }
 
 void SysPerf::update_cpu(IWbemServices *s)
@@ -152,6 +156,7 @@ void SysPerf::update_mem(IWbemServices *s)
 
 void SysPerf::update_net(IWbemServices *s)
 {
+#if 0
 	IEnumWbemClassObject *em = 0;
 	IWbemClassObject *obj = 0;
 
@@ -193,6 +198,40 @@ void SysPerf::update_net(IWbemServices *s)
 		obj->Release();
 	}
 	em->Release();
+#else
+	const char *cmd = "chcp 437& netstat -e";
+	__int64 sent = -1, recv;
+
+	FILE *fp = _popen(cmd, "r");
+	if (fp) {
+		while (!feof(fp)) {
+			char buf[256];
+			char *p = fgets(buf, sizeof(buf), fp);
+			if (!p) continue;
+
+			char name[64];
+			if (sscanf(p, "%s %I64d %I64d", name, &recv, &sent) == 3) {
+				if (!stricmp("Bytes", name)) {
+					break;
+				}
+			}
+		}
+		_pclose(fp);
+	}
+
+	if (sent > 0) {
+		double curr = GetTickCount() / 1000.0;
+		if (last_stamp_ > 0) {
+			net_rr_ = (recv - last_r_) / (curr - last_stamp_);
+			net_sr_ = (sent - last_s_) / (curr - last_stamp_);
+		}
+
+		last_stamp_ = curr;
+		last_r_ = recv;
+		last_s_ = sent;
+	}
+
+#endif // 
 }
 
 void SysPerf::update_disk(IWbemServices *s)
