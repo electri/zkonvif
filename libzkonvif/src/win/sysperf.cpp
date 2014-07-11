@@ -1,5 +1,7 @@
 #ifdef WIN32
 
+/** TODO: 原来 windows 也有个 WMIC 接口啊，将来应该修改使用 wmic.exe + pipe 方式 */
+
 #include "sysperf.h"
 #include "../../../common/log.h"
 #include <comutil.h>
