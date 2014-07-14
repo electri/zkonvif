@@ -1,8 +1,9 @@
 #include "PtzControling.h"
 #include "../../common/log.h"
 #include "../../common/utils.h"
+#include <assert.h>
 
-
+PtzControllingVisca::CAMERAS PtzControllingVisca::_all_cams;
 PtzControllingVisca::PtzControllingVisca(KVConfig *cfg) : cfg_(cfg), zvc_(cfg)
 {
 	changed_zoom_ = true;
@@ -21,6 +22,9 @@ PtzControllingVisca::PtzControllingVisca(KVConfig *cfg) : cfg_(cfg), zvc_(cfg)
 		name = cfg_->get_value("ptz_serial_name", "COMX");
 
 	name_ = name;
+
+	ptz_name_ = cfg_->get_value("ptz_serial_name", "COMX");
+	ptz_addr_ = atoi(cfg_->get_value("ptz_addr", "1"));
 }
 
 PtzControllingVisca::~PtzControllingVisca(void)
@@ -29,34 +33,64 @@ PtzControllingVisca::~PtzControllingVisca(void)
 
 int PtzControllingVisca::open()
 {
-	const char *serial_name = cfg()->get_value("ptz_serial_name", "COMX");
-	if (VISCA_open_serial(&visca_, serial_name) == VISCA_SUCCESS) {
-		int m;
-		visca_.broadcast = 0;
-		if (VISCA_set_address(&visca_, &m) == VISCA_SUCCESS) {
-			cam_.address = m;
-			VISCA_clear(&visca_, &cam_);
-			return 0;
-		} 
+	// FIXME: 需要加锁 ...
+	if (_all_cams.find(ptz_name_) == _all_cams.end()) {
+		// 打开串口 ...
+		SerialDevices *sd = new SerialDevices;
+		sd->opened = false;
+		
+		if (VISCA_open_serial(&sd->com, ptz_name_.c_str()) == VISCA_SUCCESS) {
+			sd->opened = true;
+
+			for (int i = 0; i < 8; i++)
+				sd->cams[i].address = -1;
+
+			int m;
+			sd->com.broadcast = 0;
+			if (VISCA_set_address(&sd->com, &m) == VISCA_SUCCESS) {
+				for (int i = 1; i <= m; i++) {
+					sd->cams[i].address = m;
+					if (VISCA_clear(&sd->com, &sd->cams[i]) == VISCA_SUCCESS) {
+						log(LOG_DEBUG, "DEBUG: %s: find ptz addr=%d, com=%s\n", __func__, i, ptz_name_.c_str());
+					}
+				}
+			}
+		}
 		else {
-			log(LOG_ERROR, "ERR: %s: VISCA_set_address for %s err\n", __func__, serial_name);
-			return -1;
+			_all_cams[ptz_name_] = sd; // 失败了，也填充，此时 opened = false;
+		}
+	}
+
+	SerialDevices *sd = _all_cams[ptz_name_];
+	assert(sd);
+	if (sd->opened) {
+		if (ptz_addr_ < 8 && sd->cams[ptz_addr_].address == ptz_addr_) {
+			// ok
+			return 0;
+		}
+		else {
+			log(LOG_ERROR, "ERR: %s: com '%s' opened, but addr %d err\n", __func__, ptz_name_.c_str(), ptz_addr_);
 		}
 	}
 	else {
-		log(LOG_ERROR, "ERR: %s: VISCA_open_serial for %s err\n", __func__, serial_name);
-		return -1;
+		log(LOG_ERROR, "ERR: %s: com '%s' NOT opened!!!\n", __func__, ptz_name_.c_str());
 	}
+
+	return -1;
 }
 
 void PtzControllingVisca::close()
 {
-	VISCA_close_serial(&visca_);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_close_serial(&sd->com);
+
+	// TODO: 释放 ...
 }
 
 void PtzControllingVisca::setpos(int x, int y, int speed_x, int speed_y)
 {
-	if (VISCA_set_pantilt_absolute_position_without_reply(&visca_, &cam_, speed_x, speed_y, x, y) == VISCA_FAILURE) {
+	SerialDevices *sd = _all_cams[ptz_name_];
+	if (VISCA_set_pantilt_absolute_position_without_reply(&sd->com, &sd->cams[ptz_addr_], speed_x, speed_y, x, y) == VISCA_FAILURE) {
 		log(LOG_ERROR, "ERR: %s: VISCA_set_pantilt_absolute_position for %d-%d faulure!\n", __func__, x, y);
 	}
 	changed_pos_ = true;
@@ -64,8 +98,9 @@ void PtzControllingVisca::setpos(int x, int y, int speed_x, int speed_y)
 
 int PtzControllingVisca::getpos(int &x, int &y)
 {
+	SerialDevices *sd = _all_cams[ptz_name_];
 	if (changed_pos_) {
-		if (VISCA_get_pantilt_position(&visca_, &cam_, &x, &y) == VISCA_FAILURE) {
+		if (VISCA_get_pantilt_position(&sd->com, &sd->cams[ptz_addr_], &x, &y) == VISCA_FAILURE) {
 			log(LOG_ERROR, "ERR: %s: VISCA_get_pantilt_position failure!\n", __func__);
 			return -1;
 		}
@@ -92,36 +127,42 @@ void PtzControllingVisca::reset()
 
 void PtzControllingVisca::stop()
 {
-	VISCA_set_pantilt_stop(&visca_, &cam_, 0, 0);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_set_pantilt_stop(&sd->com, &sd->cams[ptz_addr_], 0, 0);
 }
 
 void PtzControllingVisca::left(int s)
 {
-	VISCA_set_pantilt_left_without_reply(&visca_, &cam_, s, s);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_set_pantilt_left_without_reply(&sd->com, &sd->cams[ptz_addr_], s, s);
 	changed_pos_ = true;
 }
 
 void PtzControllingVisca::up(int s)
 {
-	VISCA_set_pantilt_up_without_reply(&visca_, &cam_, s, s);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_set_pantilt_up_without_reply(&sd->com, &sd->cams[ptz_addr_], s, s);
 	changed_pos_ = true;
 }
 
 void PtzControllingVisca::down(int s)
 {
-	VISCA_set_pantilt_down_without_reply(&visca_, &cam_, s, s);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_set_pantilt_down_without_reply(&sd->com, &sd->cams[ptz_addr_], s, s);
 	changed_pos_ = true;
 }
 
 void PtzControllingVisca::right(int s)
 {
-	VISCA_set_pantilt_right_without_reply(&visca_, &cam_, s, s);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_set_pantilt_right_without_reply(&sd->com, &sd->cams[ptz_addr_], s, s);
 	changed_pos_ = true;
 }
 
 void PtzControllingVisca::zoom_set(int z)
 {
-	VISCA_set_zoom_value_without_reply(&visca_, &cam_, z);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_set_zoom_value_without_reply(&sd->com, &sd->cams[ptz_addr_], z);
 	changed_zoom_ = true;
 }
 
@@ -129,7 +170,8 @@ int PtzControllingVisca::zoom_get(int &z)
 {
 	if (changed_zoom_) {
 		unsigned short v;
-		if (VISCA_get_zoom_value(&visca_, &cam_, &v) == VISCA_FAILURE) {
+		SerialDevices *sd = _all_cams[ptz_name_];
+		if (VISCA_get_zoom_value(&sd->com, &sd->cams[ptz_addr_], &v) == VISCA_FAILURE) {
 			log(LOG_ERROR, "ERR: %s: VISCA_get_zoom_value faulure!\n", __func__);
 			return -1;
 		}
@@ -155,15 +197,18 @@ double PtzControllingVisca::getScales()
 
 void PtzControllingVisca::preset_set(int n)
 {
-	VISCA_memory_set_without_reply(&visca_, &cam_, n);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_memory_set_without_reply(&sd->com, &sd->cams[ptz_addr_], n);
 }
 
 void PtzControllingVisca::preset_get(int n)
 {
-	VISCA_memory_recall_without_reply(&visca_, &cam_, n);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_memory_recall_without_reply(&sd->com, &sd->cams[ptz_addr_], n);
 }
 
 void PtzControllingVisca::preset_del(int n)
 {
-	VISCA_memory_reset_without_reply(&visca_, &cam_, n);
+	SerialDevices *sd = _all_cams[ptz_name_];
+	VISCA_memory_reset_without_reply(&sd->com, &sd->cams[ptz_addr_], n);
 }

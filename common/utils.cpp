@@ -8,6 +8,8 @@
 #include <string>
 #ifdef WIN32
 #	include <IPHlpApi.h>
+#	include <comutil.h>
+#	pragma comment(lib, "comsuppw.lib")
 #endif
 
 #ifndef WIN32
@@ -90,13 +92,14 @@ std::string conv_mac(unsigned char mac[], int len)
 // 描述一个网卡配置.
 struct NetInf
 {
+	std::string name;	// 网卡名字 ..
 	std::string macaddr;
 	std::vector<std::string> ips;
 };
 
 /** 获取可用网卡配置，仅仅选择启动的 ipv4的，非虚拟机的，ethernet
  */
-bool get_all_netinfs(std::vector<NetInf> &nis)
+static bool get_all_netinfs(std::vector<NetInf> &nis)
 {
 	static bool first = true;
 	static std::vector<NetInf> _nis;
@@ -126,6 +129,11 @@ bool get_all_netinfs(std::vector<NetInf> &nis)
 					if (!is_vm_mac(mac.c_str())) {
 						NetInf ni;
 						ni.macaddr = mac;
+
+						// FIXME: 到底用哪个 :( .... 这里真混乱 ....
+						//ni.name = p->AdapterName;
+						//ni.name = (char*)bstr_t(p->FriendlyName);
+						ni.name = (char*)bstr_t(p->Description);
 
 						IP_ADAPTER_UNICAST_ADDRESS *ip = p->FirstUnicastAddress;
 						while (ip) {
@@ -325,6 +333,25 @@ const char *util_get_mymac()
 	return _mac.c_str();
 }
 
+const char *util_get_nic_name()
+{
+	char *p = getenv("zonekey_my_nic");
+	if (p) return p;
+
+	static std::string _nic_name;
+	if (_nic_name.empty()) {
+		std::vector<NetInf> nis;
+		get_all_netinfs(nis);
+		if (nis.size() > 0) {
+			_nic_name = nis[0].name;
+		}
+	}
+
+	if (_nic_name.empty())
+		_nic_name = "unknown";
+
+	return _nic_name.c_str();
+}
 
 #include "../libzkonvif/soap/soapH.h"
 
