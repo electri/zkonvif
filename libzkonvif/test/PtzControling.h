@@ -3,6 +3,7 @@
 #include "../../common/KVConfig.h"
 #include "../../../3rd/libvisca-1.1.0/visca/libvisca.h"
 #include "ZoomValueConvert.h"
+#include <map>
 
 class PtzControlling
 {
@@ -78,13 +79,22 @@ class PtzControllingDummy : public PtzControlling
 class PtzControllingVisca : public PtzControlling
 {
 	KVConfig *cfg_;
-	VISCAInterface_t visca_;
-	VISCACamera_t cam_;	// FIXME: 仅仅支持一个就足够了 :)
 	ZoomValueConvert zvc_;
 	std::string name_;	// 方便打印 ...
+	std::string ptz_name_;
+	int ptz_addr_;
 
 	bool changed_zoom_;		int last_zoom_;
 	bool changed_pos_;		int last_x_, last_y_;
+
+	struct SerialDevices
+	{
+		bool opened;
+		VISCAInterface_t com;	// 对应一个串口
+		VISCACamera_t cams[8];	// 对应每个云台 ..
+	};
+	typedef std::map<std::string, SerialDevices*> CAMERAS;
+	static CAMERAS _all_cams;
 
 public:
 	PtzControllingVisca(KVConfig *cfg);
