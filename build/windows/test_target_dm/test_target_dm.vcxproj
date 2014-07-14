@@ -14,7 +14,7 @@
     <ProjectGuid>{55A03E01-1CB2-42B2-ADC3-009779648320}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>test_target_dm</RootNamespace>
-  </PropertyGroup>
+ </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -69,7 +69,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x600;NDEBUG;_CONSOLE;_LIB;WITH_OPENSSL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x600;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -84,6 +84,7 @@
     <ClCompile Include="..\..\..\3rd\libvisca-1.1.0\visca\libvisca_win32.c" />
     <ClCompile Include="..\..\..\common\KVConfig.cpp" />
     <ClCompile Include="..\..\..\common\utils.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\src\win\sysperf.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyDevice.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\MyEvent.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="..\..\..\common\KVConfig.h" />
     <ClInclude Include="..\..\..\common\log.h" />
     <ClInclude Include="..\..\..\common\utils.h" />
+    <ClInclude Include="..\..\..\libzkonvif\src\win\sysperf.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\MyDevice.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\MyDeviceDiscovery.h" />
     <ClInclude Include="..\..\..\libzkonvif\test\MyEvent.h" />

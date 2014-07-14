@@ -51,6 +51,9 @@
     <ClCompile Include="..\..\..\libzkonvif\test\polyfit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\src\win\sysperf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\common\utils.h">
@@ -87,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\libzkonvif\test\polyfit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\src\win\sysperf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
