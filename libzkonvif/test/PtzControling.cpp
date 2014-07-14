@@ -42,6 +42,8 @@ int PtzControllingVisca::open()
 		if (VISCA_open_serial(&sd->com, ptz_name_.c_str()) == VISCA_SUCCESS) {
 			sd->opened = true;
 
+			_all_cams[ptz_name_] = sd;
+
 			for (int i = 0; i < 8; i++)
 				sd->cams[i].address = -1;
 
