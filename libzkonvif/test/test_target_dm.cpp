@@ -9,6 +9,7 @@
 #include "MyDevice.h"
 #include "MyDeviceDiscovery.h"
 
+
 #ifdef _POSIX_THREADS 
 # include <pthread.h>
 #endif 
