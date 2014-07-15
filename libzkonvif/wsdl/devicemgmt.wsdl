@@ -30,43 +30,45 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="SysPerfRegService">
+      <xs:element name="LocalServiceRegService">
         <xs:complexType>
           <xs:sequence>
-            <xs:element name="Register" type="zonekey:ZonekeyDMSysRegisterType">
+            <xs:element name="Register" type="zonekey:ZonekeyDMServRegisterType">
             </xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="SysPerfRegServiceResponse">
+      <xs:element name="LocalServiceServiceResponse">
         <xs:complexType>
           <xs:sequence>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SysPerfUnregService">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="Unregister" type="zonekey:ZonekeyDMSysUnregisterType">
+            <xs:element name="Register" type="zonekey:ZonekeyDMServRegisterResponseType">
             </xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="SysPerfUnregServiceResponse">
+      <xs:element name="LocalServiceUnregService">
         <xs:complexType>
           <xs:sequence>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element name="SysPerfHeartbeat">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="Heartbeat" type="zonekey:ZonekeyDMSysHeartbeatType">
+            <xs:element name="Unregister" type="zonekey:ZonekeyDMServUnregisterType">
             </xs:element>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="SysPerfHeartbeatResponse">
+      <xs:element name="LocalServiceUnregServiceResponse">
+        <xs:complexType>
+          <xs:sequence>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LocalServiceHeartbeat">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Heartbeat" type="zonekey:ZonekeyDMServHeartbeatType">
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LocalServiceHeartbeatResponse">
         <xs:complexType>
           <xs:sequence>
           </xs:sequence>
@@ -95,6 +97,7 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
           </xs:sequence>
         </xs:complexType>
       </xs:element>
+      
       <!--===============================-->
       <xs:complexType name="Service">
         <xs:sequence>
@@ -1909,23 +1912,23 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
   <wsdl:message name="SysPerfGetStatusResponse">
     <wsdl:part name="parameters" element="tds:SysPerfGetStatusResponse"/>
   </wsdl:message>
-  <wsdl:message name="SysPerfRegServiceRequest">
-    <wsdl:part name="parameters" element="tds:SysPerfRegService"/>
+  <wsdl:message name="LocalServiceRegServiceRequest">
+    <wsdl:part name="parameters" element="tds:LocalServiceRegService"/>
   </wsdl:message>
-  <wsdl:message name="SysPerfRegServiceResponse">
-    <wsdl:part name="parameters" element="tds:SysPerfRegServiceResponse"/>
+  <wsdl:message name="LocalServiceRegServiceResponse">
+    <wsdl:part name="parameters" element="tds:LocalServiceRegServiceResponse"/>
   </wsdl:message>
-  <wsdl:message name="SysPerfUnregServiceRequest">
-    <wsdl:part name="parameters" element="tds:SysPerfUnregService"/>
+  <wsdl:message name="LocalServiceUnregServiceRequest">
+    <wsdl:part name="parameters" element="tds:LocalServiceUnregService"/>
   </wsdl:message>
-  <wsdl:message name="SysPerfUnregServiceResponse">
-    <wsdl:part name="parameters" element="tds:SysPerfUnregServiceResponse"/>
+  <wsdl:message name="LocalServiceUnregServiceResponse">
+    <wsdl:part name="parameters" element="tds:LocalServiceUnregServiceResponse"/>
   </wsdl:message>
-  <wsdl:message name="SysPerfHeartbeatRequest">
-    <wsdl:part name="parameters" element="tds:SysPerfHeartbeat"/>
+  <wsdl:message name="LocalServiceHeartbeatRequest">
+    <wsdl:part name="parameters" element="tds:LocalServiceHeartbeat"/>
   </wsdl:message>
-  <wsdl:message name="SysPerfHeartbeatResponse">
-    <wsdl:part name="parameters" element="tds:SysPerfHeartbeatResponse"/>
+  <wsdl:message name="LocalServiceHeartbeatResponse">
+    <wsdl:part name="parameters" element="tds:LocalServiceHeartbeatResponse"/>
   </wsdl:message>
   <!-- =========================== -->
   <wsdl:message name="GetServicesRequest">
@@ -2430,16 +2433,16 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
   </wsdl:portType>
   <wsdl:portType name="LocalServiceMgrt">
     <wsdl:operation name="RegService">
-      <wsdl:input message="tds:SysPerfRegServiceRequest"/>
-      <wsdl:output message="tds:SysPerfRegServiceResponse"/>
+      <wsdl:input message="tds:LocalServiceRegServiceRequest"/>
+      <wsdl:output message="tds:LocalServiceServiceResponse"/>
     </wsdl:operation>
     <wsdl:operation name="UnregService">
-      <wsdl:input message="tds:SysPerfUnregServiceRequest"/>
-      <wsdl:output message="tds:SysPerfUnregServiceResponse"/>
+      <wsdl:input message="tds:LocalServiceUnregServiceRequest"/>
+      <wsdl:output message="tds:LocalServiceUnregServiceResponse"/>
     </wsdl:operation>
     <wsdl:operation name="Heartbeat">
-      <wsdl:input message="tds:SysPerfHeartbeatRequest"/>
-      <wsdl:output message="tds:SysPerfHeartbeatResponse"/>
+      <wsdl:input message="tds:LocalServiceHeartbeatRequest"/>
+      <wsdl:output message="tds:LocalServiceHeartbeatResponse"/>
     </wsdl:operation>
   </wsdl:portType>
   <!-- ================================================ -->
@@ -4048,7 +4051,7 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
   <wsdl:binding name="LocalServiceMgrtBinding" type="tds:LocalServiceMgrt">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="RegService">
-      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SysPerfRegService"/>
+      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/LocalServiceRegService"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -4057,7 +4060,7 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="UnregService">
-      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SysPerfUnregService"/>
+      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/LocalServiceUnregService"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -4066,7 +4069,7 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="Heartbeat">
-      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/SysPerfHeartbeat"/>
+      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/LocalServiceHeartbeat"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
