@@ -146,7 +146,7 @@ int MyEvent::CreatePullPointSubscription(_tev__CreatePullPointSubscription *tev_
 	/** 启动一个新的 socket，接收 PullMessageRequest, UnsubscribeRequest 等 */
 	// FIXME: 应该支持 Filter ...
 	// 这里假设没有设置 filter，则支持所有 ..
-	MyPullPoint *pp = new MyPullPoint(this, "*");
+	MyPullPoint *pp = new MyPullPoint(this, "*", "*");
 
 	tev__CreatePullPointSubscriptionResponse->wsnt__CurrentTime = time(0);
 	tev__CreatePullPointSubscriptionResponse->wsnt__TerminationTime = tev__CreatePullPointSubscriptionResponse->wsnt__CurrentTime + 365 * 24 * 60 * 60; // 呵呵，一年后结束 .

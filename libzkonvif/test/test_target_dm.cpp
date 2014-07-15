@@ -123,6 +123,11 @@ private:
 		// FIXME: 这里应该照着规矩来 ...
 		return "media";
 	}
+	const char *sid() const
+	{
+		//FIXME:应该用mac +ns+ id的形式作为唯一标识，这里先把mac默认为00000000000000
+		return "000000000000media0";
+	}
 
 private:
 	void run()

@@ -20,6 +20,14 @@
   </xs:complexType>
 
  <!-- 对应 devicemgmt.wsdl 中传递的消息的详细类型 -->
+  <xs:complexType name="ZonekeyDMServiceType">
+    <xs:sequence>
+      <xs:element name="url" type="xs:string"/>
+      <xs:element name="desc" type="xs:string"/>
+      <xs:element name="sid" type="xs:string"/>
+      <xs:element name="ns" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="ZonekeyDMSysStatusType">
   	<xs:sequence>
 		<xs:element name="cpu" type="xs:double"/>

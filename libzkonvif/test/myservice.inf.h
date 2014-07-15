@@ -12,6 +12,7 @@ public:
 	virtual const char *url() const = 0;	// 所有的服务，都必须有个 url .
 	virtual const char *desc() const { return ""; }	// 可选有个描述信息 ..
 	virtual const char *ns() const = 0;	// 必须返回 namespace .
+	virtual const char *sid() const = 0;//所有的服务必须返回sid，sid代表此类别下的唯一标识
 
 	ServiceInf()
 	{
