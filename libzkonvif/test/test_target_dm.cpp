@@ -13,6 +13,7 @@
 #else
 #endif // 
 
+#ifdef WITH_OPENSSL
 
 #ifdef _POSIX_THREADS 
 # include <pthread.h>
@@ -100,6 +101,7 @@ void CRYPTO_thread_cleanup()
 	free(mutex_buf);
 	mutex_buf = NULL;
 }
+#endif // with openssl
 
 /** rtmp 服务接口, 这个仅仅为了演示如何使用 ServiceInf
 */
@@ -153,8 +155,10 @@ int main(int argc, char **argv)
 	log_init();
 
 	// 初始化 openssl ...
+#ifdef WITH_OPENSSL
 	soap_ssl_init();
 	CRYPTO_thread_setup();
+#endif
 
 	SysPerf sp("c:", util_get_nic_name());
 

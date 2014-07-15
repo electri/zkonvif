@@ -2,7 +2,9 @@
 #include "../../common/utils.h"
 #include "../../common/log.h"
 #include "../../common/KVConfig.h"
+#ifdef WITH_OPENSSL
 #include "../soap/wsseapi.h"
+#endif 
 #include "../soap/soapPullPointSubscriptionBindingProxy.h"
 
 MyEvent::MyEvent(int port)
@@ -125,6 +127,7 @@ int MyEvent::GetEventProperties(_tev__GetEventProperties *tev__GetEventPropertie
 int MyEvent::CreatePullPointSubscription(_tev__CreatePullPointSubscription *tev__CreatePullPointSubscription,
 										 _tev__CreatePullPointSubscriptionResponse *tev__CreatePullPointSubscriptionResponse)
 {
+#ifdef WITH_OPENSSL
 	// 此处进行 WS-UsernameToken 检查，参考 wsseapi.h
 	const char *username = soap_wsse_get_Username(soap);
 	if (!username) {
@@ -142,6 +145,7 @@ int MyEvent::CreatePullPointSubscription(_tev__CreatePullPointSubscription *tev_
 	}
 
 	log(LOG_DEBUG, "%s: auth chk passwd\n", __func__);
+#endif // with openssl
 
 	/** 启动一个新的 socket，接收 PullMessageRequest, UnsubscribeRequest 等 */
 	// FIXME: 应该支持 Filter ...
