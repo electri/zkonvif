@@ -30,7 +30,7 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="LocalServiceRegService">
+      <xs:element name="ServMgrtRegService">
         <xs:complexType>
           <xs:sequence>
             <xs:element name="Register" type="zonekey:ZonekeyDMServRegisterType">
@@ -38,7 +38,7 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="LocalServiceServiceResponse">
+      <xs:element name="ServMgrtRegServiceResponse">
         <xs:complexType>
           <xs:sequence>
             <xs:element name="Register" type="zonekey:ZonekeyDMServRegisterResponseType">
@@ -46,7 +46,7 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="LocalServiceUnregService">
+      <xs:element name="ServMgrtUnregService">
         <xs:complexType>
           <xs:sequence>
             <xs:element name="Unregister" type="zonekey:ZonekeyDMServUnregisterType">
@@ -54,13 +54,13 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="LocalServiceUnregServiceResponse">
+      <xs:element name="ServMgrtUnregServiceResponse">
         <xs:complexType>
           <xs:sequence>
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="LocalServiceHeartbeat">
+      <xs:element name="ServMgrtHeartbeat">
         <xs:complexType>
           <xs:sequence>
             <xs:element name="Heartbeat" type="zonekey:ZonekeyDMServHeartbeatType">
@@ -68,7 +68,46 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="LocalServiceHeartbeatResponse">
+      <xs:element name="ServMgrtHeartbeatResponse">
+        <xs:complexType>
+          <xs:sequence>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ServCtrlGetAllServices">
+        <xs:complexType>
+          <xs:sequence>      
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ServCtrlGetAllServicesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="GetAllServices" type="zonekey:ZonekeyDMAllServiceType"></xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ServCtrlStartService">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="StartService" type="zonekey:ZonekeyDMServStartServiceType"></xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ServCtrlStartServiceResponse">
+        <xs:complexType>
+          <xs:sequence>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ServCtrlStopService">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="StopService" type="zonekey:ZonekeyDMServStopServiceType"></xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ServCtrlStopServiceResponse">
         <xs:complexType>
           <xs:sequence>
           </xs:sequence>
@@ -1912,23 +1951,41 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
   <wsdl:message name="SysPerfGetStatusResponse">
     <wsdl:part name="parameters" element="tds:SysPerfGetStatusResponse"/>
   </wsdl:message>
-  <wsdl:message name="LocalServiceRegServiceRequest">
-    <wsdl:part name="parameters" element="tds:LocalServiceRegService"/>
+  <wsdl:message name="ServMgrtRegServiceRequest">
+    <wsdl:part name="parameters" element="tds:ServMgrtRegService"/>
   </wsdl:message>
-  <wsdl:message name="LocalServiceRegServiceResponse">
-    <wsdl:part name="parameters" element="tds:LocalServiceRegServiceResponse"/>
+  <wsdl:message name="ServMgrtRegServiceResponse">
+    <wsdl:part name="parameters" element="tds:ServMgrtRegServiceResponse"/>
   </wsdl:message>
-  <wsdl:message name="LocalServiceUnregServiceRequest">
-    <wsdl:part name="parameters" element="tds:LocalServiceUnregService"/>
+  <wsdl:message name="ServMgrtUnregServiceRequest">
+    <wsdl:part name="parameters" element="tds:ServMgrtUnregService"/>
   </wsdl:message>
-  <wsdl:message name="LocalServiceUnregServiceResponse">
-    <wsdl:part name="parameters" element="tds:LocalServiceUnregServiceResponse"/>
+  <wsdl:message name="ServMgrtUnregServiceResponse">
+    <wsdl:part name="parameters" element="tds:ServMgrtUnregServiceResponse"/>
   </wsdl:message>
-  <wsdl:message name="LocalServiceHeartbeatRequest">
-    <wsdl:part name="parameters" element="tds:LocalServiceHeartbeat"/>
+  <wsdl:message name="ServMgrtHeartbeatRequest">
+    <wsdl:part name="parameters" element="tds:ServMgrtHeartbeat"/>
   </wsdl:message>
-  <wsdl:message name="LocalServiceHeartbeatResponse">
-    <wsdl:part name="parameters" element="tds:LocalServiceHeartbeatResponse"/>
+  <wsdl:message name="ServMgrtHeartbeatResponse">
+    <wsdl:part name="parameters" element="tds:ServMgrtHeartbeatResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ServCtrlGetAllServicesRequest">
+    <wsdl:part name="parameters" element="tds:ServCtrlGetAllServices"/>
+  </wsdl:message>
+  <wsdl:message name="ServCtrlGetAllServicesResponse">
+    <wsdl:part name="parameters" element="tds:ServCtrlGetAllServicesResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ServCtrlStartServiceRequest">
+    <wsdl:part name="parameters" element="tds:ServCtrlStartService"/>
+  </wsdl:message>
+  <wsdl:message name="ServCtrlStartServiceResponse">
+    <wsdl:part name="parameters" element="tds:ServCtrlStartServiceResponse"/>
+  </wsdl:message>
+    <wsdl:message name="ServCtrlStopServiceRequest">
+    <wsdl:part name="parameters" element="tds:ServCtrlStopService"/>
+  </wsdl:message>
+  <wsdl:message name="ServCtrlStopServiceResponse">
+    <wsdl:part name="parameters" element="tds:ServCtrlStopServiceResponse"/>
   </wsdl:message>
   <!-- =========================== -->
   <wsdl:message name="GetServicesRequest">
@@ -2433,16 +2490,30 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
   </wsdl:portType>
   <wsdl:portType name="LocalServiceMgrt">
     <wsdl:operation name="RegService">
-      <wsdl:input message="tds:LocalServiceRegServiceRequest"/>
-      <wsdl:output message="tds:LocalServiceServiceResponse"/>
+      <wsdl:input message="tds:ServMgrtRegServiceRequest"/>
+      <wsdl:output message="tds:ServMgrtRegServiceResponse"/>
     </wsdl:operation>
     <wsdl:operation name="UnregService">
-      <wsdl:input message="tds:LocalServiceUnregServiceRequest"/>
-      <wsdl:output message="tds:LocalServiceUnregServiceResponse"/>
+      <wsdl:input message="tds:ServMgrtUnregServiceRequest"/>
+      <wsdl:output message="tds:ServMgrtUnregServiceResponse"/>
     </wsdl:operation>
     <wsdl:operation name="Heartbeat">
-      <wsdl:input message="tds:LocalServiceHeartbeatRequest"/>
-      <wsdl:output message="tds:LocalServiceHeartbeatResponse"/>
+      <wsdl:input message="tds:ServMgrtHeartbeatRequest"/>
+      <wsdl:output message="tds:ServMgrtHeartbeatResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="LocalServiceCtrl">
+    <wsdl:operation name="GetAllServices">
+      <wsdl:input message="tds:ServCtrlGetAllServicesRequest"/>
+      <wsdl:output message="tds:ServCtrlGetAllServicesResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="StartService">
+      <wsdl:input message="tds:ServCtrlStartServiceRequest"/>
+      <wsdl:output message="tds:ServCtrlStartServiceResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="StopService">
+      <wsdl:input message="tds:ServCtrlStopServiceRequest"/>
+      <wsdl:output message="tds:ServCtrlStopServiceResponse"/>
     </wsdl:operation>
   </wsdl:portType>
   <!-- ================================================ -->
@@ -4051,7 +4122,7 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
   <wsdl:binding name="LocalServiceMgrtBinding" type="tds:LocalServiceMgrt">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="RegService">
-      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/LocalServiceRegService"/>
+      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/ServMgrtRegService"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -4060,7 +4131,7 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="UnregService">
-      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/LocalServiceUnregService"/>
+      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/ServMgrtUnregService"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -4069,7 +4140,37 @@ targetNamespace="http://www.onvif.org/ver10/device/wsdl">
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="Heartbeat">
-      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/LocalServiceHeartbeat"/>
+      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/ServMgrtHeartbeat"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="LocalServiceCtrlBinding" type="tds:LocalServiceCtrl">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetAllServices">
+      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/ServCtrlGetAllServices"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StartService">
+      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/ServCtrlStartService"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="StopService">
+      <soap:operation soapAction="http://www.onvif.org/ver10/device/wsdl/ServCtrlStopService"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
