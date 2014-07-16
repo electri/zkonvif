@@ -20,8 +20,10 @@ SysPerf::SysPerf(const char *dp, const char *nic)
 	nic_ = strdup(nic);
 
 	net_sr_ = 0.0, net_rr_ = 0.0;
-
 	last_stamp_ = -1.0;
+
+	cpurate_ = 0.0;
+	last_cpu_u_ = -1.0;
 
 	quit_ = false;
 	start();
@@ -55,15 +57,30 @@ void SysPerf::once()
 
 void SysPerf::update_cpu()
 {
+	long user = -1, nice, system, idle;
 	FILE *fp = fopen("/proc/stat", "r");
 	if (fp) {
-		long user, nice, system, idle;
 		if (4 == fscanf(fp, "cpu %ld %ld %ld %ld", &user, &nice, &system, &idle)) {
-			cpurate_ = (user + system) * 1.0 / (user + nice + system + idle);
-			fprintf(stderr, "cpu: %.3f ", cpurate_);
 		}
 
 		fclose(fp);
+	}
+
+	if (user >= 0) {
+		double curr = now();
+		if (last_cpu_stamp_ > 0.0) {
+			cpurate_ = (user-last_cpu_u_ + system-last_cpu_s_) * 1.0 / 
+					(user-last_cpu_u_ + nice-last_cpu_n_ + system-last_cpu_s_ + idle-last_cpu_i_);
+			cpurate_ /= (curr - last_cpu_stamp_);
+		}
+
+		last_cpu_stamp_ = curr;
+		last_cpu_u_ = user;
+		last_cpu_s_ = system;
+		last_cpu_n_ = nice;
+		last_cpu_i_ = idle;
+
+		fprintf(stderr, "cpu: %.4f ", cpurate_);
 	}
 }
 
