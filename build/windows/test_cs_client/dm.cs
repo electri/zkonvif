@@ -446,10 +446,10 @@ namespace zonvif_dm {
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/GetServices", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
         [return: System.Xml.Serialization.XmlElementAttribute("Service")]
-        public Service[] GetServices(bool IncludeCapability) {
+        public ZonekeyDMServiceType[] GetServices(bool IncludeCapability) {
             object[] results = this.Invoke("GetServices", new object[] {
                         IncludeCapability});
-            return ((Service[])(results[0]));
+            return ((ZonekeyDMServiceType[])(results[0]));
         }
         
         /// <remarks/>
@@ -459,9 +459,9 @@ namespace zonvif_dm {
         }
         
         /// <remarks/>
-        public Service[] EndGetServices(System.IAsyncResult asyncResult) {
+        public ZonekeyDMServiceType[] EndGetServices(System.IAsyncResult asyncResult) {
             object[] results = this.EndInvoke(asyncResult);
-            return ((Service[])(results[0]));
+            return ((ZonekeyDMServiceType[])(results[0]));
         }
         
         /// <remarks/>
@@ -3866,30 +3866,33 @@ namespace zonvif_dm {
         public event HeartbeatCompletedEventHandler HeartbeatCompleted;
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/SysPerfRegService", RequestElementName="SysPerfRegService", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="SysPerfRegServiceResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public void RegService(ZonekeyDMSysRegisterType Register) {
-            this.Invoke("RegService", new object[] {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/ServMgrtRegService", RequestElementName="ServMgrtRegService", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="ServMgrtRegServiceResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("Register")]
+        public ZonekeyDMServRegisterResponseType RegService(ZonekeyDMServRegisterType Register) {
+            object[] results = this.Invoke("RegService", new object[] {
                         Register});
+            return ((ZonekeyDMServRegisterResponseType)(results[0]));
         }
         
         /// <remarks/>
-        public System.IAsyncResult BeginRegService(ZonekeyDMSysRegisterType Register, System.AsyncCallback callback, object asyncState) {
+        public System.IAsyncResult BeginRegService(ZonekeyDMServRegisterType Register, System.AsyncCallback callback, object asyncState) {
             return this.BeginInvoke("RegService", new object[] {
                         Register}, callback, asyncState);
         }
         
         /// <remarks/>
-        public void EndRegService(System.IAsyncResult asyncResult) {
-            this.EndInvoke(asyncResult);
+        public ZonekeyDMServRegisterResponseType EndRegService(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((ZonekeyDMServRegisterResponseType)(results[0]));
         }
         
         /// <remarks/>
-        public void RegServiceAsync(ZonekeyDMSysRegisterType Register) {
+        public void RegServiceAsync(ZonekeyDMServRegisterType Register) {
             this.RegServiceAsync(Register, null);
         }
         
         /// <remarks/>
-        public void RegServiceAsync(ZonekeyDMSysRegisterType Register, object userState) {
+        public void RegServiceAsync(ZonekeyDMServRegisterType Register, object userState) {
             if ((this.RegServiceOperationCompleted == null)) {
                 this.RegServiceOperationCompleted = new System.Threading.SendOrPostCallback(this.OnRegServiceOperationCompleted);
             }
@@ -3900,19 +3903,19 @@ namespace zonvif_dm {
         private void OnRegServiceOperationCompleted(object arg) {
             if ((this.RegServiceCompleted != null)) {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
-                this.RegServiceCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+                this.RegServiceCompleted(this, new RegServiceCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/SysPerfUnregService", RequestElementName="SysPerfUnregService", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="SysPerfUnregServiceResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public void UnregService(ZonekeyDMSysUnregisterType Unregister) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/ServMgrtUnregService", RequestElementName="ServMgrtUnregService", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="ServMgrtUnregServiceResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void UnregService(ZonekeyDMServUnregisterType Unregister) {
             this.Invoke("UnregService", new object[] {
                         Unregister});
         }
         
         /// <remarks/>
-        public System.IAsyncResult BeginUnregService(ZonekeyDMSysUnregisterType Unregister, System.AsyncCallback callback, object asyncState) {
+        public System.IAsyncResult BeginUnregService(ZonekeyDMServUnregisterType Unregister, System.AsyncCallback callback, object asyncState) {
             return this.BeginInvoke("UnregService", new object[] {
                         Unregister}, callback, asyncState);
         }
@@ -3923,12 +3926,12 @@ namespace zonvif_dm {
         }
         
         /// <remarks/>
-        public void UnregServiceAsync(ZonekeyDMSysUnregisterType Unregister) {
+        public void UnregServiceAsync(ZonekeyDMServUnregisterType Unregister) {
             this.UnregServiceAsync(Unregister, null);
         }
         
         /// <remarks/>
-        public void UnregServiceAsync(ZonekeyDMSysUnregisterType Unregister, object userState) {
+        public void UnregServiceAsync(ZonekeyDMServUnregisterType Unregister, object userState) {
             if ((this.UnregServiceOperationCompleted == null)) {
                 this.UnregServiceOperationCompleted = new System.Threading.SendOrPostCallback(this.OnUnregServiceOperationCompleted);
             }
@@ -3944,14 +3947,14 @@ namespace zonvif_dm {
         }
         
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/SysPerfHeartbeat", RequestElementName="SysPerfHeartbeat", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="SysPerfHeartbeatResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public void Heartbeat([System.Xml.Serialization.XmlElementAttribute("Heartbeat")] ZonekeyDMSysHeartbeatType Heartbeat1) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/ServMgrtHeartbeat", RequestElementName="ServMgrtHeartbeat", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="ServMgrtHeartbeatResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void Heartbeat([System.Xml.Serialization.XmlElementAttribute("Heartbeat")] ZonekeyDMServHeartbeatType Heartbeat1) {
             this.Invoke("Heartbeat", new object[] {
                         Heartbeat1});
         }
         
         /// <remarks/>
-        public System.IAsyncResult BeginHeartbeat(ZonekeyDMSysHeartbeatType Heartbeat1, System.AsyncCallback callback, object asyncState) {
+        public System.IAsyncResult BeginHeartbeat(ZonekeyDMServHeartbeatType Heartbeat1, System.AsyncCallback callback, object asyncState) {
             return this.BeginInvoke("Heartbeat", new object[] {
                         Heartbeat1}, callback, asyncState);
         }
@@ -3962,12 +3965,12 @@ namespace zonvif_dm {
         }
         
         /// <remarks/>
-        public void HeartbeatAsync(ZonekeyDMSysHeartbeatType Heartbeat1) {
+        public void HeartbeatAsync(ZonekeyDMServHeartbeatType Heartbeat1) {
             this.HeartbeatAsync(Heartbeat1, null);
         }
         
         /// <remarks/>
-        public void HeartbeatAsync(ZonekeyDMSysHeartbeatType Heartbeat1, object userState) {
+        public void HeartbeatAsync(ZonekeyDMServHeartbeatType Heartbeat1, object userState) {
             if ((this.HeartbeatOperationCompleted == null)) {
                 this.HeartbeatOperationCompleted = new System.Threading.SendOrPostCallback(this.OnHeartbeatOperationCompleted);
             }
@@ -3990,119 +3993,152 @@ namespace zonvif_dm {
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
-    [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.onvif.org/ver10/device/wsdl")]
-    public partial class Service {
+    [System.Web.Services.WebServiceBindingAttribute(Name="LocalServiceCtrlBinding", Namespace="http://www.onvif.org/ver10/device/wsdl")]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(DeviceEntity))]
+    public partial class LocalServiceCtrlBinding : System.Web.Services.Protocols.SoapHttpClientProtocol {
         
-        private string namespaceField;
+        private System.Threading.SendOrPostCallback GetAllServicesOperationCompleted;
         
-        private string xAddrField;
+        private System.Threading.SendOrPostCallback StartServiceOperationCompleted;
         
-        private System.Xml.XmlElement capabilitiesField;
-        
-        private OnvifVersion versionField;
-        
-        private System.Xml.XmlElement[] anyField;
-        
-        private System.Xml.XmlAttribute[] anyAttrField;
+        private System.Threading.SendOrPostCallback StopServiceOperationCompleted;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="anyURI")]
-        public string Namespace {
-            get {
-                return this.namespaceField;
+        public LocalServiceCtrlBinding() {
+            this.SoapVersion = System.Web.Services.Protocols.SoapProtocolVersion.Soap12;
+        }
+        
+        /// <remarks/>
+        public event GetAllServicesCompletedEventHandler GetAllServicesCompleted;
+        
+        /// <remarks/>
+        public event StartServiceCompletedEventHandler StartServiceCompleted;
+        
+        /// <remarks/>
+        public event StopServiceCompletedEventHandler StopServiceCompleted;
+        
+        /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/ServCtrlGetAllServices", RequestElementName="ServCtrlGetAllServices", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="ServCtrlGetAllServicesResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute("GetAllServices")]
+        public ZonekeyDMAllServiceType GetAllServices() {
+            object[] results = this.Invoke("GetAllServices", new object[0]);
+            return ((ZonekeyDMAllServiceType)(results[0]));
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginGetAllServices(System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("GetAllServices", new object[0], callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public ZonekeyDMAllServiceType EndGetAllServices(System.IAsyncResult asyncResult) {
+            object[] results = this.EndInvoke(asyncResult);
+            return ((ZonekeyDMAllServiceType)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetAllServicesAsync() {
+            this.GetAllServicesAsync(null);
+        }
+        
+        /// <remarks/>
+        public void GetAllServicesAsync(object userState) {
+            if ((this.GetAllServicesOperationCompleted == null)) {
+                this.GetAllServicesOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetAllServicesOperationCompleted);
             }
-            set {
-                this.namespaceField = value;
+            this.InvokeAsync("GetAllServices", new object[0], this.GetAllServicesOperationCompleted, userState);
+        }
+        
+        private void OnGetAllServicesOperationCompleted(object arg) {
+            if ((this.GetAllServicesCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetAllServicesCompleted(this, new GetAllServicesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType="anyURI")]
-        public string XAddr {
-            get {
-                return this.xAddrField;
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/ServCtrlStartService", RequestElementName="ServCtrlStartService", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="ServCtrlStartServiceResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void StartService([System.Xml.Serialization.XmlElementAttribute("StartService")] ZonekeyDMServStartServiceType StartService1) {
+            this.Invoke("StartService", new object[] {
+                        StartService1});
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginStartService(ZonekeyDMServStartServiceType StartService1, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("StartService", new object[] {
+                        StartService1}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public void EndStartService(System.IAsyncResult asyncResult) {
+            this.EndInvoke(asyncResult);
+        }
+        
+        /// <remarks/>
+        public void StartServiceAsync(ZonekeyDMServStartServiceType StartService1) {
+            this.StartServiceAsync(StartService1, null);
+        }
+        
+        /// <remarks/>
+        public void StartServiceAsync(ZonekeyDMServStartServiceType StartService1, object userState) {
+            if ((this.StartServiceOperationCompleted == null)) {
+                this.StartServiceOperationCompleted = new System.Threading.SendOrPostCallback(this.OnStartServiceOperationCompleted);
             }
-            set {
-                this.xAddrField = value;
+            this.InvokeAsync("StartService", new object[] {
+                        StartService1}, this.StartServiceOperationCompleted, userState);
+        }
+        
+        private void OnStartServiceOperationCompleted(object arg) {
+            if ((this.StartServiceCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.StartServiceCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
         /// <remarks/>
-        public System.Xml.XmlElement Capabilities {
-            get {
-                return this.capabilitiesField;
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://www.onvif.org/ver10/device/wsdl/ServCtrlStopService", RequestElementName="ServCtrlStopService", RequestNamespace="http://www.onvif.org/ver10/device/wsdl", ResponseElementName="ServCtrlStopServiceResponse", ResponseNamespace="http://www.onvif.org/ver10/device/wsdl", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void StopService([System.Xml.Serialization.XmlElementAttribute("StopService")] ZonekeyDMServStopServiceType StopService1) {
+            this.Invoke("StopService", new object[] {
+                        StopService1});
+        }
+        
+        /// <remarks/>
+        public System.IAsyncResult BeginStopService(ZonekeyDMServStopServiceType StopService1, System.AsyncCallback callback, object asyncState) {
+            return this.BeginInvoke("StopService", new object[] {
+                        StopService1}, callback, asyncState);
+        }
+        
+        /// <remarks/>
+        public void EndStopService(System.IAsyncResult asyncResult) {
+            this.EndInvoke(asyncResult);
+        }
+        
+        /// <remarks/>
+        public void StopServiceAsync(ZonekeyDMServStopServiceType StopService1) {
+            this.StopServiceAsync(StopService1, null);
+        }
+        
+        /// <remarks/>
+        public void StopServiceAsync(ZonekeyDMServStopServiceType StopService1, object userState) {
+            if ((this.StopServiceOperationCompleted == null)) {
+                this.StopServiceOperationCompleted = new System.Threading.SendOrPostCallback(this.OnStopServiceOperationCompleted);
             }
-            set {
-                this.capabilitiesField = value;
+            this.InvokeAsync("StopService", new object[] {
+                        StopService1}, this.StopServiceOperationCompleted, userState);
+        }
+        
+        private void OnStopServiceOperationCompleted(object arg) {
+            if ((this.StopServiceCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.StopServiceCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
         
         /// <remarks/>
-        public OnvifVersion Version {
-            get {
-                return this.versionField;
-            }
-            set {
-                this.versionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAnyElementAttribute()]
-        public System.Xml.XmlElement[] Any {
-            get {
-                return this.anyField;
-            }
-            set {
-                this.anyField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAnyAttributeAttribute()]
-        public System.Xml.XmlAttribute[] AnyAttr {
-            get {
-                return this.anyAttrField;
-            }
-            set {
-                this.anyAttrField = value;
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.onvif.org/ver10/schema")]
-    public partial class OnvifVersion {
-        
-        private int majorField;
-        
-        private int minorField;
-        
-        /// <remarks/>
-        public int Major {
-            get {
-                return this.majorField;
-            }
-            set {
-                this.majorField = value;
-            }
-        }
-        
-        /// <remarks/>
-        public int Minor {
-            get {
-                return this.minorField;
-            }
-            set {
-                this.minorField = value;
-            }
+        public new void CancelAsync(object userState) {
+            base.CancelAsync(userState);
         }
     }
     
@@ -4112,9 +4148,15 @@ namespace zonvif_dm {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
-    public partial class ZonekeyDMSysHeartbeatType {
+    public partial class ZonekeyDMServiceType {
         
         private string urlField;
+        
+        private string descField;
+        
+        private string sidField;
+        
+        private string nsField;
         
         /// <remarks/>
         public string url {
@@ -4125,25 +4167,34 @@ namespace zonvif_dm {
                 this.urlField = value;
             }
         }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
-    public partial class ZonekeyDMSysUnregisterType {
-        
-        private string urlField;
         
         /// <remarks/>
-        public string url {
+        public string desc {
             get {
-                return this.urlField;
+                return this.descField;
             }
             set {
-                this.urlField = value;
+                this.descField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string sid {
+            get {
+                return this.sidField;
+            }
+            set {
+                this.sidField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string ns {
+            get {
+                return this.nsField;
+            }
+            set {
+                this.nsField = value;
             }
         }
     }
@@ -4154,7 +4205,193 @@ namespace zonvif_dm {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
-    public partial class ZonekeyDMSysRegisterType {
+    public partial class ZonekeyDMServStopServiceType {
+        
+        private string sidField;
+        
+        /// <remarks/>
+        public string sid {
+            get {
+                return this.sidField;
+            }
+            set {
+                this.sidField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMServStartServiceType {
+        
+        private string sidField;
+        
+        /// <remarks/>
+        public string sid {
+            get {
+                return this.sidField;
+            }
+            set {
+                this.sidField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMAllServiceType {
+        
+        private string urlField;
+        
+        private string descField;
+        
+        private string sidField;
+        
+        private string nsField;
+        
+        private bool activeField;
+        
+        /// <remarks/>
+        public string url {
+            get {
+                return this.urlField;
+            }
+            set {
+                this.urlField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string desc {
+            get {
+                return this.descField;
+            }
+            set {
+                this.descField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string sid {
+            get {
+                return this.sidField;
+            }
+            set {
+                this.sidField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string ns {
+            get {
+                return this.nsField;
+            }
+            set {
+                this.nsField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public bool active {
+            get {
+                return this.activeField;
+            }
+            set {
+                this.activeField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMServHeartbeatType {
+        
+        private int idField;
+        
+        /// <remarks/>
+        public int id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMServUnregisterType {
+        
+        private int idField;
+        
+        /// <remarks/>
+        public int id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMServRegisterResponseType {
+        
+        private int idField;
+        
+        private string sidField;
+        
+        /// <remarks/>
+        public int id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string sid {
+            get {
+                return this.sidField;
+            }
+            set {
+                this.sidField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.zonekey.com.cn/schema")]
+    public partial class ZonekeyDMServRegisterType {
         
         private string urlField;
         
@@ -4215,7 +4452,9 @@ namespace zonvif_dm {
         
         private double cpuField;
         
-        private double memField;
+        private double memfreeField;
+        
+        private double memtoatlField;
         
         private double netrecvField;
         
@@ -4236,12 +4475,22 @@ namespace zonvif_dm {
         }
         
         /// <remarks/>
-        public double mem {
+        public double memfree {
             get {
-                return this.memField;
+                return this.memfreeField;
             }
             set {
-                this.memField = value;
+                this.memfreeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public double memtoatl {
+            get {
+                return this.memtoatlField;
+            }
+            set {
+                this.memtoatlField = value;
             }
         }
         
@@ -13765,6 +14014,39 @@ namespace zonvif_dm {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.onvif.org/ver10/schema")]
+    public partial class OnvifVersion {
+        
+        private int majorField;
+        
+        private int minorField;
+        
+        /// <remarks/>
+        public int Major {
+            get {
+                return this.majorField;
+            }
+            set {
+                this.majorField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int Minor {
+            get {
+                return this.minorField;
+            }
+            set {
+                this.minorField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(TypeName="SystemCapabilities", Namespace="http://www.onvif.org/ver10/schema")]
     public partial class SystemCapabilities1 {
         
@@ -16217,10 +16499,10 @@ namespace zonvif_dm {
         }
         
         /// <remarks/>
-        public Service[] Result {
+        public ZonekeyDMServiceType[] Result {
             get {
                 this.RaiseExceptionIfNecessary();
-                return ((Service[])(this.results[0]));
+                return ((ZonekeyDMServiceType[])(this.results[0]));
             }
         }
     }
@@ -17699,7 +17981,29 @@ namespace zonvif_dm {
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
-    public delegate void RegServiceCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+    public delegate void RegServiceCompletedEventHandler(object sender, RegServiceCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class RegServiceCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal RegServiceCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public ZonekeyDMServRegisterResponseType Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((ZonekeyDMServRegisterResponseType)(this.results[0]));
+            }
+        }
+    }
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
@@ -17708,4 +18012,38 @@ namespace zonvif_dm {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
     public delegate void HeartbeatCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    public delegate void GetAllServicesCompletedEventHandler(object sender, GetAllServicesCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetAllServicesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetAllServicesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public ZonekeyDMAllServiceType Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((ZonekeyDMAllServiceType)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    public delegate void StartServiceCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("wsdl", "4.0.30319.1")]
+    public delegate void StopServiceCompletedEventHandler(object sender, System.ComponentModel.AsyncCompletedEventArgs e);
 }
