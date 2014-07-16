@@ -14,9 +14,12 @@ static double now()
 }
 
 SysPerf::SysPerf(const char *dp, const char *nic)
+	: ost::Thread(0, 16384)
 {
 	dp_ = strdup(dp);
 	nic_ = strdup(nic);
+
+	net_sr_ = 0.0, net_rr_ = 0.0;
 
 	last_stamp_ = -1.0;
 
@@ -36,8 +39,8 @@ SysPerf::~SysPerf()
 void SysPerf::run()
 {
 	while (!quit_) {
-		once();
 		sleep(1000);
+		once();
 	}
 }
 
@@ -47,6 +50,7 @@ void SysPerf::once()
 	update_mem();
 	update_disk();
 	update_net();
+	fprintf(stderr, "\n");
 }
 
 void SysPerf::update_cpu()
@@ -56,6 +60,7 @@ void SysPerf::update_cpu()
 		long user, nice, system, idle;
 		if (4 == fscanf(fp, "cpu %ld %ld %ld %ld", &user, &nice, &system, &idle)) {
 			cpurate_ = (user + system) * 1.0 / (user + nice + system + idle);
+			fprintf(stderr, "cpu: %.3f ", cpurate_);
 		}
 
 		fclose(fp);
@@ -67,15 +72,21 @@ void SysPerf::update_mem()
 	FILE *fp = fopen("/proc/meminfo", "r");
 	if (fp) {
 		char buf[256];
-		char *p = fgets(buf, sizeof(buf), fp);
-		long val;
-		if (sscanf(p, "MemTotal: %ld kB", &val) == 1)
-			mem_tot_ = val * 1000.0;
+		while (!feof(fp)) {
+			char *p = fgets(buf, sizeof(buf), fp);
+			if (!p) continue;
 
-		p = fgets(buf, sizeof(buf), fp);
-		if (sscanf(p, "MemFree: %ld kB", &val) == 1)
-			mem_used_ = mem_tot_ - val * 1000.0;
+			long val;
+			char key[64];
+			if (sscanf(p, "%s %ld kB", key, &val) == 2) {
+				if (!strcmp("MemTotal:", key))
+					mem_tot_ = val * 1000.0;
+				else if (!strcmp("MemFree:", key))
+					mem_used_ = mem_tot_ - val * 1000.0;
+			}
+		}
 
+		fprintf(stderr, "mem: %.0fM, %.0fM ", mem_tot_/1000000.0, mem_used_/1000000.0);
 
 		fclose(fp);
 	}
@@ -99,6 +110,9 @@ void SysPerf::update_disk()
 			if (!strcmp(mnt, dp_)) {
 				disk_tot_ = 1000.0 * tot;
 				disk_used_ = 1000.0 * used;
+
+				fprintf(stderr, "disk: %.3fG, %.3fG ", disk_tot_/1000000000.0, disk_used_/1000000000.0);
+
 				break;
 			}
 		}
@@ -110,20 +124,23 @@ void SysPerf::update_disk()
 
 void SysPerf::update_net()
 {
-	// /proc/net/dev，每个一段时间读取，减得差除以时间，即可计算速度
-	long r = -1, s;
+	long r = -1, s = 0;
 
 	FILE *fp = fopen("/proc/net/dev", "r");
 	if (fp) {
 		while (!feof(fp)) {
-			char buf[1024];
+			char buf[512];
 			char *p = fgets(buf, sizeof(buf), fp);
 			if (!p) continue;
 
 			char nic[64];
-			if (sscanf(p, "%[^:]: %ld %*d %*d %*d %*d %*d %*d %*d %ld", nic, &r, &s) == 10) {
-				if (!strcmp(nic, nic_))
+			int rc = sscanf(p, "%63[^:]: %ld %*ld %*ld %*ld %*ld %*ld %*ld %*ld %ld", nic, &r, &s);
+			if (rc == 3) {
+				char *pnic = nic;
+				while (*pnic == ' ' || *pnic == '\t') pnic++;
+				if (!strcmp(pnic, nic_)) {
 					break;
+				}
 			}
 		}
 		fclose(fp);
@@ -131,7 +148,8 @@ void SysPerf::update_net()
 
 	if (r > 0) {
 		double curr = now();
-		if (last_stamp_ > 0) {
+
+		if (last_stamp_ > 0.0) {
 			net_rr_ = (r - last_r_) / (curr - last_stamp_);
 			net_sr_ = (s - last_s_) / (curr - last_stamp_);
 		}
@@ -139,6 +157,8 @@ void SysPerf::update_net()
 		last_stamp_ = curr;
 		last_r_ = r;
 		last_s_ = s;
+
+		fprintf(stderr, "net: %.0f, %.0f ", net_sr_, net_rr_);
 	}
 }
 

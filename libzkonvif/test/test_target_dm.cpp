@@ -138,7 +138,7 @@ private:
 		int code = 0;
 
 		/// 测试：每隔1000豪秒，发出一个通知 ...
-		while (1) {
+		while (0) {
 			sink_->post(this->ns(), "test", code++, "...");
 			sleep(1000);
 		}
@@ -160,13 +160,20 @@ int main(int argc, char **argv)
 {
 	log_init();
 
+//	ost::Thread::setStack(16384);
+//	fprintf(stdout, "en, using thread stack size: %u\n", 16384);
+
 	// 初始化 openssl ...
 #ifdef WITH_OPENSSL
 	soap_ssl_init();
 	CRYPTO_thread_setup();
 #endif
 
+#ifdef WIN32
 	SysPerf sp("c:", util_get_nic_name());
+#else
+	SysPerf sp("/home", util_get_nic_name());
+#endif
 
 	std::vector<ServiceInf *> services;
 

@@ -16,11 +16,11 @@ AC_PROG_RANLIB
 AC_PROG_LIBTOOL
 
 AC_SUBST(GLOBAL_CXXFLAGS)
-GLOBAL_CXXFLAGS='-DZONEKEY_SOURCE'
+GLOBAL_CXXFLAGS='-DZONEKEY_SOURCE -DMAX_STACK=8192'
 
 # Checks for libraries.
 AC_CHECK_LIB(ssl, ssl2_enc_init, 
-		[ GLOBAL_CXXFLAGS="${GLOBAL_CXXFLAGS} "  ], 
+		[ GLOBAL_CXXFLAGS="${GLOBAL_CXXFLAGS}"  ], 
 		[ echo "Warning: NO openssl lib!" ])
 
 # Checks for header files.

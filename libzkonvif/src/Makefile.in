@@ -89,21 +89,17 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(libdir)"
-LIBRARIES = $(lib_LIBRARIES)
-ARFLAGS = cru
-libzkonvif_a_AR = $(AR) $(ARFLAGS)
-libzkonvif_a_LIBADD =
-am_libzkonvif_a_OBJECTS = nsmap.$(OBJEXT) soapC.$(OBJEXT) \
-	soapDeviceBindingProxy.$(OBJEXT) \
-	soapDeviceBindingService.$(OBJEXT) \
-	soapPTZBindingProxy.$(OBJEXT) soapPTZBindingService.$(OBJEXT) \
-	soapPullPointSubscriptionBindingProxy.$(OBJEXT) \
-	soapPullPointSubscriptionBindingService.$(OBJEXT) \
-	soapRemoteDiscoveryBindingProxy.$(OBJEXT) \
-	soapRemoteDiscoveryBindingService.$(OBJEXT) \
-	soapwsddProxy.$(OBJEXT) soapwsddService.$(OBJEXT) \
-	duration.$(OBJEXT) stdsoap2.$(OBJEXT)
-libzkonvif_a_OBJECTS = $(am_libzkonvif_a_OBJECTS)
+LTLIBRARIES = $(lib_LTLIBRARIES)
+libzkonvif_la_LIBADD =
+am_libzkonvif_la_OBJECTS = nsmap.lo soapC.lo soapDeviceBindingProxy.lo \
+	soapDeviceBindingService.lo soapPTZBindingProxy.lo \
+	soapPTZBindingService.lo \
+	soapPullPointSubscriptionBindingProxy.lo \
+	soapPullPointSubscriptionBindingService.lo \
+	soapRemoteDiscoveryBindingProxy.lo \
+	soapRemoteDiscoveryBindingService.lo soapwsddProxy.lo \
+	soapwsddService.lo duration.lo stdsoap2.lo
+libzkonvif_la_OBJECTS = $(am_libzkonvif_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -117,8 +113,8 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(libzkonvif_a_SOURCES)
-DIST_SOURCES = $(libzkonvif_a_SOURCES)
+SOURCES = $(libzkonvif_la_SOURCES)
+DIST_SOURCES = $(libzkonvif_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -246,9 +242,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-lib_LIBRARIES = libzkonvif.a
+lib_LTLIBRARIES = libzkonvif.la
 AM_CXXFLAGS = ${GLOBAL_CXXFLAGS} -DWITH_PURE_VIRTUAL
-libzkonvif_a_SOURCES = ../soap/nsmap.cpp		\
+libzkonvif_la_SOURCES = ../soap/nsmap.cpp		\
 	../soap/soapC.cpp			\
 	../soap/soapDeviceBindingProxy.cpp	\
 	../soap/soapDeviceBindingService.cpp	\
@@ -297,9 +293,9 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-libLIBRARIES: $(lib_LIBRARIES)
+install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
 	list2=; for p in $$list; do \
 	  if test -f $$p; then \
 	    list2="$$list2 $$p"; \
@@ -308,30 +304,29 @@ install-libLIBRARIES: $(lib_LIBRARIES)
 	test -z "$$list2" || { \
 	  echo " $(MKDIR_P) '$(DESTDIR)$(libdir)'"; \
 	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 1; \
-	  echo " $(INSTALL_DATA) $$list2 '$(DESTDIR)$(libdir)'"; \
-	  $(INSTALL_DATA) $$list2 "$(DESTDIR)$(libdir)" || exit $$?; }
-	@$(POST_INSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(libdir)'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(libdir)"; \
+	}
+
+uninstall-libLTLIBRARIES:
+	@$(NORMAL_UNINSTALL)
+	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
 	for p in $$list; do \
-	  if test -f $$p; then \
-	    $(am__strip_dir) \
-	    echo " ( cd '$(DESTDIR)$(libdir)' && $(RANLIB) $$f )"; \
-	    ( cd "$(DESTDIR)$(libdir)" && $(RANLIB) $$f ) || exit $$?; \
-	  else :; fi; \
+	  $(am__strip_dir) \
+	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$f'"; \
+	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$f"; \
 	done
 
-uninstall-libLIBRARIES:
-	@$(NORMAL_UNINSTALL)
-	@list='$(lib_LIBRARIES)'; test -n "$(libdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(libdir)'; $(am__uninstall_files_from_dir)
-
-clean-libLIBRARIES:
-	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
-libzkonvif.a: $(libzkonvif_a_OBJECTS) $(libzkonvif_a_DEPENDENCIES) $(EXTRA_libzkonvif_a_DEPENDENCIES) 
-	-rm -f libzkonvif.a
-	$(libzkonvif_a_AR) libzkonvif.a $(libzkonvif_a_OBJECTS) $(libzkonvif_a_LIBADD)
-	$(RANLIB) libzkonvif.a
+clean-libLTLIBRARIES:
+	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+libzkonvif.la: $(libzkonvif_la_OBJECTS) $(libzkonvif_la_DEPENDENCIES) $(EXTRA_libzkonvif_la_DEPENDENCIES) 
+	$(CXXLINK) -rpath $(libdir) $(libzkonvif_la_OBJECTS) $(libzkonvif_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -339,20 +334,20 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/duration.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nsmap.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapC.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapDeviceBindingProxy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapDeviceBindingService.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPTZBindingProxy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPTZBindingService.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPullPointSubscriptionBindingProxy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPullPointSubscriptionBindingService.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapRemoteDiscoveryBindingProxy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapRemoteDiscoveryBindingService.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapwsddProxy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapwsddService.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stdsoap2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/duration.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nsmap.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapC.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapDeviceBindingProxy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapDeviceBindingService.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPTZBindingProxy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPTZBindingService.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPullPointSubscriptionBindingProxy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPullPointSubscriptionBindingService.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapRemoteDiscoveryBindingProxy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapRemoteDiscoveryBindingService.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapwsddProxy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapwsddService.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stdsoap2.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -375,201 +370,103 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-nsmap.o: ../soap/nsmap.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsmap.o -MD -MP -MF $(DEPDIR)/nsmap.Tpo -c -o nsmap.o `test -f '../soap/nsmap.cpp' || echo '$(srcdir)/'`../soap/nsmap.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/nsmap.Tpo $(DEPDIR)/nsmap.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/nsmap.cpp' object='nsmap.o' libtool=no @AMDEPBACKSLASH@
+nsmap.lo: ../soap/nsmap.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsmap.lo -MD -MP -MF $(DEPDIR)/nsmap.Tpo -c -o nsmap.lo `test -f '../soap/nsmap.cpp' || echo '$(srcdir)/'`../soap/nsmap.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/nsmap.Tpo $(DEPDIR)/nsmap.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/nsmap.cpp' object='nsmap.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsmap.o `test -f '../soap/nsmap.cpp' || echo '$(srcdir)/'`../soap/nsmap.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsmap.lo `test -f '../soap/nsmap.cpp' || echo '$(srcdir)/'`../soap/nsmap.cpp
 
-nsmap.obj: ../soap/nsmap.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT nsmap.obj -MD -MP -MF $(DEPDIR)/nsmap.Tpo -c -o nsmap.obj `if test -f '../soap/nsmap.cpp'; then $(CYGPATH_W) '../soap/nsmap.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/nsmap.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/nsmap.Tpo $(DEPDIR)/nsmap.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/nsmap.cpp' object='nsmap.obj' libtool=no @AMDEPBACKSLASH@
+soapC.lo: ../soap/soapC.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapC.lo -MD -MP -MF $(DEPDIR)/soapC.Tpo -c -o soapC.lo `test -f '../soap/soapC.cpp' || echo '$(srcdir)/'`../soap/soapC.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapC.Tpo $(DEPDIR)/soapC.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapC.cpp' object='soapC.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o nsmap.obj `if test -f '../soap/nsmap.cpp'; then $(CYGPATH_W) '../soap/nsmap.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/nsmap.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapC.lo `test -f '../soap/soapC.cpp' || echo '$(srcdir)/'`../soap/soapC.cpp
 
-soapC.o: ../soap/soapC.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapC.o -MD -MP -MF $(DEPDIR)/soapC.Tpo -c -o soapC.o `test -f '../soap/soapC.cpp' || echo '$(srcdir)/'`../soap/soapC.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapC.Tpo $(DEPDIR)/soapC.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapC.cpp' object='soapC.o' libtool=no @AMDEPBACKSLASH@
+soapDeviceBindingProxy.lo: ../soap/soapDeviceBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapDeviceBindingProxy.lo -MD -MP -MF $(DEPDIR)/soapDeviceBindingProxy.Tpo -c -o soapDeviceBindingProxy.lo `test -f '../soap/soapDeviceBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapDeviceBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapDeviceBindingProxy.Tpo $(DEPDIR)/soapDeviceBindingProxy.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapDeviceBindingProxy.cpp' object='soapDeviceBindingProxy.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapC.o `test -f '../soap/soapC.cpp' || echo '$(srcdir)/'`../soap/soapC.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapDeviceBindingProxy.lo `test -f '../soap/soapDeviceBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapDeviceBindingProxy.cpp
 
-soapC.obj: ../soap/soapC.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapC.obj -MD -MP -MF $(DEPDIR)/soapC.Tpo -c -o soapC.obj `if test -f '../soap/soapC.cpp'; then $(CYGPATH_W) '../soap/soapC.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapC.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapC.Tpo $(DEPDIR)/soapC.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapC.cpp' object='soapC.obj' libtool=no @AMDEPBACKSLASH@
+soapDeviceBindingService.lo: ../soap/soapDeviceBindingService.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapDeviceBindingService.lo -MD -MP -MF $(DEPDIR)/soapDeviceBindingService.Tpo -c -o soapDeviceBindingService.lo `test -f '../soap/soapDeviceBindingService.cpp' || echo '$(srcdir)/'`../soap/soapDeviceBindingService.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapDeviceBindingService.Tpo $(DEPDIR)/soapDeviceBindingService.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapDeviceBindingService.cpp' object='soapDeviceBindingService.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapC.obj `if test -f '../soap/soapC.cpp'; then $(CYGPATH_W) '../soap/soapC.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapC.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapDeviceBindingService.lo `test -f '../soap/soapDeviceBindingService.cpp' || echo '$(srcdir)/'`../soap/soapDeviceBindingService.cpp
 
-soapDeviceBindingProxy.o: ../soap/soapDeviceBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapDeviceBindingProxy.o -MD -MP -MF $(DEPDIR)/soapDeviceBindingProxy.Tpo -c -o soapDeviceBindingProxy.o `test -f '../soap/soapDeviceBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapDeviceBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapDeviceBindingProxy.Tpo $(DEPDIR)/soapDeviceBindingProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapDeviceBindingProxy.cpp' object='soapDeviceBindingProxy.o' libtool=no @AMDEPBACKSLASH@
+soapPTZBindingProxy.lo: ../soap/soapPTZBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPTZBindingProxy.lo -MD -MP -MF $(DEPDIR)/soapPTZBindingProxy.Tpo -c -o soapPTZBindingProxy.lo `test -f '../soap/soapPTZBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapPTZBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPTZBindingProxy.Tpo $(DEPDIR)/soapPTZBindingProxy.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPTZBindingProxy.cpp' object='soapPTZBindingProxy.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapDeviceBindingProxy.o `test -f '../soap/soapDeviceBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapDeviceBindingProxy.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPTZBindingProxy.lo `test -f '../soap/soapPTZBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapPTZBindingProxy.cpp
 
-soapDeviceBindingProxy.obj: ../soap/soapDeviceBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapDeviceBindingProxy.obj -MD -MP -MF $(DEPDIR)/soapDeviceBindingProxy.Tpo -c -o soapDeviceBindingProxy.obj `if test -f '../soap/soapDeviceBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapDeviceBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapDeviceBindingProxy.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapDeviceBindingProxy.Tpo $(DEPDIR)/soapDeviceBindingProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapDeviceBindingProxy.cpp' object='soapDeviceBindingProxy.obj' libtool=no @AMDEPBACKSLASH@
+soapPTZBindingService.lo: ../soap/soapPTZBindingService.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPTZBindingService.lo -MD -MP -MF $(DEPDIR)/soapPTZBindingService.Tpo -c -o soapPTZBindingService.lo `test -f '../soap/soapPTZBindingService.cpp' || echo '$(srcdir)/'`../soap/soapPTZBindingService.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPTZBindingService.Tpo $(DEPDIR)/soapPTZBindingService.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPTZBindingService.cpp' object='soapPTZBindingService.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapDeviceBindingProxy.obj `if test -f '../soap/soapDeviceBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapDeviceBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapDeviceBindingProxy.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPTZBindingService.lo `test -f '../soap/soapPTZBindingService.cpp' || echo '$(srcdir)/'`../soap/soapPTZBindingService.cpp
 
-soapDeviceBindingService.o: ../soap/soapDeviceBindingService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapDeviceBindingService.o -MD -MP -MF $(DEPDIR)/soapDeviceBindingService.Tpo -c -o soapDeviceBindingService.o `test -f '../soap/soapDeviceBindingService.cpp' || echo '$(srcdir)/'`../soap/soapDeviceBindingService.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapDeviceBindingService.Tpo $(DEPDIR)/soapDeviceBindingService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapDeviceBindingService.cpp' object='soapDeviceBindingService.o' libtool=no @AMDEPBACKSLASH@
+soapPullPointSubscriptionBindingProxy.lo: ../soap/soapPullPointSubscriptionBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPullPointSubscriptionBindingProxy.lo -MD -MP -MF $(DEPDIR)/soapPullPointSubscriptionBindingProxy.Tpo -c -o soapPullPointSubscriptionBindingProxy.lo `test -f '../soap/soapPullPointSubscriptionBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapPullPointSubscriptionBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPullPointSubscriptionBindingProxy.Tpo $(DEPDIR)/soapPullPointSubscriptionBindingProxy.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPullPointSubscriptionBindingProxy.cpp' object='soapPullPointSubscriptionBindingProxy.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapDeviceBindingService.o `test -f '../soap/soapDeviceBindingService.cpp' || echo '$(srcdir)/'`../soap/soapDeviceBindingService.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPullPointSubscriptionBindingProxy.lo `test -f '../soap/soapPullPointSubscriptionBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapPullPointSubscriptionBindingProxy.cpp
 
-soapDeviceBindingService.obj: ../soap/soapDeviceBindingService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapDeviceBindingService.obj -MD -MP -MF $(DEPDIR)/soapDeviceBindingService.Tpo -c -o soapDeviceBindingService.obj `if test -f '../soap/soapDeviceBindingService.cpp'; then $(CYGPATH_W) '../soap/soapDeviceBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapDeviceBindingService.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapDeviceBindingService.Tpo $(DEPDIR)/soapDeviceBindingService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapDeviceBindingService.cpp' object='soapDeviceBindingService.obj' libtool=no @AMDEPBACKSLASH@
+soapPullPointSubscriptionBindingService.lo: ../soap/soapPullPointSubscriptionBindingService.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPullPointSubscriptionBindingService.lo -MD -MP -MF $(DEPDIR)/soapPullPointSubscriptionBindingService.Tpo -c -o soapPullPointSubscriptionBindingService.lo `test -f '../soap/soapPullPointSubscriptionBindingService.cpp' || echo '$(srcdir)/'`../soap/soapPullPointSubscriptionBindingService.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPullPointSubscriptionBindingService.Tpo $(DEPDIR)/soapPullPointSubscriptionBindingService.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPullPointSubscriptionBindingService.cpp' object='soapPullPointSubscriptionBindingService.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapDeviceBindingService.obj `if test -f '../soap/soapDeviceBindingService.cpp'; then $(CYGPATH_W) '../soap/soapDeviceBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapDeviceBindingService.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPullPointSubscriptionBindingService.lo `test -f '../soap/soapPullPointSubscriptionBindingService.cpp' || echo '$(srcdir)/'`../soap/soapPullPointSubscriptionBindingService.cpp
 
-soapPTZBindingProxy.o: ../soap/soapPTZBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPTZBindingProxy.o -MD -MP -MF $(DEPDIR)/soapPTZBindingProxy.Tpo -c -o soapPTZBindingProxy.o `test -f '../soap/soapPTZBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapPTZBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPTZBindingProxy.Tpo $(DEPDIR)/soapPTZBindingProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPTZBindingProxy.cpp' object='soapPTZBindingProxy.o' libtool=no @AMDEPBACKSLASH@
+soapRemoteDiscoveryBindingProxy.lo: ../soap/soapRemoteDiscoveryBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRemoteDiscoveryBindingProxy.lo -MD -MP -MF $(DEPDIR)/soapRemoteDiscoveryBindingProxy.Tpo -c -o soapRemoteDiscoveryBindingProxy.lo `test -f '../soap/soapRemoteDiscoveryBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapRemoteDiscoveryBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRemoteDiscoveryBindingProxy.Tpo $(DEPDIR)/soapRemoteDiscoveryBindingProxy.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRemoteDiscoveryBindingProxy.cpp' object='soapRemoteDiscoveryBindingProxy.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPTZBindingProxy.o `test -f '../soap/soapPTZBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapPTZBindingProxy.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRemoteDiscoveryBindingProxy.lo `test -f '../soap/soapRemoteDiscoveryBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapRemoteDiscoveryBindingProxy.cpp
 
-soapPTZBindingProxy.obj: ../soap/soapPTZBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPTZBindingProxy.obj -MD -MP -MF $(DEPDIR)/soapPTZBindingProxy.Tpo -c -o soapPTZBindingProxy.obj `if test -f '../soap/soapPTZBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapPTZBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapPTZBindingProxy.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPTZBindingProxy.Tpo $(DEPDIR)/soapPTZBindingProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPTZBindingProxy.cpp' object='soapPTZBindingProxy.obj' libtool=no @AMDEPBACKSLASH@
+soapRemoteDiscoveryBindingService.lo: ../soap/soapRemoteDiscoveryBindingService.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRemoteDiscoveryBindingService.lo -MD -MP -MF $(DEPDIR)/soapRemoteDiscoveryBindingService.Tpo -c -o soapRemoteDiscoveryBindingService.lo `test -f '../soap/soapRemoteDiscoveryBindingService.cpp' || echo '$(srcdir)/'`../soap/soapRemoteDiscoveryBindingService.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRemoteDiscoveryBindingService.Tpo $(DEPDIR)/soapRemoteDiscoveryBindingService.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRemoteDiscoveryBindingService.cpp' object='soapRemoteDiscoveryBindingService.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPTZBindingProxy.obj `if test -f '../soap/soapPTZBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapPTZBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapPTZBindingProxy.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRemoteDiscoveryBindingService.lo `test -f '../soap/soapRemoteDiscoveryBindingService.cpp' || echo '$(srcdir)/'`../soap/soapRemoteDiscoveryBindingService.cpp
 
-soapPTZBindingService.o: ../soap/soapPTZBindingService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPTZBindingService.o -MD -MP -MF $(DEPDIR)/soapPTZBindingService.Tpo -c -o soapPTZBindingService.o `test -f '../soap/soapPTZBindingService.cpp' || echo '$(srcdir)/'`../soap/soapPTZBindingService.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPTZBindingService.Tpo $(DEPDIR)/soapPTZBindingService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPTZBindingService.cpp' object='soapPTZBindingService.o' libtool=no @AMDEPBACKSLASH@
+soapwsddProxy.lo: ../soap/soapwsddProxy.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapwsddProxy.lo -MD -MP -MF $(DEPDIR)/soapwsddProxy.Tpo -c -o soapwsddProxy.lo `test -f '../soap/soapwsddProxy.cpp' || echo '$(srcdir)/'`../soap/soapwsddProxy.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapwsddProxy.Tpo $(DEPDIR)/soapwsddProxy.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapwsddProxy.cpp' object='soapwsddProxy.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPTZBindingService.o `test -f '../soap/soapPTZBindingService.cpp' || echo '$(srcdir)/'`../soap/soapPTZBindingService.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapwsddProxy.lo `test -f '../soap/soapwsddProxy.cpp' || echo '$(srcdir)/'`../soap/soapwsddProxy.cpp
 
-soapPTZBindingService.obj: ../soap/soapPTZBindingService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPTZBindingService.obj -MD -MP -MF $(DEPDIR)/soapPTZBindingService.Tpo -c -o soapPTZBindingService.obj `if test -f '../soap/soapPTZBindingService.cpp'; then $(CYGPATH_W) '../soap/soapPTZBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapPTZBindingService.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPTZBindingService.Tpo $(DEPDIR)/soapPTZBindingService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPTZBindingService.cpp' object='soapPTZBindingService.obj' libtool=no @AMDEPBACKSLASH@
+soapwsddService.lo: ../soap/soapwsddService.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapwsddService.lo -MD -MP -MF $(DEPDIR)/soapwsddService.Tpo -c -o soapwsddService.lo `test -f '../soap/soapwsddService.cpp' || echo '$(srcdir)/'`../soap/soapwsddService.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapwsddService.Tpo $(DEPDIR)/soapwsddService.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapwsddService.cpp' object='soapwsddService.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPTZBindingService.obj `if test -f '../soap/soapPTZBindingService.cpp'; then $(CYGPATH_W) '../soap/soapPTZBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapPTZBindingService.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapwsddService.lo `test -f '../soap/soapwsddService.cpp' || echo '$(srcdir)/'`../soap/soapwsddService.cpp
 
-soapPullPointSubscriptionBindingProxy.o: ../soap/soapPullPointSubscriptionBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPullPointSubscriptionBindingProxy.o -MD -MP -MF $(DEPDIR)/soapPullPointSubscriptionBindingProxy.Tpo -c -o soapPullPointSubscriptionBindingProxy.o `test -f '../soap/soapPullPointSubscriptionBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapPullPointSubscriptionBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPullPointSubscriptionBindingProxy.Tpo $(DEPDIR)/soapPullPointSubscriptionBindingProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPullPointSubscriptionBindingProxy.cpp' object='soapPullPointSubscriptionBindingProxy.o' libtool=no @AMDEPBACKSLASH@
+duration.lo: ../soap/duration.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT duration.lo -MD -MP -MF $(DEPDIR)/duration.Tpo -c -o duration.lo `test -f '../soap/duration.cpp' || echo '$(srcdir)/'`../soap/duration.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/duration.Tpo $(DEPDIR)/duration.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/duration.cpp' object='duration.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPullPointSubscriptionBindingProxy.o `test -f '../soap/soapPullPointSubscriptionBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapPullPointSubscriptionBindingProxy.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o duration.lo `test -f '../soap/duration.cpp' || echo '$(srcdir)/'`../soap/duration.cpp
 
-soapPullPointSubscriptionBindingProxy.obj: ../soap/soapPullPointSubscriptionBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPullPointSubscriptionBindingProxy.obj -MD -MP -MF $(DEPDIR)/soapPullPointSubscriptionBindingProxy.Tpo -c -o soapPullPointSubscriptionBindingProxy.obj `if test -f '../soap/soapPullPointSubscriptionBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapPullPointSubscriptionBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapPullPointSubscriptionBindingProxy.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPullPointSubscriptionBindingProxy.Tpo $(DEPDIR)/soapPullPointSubscriptionBindingProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPullPointSubscriptionBindingProxy.cpp' object='soapPullPointSubscriptionBindingProxy.obj' libtool=no @AMDEPBACKSLASH@
+stdsoap2.lo: ../soap/stdsoap2.cpp
+@am__fastdepCXX_TRUE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stdsoap2.lo -MD -MP -MF $(DEPDIR)/stdsoap2.Tpo -c -o stdsoap2.lo `test -f '../soap/stdsoap2.cpp' || echo '$(srcdir)/'`../soap/stdsoap2.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/stdsoap2.Tpo $(DEPDIR)/stdsoap2.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/stdsoap2.cpp' object='stdsoap2.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPullPointSubscriptionBindingProxy.obj `if test -f '../soap/soapPullPointSubscriptionBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapPullPointSubscriptionBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapPullPointSubscriptionBindingProxy.cpp'; fi`
-
-soapPullPointSubscriptionBindingService.o: ../soap/soapPullPointSubscriptionBindingService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPullPointSubscriptionBindingService.o -MD -MP -MF $(DEPDIR)/soapPullPointSubscriptionBindingService.Tpo -c -o soapPullPointSubscriptionBindingService.o `test -f '../soap/soapPullPointSubscriptionBindingService.cpp' || echo '$(srcdir)/'`../soap/soapPullPointSubscriptionBindingService.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPullPointSubscriptionBindingService.Tpo $(DEPDIR)/soapPullPointSubscriptionBindingService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPullPointSubscriptionBindingService.cpp' object='soapPullPointSubscriptionBindingService.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPullPointSubscriptionBindingService.o `test -f '../soap/soapPullPointSubscriptionBindingService.cpp' || echo '$(srcdir)/'`../soap/soapPullPointSubscriptionBindingService.cpp
-
-soapPullPointSubscriptionBindingService.obj: ../soap/soapPullPointSubscriptionBindingService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapPullPointSubscriptionBindingService.obj -MD -MP -MF $(DEPDIR)/soapPullPointSubscriptionBindingService.Tpo -c -o soapPullPointSubscriptionBindingService.obj `if test -f '../soap/soapPullPointSubscriptionBindingService.cpp'; then $(CYGPATH_W) '../soap/soapPullPointSubscriptionBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapPullPointSubscriptionBindingService.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapPullPointSubscriptionBindingService.Tpo $(DEPDIR)/soapPullPointSubscriptionBindingService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapPullPointSubscriptionBindingService.cpp' object='soapPullPointSubscriptionBindingService.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapPullPointSubscriptionBindingService.obj `if test -f '../soap/soapPullPointSubscriptionBindingService.cpp'; then $(CYGPATH_W) '../soap/soapPullPointSubscriptionBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapPullPointSubscriptionBindingService.cpp'; fi`
-
-soapRemoteDiscoveryBindingProxy.o: ../soap/soapRemoteDiscoveryBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRemoteDiscoveryBindingProxy.o -MD -MP -MF $(DEPDIR)/soapRemoteDiscoveryBindingProxy.Tpo -c -o soapRemoteDiscoveryBindingProxy.o `test -f '../soap/soapRemoteDiscoveryBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapRemoteDiscoveryBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRemoteDiscoveryBindingProxy.Tpo $(DEPDIR)/soapRemoteDiscoveryBindingProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRemoteDiscoveryBindingProxy.cpp' object='soapRemoteDiscoveryBindingProxy.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRemoteDiscoveryBindingProxy.o `test -f '../soap/soapRemoteDiscoveryBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapRemoteDiscoveryBindingProxy.cpp
-
-soapRemoteDiscoveryBindingProxy.obj: ../soap/soapRemoteDiscoveryBindingProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRemoteDiscoveryBindingProxy.obj -MD -MP -MF $(DEPDIR)/soapRemoteDiscoveryBindingProxy.Tpo -c -o soapRemoteDiscoveryBindingProxy.obj `if test -f '../soap/soapRemoteDiscoveryBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapRemoteDiscoveryBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapRemoteDiscoveryBindingProxy.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRemoteDiscoveryBindingProxy.Tpo $(DEPDIR)/soapRemoteDiscoveryBindingProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRemoteDiscoveryBindingProxy.cpp' object='soapRemoteDiscoveryBindingProxy.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRemoteDiscoveryBindingProxy.obj `if test -f '../soap/soapRemoteDiscoveryBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapRemoteDiscoveryBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapRemoteDiscoveryBindingProxy.cpp'; fi`
-
-soapRemoteDiscoveryBindingService.o: ../soap/soapRemoteDiscoveryBindingService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRemoteDiscoveryBindingService.o -MD -MP -MF $(DEPDIR)/soapRemoteDiscoveryBindingService.Tpo -c -o soapRemoteDiscoveryBindingService.o `test -f '../soap/soapRemoteDiscoveryBindingService.cpp' || echo '$(srcdir)/'`../soap/soapRemoteDiscoveryBindingService.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRemoteDiscoveryBindingService.Tpo $(DEPDIR)/soapRemoteDiscoveryBindingService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRemoteDiscoveryBindingService.cpp' object='soapRemoteDiscoveryBindingService.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRemoteDiscoveryBindingService.o `test -f '../soap/soapRemoteDiscoveryBindingService.cpp' || echo '$(srcdir)/'`../soap/soapRemoteDiscoveryBindingService.cpp
-
-soapRemoteDiscoveryBindingService.obj: ../soap/soapRemoteDiscoveryBindingService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRemoteDiscoveryBindingService.obj -MD -MP -MF $(DEPDIR)/soapRemoteDiscoveryBindingService.Tpo -c -o soapRemoteDiscoveryBindingService.obj `if test -f '../soap/soapRemoteDiscoveryBindingService.cpp'; then $(CYGPATH_W) '../soap/soapRemoteDiscoveryBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapRemoteDiscoveryBindingService.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRemoteDiscoveryBindingService.Tpo $(DEPDIR)/soapRemoteDiscoveryBindingService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRemoteDiscoveryBindingService.cpp' object='soapRemoteDiscoveryBindingService.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRemoteDiscoveryBindingService.obj `if test -f '../soap/soapRemoteDiscoveryBindingService.cpp'; then $(CYGPATH_W) '../soap/soapRemoteDiscoveryBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapRemoteDiscoveryBindingService.cpp'; fi`
-
-soapwsddProxy.o: ../soap/soapwsddProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapwsddProxy.o -MD -MP -MF $(DEPDIR)/soapwsddProxy.Tpo -c -o soapwsddProxy.o `test -f '../soap/soapwsddProxy.cpp' || echo '$(srcdir)/'`../soap/soapwsddProxy.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapwsddProxy.Tpo $(DEPDIR)/soapwsddProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapwsddProxy.cpp' object='soapwsddProxy.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapwsddProxy.o `test -f '../soap/soapwsddProxy.cpp' || echo '$(srcdir)/'`../soap/soapwsddProxy.cpp
-
-soapwsddProxy.obj: ../soap/soapwsddProxy.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapwsddProxy.obj -MD -MP -MF $(DEPDIR)/soapwsddProxy.Tpo -c -o soapwsddProxy.obj `if test -f '../soap/soapwsddProxy.cpp'; then $(CYGPATH_W) '../soap/soapwsddProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapwsddProxy.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapwsddProxy.Tpo $(DEPDIR)/soapwsddProxy.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapwsddProxy.cpp' object='soapwsddProxy.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapwsddProxy.obj `if test -f '../soap/soapwsddProxy.cpp'; then $(CYGPATH_W) '../soap/soapwsddProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapwsddProxy.cpp'; fi`
-
-soapwsddService.o: ../soap/soapwsddService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapwsddService.o -MD -MP -MF $(DEPDIR)/soapwsddService.Tpo -c -o soapwsddService.o `test -f '../soap/soapwsddService.cpp' || echo '$(srcdir)/'`../soap/soapwsddService.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapwsddService.Tpo $(DEPDIR)/soapwsddService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapwsddService.cpp' object='soapwsddService.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapwsddService.o `test -f '../soap/soapwsddService.cpp' || echo '$(srcdir)/'`../soap/soapwsddService.cpp
-
-soapwsddService.obj: ../soap/soapwsddService.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapwsddService.obj -MD -MP -MF $(DEPDIR)/soapwsddService.Tpo -c -o soapwsddService.obj `if test -f '../soap/soapwsddService.cpp'; then $(CYGPATH_W) '../soap/soapwsddService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapwsddService.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapwsddService.Tpo $(DEPDIR)/soapwsddService.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapwsddService.cpp' object='soapwsddService.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapwsddService.obj `if test -f '../soap/soapwsddService.cpp'; then $(CYGPATH_W) '../soap/soapwsddService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapwsddService.cpp'; fi`
-
-duration.o: ../soap/duration.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT duration.o -MD -MP -MF $(DEPDIR)/duration.Tpo -c -o duration.o `test -f '../soap/duration.cpp' || echo '$(srcdir)/'`../soap/duration.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/duration.Tpo $(DEPDIR)/duration.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/duration.cpp' object='duration.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o duration.o `test -f '../soap/duration.cpp' || echo '$(srcdir)/'`../soap/duration.cpp
-
-duration.obj: ../soap/duration.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT duration.obj -MD -MP -MF $(DEPDIR)/duration.Tpo -c -o duration.obj `if test -f '../soap/duration.cpp'; then $(CYGPATH_W) '../soap/duration.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/duration.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/duration.Tpo $(DEPDIR)/duration.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/duration.cpp' object='duration.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o duration.obj `if test -f '../soap/duration.cpp'; then $(CYGPATH_W) '../soap/duration.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/duration.cpp'; fi`
-
-stdsoap2.o: ../soap/stdsoap2.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stdsoap2.o -MD -MP -MF $(DEPDIR)/stdsoap2.Tpo -c -o stdsoap2.o `test -f '../soap/stdsoap2.cpp' || echo '$(srcdir)/'`../soap/stdsoap2.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/stdsoap2.Tpo $(DEPDIR)/stdsoap2.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/stdsoap2.cpp' object='stdsoap2.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stdsoap2.o `test -f '../soap/stdsoap2.cpp' || echo '$(srcdir)/'`../soap/stdsoap2.cpp
-
-stdsoap2.obj: ../soap/stdsoap2.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT stdsoap2.obj -MD -MP -MF $(DEPDIR)/stdsoap2.Tpo -c -o stdsoap2.obj `if test -f '../soap/stdsoap2.cpp'; then $(CYGPATH_W) '../soap/stdsoap2.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/stdsoap2.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/stdsoap2.Tpo $(DEPDIR)/stdsoap2.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/stdsoap2.cpp' object='stdsoap2.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stdsoap2.obj `if test -f '../soap/stdsoap2.cpp'; then $(CYGPATH_W) '../soap/stdsoap2.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/stdsoap2.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(LIBTOOL)  --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o stdsoap2.lo `test -f '../soap/stdsoap2.cpp' || echo '$(srcdir)/'`../soap/stdsoap2.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -661,7 +558,7 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES)
+all-am: Makefile $(LTLIBRARIES)
 installdirs:
 	for dir in "$(DESTDIR)$(libdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -698,7 +595,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libLIBRARIES clean-libtool \
+clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
 	mostlyclean-am
 
 distclean: distclean-am
@@ -725,7 +622,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-libLIBRARIES
+install-exec-am: install-libLTLIBRARIES
 
 install-html: install-html-am
 
@@ -765,23 +662,23 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLIBRARIES
+uninstall-am: uninstall-libLTLIBRARIES
 
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libLIBRARIES clean-libtool ctags distclean \
+	clean-libLTLIBRARIES clean-libtool ctags distclean \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am \
-	install-libLIBRARIES install-man install-pdf install-pdf-am \
+	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-libLIBRARIES
+	tags uninstall uninstall-am uninstall-libLTLIBRARIES
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
