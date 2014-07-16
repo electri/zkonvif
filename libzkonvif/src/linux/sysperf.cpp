@@ -85,7 +85,7 @@ void SysPerf::update_disk()
 {
 	// using /bin/df
 	
-	FILE *fp = popen("/bin/df", "r");
+	FILE *fp = popen("LANG=C /bin/df", "r");
 	if (fp) {
 		char buf[256];
 
@@ -95,7 +95,7 @@ void SysPerf::update_disk()
 		while (!feof(fp)) {
 			char *p = fgets(buf, sizeof(buf), fp);
 			if (!p) continue;
-			sscanf(p, "%*s %lld %lld %*lld %s %[^\r\n]", &tot, &used, mnt);
+			sscanf(p, "%*s %lld %lld %*lld %*s %[^\r\n]", &tot, &used, mnt);
 			if (!strcmp(mnt, dp_)) {
 				disk_tot_ = 1000.0 * tot;
 				disk_used_ = 1000.0 * used;

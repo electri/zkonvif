@@ -226,50 +226,57 @@ static bool get_all_netinfs(std::vector<NetInf> &nis)
     }
 #endif // apple
 #ifdef linux
-	char buffer[8096];
+
+	if (!first) {
+		nis = _nis;
+		return true;
+	}
+	
+	char buf[8096];
 	struct ifconf ifc;
     
 	int fd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (fd == -1)
 		return false;
     
-	ifc.ifc_len = sizeof(buffer);
-	ifc.ifc_buf = buffer;
+	ifc.ifc_len = sizeof(buf);
+	ifc.ifc_buf = buf;
     
 	if (ioctl(fd, SIOCGIFCONF, &ifc) == -1)
 		return false;
-    
-    for (char *ptr = buffer; ptr < buffer + ifc.ifc_len; ) {
-        ifreq *req = (ifreq*)ptr;
-        int len = sizeof(sockaddr);// > req->ifr_addr.sa_len ? sizeof(sockaddr) : req->ifr_addr.sa_len;
-        
-        ptr += sizeof(req->ifr_name) + len; // next .
-        
-        if (req->ifr_addr.sa_family != AF_INET)
-            continue;
-        
-        ioctl(fd, SIOCGIFFLAGS, req);
-        int flags = req->ifr_flags;
-        if (flags & IFF_LOOPBACK)
-            continue;
-        
-        if (!(flags & IFF_UP))
-            continue;
-        
-        sockaddr_in sin;
-        sin.sin_addr = ((sockaddr_in&)req->ifr_addr).sin_addr;
-        
-        ioctl(fd, SIOCGIFHWADDR, req);
-        uint8_t *mac = (uint8_t*)req->ifr_hwaddr.sa_data;
-        
-        NetInf ni;
-        ni.macaddr = conv_mac(mac, 6);
-        ni.ips.push_back(inet_ntoa(sin.sin_addr));
-        
-        fprintf(stderr, "if: name=%s, ip=%s, mac=%s\n", req->ifr_name, inet_ntoa(sin.sin_addr), ni.macaddr.c_str());
-    }
-    
+
+	int n = ifc.ifc_len / sizeof(ifreq);
+	for (int i = 0; i < n; i++) {
+		ifreq *req = (ifreq*)&buf[i * sizeof(ifreq)];
+		const char *name = req->ifr_name;
+		
+		if (!strcmp(name, "lo"))
+			continue;
+
+		ioctl(fd, SIOCGIFFLAGS, (char*)req);
+		if (!(req->ifr_flags & IFF_UP))
+			continue;
+
+		ioctl(fd, SIOCGIFHWADDR, (char*)req);
+		std::string mac = conv_mac((uint8_t*)req->ifr_hwaddr.sa_data, 6);
+
+		ioctl(fd, SIOCGIFADDR, (char*)req);
+		sockaddr_in *sin = (sockaddr_in*)&req->ifr_addr;
+
+		if (sin->sin_family != AF_INET)
+			continue;
+
+		NetInf ni;
+		ni.name = name;
+		ni.macaddr = mac;
+		ni.ips.push_back(inet_ntoa(sin->sin_addr));
+
+		nis.push_back(ni);
+	}
+   
 	close(fd);
+
+	_nis = nis;
 #endif
     
 	return true;
