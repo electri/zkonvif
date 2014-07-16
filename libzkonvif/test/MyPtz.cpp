@@ -22,18 +22,18 @@ MyPtz::MyPtz(int listen_port)
 	url_ = buf;
 
 	//
-	// 打开 所有云台节点
+	// 打开 所有云台节点. 
 	//
 	_ptzKVC = new KVConfig("config/ptz_nodes");
 	std::vector<std::string> tokenList = _ptzKVC->keys();
 	std::vector<std::string>::const_iterator c_it;
 	for (c_it = tokenList.begin(); c_it != tokenList.end(); ++c_it) {
-		//为返回值 赋值
+		//为返回值 赋值. 
 		const char *value = _ptzKVC->get_value(c_it->c_str(), "teacher");
 		char name[255] = "\0";
 		snprintf(name, 255, "config/%s", value);
 
-		// 创建 ptz, 保存至 ptz 列表
+		// 创建 ptz, 保存至 ptz 列表. 
 		KVConfig *comKVC = new KVConfig(name);
 		PtzControlling * ptzVisca = new PtzControllingVisca(comKVC);
 		//ptzes.insert(ptz_pair(*c_it, ptzVisca));
@@ -88,14 +88,14 @@ int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz__
 
 	std::vector<std::string>::const_iterator c_it;
 
-	//是否存在相匹配云台节点
+	//是否存在相匹配云台节点. 
 	for (c_it = tokenList.begin(); c_it != tokenList.end(); ++c_it) {
 		if (*c_it == tptz__GetNode->NodeToken) {
 			tt__PTZNode *ptzNode = soap_new_tt__PTZNode(pSoap);
 			ptzNode->token = *c_it;
 			std::string *pName = soap_new_std__string(soap);
 			
-			//为返回值 赋值
+			//为返回值 赋值. 
 			const char *value = _ptzKVC->get_value(c_it->c_str(), "teacher");
 			pName->assign(value, strlen(value));
 			ptzNode->Name = pName;
