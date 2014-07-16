@@ -1,5 +1,6 @@
 #include "ZoomValueConvert.h"
 #include <algorithm>
+#include <math.h>
 
 ZoomValueConvert::ZoomValueConvert(KVConfig *cfg)
 	: cfg_(cfg)

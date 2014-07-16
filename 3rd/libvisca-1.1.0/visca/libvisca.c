@@ -1716,7 +1716,11 @@ VISCA_get_zoom_value(VISCAInterface_t *iface, VISCACamera_t *camera, uint16_t *v
   VISCAPacket_t packet;
   uint32_t err;
 
-  PurgeComm(iface->port_fd, PURGE_RXCLEAR);	// Çå¿Õ¶Á»º³å
+#ifdef WIN32
+  PurgeComm(iface->port_fd, PURGE_RXCLEAR);	//
+#else
+  tcflush(iface->port_fd, TCIFLUSH);
+#endif // 
 
   _VISCA_init_packet(&packet);
   _VISCA_append_byte(&packet, VISCA_INQUIRY);
@@ -2980,7 +2984,11 @@ VISCA_get_pantilt_position(VISCAInterface_t *iface, VISCACamera_t *camera, int *
   uint32_t err;
   uint16_t pan_pos, tilt_pos;
 
-  PurgeComm(iface->port_fd, PURGE_RXCLEAR);	// Çå¿Õ¶Á»º³å
+#ifdef WIN32
+  PurgeComm(iface->port_fd, PURGE_RXCLEAR);
+#else
+  tcflush(iface->port_fd, TCIFLUSH);
+#endif 
 
   _VISCA_init_packet(&packet);
   _VISCA_append_byte(&packet, VISCA_INQUIRY);

@@ -11,6 +11,7 @@
 #ifdef WIN32
 #	include "../src/win/sysperf.h"
 #else
+#	include "../src/linux/sysperf.h"
 #endif // 
 
 #ifdef WITH_OPENSSL

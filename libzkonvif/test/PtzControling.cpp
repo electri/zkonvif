@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "PtzControling.h"
 #include "../../common/log.h"
 #include "../../common/utils.h"

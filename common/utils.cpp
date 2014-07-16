@@ -1,11 +1,13 @@
-#pragma once
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <cc++/socket.h>
 #include <cc++/network.h>
 #include <cc++/address.h>
 #include <map>
 #include <string>
+
 #ifdef WIN32
 #	include <IPHlpApi.h>
 #	include <comutil.h>
@@ -76,7 +78,7 @@ bool is_vm_mac(const char *mac)
 }
 
 // 将 byte[] 类型，转换为小写的 ascii 字符串.
-std::string conv_mac(unsigned char mac[], int len)
+static std::string conv_mac(unsigned char mac[], int len)
 {
 	std::string s;
 	char *buf = (char *)alloca(len * 2 + 1);
@@ -97,17 +99,16 @@ struct NetInf
 	std::vector<std::string> ips;
 };
 
-/** 获取可用网卡配置，仅仅选择启动的 ipv4的，非虚拟机的，ethernet
- */
 static bool get_all_netinfs(std::vector<NetInf> &nis)
 {
 	static bool first = true;
 	static std::vector<NetInf> _nis;
 
+#ifdef WIN32
 	if (first) {
 		first = false;
 		nis.clear();
-#ifdef WIN32
+
 		ULONG len = 16 * 1024;
 		IP_ADAPTER_ADDRESSES *adapter = (IP_ADAPTER_ADDRESSES*)malloc(len);
 
@@ -158,8 +159,9 @@ static bool get_all_netinfs(std::vector<NetInf> &nis)
 	else {
 		nis = _nis;
 	}
+#endif // win32
     
-#elif __APPLE__
+#ifdef __APPLE__
     struct ifaddrs *ifap, *ifa;
     std::map<std::string, Tmp> name_macs;
     std::map<std::string, Tmp>::iterator itf;
@@ -171,7 +173,7 @@ static bool get_all_netinfs(std::vector<NetInf> &nis)
             if (!(ifa->ifa_flags & IFF_RUNNING))
                 continue;
             
-            if (strstr(ifa->ifa_name, "bridge")) // 去除桥接网卡
+            if (strstr(ifa->ifa_name, "bridge")) // 去除桥接网卡 .
                 continue;
             
             fprintf(stderr, "name: %s, family=%d\n", ifa->ifa_name, ifa->ifa_addr->sa_family);
@@ -222,7 +224,8 @@ static bool get_all_netinfs(std::vector<NetInf> &nis)
         
         freeifaddrs(ifap);
     }
-#else
+#endif // apple
+#ifdef linux
 	char buffer[8096];
 	struct ifconf ifc;
     
@@ -238,9 +241,9 @@ static bool get_all_netinfs(std::vector<NetInf> &nis)
     
     for (char *ptr = buffer; ptr < buffer + ifc.ifc_len; ) {
         ifreq *req = (ifreq*)ptr;
-        int len = sizeof(sockaddr) > req->ifr_addr.sa_len ? sizeof(sockaddr) : req->ifr_addr.sa_len;
+        int len = sizeof(sockaddr);// > req->ifr_addr.sa_len ? sizeof(sockaddr) : req->ifr_addr.sa_len;
         
-        ptr += sizeof(req->ifr_name) + len; // next
+        ptr += sizeof(req->ifr_name) + len; // next .
         
         if (req->ifr_addr.sa_family != AF_INET)
             continue;
@@ -272,6 +275,27 @@ static bool get_all_netinfs(std::vector<NetInf> &nis)
 	return true;
 }
 
+const char *util_get_myip()
+{
+	char *p = getenv("zonekey_my_ip");
+	if (p) return p;
+    
+	static std::string _ip;
+	if (_ip.empty()) {
+		std::vector<NetInf> nis;
+		get_all_netinfs(nis);
+		if (nis.size() > 0) {
+			if (nis[0].ips.size() > 0) {
+				_ip = nis[0].ips[0];
+			}
+		}
+	}
+    
+	if (_ip.empty())
+		_ip = "000.000.000.000";
+	return _ip.c_str();
+}
+
 const char *util_get_myip_real()
 {
 	char *p = getenv("zonekey_my_ip_real");
@@ -293,26 +317,6 @@ const char *util_get_myip_real()
 	return _ip.c_str();
 }
 
-const char *util_get_myip()
-{
-	char *p = getenv("zonekey_my_ip");
-	if (p) return p;
-    
-	static std::string _ip;
-	if (_ip.empty()) {
-		std::vector<NetInf> nis;
-		get_all_netinfs(nis);
-		if (nis.size() > 0) {
-			if (nis[0].ips.size() > 0) {
-				_ip = nis[0].ips[0];
-			}
-		}
-	}
-    
-	if (_ip.empty())
-		_ip = "000.000.000.000";
-	return _ip.c_str();
-}
 
 const char *util_get_mymac()
 {
@@ -410,3 +414,4 @@ const char* soap_wsa_rand_uuid(struct soap *soap)
 	//DEGFUN1("soap_wsa_rand_uuid", "%s", uuid);
 	return uuid;
 }
+

@@ -22,18 +22,18 @@ MyPtz::MyPtz(int listen_port)
 	url_ = buf;
 
 	//
-	// ´ò¿ª ËùÓĞÔÆÌ¨½Úµã
+	// æ‰“å¼€ æ‰€æœ‰äº‘å°èŠ‚ç‚¹
 	//
 	_ptzKVC = new KVConfig("config/ptz_nodes");
 	std::vector<std::string> tokenList = _ptzKVC->keys();
 	std::vector<std::string>::const_iterator c_it;
 	for (c_it = tokenList.begin(); c_it != tokenList.end(); ++c_it) {
-		//Îª·µ»ØÖµ ¸³Öµ
+		//ä¸ºè¿”å›å€¼ èµ‹å€¼
 		const char *value = _ptzKVC->get_value(c_it->c_str(), "teacher");
 		char name[255] = "\0";
-		_snprintf(name, 255, "config/%s", value);
+		snprintf(name, 255, "config/%s", value);
 
-		// ´´½¨ ptz, ±£´æÖÁ ptz ÁĞ±í
+		// åˆ›å»º ptz, ä¿å­˜è‡³ ptz åˆ—è¡¨
 		KVConfig *comKVC = new KVConfig(name);
 		PtzControlling * ptzVisca = new PtzControllingVisca(comKVC);
 		//ptzes.insert(ptz_pair(*c_it, ptzVisca));
@@ -88,14 +88,14 @@ int MyPtz::GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz__
 
 	std::vector<std::string>::const_iterator c_it;
 
-	//ÊÇ·ñ´æÔÚÏàÆ¥ÅäÔÆÌ¨½Úµã
+	//æ˜¯å¦å­˜åœ¨ç›¸åŒ¹é…äº‘å°èŠ‚ç‚¹
 	for (c_it = tokenList.begin(); c_it != tokenList.end(); ++c_it) {
 		if (*c_it == tptz__GetNode->NodeToken) {
 			tt__PTZNode *ptzNode = soap_new_tt__PTZNode(pSoap);
 			ptzNode->token = *c_it;
 			std::string *pName = soap_new_std__string(soap);
 			
-			//Îª·µ»ØÖµ ¸³Öµ
+			//ä¸ºè¿”å›å€¼ èµ‹å€¼
 			const char *value = _ptzKVC->get_value(c_it->c_str(), "teacher");
 			pName->assign(value, strlen(value));
 			ptzNode->Name = pName;
@@ -395,7 +395,7 @@ void MyPtz::run()
 
 void set_SOAP_ENV__Fault(soap *soap, char *env, char *ter0, char *ter1, char *text)
 {
-	//FIXME:ÀûÓÃ memset, soap_typeµÄÖµ±äÎª 0, ²»Öª¿É·ñ ????
+	//FIXME:åˆ©ç”¨ memset, soap_typeçš„å€¼å˜ä¸º 0, ä¸çŸ¥å¯å¦ ????
 	soap->fault = soap_new_SOAP_ENV__Fault(soap);
 	memset(soap->fault, 0, sizeof(SOAP_ENV__Fault));
 
@@ -529,5 +529,5 @@ void set_SOAP_ENV__Fault(soap *soap, char *env, char *ter0, char *ter1, char *te
 //
 //void delete_tt__PTZConfigurations(std::vector<tt__PTZConfiguration *> pConfigurations)
 //{
-//	//TODO:µ±¹Ø»úÊ±,ĞèÒªÊÍ·Åµô configurations
+//	//TODO:å½“å…³æœºæ—¶,éœ€è¦é‡Šæ”¾æ‰ configurations
 //}

@@ -458,8 +458,9 @@ typedef struct _VISCA_interface
 } VISCAInterface_t;
 
 #else
-
-//#include <termios.h>
+#ifdef linux
+#include <termios.h>
+#endif
 #include <stdint.h>
 
 /* timeout in us */

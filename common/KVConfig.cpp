@@ -23,7 +23,7 @@ bool KVConfig::del_key(const char *key)
 {
 	ost::MutexLock al(cs_);
 
-	KVS::const_iterator itf = kvs_.find(key);
+	KVS::iterator itf = kvs_.find(key);
 	if (itf != kvs_.end()) {
 		kvs_.erase(itf);
 		return true;
