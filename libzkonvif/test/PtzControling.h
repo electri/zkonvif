@@ -32,9 +32,9 @@ public:
 
 	struct PtzParam
 	{
-		double f; // 焦距
-		double ccd_size_width, ccd_size_height;	// cmos 大小
-		double pan_min_angle, tilt_min_angle;	// 水平，竖直方向最小角
+		double f; // 焦距..
+		double ccd_size_width, ccd_size_height;	// cmos 大小 ..
+		double pan_min_angle, tilt_min_angle;	// 水平，竖直方向最小角..
 		double pan_max_va, tilt_max_va;		// 水平，竖直方向最大视角（1倍时), 其他倍率，直接使用该值除以倍率即可 ..
 	};
 
@@ -90,7 +90,7 @@ class PtzControllingVisca : public PtzControlling
 	struct SerialDevices
 	{
 		bool opened;
-		VISCAInterface_t com;	// 对应一个串口
+		VISCAInterface_t com;	// 对应一个串口 ..
 		VISCACamera_t cams[8];	// 对应每个云台 ..
 	};
 	typedef std::map<std::string, SerialDevices*> CAMERAS;
