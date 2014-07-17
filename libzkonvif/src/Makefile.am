@@ -1,8 +1,8 @@
-lib_LTLIBRARIES= libzkonvif.la
+lib_LIBRARIES= libzkonvif.a
 
 AM_CXXFLAGS=${GLOBAL_CXXFLAGS} -DWITH_PURE_VIRTUAL
 
-libzkonvif_la_SOURCES= ../soap/nsmap.cpp		\
+libzkonvif_a_SOURCES= ../soap/nsmap.cpp		\
 	../soap/soapC.cpp			\
 	../soap/soapDeviceBindingProxy.cpp	\
 	../soap/soapDeviceBindingService.cpp	\

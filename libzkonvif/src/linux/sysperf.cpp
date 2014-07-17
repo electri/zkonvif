@@ -52,7 +52,6 @@ void SysPerf::once()
 	update_mem();
 	update_disk();
 	update_net();
-	fprintf(stderr, "\n");
 }
 
 void SysPerf::update_cpu()
@@ -79,8 +78,6 @@ void SysPerf::update_cpu()
 		last_cpu_s_ = system;
 		last_cpu_n_ = nice;
 		last_cpu_i_ = idle;
-
-		fprintf(stderr, "cpu: %.4f ", cpurate_);
 	}
 }
 
@@ -102,8 +99,6 @@ void SysPerf::update_mem()
 					mem_used_ = mem_tot_ - val * 1000.0;
 			}
 		}
-
-		fprintf(stderr, "mem: %.0fM, %.0fM ", mem_tot_/1000000.0, mem_used_/1000000.0);
 
 		fclose(fp);
 	}
@@ -127,8 +122,6 @@ void SysPerf::update_disk()
 			if (!strcmp(mnt, dp_)) {
 				disk_tot_ = 1000.0 * tot;
 				disk_used_ = 1000.0 * used;
-
-				fprintf(stderr, "disk: %.3fG, %.3fG ", disk_tot_/1000000000.0, disk_used_/1000000000.0);
 
 				break;
 			}
@@ -174,8 +167,6 @@ void SysPerf::update_net()
 		last_stamp_ = curr;
 		last_r_ = r;
 		last_s_ = s;
-
-		fprintf(stderr, "net: %.0f, %.0f ", net_sr_, net_rr_);
 	}
 }
 

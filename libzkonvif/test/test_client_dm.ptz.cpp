@@ -1,25 +1,27 @@
 #include "../soap/soapPTZBindingProxy.h"
-#include "../soap/wsseapi.h"
+#ifdef WITH_OPENSSL
+#	include "../soap/wsseapi.h"
+#endif
 #include "../../common/log.h"
 #include "../../common/utils.h"
 #include "../../common/KVConfig.h"
 //#include "../soap/stdsoap2.h"
 
-// ²âÊÔÔÆÌ¨ ...
+// æµ‹è¯•äº‘å° ...
 void test_ptz(const zonekey__ZonekeyDMServiceType *service)
 {
 	int rc;
 	PTZBindingProxy ptz;
 	fprintf(stdout, "%s: url=%s\n", __FUNCTION__, service->url.c_str());
 
-	//Ê¹ÓÃ WS-usernameToken, ²Î¿¼ wsseapi.h
+#ifdef WITH_OPENSSL
+	//ä½¿ç”¨ WS-usernameToken, å‚è€ƒ wsseapi.h
 	soap_wsse_add_UsernameTokenDigest(ptz.soap, "id", "zonekey", "yekenoz");
 
-#ifdef WITH_OPENSSL
-	// Ê¹ÓÃtls ..
+	// ä½¿ç”¨tls ..
 	KVConfig cfg("client.config");
 
-	//ca-certs µÄÎÄ¼şÖĞ,±£´æ×ÅÇ©Êğ server Ö¤ÊéµÄ ca ...
+	//ca-certs çš„æ–‡ä»¶ä¸­,ä¿å­˜ç€ç­¾ç½² server è¯ä¹¦çš„ ca ...
 	rc = soap_ssl_client_context(ptz.soap, SOAP_SSL_DEFAULT | SOAP_SSL_SKIP_HOST_CHECK, 0, 0, cfg.get_value("cacerts", "cacerts.pem"), 0, 0);
 	if (rc != SOAP_OK) {
 		log(LOG_FAULT, "%s: soap_ssl_client_context faulure, code = %d, using cacerts = %s\n", __func__, rc, cfg.get_value("cacerts", "cacerts.pem"));

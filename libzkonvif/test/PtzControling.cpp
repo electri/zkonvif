@@ -35,13 +35,14 @@ PtzControllingVisca::~PtzControllingVisca(void)
 
 int PtzControllingVisca::open()
 {
-	// FIXME: ÐèÒª¼ÓËø ...
+	// FIXME: éœ€è¦åŠ é” ...
 	if (_all_cams.find(ptz_name_) == _all_cams.end()) {
-		// ´ò¿ª´®¿Ú ...
+		// æ‰“å¼€ä¸²å£ ...
 		SerialDevices *sd = new SerialDevices;
 		sd->opened = false;
 		
 		if (VISCA_open_serial(&sd->com, ptz_name_.c_str()) == VISCA_SUCCESS) {
+			fprintf(stderr, "DEBUG: %s: open '%s' ok\n", __func__, ptz_name_.c_str());
 			sd->opened = true;
 
 			_all_cams[ptz_name_] = sd;
@@ -51,7 +52,9 @@ int PtzControllingVisca::open()
 
 			int m;
 			sd->com.broadcast = 0;
+			fprintf(stderr, "DEBUG: %s: before VISCA_set_address ...\n", __func__);
 			if (VISCA_set_address(&sd->com, &m) == VISCA_SUCCESS) {
+				fprintf(stderr, "DEBUG: %s: en, found %d visca devices\n", __func__, m);
 				for (int i = 1; i <= m; i++) {
 					sd->cams[i].address = m;
 					if (VISCA_clear(&sd->com, &sd->cams[i]) == VISCA_SUCCESS) {
@@ -59,9 +62,12 @@ int PtzControllingVisca::open()
 					}
 				}
 			}
+			else {
+				fprintf(stderr, "DEBUG: %s: NO visca devices ....\n", __func__);
+			}
 		}
 		else {
-			_all_cams[ptz_name_] = sd; // Ê§°ÜÁË£¬Ò²Ìî³ä£¬´ËÊ± opened = false;
+			_all_cams[ptz_name_] = sd; // å¤±è´¥äº†ï¼Œä¹Ÿå¡«å……ï¼Œæ­¤æ—¶ opened = false;
 		}
 	}
 
@@ -88,7 +94,7 @@ void PtzControllingVisca::close()
 	SerialDevices *sd = _all_cams[ptz_name_];
 	VISCA_close_serial(&sd->com);
 
-	// TODO: ÊÍ·Å ...
+	// TODO: é‡Šæ”¾ ...
 }
 
 void PtzControllingVisca::setpos(int x, int y, int speed_x, int speed_y)

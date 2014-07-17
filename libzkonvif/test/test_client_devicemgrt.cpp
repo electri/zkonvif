@@ -1,10 +1,12 @@
 #include "../soap/soapPullPointSubscriptionBindingProxy.h"
-#include "../soap/wsseapi.h"
+#ifdef WITH_OPENSSL
+#	include "../soap/wsseapi.h"
+#endif // openssl
 #include "../../common/log.h"
 #include "../../common/utils.h"
 #include "../../common/KVConfig.h"
 
-// ²âÊÔÉè±¸¹ÜÀí ...
+// æµ‹è¯•è®¾å¤‡ç®¡ç† ...
 void test_devicemgrt(const zonekey__ZonekeyDMServiceType *service)
 {
 	fprintf(stdout, "\n\n%s: url=%s\n", __FUNCTION__, service->url.c_str());

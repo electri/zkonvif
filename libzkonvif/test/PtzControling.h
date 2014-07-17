@@ -32,17 +32,17 @@ public:
 
 	struct PtzParam
 	{
-		double f; // ½¹¾à
-		double ccd_size_width, ccd_size_height;	// cmos ´óĞ¡
-		double pan_min_angle, tilt_min_angle;	// Ë®Æ½£¬ÊúÖ±·½Ïò×îĞ¡½Ç
-		double pan_max_va, tilt_max_va;		// Ë®Æ½£¬ÊúÖ±·½Ïò×î´óÊÓ½Ç£¨1±¶Ê±), ÆäËû±¶ÂÊ£¬Ö±½ÓÊ¹ÓÃ¸ÃÖµ³ıÒÔ±¶ÂÊ¼´¿É ..
+		double f; // ç„¦è·
+		double ccd_size_width, ccd_size_height;	// cmos å¤§å°
+		double pan_min_angle, tilt_min_angle;	// æ°´å¹³ï¼Œç«–ç›´æ–¹å‘æœ€å°è§’
+		double pan_max_va, tilt_max_va;		// æ°´å¹³ï¼Œç«–ç›´æ–¹å‘æœ€å¤§è§†è§’ï¼ˆ1å€æ—¶), å…¶ä»–å€ç‡ï¼Œç›´æ¥ä½¿ç”¨è¯¥å€¼é™¤ä»¥å€ç‡å³å¯ ..
 	};
 
 	virtual const PtzParam &getPtzParam() const = 0;
 	virtual double getScales() = 0;
 };
 
-/** µ±ÎŞÔÆÌ¨Ê± ...
+/** å½“æ— äº‘å°æ—¶ ...
  */
 class PtzControllingDummy : public PtzControlling
 {
@@ -74,13 +74,13 @@ class PtzControllingDummy : public PtzControlling
 	void preset_del(int n) {}
 };
 
-/** ·â×°ÔÆÌ¨µÄ»ù±¾²Ù×÷ ...
+/** å°è£…äº‘å°çš„åŸºæœ¬æ“ä½œ ...
  */
 class PtzControllingVisca : public PtzControlling
 {
 	KVConfig *cfg_;
 	ZoomValueConvert zvc_;
-	std::string name_;	// ·½±ã´òÓ¡ ...
+	std::string name_;	// æ–¹ä¾¿æ‰“å° ...
 	std::string ptz_name_;
 	int ptz_addr_;
 
@@ -90,8 +90,8 @@ class PtzControllingVisca : public PtzControlling
 	struct SerialDevices
 	{
 		bool opened;
-		VISCAInterface_t com;	// ¶ÔÓ¦Ò»¸ö´®¿Ú
-		VISCACamera_t cams[8];	// ¶ÔÓ¦Ã¿¸öÔÆÌ¨ ..
+		VISCAInterface_t com;	// å¯¹åº”ä¸€ä¸ªä¸²å£
+		VISCACamera_t cams[8];	// å¯¹åº”æ¯ä¸ªäº‘å° ..
 	};
 	typedef std::map<std::string, SerialDevices*> CAMERAS;
 	static CAMERAS _all_cams;
@@ -103,7 +103,7 @@ public:
 	int open();
 	void close();
 
-	void reset();	// ×ª¶¯µ½ ptz_init_x, ptz_init_y, ¾µÍ·µ½ ptz_init_z
+	void reset();	// è½¬åŠ¨åˆ° ptz_init_x, ptz_init_y, é•œå¤´åˆ° ptz_init_z
 	
 	void setpos(int x, int y, int speed_x, int speed_y);
 	int getpos(int &x, int &y);
@@ -119,7 +119,7 @@ public:
 
 	const PtzParam &getPtzParam() const { return param_; }
 
-	double getScales();	// »ñÈ¡µ±Ç°±¶ÂÊ ..
+	double getScales();	// è·å–å½“å‰å€ç‡ ..
 
 	void preset_set(int n);
 	void preset_get(int n);
