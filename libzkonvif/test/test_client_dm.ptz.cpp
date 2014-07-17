@@ -6,11 +6,11 @@
 //#include "../soap/stdsoap2.h"
 
 // 测试云台 ...
-void test_ptz(const tds__Service *service)
+void test_ptz(const zonekey__ZonekeyDMServiceType *service)
 {
 	int rc;
 	PTZBindingProxy ptz;
-	fprintf(stdout, "%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
+	fprintf(stdout, "%s: url=%s\n", __FUNCTION__, service->url.c_str());
 
 	//使用 WS-usernameToken, 参考 wsseapi.h
 	soap_wsse_add_UsernameTokenDigest(ptz.soap, "id", "zonekey", "yekenoz");
@@ -31,7 +31,7 @@ void test_ptz(const tds__Service *service)
 
 	_tptz__GetServiceCapabilities req;
 	_tptz__GetServiceCapabilitiesResponse res;
-	rc = ptz.GetServiceCapabilities(service->XAddr.c_str(), 0, &req, &res);
+	rc = ptz.GetServiceCapabilities(service->url.c_str(), 0, &req, &res);
 	if (rc != SOAP_OK) {
 		log(LOG_ERROR, "%S: GetServiceCapabilities err, code = %d\n", __func__, rc);
 		soap_print_fault(ptz.soap, stderr);
@@ -44,7 +44,7 @@ void test_ptz(const tds__Service *service)
 #endif
 }
 
-void test_ptz_GetConfigurations(PTZBindingProxy *ptz, const tds__Service *service)
+void test_ptz_GetConfigurations(PTZBindingProxy *ptz, const zonekey__ZonekeyDMServiceType *service)
 {
 	int rc;
 
@@ -53,7 +53,7 @@ void test_ptz_GetConfigurations(PTZBindingProxy *ptz, const tds__Service *servic
 	_tptz__GetConfigurations req;
 	_tptz__GetConfigurationsResponse res;
 
-	rc = ptz->GetConfigurations(service->XAddr.c_str(), 0, &req, &res);
+	rc = ptz->GetConfigurations(service->url.c_str(), 0, &req, &res);
 	if (rc != SOAP_OK) {
 		log(LOG_ERROR, "%s: PTZ GetConfigurations err, code = %d\n", __func__, rc);
 		soap_print_fault(ptz->soap, stderr);
@@ -76,14 +76,14 @@ void test_ptz_GetConfigurations(PTZBindingProxy *ptz, const tds__Service *servic
 	log(LOG_DEBUG, "%s end \n\n", __func__);
 }
 
-void test_ptz_SetConfiguration(PTZBindingProxy *ptz, const tds__Service *service, _tptz__SetConfiguration *req)
+void test_ptz_SetConfiguration(PTZBindingProxy *ptz, const zonekey__ZonekeyDMServiceType *service, _tptz__SetConfiguration *req)
 {
 	int rc;
 
 	log(LOG_DEBUG, "===> try SetConfiguration ...\n");
 
 	_tptz__SetConfigurationResponse res;
-	rc = ptz->SetConfiguration(service->XAddr.c_str(), 0, req, &res);
+	rc = ptz->SetConfiguration(service->url.c_str(), 0, req, &res);
 
 	if (rc != SOAP_OK) {
 		log(LOG_ERROR, "%s: PTZ SetConfiguration err, code = %d\n", __func__, rc);
@@ -94,12 +94,12 @@ void test_ptz_SetConfiguration(PTZBindingProxy *ptz, const tds__Service *service
 	}
 }
 
-void test_ptz_GetConfiguration(PTZBindingProxy *ptz, const tds__Service *service, _tptz__GetConfiguration *req, _tptz__GetConfigurationResponse *res)
+void test_ptz_GetConfiguration(PTZBindingProxy *ptz, const zonekey__ZonekeyDMServiceType *service, _tptz__GetConfiguration *req, _tptz__GetConfigurationResponse *res)
 {
 	int rc;
 	log(LOG_DEBUG, "===> try GetConfiguration ...\n");
 	
-	rc = ptz->GetConfiguration(service->XAddr.c_str(), 0, req, res);
+	rc = ptz->GetConfiguration(service->url.c_str(), 0, req, res);
 
 	if (rc != SOAP_OK) {
 		log(LOG_ERROR, "%s: PTZ GetConfiguration err, code = %d\n", __func__, rc);

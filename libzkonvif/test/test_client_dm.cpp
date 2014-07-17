@@ -11,7 +11,7 @@
 #include "../soap/soapDeviceBindingProxy.h"
 #include "../soap/soapPTZBindingProxy.h"
 
-typedef void(*pfn_test_service)(const tds__Service *service);
+typedef void(*pfn_test_service)(const zonekey__ZonekeyDMServiceType *service);
 
 struct TestServiceFunc
 {
@@ -19,9 +19,9 @@ struct TestServiceFunc
 	pfn_test_service func;
 };
 
-extern void test_ptz(const tds__Service *);
-extern void test_event(const tds__Service *);
-extern void test_devicemgrt(const tds__Service*);
+extern void test_ptz(const zonekey__ZonekeyDMServiceType *);
+extern void test_event(const zonekey__ZonekeyDMServiceType *);
+extern void test_devicemgrt(const zonekey__ZonekeyDMServiceType*);
 
 static TestServiceFunc _test_service_func_table[] = {
 		{ "ptz", test_ptz, },	// FIXME: 
@@ -71,9 +71,9 @@ int main(int argc, char **argv)
 	}
 
 	// 测试每个服务 .
-	std::vector<tds__Service *>::const_iterator it;
+	std::vector<zonekey__ZonekeyDMServiceType *>::const_iterator it;
 	for (it = res_gs.Service.begin(); it != res_gs.Service.end(); ++it) {
-		const char *ns = (*it)->Namespace.c_str();
+		const char *ns = (*it)->ns.c_str();
 		pfn_test_service func = get_test_ptr(ns);
 		if (func) func(*it);
 	}

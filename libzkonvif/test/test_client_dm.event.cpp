@@ -5,10 +5,10 @@
 #include "../../common/KVConfig.h"
 
 // 测试事件 ...
-void test_event(const tds__Service *service)
+void test_event(const zonekey__ZonekeyDMServiceType *service)
 {
 	int rc;
-	fprintf(stdout, "\n\n%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
+	fprintf(stdout, "\n\n%s: url=%s\n", __FUNCTION__, service->url.c_str());
 
 	PullPointSubscriptionBindingProxy pps, pps_p;	// pps 用于 CreatePullPointSubscription, pps_p 用于 PullMessage, ...
 
@@ -36,7 +36,7 @@ void test_event(const tds__Service *service)
 		/// GetServiceCapabilities
 		_tev__GetServiceCapabilities req;
 		_tev__GetServiceCapabilitiesResponse res;
-		rc = pps.GetServiceCapabilities(service->XAddr.c_str(), 0, &req, &res);
+		rc = pps.GetServiceCapabilities(service->url.c_str(), 0, &req, &res);
 		if (rc != SOAP_OK) {
 			log(LOG_ERROR, "%s: GetServiceCapablities err, code=%d\n", __func__, rc);
 			soap_print_fault(pps.soap, stderr);
@@ -53,7 +53,7 @@ void test_event(const tds__Service *service)
 		_tev__CreatePullPointSubscription req;
 		_tev__CreatePullPointSubscriptionResponse res;
 
-		rc = pps.CreatePullPointSubscription(service->XAddr.c_str(), 0, &req, &res);
+		rc = pps.CreatePullPointSubscription(service->url.c_str(), 0, &req, &res);
 		if (rc != SOAP_OK) {
 			log(LOG_ERROR, "%s: CreatePullPointSubscription err, code=%d\n", __func__, rc);
 			soap_print_fault(pps.soap, stderr);

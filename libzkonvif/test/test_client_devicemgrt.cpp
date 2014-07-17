@@ -5,7 +5,7 @@
 #include "../../common/KVConfig.h"
 
 // 测试设备管理 ...
-void test_devicemgrt(const tds__Service *service)
+void test_devicemgrt(const zonekey__ZonekeyDMServiceType *service)
 {
-	fprintf(stdout, "\n\n%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
+	fprintf(stdout, "\n\n%s: url=%s\n", __FUNCTION__, service->url.c_str());
 }
