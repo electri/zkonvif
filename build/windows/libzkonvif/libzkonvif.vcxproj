@@ -96,6 +96,8 @@
     <ClCompile Include="..\..\..\libzkonvif\soap\soapPTZBindingService.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingProxy.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingService.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapRecordingBindingProxy.cpp" />
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapRecordingBindingService.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingProxy.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingService.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\soap\soapwsddProxy.cpp" />
@@ -116,6 +118,8 @@
     <ClInclude Include="..\..\..\libzkonvif\soap\soapPTZBindingService.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingProxy.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapPullPointSubscriptionBindingService.h" />
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapRecordingBindingProxy.h" />
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapRecordingBindingService.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingProxy.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapRemoteDiscoveryBindingService.h" />
     <ClInclude Include="..\..\..\libzkonvif\soap\soapStub.h" />
