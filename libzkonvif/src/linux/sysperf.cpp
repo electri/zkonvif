@@ -5,14 +5,9 @@
 #include <string.h>
 #include "sysperf.h"
 #include <sys/time.h>
+#include "../../common/utils.h"
 
-static double now()
-{
-	struct timeval tv;
-	gettimeofday(&tv, 0);
-	return tv.tv_sec + tv.tv_usec / 1000000.0;
-}
-
+#define now util_now
 SysPerf::SysPerf(const char *dp, const char *nic)
 	: ost::Thread(0, 16384)
 {

@@ -422,3 +422,14 @@ const char* soap_wsa_rand_uuid(struct soap *soap)
 	return uuid;
 }
 
+double util_now()
+{
+	struct timeval tv;
+#ifdef WIN32
+	ost::gettimeofday(&tv, 0);
+#else
+	gettimeofday(&tv, 0);
+#endif
+	return tv.tv_sec + tv.tv_usec / 1000000.0;
+}
+

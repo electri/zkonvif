@@ -11,6 +11,8 @@ int main()
 	char url[128];
 	snprintf(url, sizeof(url), "test://%s:0", util_get_myip());
 
+	fprintf(stderr, "en, using url: '%s'\n", url);
+
 	lc_regdesc_t desc;
 	desc.ns = "test";
 	desc.url = url;

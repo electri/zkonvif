@@ -57,17 +57,26 @@ namespace {
 			std::string sid;
 
 			while (!quit_) {
-				if (!reged)
+				if (!reged) {
 					reged = reg(id, sid);
+					if (reged)
+						fprintf(stderr, "DEBUG: local reg ok, id=%d, sid=%s\n", id, sid.c_str());
+					else
+						fprintf(stderr, "DEBUG: local reg err ...\n");
+				}
 
 				if (exit_.wait(10000)) continue;
 
-				if (reged)
+				if (reged) {
 					hb(id);
+					fprintf(stderr, "DEBUG: local hb ...\n");
+				}
 			}
 
-			if (reged)
+			if (reged) {
 				unreg(id);
+				fprintf(stderr, "DEBUG: local unreg ...\n");
+			}
 		}
 
 		// TODO: 返回本级 dm 
