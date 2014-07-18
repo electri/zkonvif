@@ -99,8 +99,10 @@ am_libzkonvif_a_OBJECTS = nsmap.$(OBJEXT) soapC.$(OBJEXT) \
 	soapPullPointSubscriptionBindingService.$(OBJEXT) \
 	soapRemoteDiscoveryBindingProxy.$(OBJEXT) \
 	soapRemoteDiscoveryBindingService.$(OBJEXT) \
-	soapwsddProxy.$(OBJEXT) soapwsddService.$(OBJEXT) \
-	duration.$(OBJEXT) stdsoap2.$(OBJEXT)
+	soapRecordingBindingProxy.$(OBJEXT) \
+	soapRecordingBindingService.$(OBJEXT) soapwsddProxy.$(OBJEXT) \
+	soapwsddService.$(OBJEXT) duration.$(OBJEXT) \
+	stdsoap2.$(OBJEXT)
 libzkonvif_a_OBJECTS = $(am_libzkonvif_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -227,6 +229,8 @@ libzkonvif_a_SOURCES = ../soap/nsmap.cpp		\
 	../soap/soapPullPointSubscriptionBindingService.cpp	\
 	../soap/soapRemoteDiscoveryBindingProxy.cpp		\
 	../soap/soapRemoteDiscoveryBindingService.cpp		\
+	../soap/soapRecordingBindingProxy.cpp \
+	../soap/soapRecordingBindingService.cpp \
 	../soap/soapwsddProxy.cpp		\
 	../soap/soapwsddService.cpp		\
 	../soap/duration.cpp 			\
@@ -317,6 +321,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPTZBindingService.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPullPointSubscriptionBindingProxy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapPullPointSubscriptionBindingService.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapRecordingBindingProxy.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapRecordingBindingService.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapRemoteDiscoveryBindingProxy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapRemoteDiscoveryBindingService.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soapwsddProxy.Po@am__quote@
@@ -476,6 +482,34 @@ soapRemoteDiscoveryBindingService.obj: ../soap/soapRemoteDiscoveryBindingService
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRemoteDiscoveryBindingService.cpp' object='soapRemoteDiscoveryBindingService.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRemoteDiscoveryBindingService.obj `if test -f '../soap/soapRemoteDiscoveryBindingService.cpp'; then $(CYGPATH_W) '../soap/soapRemoteDiscoveryBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapRemoteDiscoveryBindingService.cpp'; fi`
+
+soapRecordingBindingProxy.o: ../soap/soapRecordingBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRecordingBindingProxy.o -MD -MP -MF $(DEPDIR)/soapRecordingBindingProxy.Tpo -c -o soapRecordingBindingProxy.o `test -f '../soap/soapRecordingBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapRecordingBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRecordingBindingProxy.Tpo $(DEPDIR)/soapRecordingBindingProxy.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRecordingBindingProxy.cpp' object='soapRecordingBindingProxy.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRecordingBindingProxy.o `test -f '../soap/soapRecordingBindingProxy.cpp' || echo '$(srcdir)/'`../soap/soapRecordingBindingProxy.cpp
+
+soapRecordingBindingProxy.obj: ../soap/soapRecordingBindingProxy.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRecordingBindingProxy.obj -MD -MP -MF $(DEPDIR)/soapRecordingBindingProxy.Tpo -c -o soapRecordingBindingProxy.obj `if test -f '../soap/soapRecordingBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapRecordingBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapRecordingBindingProxy.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRecordingBindingProxy.Tpo $(DEPDIR)/soapRecordingBindingProxy.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRecordingBindingProxy.cpp' object='soapRecordingBindingProxy.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRecordingBindingProxy.obj `if test -f '../soap/soapRecordingBindingProxy.cpp'; then $(CYGPATH_W) '../soap/soapRecordingBindingProxy.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapRecordingBindingProxy.cpp'; fi`
+
+soapRecordingBindingService.o: ../soap/soapRecordingBindingService.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRecordingBindingService.o -MD -MP -MF $(DEPDIR)/soapRecordingBindingService.Tpo -c -o soapRecordingBindingService.o `test -f '../soap/soapRecordingBindingService.cpp' || echo '$(srcdir)/'`../soap/soapRecordingBindingService.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRecordingBindingService.Tpo $(DEPDIR)/soapRecordingBindingService.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRecordingBindingService.cpp' object='soapRecordingBindingService.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRecordingBindingService.o `test -f '../soap/soapRecordingBindingService.cpp' || echo '$(srcdir)/'`../soap/soapRecordingBindingService.cpp
+
+soapRecordingBindingService.obj: ../soap/soapRecordingBindingService.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapRecordingBindingService.obj -MD -MP -MF $(DEPDIR)/soapRecordingBindingService.Tpo -c -o soapRecordingBindingService.obj `if test -f '../soap/soapRecordingBindingService.cpp'; then $(CYGPATH_W) '../soap/soapRecordingBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapRecordingBindingService.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/soapRecordingBindingService.Tpo $(DEPDIR)/soapRecordingBindingService.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../soap/soapRecordingBindingService.cpp' object='soapRecordingBindingService.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o soapRecordingBindingService.obj `if test -f '../soap/soapRecordingBindingService.cpp'; then $(CYGPATH_W) '../soap/soapRecordingBindingService.cpp'; else $(CYGPATH_W) '$(srcdir)/../soap/soapRecordingBindingService.cpp'; fi`
 
 soapwsddProxy.o: ../soap/soapwsddProxy.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT soapwsddProxy.o -MD -MP -MF $(DEPDIR)/soapwsddProxy.Tpo -c -o soapwsddProxy.o `test -f '../soap/soapwsddProxy.cpp' || echo '$(srcdir)/'`../soap/soapwsddProxy.cpp

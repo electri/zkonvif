@@ -11,7 +11,13 @@ fi
 
 
 if [ ! -f zonvif.h ]; then
-	wsdl2h -xjPt wsdl/typemap.dat wsdl/event.wsdl wsdl/devicemgmt.wsdl wsdl/remotediscovery.wsdl wsdl/ptz.wsdl -o zonvif0.h
+	wsdl2h -xjPt wsdl/typemap.dat \
+		wsdl/event.wsdl \
+		wsdl/devicemgmt.wsdl \
+		wsdl/remotediscovery.wsdl \
+		wsdl/ptz.wsdl \
+		wsdl/recording.wsdl \
+		-o zonvif0.h
 	echo '#import "wsse.h"' > zonvif.h
 	cat zonvif0.h >> zonvif.h
 	dos2unix zonvif.h

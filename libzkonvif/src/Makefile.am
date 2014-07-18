@@ -12,6 +12,8 @@ libzkonvif_a_SOURCES= ../soap/nsmap.cpp		\
 	../soap/soapPullPointSubscriptionBindingService.cpp	\
 	../soap/soapRemoteDiscoveryBindingProxy.cpp		\
 	../soap/soapRemoteDiscoveryBindingService.cpp		\
+	../soap/soapRecordingBindingProxy.cpp \
+	../soap/soapRecordingBindingService.cpp \
 	../soap/soapwsddProxy.cpp		\
 	../soap/soapwsddService.cpp		\
 	../soap/duration.cpp 			\
