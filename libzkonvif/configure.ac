@@ -33,5 +33,5 @@ AC_TYPE_SIZE_T
 
 # Checks for library functions.
 
-AC_OUTPUT([ Makefile src/Makefile test/Makefile
+AC_OUTPUT([ Makefile src/Makefile test/Makefile libzkreg/Makefile
 		 ])

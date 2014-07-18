@@ -1,4 +1,4 @@
-bin_PROGRAMS= test_target_dm test_client_dm
+bin_PROGRAMS= test_target_dm test_client_dm test_normal_service
 
 test_target_dm_CFLAGS=-Wno-psabi -Wall
 test_target_dm_SOURCES= test_target_dm.cpp \
@@ -16,3 +16,6 @@ test_client_dm_SOURCES= test_client_dm.cpp \
 						test_client_dm.ptz.cpp
 test_client_dm_LDADD= ../src/libzkonvif.a -lccgnu2
 
+
+test_normal_service_SOURCES=test_normal_service.cpp ../../common/utils.cpp
+test_normal_service_LDADD=	../libzkreg/libzkreg.a ../src/libzkonvif.a -lccgnu2

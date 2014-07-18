@@ -1,0 +1,5 @@
+AM_CXXFLAGS=${GLOBAL_CXXFLAGS} -DWITH_PURE_VIRTUAL
+
+lib_LIBRARIES=	libzkreg.a
+libzkreg_a_SOURCES= main.cpp
+
