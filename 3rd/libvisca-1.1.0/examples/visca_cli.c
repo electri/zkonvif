@@ -475,6 +475,7 @@ void close_interface()
 
   VISCA_usleep(2000);
 
+#if 0
   if (VISCA_unread_bytes(&iface, packet, &buffer_size)!=VISCA_SUCCESS)
   {
     uint32_t i;
@@ -483,6 +484,7 @@ void close_interface()
       fprintf(stderr,"%2x ",packet[i]);
     fprintf(stderr,"\n");
   }
+#endif
 
   VISCA_close_serial(&iface);
 }
