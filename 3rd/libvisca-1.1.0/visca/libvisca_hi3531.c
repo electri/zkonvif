@@ -15,7 +15,8 @@
 void _VISCA_append_byte(VISCAPacket_t *packet, unsigned char byte);
 void _VISCA_init_packet(VISCAPacket_t *packet);
 unsigned int _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *camera);
-unsigned int _VISCA_send_packet_with_reply(VISCAInterface_t *iface, VISCACamera_t *camera, VISCAPacket_t *packet);
+unsigned int _VISCA_send_packet_with_reply(VISCAInterface_t *iface, 
+		VISCACamera_t *camera, VISCAPacket_t *packet);
 
 /* Implementation of the platform specific code. The following functions must
  * be implemented here:
@@ -97,12 +98,15 @@ static void dump(int out, const unsigned char *buf, int len)
 /** 总是首先清空缓冲 */
 static void _flush(VISCAInterface_t *i)
 {
-	/** FIXME: read 不会阻塞，直接循环读30个字符，应该读空了 :)
+	/** FIXME: 
+	  	只要 poll 有数据，recv 一次，就清空了 :(
 	 */
-	int j;
-	char c;
-	for (j = 0; j < 30; j++)
+	fprintf(stderr, " //// before flush ....");
+	if (_poll(i, 0) > 0) {
+		char c;
 		read(i->port_fd, &c, 1);
+	}
+	fprintf(stderr, " end!\n");
 }
 
 uint32_t
@@ -113,8 +117,9 @@ _VISCA_write_packet_data(VISCAInterface_t * iface, VISCACamera_t * camera,
 
 	_flush(iface); // 发送命令之前，总是首先清空接收缓冲 ...
 
-	err = write(iface->port_fd, packet->bytes, packet->length);
 	dump(1, packet->bytes, packet->length);
+
+	err = write(iface->port_fd, packet->bytes, packet->length);
 	if (err < packet->length)
 		return VISCA_FAILURE;
 	else
@@ -128,8 +133,7 @@ _VISCA_send_packet(VISCAInterface_t * iface, VISCACamera_t * camera,
 	// check data:
 	if ((iface->address > 7) || (camera->address > 7) || (iface->broadcast > 1)) {
 		fprintf(stderr, "(%s): Invalid header parameters\n", __FILE__);
-		fprintf(stderr, " %d %d %d   \n", iface->address,
-			camera->address, iface->broadcast);
+		fprintf(stderr, " %d %d %d   \n", iface->address, camera->address, iface->broadcast);
 		return VISCA_FAILURE;
 	}
 
@@ -154,30 +158,19 @@ uint32_t _VISCA_get_packet(VISCAInterface_t * iface)
 	int pos = 0;
 	int bytes_read;
 
-	// wait for message
+	// 300ms 超时
 	if (_poll(iface, 300) == 0) {
 		fprintf(stderr, "WARNING: %s: timeout\n", __func__);
 		return VISCA_FAILURE;
 	}
 
-#if 1
-	// 对于此驱动，要求必须一次都读出来 :( 
+	// 对于驱动vk3344，要求必须一次都读出来 :( 
 	bytes_read = read(iface->port_fd, iface->ibuf, VISCA_INPUT_BUFFER_SIZE);
 	if (bytes_read <= 0) {
 		return VISCA_FAILURE;
 	}
 
 	iface->bytes = bytes_read;
-#else
-
-	// get octets one by one
-	bytes_read = read(iface->port_fd, iface->ibuf, 1);
-	while (iface->ibuf[pos] != VISCA_TERMINATOR) {
-		pos++;
-		bytes_read = read(iface->port_fd, &iface->ibuf[pos], 1);
-	}
-	iface->bytes = pos + 1;
-#endif
 
 	dump(0, iface->ibuf, iface->bytes);
 

@@ -26,6 +26,8 @@ MyPtz::MyPtz(int listen_port)
 	//
 	_ptzKVC = new KVConfig("config/ptz_nodes");
 	std::vector<std::string> tokenList = _ptzKVC->keys();
+	for (std::vector<std::string>::const_iterator it = tokenList.begin(); it != tokenList.end(); ++it)
+		fprintf(stderr, "\t%s\n", it->c_str());
 	std::vector<std::string>::const_iterator c_it;
 	for (c_it = tokenList.begin(); c_it != tokenList.end(); ++c_it) {
 		//为返回值 赋值. 
@@ -170,10 +172,12 @@ int MyPtz::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__Co
 
 	std::vector<std::string> tokenList = _ptzKVC->keys();
 
+	fprintf(stderr, "DEBUG: %s called...\n", __func__);
 
 	if (std::find(tokenList.begin(), tokenList.end(), key) == tokenList.end()) {
 		soap_print_fault(stderr);
-		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", "ter:NoEntity", "the requested profile token ProfileToken does not exist");
+		set_SOAP_ENV__Fault(soap, "env:Sender", "ter:InvalidArgVal", 
+				"ter:NoEntity", "the requested profile token ProfileToken does not exist");
 		
 		return SOAP_ERR;
 	}
@@ -186,6 +190,8 @@ int MyPtz::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__Co
 		speedy = tptz__ContinuousMove->Velocity->PanTilt->y;
 	}
 
+	fprintf(stderr, "before .....\n");
+
 	if (speedx < 0)
 		_ptzes[key]->left(-speedx);
 	if (speedx > 0)
@@ -195,6 +201,8 @@ int MyPtz::ContinuousMove(_tptz__ContinuousMove *tptz__ContinuousMove, _tptz__Co
 		_ptzes[key]->up(speedy);
 	if (speedy < 0)
 		_ptzes[key]->down(-speedy);
+
+	fprintf(stderr, "after ...\n");
 	
 	return SOAP_OK;	
 }

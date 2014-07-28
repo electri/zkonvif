@@ -55,6 +55,15 @@ typedef struct Packet
 	int type;
 } Packet;
 
+static void dump_packet(const Packet *pkg)
+{
+	int pos;
+	fprintf(stderr, "  DUMP: type=%d: len=%d ", pkg->type, pkg->len);
+	for (pos = 0; pos < pkg->len; pos++)
+		fprintf(stderr, "%02x ", pkg->head[pos]);
+	fprintf(stderr, "\n");
+}
+
 // 从 buf 中，找到一个 Packet，如果找不到，返回 0
 static int next_packet(uint8_t *buf, int len, Packet *p)
 {
@@ -85,11 +94,20 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 		return VISCA_FAILURE;
 	}
 
+	// 打印得到的所有, 便于调试  ....
+	fprintf(stderr, "++++ all reply bytes: len=%d\n\t", iface->bytes);
+	for (pos = 0; pos < iface->bytes; pos++)
+		fprintf(stderr, "%02x ", iface->ibuf[pos]);
+	fprintf(stderr, "\n");
+
+	pos = 0;
+
 	// 扔掉可能的 ack
 	while (next_packet(&iface->ibuf[pos], iface->bytes-pos, &pkg)) {
-		fprintf(stderr, "+++ pkg: len=%d, type=%02x\n", pkg.len, pkg.type);
+		dump_packet(&pkg);
 
 		if (pkg.type == 0x50) {
+			fprintf(stderr, "\t result: len=%d\n\n", pkg.len);
 			// result ...
 			iface->want_result = 0;
 			memmove(iface->ibuf, pkg.head, pkg.len);
@@ -98,14 +116,25 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 		}
 
 		if ((pkg.type & 0xf0) == VISCA_RESPONSE_ACK) {
+			fprintf(stderr, "\t ACK: len=%d\n", pkg.len);
 			pos += pkg.len;
 		}
 		else {
-			memmove(iface->ibuf, pkg.head, pkg.len);
-			iface->bytes = pkg.len;
-			return VISCA_SUCCESS;
+			if (iface->want_result) {
+				// 此时需要的是 result ...
+				fprintf(stderr, "\t Type: %02x, len=%d\n", pkg.type, pkg.len);
+				pos += pkg.len;
+			}
+			else {
+				fprintf(stderr, "\t Type: %02x, len=%d, Complete!\n\n", pkg.type, pkg.len);
+				memmove(iface->ibuf, pkg.head, pkg.len);
+				iface->bytes = pkg.len;
+				return VISCA_SUCCESS;
+			}
 		}
 	}
+
+	fprintf(stderr, "  err: NOT found result...!!!\n");
 
 	return VISCA_FAILURE;
 }
@@ -180,6 +209,8 @@ VISCA_API uint32_t VISCA_set_address(VISCAInterface_t * iface, int *camera_num)
 	camera.address = 0;
 	backup = iface->broadcast;
 	iface->want_result = 0;
+
+	fprintf(stderr, "DEBUG: %s calling ...\n", __func__);
 
 	_VISCA_init_packet(&packet);
 	_VISCA_append_byte(&packet, 0x30);
@@ -2520,6 +2551,8 @@ VISCA_set_pantilt_right_without_reply(VISCAInterface_t * iface,
 {
 	VISCAPacket_t packet;
 
+	fprintf(stderr, "---------%s calling \n", __func__);
+
 	_VISCA_init_packet(&packet);
 	_VISCA_append_byte(&packet, VISCA_COMMAND);
 	_VISCA_append_byte(&packet, VISCA_CATEGORY_PAN_TILTER);
@@ -2689,6 +2722,24 @@ VISCA_set_pantilt_stop(VISCAInterface_t * iface, VISCACamera_t * camera,
 	_VISCA_append_byte(&packet, VISCA_PT_DRIVE_VERT_STOP);
 	return _VISCA_send_packet_with_reply(iface, camera, &packet);
 }
+
+VISCA_API uint32_t
+VISCA_set_pantilt_stop_without_reply(VISCAInterface_t * iface, VISCACamera_t * camera,
+		       uint32_t pan_speed, uint32_t tilt_speed)
+{
+	VISCAPacket_t packet;
+
+	_VISCA_init_packet(&packet);
+	_VISCA_append_byte(&packet, VISCA_COMMAND);
+	_VISCA_append_byte(&packet, VISCA_CATEGORY_PAN_TILTER);
+	_VISCA_append_byte(&packet, VISCA_PT_DRIVE);
+	_VISCA_append_byte(&packet, pan_speed);
+	_VISCA_append_byte(&packet, tilt_speed);
+	_VISCA_append_byte(&packet, VISCA_PT_DRIVE_HORIZ_STOP);
+	_VISCA_append_byte(&packet, VISCA_PT_DRIVE_VERT_STOP);
+	return _VISCA_send_packet(iface, camera, &packet);
+}
+
 
 VISCA_API uint32_t
 VISCA_set_pantilt_absolute_position(VISCAInterface_t * iface,
