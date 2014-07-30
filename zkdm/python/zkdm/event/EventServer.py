@@ -8,6 +8,7 @@ import sys, time
 import threading, Queue
 from socket import *
 from functools import wraps
+import json
 
 sys.path.append('../')
 
@@ -43,10 +44,11 @@ class LazyQueue(object):
 
 # 保存启动后收到的所有本地消息 ...
 _lazyMessages = LazyQueue(1000)
+_all_pps = None
 
 
-class Message(object):
-	''' 通知消息 
+class Message:
+	''' 通知消息 , 模拟成一个 dict ??
 	'''
 	def __init__(self, catalog, sid, code, info = ''):
 		self.__catalog = catalog
@@ -54,7 +56,6 @@ class Message(object):
 		self.__code = code
 		self.__info = info
 		self.__stamp = time.time()
-		print 'construct Message:', catalog, sid, code, info
 
 
 	def catalog(self):
@@ -77,7 +78,11 @@ class Message(object):
 		return self.__stamp
 	
 
-	def data(self):
+	def __repr__(self):
+		return str(self.dict())
+
+
+	def dict(self):
 		return { 
 			'catalog': self.__catalog,
 			'sid': self.__sid,
@@ -85,6 +90,7 @@ class Message(object):
 			'info': self.__info,
 			'stamp': self.__stamp,
 		}
+
 
 
 class LocalUdpRecver(threading.Thread):
@@ -101,12 +107,13 @@ class LocalUdpRecver(threading.Thread):
 		sock.bind(("127.0.0.1", 10001))
 		while True:
 			data, addr = sock.recvfrom(4096)
-			print data
 			msg = self.__decode(data)
 			if msg:
 				if msg.catalog() == '!exit':
 					break
 				_lazyMessages.push(msg)
+				if _all_pps:
+					_all_pps.push(msg)
 		sock.close()
 	
 	
@@ -117,7 +124,6 @@ class LocalUdpRecver(threading.Thread):
 			   		<catalog>\n<sid>\n<code>\n<info>\n
 		'''
 		ss = data.split('\n', 3)
-		print ss
 		if len(ss) == 4:
 			code = 0
 			try:
@@ -133,6 +139,8 @@ class PullPoint:
 	''' 对应一个订阅点 '''
 	def __init__(self, pid):
 		self.__pid = pid
+		self.__queue = Queue.Queue()
+		self.__event = threading.Event()
 
 
 	def pid(self):
@@ -145,6 +153,35 @@ class PullPoint:
 
 	def __repr__(self):
 		return 'pp: ##' + str(self.__pid)
+
+		
+	def __get_all_pending(self):
+		msgs = []
+		while True:
+			try:
+				msgs.append(self.__queue.get(False))
+			except:
+				break
+		return msgs
+
+
+	def put_message(self, msgs):
+		''' 保存收到的消息 '''
+		for msg in msgs:
+			self.__queue.put(msg)
+		self.__event.set()
+
+
+	def get_message(self):
+		''' 返回消息，如果无消息，最多等待 10秒 '''
+		if self.__queue.empty():
+			if self.__event.wait(10.0):
+				self.__event.clear()
+				return self.__get_all_pending()
+			else:
+				return [] # 超时 ..
+		else:
+		  	return self.__get_all_pending()
 
 
 
@@ -172,9 +209,15 @@ class PullPoints:
 		self.__next_pid = self.__next_pid+1
 		items.append(pp)
 		self.unlock()
-		print items
-		print self.__items
+		pp.put_message(_lazyMessages.all()) # 所有缓冲的消息 ...
 		return pp
+
+
+	def destroy(self, pp):
+		''' 删除 pp '''
+		items = self.lock()
+		items.remove(pp)
+		self.unlock()
 
 
 	def get_pp(self, pid):
@@ -186,6 +229,13 @@ class PullPoints:
 				break
 		self.unlock()
 		return pp
+
+
+	def push(self, msg):
+		items = self.lock()
+		for pp in items:
+			pp.put_message([msg])
+		self.unlock()
 
 
 
@@ -223,42 +273,38 @@ def run_async(func):
 class EventHandler(RequestHandler):
 	''' 处理 get, unsubscribe, seek, .... '''
 	def get(self, pid, command):
-		print 'EventHandler.get calling: pid:', pid, 'command:', command
 		pp = _all_pps.get_pp(int(pid)) # pid 总是 int 类型 
 		if not pp:
 			self.write( {'result':'error', 'info':' pid NOT found' } )
 		else:
-			if command == 'get':
-				self.__get(pp)
-			elif command == 'seek':
-				self.__seek(pp)
-			elif common == 'unsubscribe':
+			if command == 'pull':
+				self.__pull(pp)
+			elif command == 'unsubscribe':
 				self.__unsubscribe(pp)
 		
 
 	@asynchronous
 	@coroutine
-	def __get(self, pp):
+	def __pull(self, pp):
 		''' 如果有pending message，立即返回，否则最多等待 10秒 ..'''
-		res = yield Task(self.__get0)
-		self.write(res)
-		self.finish
+		res = yield Task(self.__pull0, pp=pp)
+		self.write(str(res)) # json 序列化 Message 时，会出问题 ...
+		self.finish()
 
 
 	@run_async
-	def __get0(self, callback):
+	def __pull0(self, callback, pp):
 		# 这里阻塞等待 ....
-		callback('end....')
+		msgs = pp.get_message()
+		result = { 'result':'ok', 'info':'', 'msgs': msgs }
+		callback(result)
 
-
-
-	def __seek(self, pp):
-		pass
 
 
 	def __unsubscribe(self, pp):
-		pass
-
+		''' 删除对应的 pp '''
+		_all_pps.destroy(pp)
+		self.write({'result':'ok', 'info':'unsubscribed' })
 
 
 
