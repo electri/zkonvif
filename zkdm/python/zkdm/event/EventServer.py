@@ -247,7 +247,7 @@ class ListHandler(RequestHandler):
 	def get(self):
 		''' 列出所有订阅点？ '''
 		pps = _all_pps.lock()
-		self.write({'all':pps, 'result':'ok', 'info':'' })
+		self.write(str({'all':pps, 'result':'ok', 'info':'' }))
 		_all_pps.unlock()
 
 
@@ -281,6 +281,8 @@ class EventHandler(RequestHandler):
 				self.__pull(pp)
 			elif command == 'unsubscribe':
 				self.__unsubscribe(pp)
+			else:
+				self.write('Command NOT supported!')
 		
 
 	@asynchronous
