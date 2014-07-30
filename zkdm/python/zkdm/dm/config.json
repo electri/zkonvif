@@ -1,0 +1,9 @@
+{ "services": 
+	[
+		{ 
+			"name": "event service",
+			"exec": "python ../event/EventSever.py",
+			"enable": 1
+		}
+	]
+}

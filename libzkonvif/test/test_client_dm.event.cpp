@@ -9,6 +9,7 @@
 // 测试事件 ...
 void test_event(const zonekey__ZonekeyDMServiceType *service)
 {
+	return;
 	int rc;
 	fprintf(stdout, "\n\n%s: url=%s\n", __FUNCTION__, service->url.c_str());
 

@@ -42,9 +42,11 @@ class LazyQueue(object):
 		return items
 	
 
+
 # 保存启动后收到的所有本地消息 ...
 _lazyMessages = LazyQueue(1000)
 _all_pps = None
+
 
 
 class Message:
@@ -133,6 +135,7 @@ class LocalUdpRecver(threading.Thread):
 			return Message(ss[0], ss[1], code, ss[3])
 		else:
 			return None
+
 
 
 class PullPoint:
@@ -243,6 +246,7 @@ class PullPoints:
 _all_pps = PullPoints()
 
 
+
 class ListHandler(RequestHandler):
 	def get(self):
 		''' 列出所有订阅点？ '''
@@ -291,6 +295,7 @@ class EventHandler(RequestHandler):
 		''' 如果有pending message，立即返回，否则最多等待 10秒 ..'''
 		res = yield Task(self.__pull0, pp=pp)
 		self.write(str(res)) # json 序列化 Message 时，会出问题 ...
+		self.set_header('Content-Type', 'application/json')
 		self.finish()
 
 
@@ -300,7 +305,6 @@ class EventHandler(RequestHandler):
 		msgs = pp.get_message()
 		result = { 'result':'ok', 'info':'', 'msgs': msgs }
 		callback(result)
-
 
 
 	def __unsubscribe(self, pp):
@@ -324,5 +328,8 @@ if __name__ == '__main__':
 	recver.start()
 	app = make_app()
 	app.listen(10001)
-	IOLoop.current().start()
-	recver.join()
+	try:
+		IOLoop.instance().start()
+		recver.join()
+	except:
+		print 'end ...'

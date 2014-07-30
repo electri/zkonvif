@@ -7,6 +7,8 @@
 #include "../../common/KVConfig.h"
 //#include "../soap/stdsoap2.h"
 
+static void test_node(tt__PTZNode *node, const zonekey__ZonekeyDMServiceType *service);
+
 // 测试云台 ...
 void test_ptz(const zonekey__ZonekeyDMServiceType *service)
 {
@@ -30,20 +32,51 @@ void test_ptz(const zonekey__ZonekeyDMServiceType *service)
 	}
 
 	log(LOG_DEBUG, "%s: soap_ssl_client_context ok, using cacerts='%s'\n", __func__, cfg.get_value("cacerts", "cacerts.pem"));
+#endif
 
-	_tptz__GetServiceCapabilities req;
-	_tptz__GetServiceCapabilitiesResponse res;
-	rc = ptz.GetServiceCapabilities(service->url.c_str(), 0, &req, &res);
+	_tptz__GetNodes req; _tptz__GetNodesResponse res;
+	rc = ptz.GetNodes(service->url.c_str(), 0, &req, &res);
 	if (rc != SOAP_OK) {
-		log(LOG_ERROR, "%S: GetServiceCapabilities err, code = %d\n", __func__, rc);
-		soap_print_fault(ptz.soap, stderr);
+		fprintf(stderr, "ERR: ...\n");
 	}
 	else {
-		log(LOG_DEBUG, "%s: GetServiceCapabilities ok\n", __func__);
+		std::vector<class tt__PTZNode *>::iterator it;
+		for (it = res.PTZNode.begin(); it != res.PTZNode.end(); ++it) {
+			test_node(*it, service);
+		}
+	}
+}
+
+static void test_node(tt__PTZNode *node, const zonekey__ZonekeyDMServiceType *service)
+{
+	log(LOG_DEBUG, "%s: to test node, name=%s\n", __func__, node->token.c_str());
+
+	// 左转 1秒
+	int rc;
+	PTZBindingProxy ptz;
+
+	{
+		_tptz__ContinuousMove req; _tptz__ContinuousMoveResponse res;
+		req.ProfileToken = node->token;
+		req.Velocity = soap_new_tt__PTZSpeed(ptz.soap);
+		req.Velocity->PanTilt = 0; // soap_new_tt__Vector2D(ptz.soap);
+		req.Velocity->Zoom = soap_new_tt__Vector1D(ptz.soap);
+		req.Velocity->Zoom->x = 1.0;
+		//req.Velocity->PanTilt->x = 1.0;
+		//req.Velocity->PanTilt->y = 0.0;
+		rc = ptz.ContinuousMove(service->url.c_str(), 0, &req, &res);
 	}
 
+	ost::Thread::sleep(1000);
 
-#endif
+	{
+		_tptz__Stop req; _tptz__StopResponse res;
+		req.ProfileToken = node->token;
+		req.PanTilt = 0;
+		req.Zoom = 0;
+
+		rc = ptz.Stop(service->url.c_str(), 0, &req, &res);
+	}
 }
 
 void test_ptz_GetConfigurations(PTZBindingProxy *ptz, const zonekey__ZonekeyDMServiceType *service)

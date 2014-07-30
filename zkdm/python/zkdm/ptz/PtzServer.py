@@ -23,6 +23,7 @@ def load_ptz_config(cfg, who):
 		config['ptz'].open(config['serial_name'], int(config['addr']))
 	return config;
 
+
 # 加载全局配置 ...
 _cfg = KVConfig('ptz.config')
 _config = {}
@@ -33,6 +34,12 @@ _config['student'] = load_ptz_config(_cfg, 'student')
 class HelpHandler(RequestHandler):
 	def get(self):
 		self.render('help.html')
+
+
+class QuitHandler(RequestHandler):
+	def get(self):
+		print 'Just exit()'
+		exit()
 
 
 class GetConfigHandler(RequestHandler):
@@ -62,6 +69,7 @@ class ControllingHandler(RequestHandler):
 
 def make_app():
 	return Application([
+			url(r'/quit', QuitHandler),
 			url(r'/help', HelpHandler),
 			url(r"/config(/?)", GetConfigHandler),
 			url(r'/ptz/([^\/]+)/([^\?]+)', ControllingHandler),
