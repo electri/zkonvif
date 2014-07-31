@@ -1,9 +1,1 @@
-{ "services": 
-	[
-		{ 
-			"name": "event service",
-			"exec": "python ../event/EventSever.py",
-			"enable": 1
-		}
-	]
-}
+{"services": [{"fork": true, "enable": true, "name": "event service", "title": "事件服务", "path": "python ../event/EventServer.py", "type": "event"}, {"fork": true, "enable": false, "name": "teacher video 1", "title": "教师特写摄像头", "path": "cardlive.exe 1", "type": "eval"}]}
