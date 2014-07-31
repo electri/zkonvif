@@ -1,2 +1,48 @@
 实现 dm 接口：
 dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
+
+提供一下接口：
+
+	/dm/list: 列出该机配置的所有服务
+		返回：application/json
+			{ 
+				"result": "ok",
+				"info": "",
+				"value": {
+					"type":"list",
+					"data": [ 
+					{
+						"name":"event service",
+						"type":"event",
+						"enable": true
+					}
+					{
+						”name":"teacher video 1",
+						"type":"evel",
+						"enable": false
+					}
+					....
+						]
+				}
+			}
+
+
+	/dm/<service name>/start: 启动指定名字的服务
+	/dm/<service name>/stop: 停止服务
+	/dm/<service name>/enable: 启用服务
+	/dm/<service name>/disable: 禁用服务
+
+		返回：application/json
+			成功:
+				{
+					"result":"ok",
+					"info":""
+				}
+			失败：
+				{
+					"result":"error",
+					"info":"not found or disabled"
+				}
+
+
+			

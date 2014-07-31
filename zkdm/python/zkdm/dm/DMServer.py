@@ -46,7 +46,8 @@ class ListServiceHandler(RequestHandler):
 	''' 返回服务列表 '''
 	def get(self):
 		ss = _sm.list_services()
-		result = { 'result':'ok', 'info':'', 'value':ss }
+		ssd = { 'type':'list', 'data':ss }
+		result = { 'result':'ok', 'info':'', 'value':ssd }
 		self.write(result)
 
 
