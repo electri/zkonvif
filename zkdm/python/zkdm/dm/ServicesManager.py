@@ -50,7 +50,7 @@ class ServicesManager:
 	def start_service(self, name):
 		''' 启动服务，如果 name 存在 '''
 		ssd = self.list_services()
-		for x in ssd['services']:
+		for x in ssd:
 			if x['name'] == name and x['enable']:
 				self.__start_service(x)
 				return True
@@ -61,7 +61,7 @@ class ServicesManager:
 	def stop_service(self, name):
 		''' 停止服务 '''
 		ssd = self.list_services()
-		for x in ssd['services']:
+		for x in ssd:
 			if x['name'] == name:
 			   self.__stop_service(x)
 			   return True
