@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from ctypes import *
-import platform
+import platform, os
 
 _ptz_so = 'libzkptz.so.0.0.0'
+if os.environ.get("ptzso"):
+	_ptz_so = os.environ.get("ptz.so")
 
-if platform.system() != 'Linux':
-	_ptz_so = 'zkptz.dll'
 
 class Ptz(object):
 	''' 封装 libzkptz.so 的调用
@@ -157,7 +157,11 @@ class Ptz(object):
 	def __load_ptz_module(self):
 		''' 加载 ptz 模块 '''
 		ptz = {}
-		ptz['so'] = cdll.LoadLibrary(_ptz_so)
+		global _ptz_so
+		if _ptz_so is None:
+			_ptz_so = './libzkptz.dylib'
+		ptz['so'] = CDLL(_ptz_so)
+		print ptz['so']
 		ptz['func_open'] = ptz['so'].ptz_open
 		ptz['func_open'].restype = c_void_p
 		ptz['func_close'] = ptz['so'].ptz_close
