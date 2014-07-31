@@ -20,6 +20,7 @@ def save_config(fname, data):
 
 
 
+
 if __name__ == '__main__':
 	data = load_config('config.json')
 	pprint(data)
