@@ -13,6 +13,13 @@ DMS_PORT = 10000
 _sm = ServicesManager.ServicesManager()
 
 
+class HelpHandler(RequestHandler):
+	''' 提示信息 ....
+	'''
+	def get(self):
+		self.render('./help.html')
+
+
 class ServiceHandler(RequestHandler):
 	''' 处理服务的控制命令 ....
 		/dm/<service name>/<operator>?<params ...>
@@ -41,7 +48,6 @@ class ServiceHandler(RequestHandler):
 
 
 
-
 class ListServiceHandler(RequestHandler):
 	''' 返回服务列表 '''
 	def get(self):
@@ -53,6 +59,7 @@ class ListServiceHandler(RequestHandler):
 
 def make_app():
 	return Application([
+			url(r'/dm/help', HelpHandler),
 			url(r'/dm/list', ListServiceHandler),
 			url(r'/dm/([^/]+)/(.*)', ServiceHandler),
 			])

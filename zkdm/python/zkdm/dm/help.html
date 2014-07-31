@@ -1,3 +1,9 @@
+<html>
+<head>
+	<title> DM help </title>
+</head>
+<body>
+
 实现 dm 接口：
 dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 
@@ -27,10 +33,10 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 			}
 
 
-	/dm/<service name>/start: 启动指定名字的服务
-	/dm/<service name>/stop: 停止服务
-	/dm/<service name>/enable: 启用服务
-	/dm/<service name>/disable: 禁用服务
+	/dm/(service name)/start: 启动指定名字的服务
+	/dm/(service name)/stop: 停止服务
+	/dm/(service name)/enable: 启用服务
+	/dm/(service name)/disable: 禁用服务
 
 		返回：application/json
 			成功:
@@ -45,6 +51,6 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 				}
 
 
-	/dm/help: 显示上面的帮助信息 :)
 		
-		
+</body>
+</html>
