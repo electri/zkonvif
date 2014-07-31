@@ -1,55 +1,57 @@
 <html>
 <head>
 	<title> DM help </title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 
-实现 dm 接口：
-dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
-
-提供如下接口：
-
-	/dm/list: 列出该机配置的所有服务
-		返回：application/json
-			{ 
-				"result": "ok",
-				"info": "",
-				"value": {
-					"type":"list",
-					"data": [ 
-					{
-						"name":"event service",
-						"type":"event",
-						"enable": true
-					}
-					{
-						”name":"teacher video 1",
-						"type":"evel",
-						"enable": false
-					}
-					....
-						]
-				}
-			}
-
-
-	/dm/(service name)/start: 启动指定名字的服务
-	/dm/(service name)/stop: 停止服务
-	/dm/(service name)/enable: 启用服务
-	/dm/(service name)/disable: 禁用服务
-
-		返回：application/json
-			成功:
-				{
-					"result":"ok",
-					"info":""
-				}
-			失败：
-				{
-					"result":"error",
-					"info":"not found or disabled"
-				}
-
+<B>实现 dm 接口：</B>
+<br> dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
+<br>
+<br>提供如下接口：
+<br>
+<br>	<B>/dm/list</B>: 列出该机配置的所有服务
+<br>		返回：application/json
+<br>
+<br>			{ 
+<br>				"result": "ok",
+<br>				"info": "",
+<br>				"value": {
+<br>					"type":"list",
+<br>					"data": [ 
+<br>					{
+<br>						"name":"event service",
+<br>						"type":"event",
+<br>						"enable": true
+<br>					}
+<br>					{
+<br>						”name":"teacher video 1",
+<br>						"type":"evel",
+<br>						"enable": false
+<br>					}
+<br>					....
+<br>						]
+<br>				}
+<br>			}
+<br>
+<br>
+<br>	<B>/dm/(service name)/start</B>: 启动指定名字的服务
+<br>	<B>/dm/(service name)/stop</B>: 停止服务
+<br>	<B>/dm/(service name)/enable</B>: 启用服务
+<br>	<B>/dm/(service name)/disable</B>: 禁用服务
+<br>
+<br>		返回：application/json
+<br>			成功:
+<br>				{
+<br>					"result":"ok",
+<br>					"info":""
+<br>				}
+<br>			失败：
+<br>				{
+<br>					"result":"error",
+<br>					"info":"not found or disabled"
+<br>				}
+<br>
 
 		
 </body>
