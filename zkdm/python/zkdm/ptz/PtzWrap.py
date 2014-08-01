@@ -6,9 +6,24 @@ import platform, os
 
 
 _ptz_so = 'libzkptz.so.0.0.0'
-if os.environ.get("ptzso"):
-	global _ptz_so
-	_ptz_so = os.environ.get("ptzso")
+
+plat = platform.uname()[0]
+
+if plat == 'Darwin':
+	_ptz_so = './osx/libzkptz.dylib'
+elif plat == 'Windows':
+	_ptz_so = r'win32\zkptz.dll'
+elif plat == 'Linux':
+	if platform.uname()[4].find('arm') >= 0:
+		_ptz_so = './arm/libzkptz.so.0.0.0'
+	else:
+		_ptz_so = './linux/libzkptz.so.0.0.0'
+elif plat.find('CYGWIN') >= 0:
+	_ptz_so = './cygwin64/zkptz.dll'
+else:
+	_ptz_so = None
+
+print 'using PTZ mod:', _ptz_so
 
 
 
