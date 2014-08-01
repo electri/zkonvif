@@ -108,6 +108,7 @@ class LocalUdpRecver(threading.Thread):
 		sock = socket(AF_INET, SOCK_DGRAM)
 		sock.bind(("127.0.0.1", 10001))
 		while True:
+			global _all_pps
 			data, addr = sock.recvfrom(4096)
 			msg = self.__decode(data)
 			if msg:
@@ -180,11 +181,11 @@ class PullPoint:
 		if self.__queue.empty():
 			if self.__event.wait(10.0):
 				self.__event.clear()
-				return self.__get_all_pending()
+				return self.__get_all_pending(), False
 			else:
-				return [] # 超时 ..
+				return [], True # 超时 ..
 		else:
-		  	return self.__get_all_pending()
+		  	return self.__get_all_pending(), False
 
 
 
@@ -246,12 +247,19 @@ class PullPoints:
 _all_pps = PullPoints()
 
 
+class HelpHandler(RequestHandler):
+	def get(self):
+		self.render('./help.html')
+		
+
 
 class ListHandler(RequestHandler):
 	def get(self):
 		''' 列出所有订阅点？ '''
+		global _all_pps
 		pps = _all_pps.lock()
-		self.write(str({'all':pps, 'result':'ok', 'info':'' }))
+		values = { "type":"list", "data":pps }
+		self.write(str({'value':values, 'result':'ok', 'info':'' }))
 		_all_pps.unlock()
 
 
@@ -259,8 +267,10 @@ class ListHandler(RequestHandler):
 class CreatePPHandler(RequestHandler):
 	def get(self):
 		''' 处理 create_pp '''
+		global _all_pps
 		pp = _all_pps.create()
-		self.write( {'pid': pp.pid(), 'result':'ok', 'info':'' })
+		values = {'type':'int', 'data':pp.pid() }
+		self.write( {'result':'ok', 'info':'', 'value':values })
 
 
 
@@ -277,6 +287,7 @@ def run_async(func):
 class EventHandler(RequestHandler):
 	''' 处理 get, unsubscribe, seek, .... '''
 	def get(self, pid, command):
+		global _all_pps
 		pp = _all_pps.get_pp(int(pid)) # pid 总是 int 类型 
 		if not pp:
 			self.write( {'result':'error', 'info':' pid NOT found' } )
@@ -302,13 +313,17 @@ class EventHandler(RequestHandler):
 	@run_async
 	def __pull0(self, callback, pp):
 		# 这里阻塞等待 ....
-		msgs = pp.get_message()
-		result = { 'result':'ok', 'info':'', 'msgs': msgs }
+		msgs, timeouted = pp.get_message()
+		values = { 'type':'list', 'data':msgs }
+		result = { 'result':'ok', 'info':'', 'value':values }
+		if timeouted:
+			result['info'] = 'timeouted'
 		callback(result)
 
 
 	def __unsubscribe(self, pp):
 		''' 删除对应的 pp '''
+		global _all_pps
 		_all_pps.destroy(pp)
 		self.write({'result':'ok', 'info':'unsubscribed' })
 
@@ -316,7 +331,8 @@ class EventHandler(RequestHandler):
 
 def make_app():
 	return Application([
-			url(r'/event/?', ListHandler),
+			url(r'/event/help', HelpHandler),
+			url(r'/event/list', ListHandler),
 			url(r'/event/create_pp', CreatePPHandler),
 			url(r'/event/([0-9]+)/(.+)', EventHandler),
 			])
