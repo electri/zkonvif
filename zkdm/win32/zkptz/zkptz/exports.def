@@ -1,0 +1,16 @@
+EXPORTS
+	ptz_open
+	ptz_close
+
+	ptz_left
+	ptz_right
+	ptz_up
+	ptz_down
+	ptz_stop
+
+	ptz_set_pos
+	ptz_get_pos
+
+	ptz_set_zoom
+	ptz_get_zoom
+
