@@ -4,42 +4,57 @@ from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application, url
 from ctypes import *
 import re, sys
-
-sys.path.append('../')
-
-from common.KVConfig import KVConfig
-from PtzWrap import Ptz
+import json, io
+from PtzWrap import PtzWrap
 
 
-def load_ptz_config(cfg, who):
-	''' 加载云台配置 '''
-	config = {}
-	fname = cfg.get(who)
-	if fname:
-		c = KVConfig(fname)
-		config['serial_name'] = c.get('serial_name', 'COMX')
-		config['addr'] = c.get('addr', '1')
-		config['ptz'] = Ptz()
-		config['ptz'].open(config['serial_name'], int(config['addr']))
-	return config;
+# 从 config.json 文件中加载配置信息
+_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
 
-# 加载全局配置 ...
-_cfg = KVConfig('ptz.config')
-_config = {}
-_config['teacher'] = load_ptz_config(_cfg, 'teacher')
-_config['student'] = load_ptz_config(_cfg, 'student')
+def all_ptzs_config():
+	''' 返回配置的云台 ... '''
+	global _all_config
+	return _all_config['ptzs']
+
+		
+def load_ptz(config):
+	''' 加载云台配置模块 '''
+	ptz = {
+		'name': config['name'],
+		'serial': config['config']['serial'],
+		'addr': config['config']['addr'],
+		'ptz': None
+	}
+	# 此处打开 ...
+	try:
+		ptz['ptz'] = PtzWrap()
+	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
+		ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
+	except:
+		ptz['ptz'] = None
+	return ptz
+
+
+def load_all_ptzs():
+	''' 加载所有云台模块 '''
+	ptzs = all_ptzs_config()
+	ret = {}
+	for x in ptzs:
+		ret[x['name']] = (load_ptz(x))
+	return ret
+
+
+# 这里保存所有云台
+_all_ptzs = load_all_ptzs()
+
 
 
 class HelpHandler(RequestHandler):
+	''' 返回 help '''
 	def get(self):
 		self.render('help.html')
 
-
-class QuitHandler(RequestHandler):
-	def get(self):
-		print 'Just exit()'
-		exit()
 
 
 class GetConfigHandler(RequestHandler):
@@ -49,29 +64,35 @@ class GetConfigHandler(RequestHandler):
 		self.write(cfg)
 
 	def __load_config(self):
-		return {'ptzs': _config.keys() }
+		return { 'result':'ok', 'info':'', 'value': { 'type': 'list', 'data':all_ptzs_config() } }
+
 
 
 class ControllingHandler(RequestHandler):
 	''' 处理云台操作 '''
-	def get(self, sid, method):
+	def get(self, name, method):
 		''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
 		'''
-		ret = self.__exec_ptz_method(sid, method, self.request.arguments)
+		ret = self.__exec_ptz_method(name, method, self.request.arguments)
 		self.write(ret)
 
-	def __exec_ptz_method(self, sid, method, params):
-		if sid in _config:
-			return _config[sid]['ptz'].call(method, params)
+	def __exec_ptz_method(self, name, method, params):
+		global _all_ptzs
+		print 'name:', name, ' method:', method, ' params:', params
+		if name in _all_ptzs:
+			if _all_ptzs[name]['ptz']:
+				return _all_ptzs[name]['ptz'].call(method, params)
+			else:
+				return { 'result':'error', 'info':'ptz config failure' }
 		else:
-			return {'result':'error', 'info':'sid='+sid+' NOT found'}
+			return { 'result':'error', 'info':name + ' NOT found' }
+
 
 
 def make_app():
 	return Application([
-			url(r'/quit', QuitHandler),
-			url(r'/help', HelpHandler),
-			url(r"/config(/?)", GetConfigHandler),
+			url(r'/ptz/help', HelpHandler),
+			url(r"/ptz/config(/?)", GetConfigHandler),
 			url(r'/ptz/([^\/]+)/([^\?]+)', ControllingHandler),
 			])
 

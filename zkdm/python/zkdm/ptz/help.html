@@ -1,9 +1,44 @@
 <html>
 <head>
 	<title>PTZ help</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-	using "http://ip:port/config" to get all configured ptz. <br>
+	云天控制接口:
+	<p>
+
+	using "http://ip:port/config" to get all configured ptz.
+<br>		返回 application/json:
+<br>		{
+<br>			"result":"ok",
+<br>			"info": "",
+<br>			"value": {
+<br>				"type": "list",
+<br>				"data": [
+<br>					{
+<br>						"name": "teacher",
+<br>						"config": {
+<br>							"serial": "com1",
+<br>							"addr": 1
+<br>						}
+<br>					}
+<br>					{
+<br>						"name": "student",
+<br>						"config": {
+<br>							"serial": "com3",
+<br>							"addr": 1
+<br>						}
+<br>					}
+<br>				]
+<br>			}
+<br>		}
+<br>
+<br>
+
 	using "http://ip:port/ptz/<b>which</b>/<b>method</b>?<b>params...</b>" to control.
+<br> 如: /ptz/teacher/left?speed=1
+<br>
+<br>
+		method: <B> left, right, up, down, stop, set_pos, get_pos, set_zoom, get_zoom </B>
 </body>
 </html>
