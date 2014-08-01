@@ -3,7 +3,7 @@
 		{
 			"name": "teacher",
 			"config": {
-				"serial": "/dev/vktty.1",
+				"serial": "COM3",
 				"addr":1
 			}
 		},
