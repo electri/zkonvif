@@ -21,6 +21,14 @@ class zkQuery:
 
 if __name__ == '__main__':
 	query = zkQuery()
-	print query.getAllServices(offline = True)
+	import time
+	t1 = time.time()
+	n = 1000
+	while n > 0:
+		query.getAllServices(offline = True)
+		n -= 1
+	t2 = time.time()
 	print query.getAllServices()
+	print 'using ', t2-t1, ' seconds'
+
 
