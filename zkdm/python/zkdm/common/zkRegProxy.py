@@ -5,6 +5,18 @@ import threading, time
 
 
 REG_ENDP = 'http://172.16.1.103:8899'
+WSDL_FILE = 'wsdl/zkreg.wsdl'
+
+
+__zkreg = None
+
+def getZkReg():
+	global __zkreg
+	if __zkreg:
+		return __zkreg
+	else:
+		__zkreg = WsdlLoader('wsdl/zkreg.wsdl', REG_ENDP)
+		return __zkreg	
 
 
 class __HBWorking(threading.Thread):
@@ -13,7 +25,7 @@ class __HBWorking(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self)
 		self.daemon = True	# 为了无条件结束 ...
-		self.__wsdl = WsdlLoader('wsdl/zkreg.wsdl', REG_ENDP)
+		self.__wsdl = getZkReg()
 		self.__service = self.__wsdl.service()
 		self.__mutex = threading.RLock()
 		self.__tokens = [] # 存储 regservice 返回的 token
@@ -73,7 +85,7 @@ class zkRegProxy:
 
 	
 	def reg(self):
-		wsdl = WsdlLoader("wsdl/zkreg.wsdl", REG_ENDP)
+		wsdl = getZkReg()
 		sd = wsdl.factory().create('Service')
 		sd.name = self.__service_name
 		sd.catalog = wsdl.factory().create('zkreg:Catalog').Service
@@ -93,7 +105,7 @@ class zkRegProxy:
 	def unreg(self):
 		if self.__token:
 			getThread().remove(self.__token)
-			wsdl = WsdlLoader('wsdl/zkreg.wsdl', REG_ENDP)
+			wsdl = getZkReg()
 			wsdl.service().unregService(self.__token);
 			self.__token = None
 

@@ -4,12 +4,13 @@ from WsdlLoader import WsdlLoader
 
 
 Q_ENDP = 'http://172.16.1.103:8899'
+WSDL_FILE = 'wsdl/zkq.wsdl'
 
 
 class zkQuery:
 	''' 对mse模型中的 zkq 模块的访问'''
 	def __init__(self, endp = Q_ENDP):
-		self.__wsdl = WsdlLoader('wsdl/zkq.wsdl', endp)
+		self.__wsdl = WsdlLoader(WSDL_FILE, endp)
 		# print self.__wsdl.client()
 
 
