@@ -10,9 +10,12 @@
 #	pragma comment(lib, "iphlpapi.lib")
 #	pragma comment(lib, "ws2_32.lib")
 #else
+#	include <unistd.h>
 #	include <sys/socket.h>
 #	include <sys/types.h>
 #	include <netinet/in.h>
+#	include <arpa/inet.h>
+#	include <net/if.h>
 #	include <netdb.h>
 #endif
 
