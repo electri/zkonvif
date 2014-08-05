@@ -2,6 +2,7 @@
 
 import subprocess
 import threading, re, os, time, platform
+from utils import zkutils
 
 _alldata = None
 _lock = threading.Lock()
