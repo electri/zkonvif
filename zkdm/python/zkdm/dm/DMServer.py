@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import subprocess
 from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
 import ServicesManager
