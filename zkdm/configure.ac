@@ -27,4 +27,5 @@ AC_CHECK_HEADERS([visca/libvisca.h])
 AC_OUTPUT([
 		Makefile
 		ptz/Makefile
+		zkutil/Makefile
 		])

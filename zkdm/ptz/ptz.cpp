@@ -3,7 +3,12 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <visca/libvisca.h>
+#ifdef WIN32
+#	define VISCA_WIN
+#	include "../win32/zkptz/zkptz/libvisca.h"
+#else
+#	include <visca/libvisca.h>
+#endif 
 #include "ptz.h"
 
 namespace {
