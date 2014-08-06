@@ -1,0 +1,915 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="zkreg"
+ targetNamespace="http://www.zonekey.com/sysmgrt/register"
+ xmlns:tns="http://www.zonekey.com/sysmgrt/register"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:zkreg="http://www.zonekey.com/sysmgrt/register"
+ xmlns:zkq="http://www.zonekey.com/sysmgrt/query"
+ xmlns:zkcfg="http://www.zonekey.com/sysmgrt/config"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:HTTP="http://schemas.xmlsoap.org/wsdl/http/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="http://www.zonekey.com/sysmgrt/register"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:zkreg="http://www.zonekey.com/sysmgrt/register"
+  xmlns:zkq="http://www.zonekey.com/sysmgrt/query"
+  xmlns:zkcfg="http://www.zonekey.com/sysmgrt/config"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  attributeFormDefault="qualified">
+  <import namespace="http://www.zonekey.com/sysmgrt/query"/>
+  <import namespace="http://www.zonekey.com/sysmgrt/config"/>
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <simpleType name="Catalog"><!-- zkreg__Catalog -->
+
+   <restriction base="xsd:string">
+    <enumeration value="Host"/><!-- zkreg__Catalog::zkreg__Catalog__Host -->
+    <!-- = 0 -->
+    <enumeration value="Service"/><!-- zkreg__Catalog::zkreg__Catalog__Service -->
+    <!-- = 1 -->
+    <enumeration value="Device"/><!-- zkreg__Catalog::zkreg__Catalog__Device -->
+    <!-- = 2 -->
+    <enumeration value="Logic"/><!-- zkreg__Catalog::zkreg__Catalog__Logic -->
+    <!-- = 3 -->
+   </restriction>
+  </simpleType>
+  <complexType name="Ips"><!-- zkreg__Ips -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Urls"><!-- zkreg__Urls -->
+
+   <sequence>
+    <element name="item" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Strs"><!-- zkreg__Strs -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Mse"><!-- zkreg__Mse -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Mse::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Mse::catalog -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Mse::parent -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Mse::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Mses"><!-- zkreg__Mses -->
+
+   <sequence>
+    <element name="item" type="zkreg:Mse" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Host"><!-- zkreg__Host -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Host::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Host::catalog -->
+     <element name="ips" type="zkreg:Ips" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Host::ips -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Host::parent -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Host::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Hosts"><!-- zkreg__Hosts -->
+
+   <sequence>
+    <element name="item" type="zkreg:Host" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Service"><!-- zkreg__Service -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Service::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Service::catalog -->
+     <element name="hostname" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Service::hostname -->
+     <element name="type" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Service::type -->
+     <element name="urls" type="zkreg:Urls" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Service::urls -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Service::parent -->
+     <element name="version" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Service::version -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Service::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Services"><!-- zkreg__Services -->
+
+   <sequence>
+    <element name="item" type="zkreg:Service" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Device"><!-- zkreg__Device -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Device::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Device::catalog -->
+     <element name="hostname" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Device::hostname -->
+     <element name="type" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Device::type -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::parent -->
+     <element name="vendor" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::vendor -->
+     <element name="model" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::model -->
+     <element name="serial" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::serial -->
+     <element name="version" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::version -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Devices"><!-- zkreg__Devices -->
+
+   <sequence>
+    <element name="item" type="zkreg:Device" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Logic"><!-- zkreg__Logic -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Logic::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Logic::catalog -->
+     <element name="children" type="zkreg:Strs" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Logic::children -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Logic::parent -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Logic::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Logics"><!-- zkreg__Logics -->
+
+   <sequence>
+    <element name="item" type="zkreg:Logic" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Brothers"><!-- zkq__Brothers -->
+
+   <sequence>
+    <element name="item" type="zkq:Brother" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Keys"><!-- zkcfg__Keys -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <element name="regHostReq" type="zkreg:Host"/>
+  <element name="unRegHoststring" type="xsd:string"/>
+  <element name="regServiceReq" type="zkreg:Service"/>
+  <element name="unregServicestring" type="xsd:string"/>
+  <element name="regDeviceReq" type="zkreg:Device"/>
+  <element name="unregDevciestring" type="xsd:string"/>
+  <element name="regLogicReq" type="zkreg:Logic"/>
+  <element name="delMseNameReq" type="xsd:string"/>
+  <element name="heartBeatTokenReq" type="xsd:string"/>
+  <element name="setShowNameReq" type="xsd:string"/>
+  <element name="bindLogicName" type="xsd:string"/>
+  <element name="setParentName" type="xsd:string"/>
+  <!-- operation request element -->
+  <element name="version">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="versionResponse">
+   <complexType>
+    <sequence>
+     <element name="info" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__version::info -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="regHost">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:regHostReq" minOccurs="0" maxOccurs="1"/><!-- zkreg__regHost::zkreg__regHostReq -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="regHostResponse">
+   <complexType>
+    <sequence>
+     <element name="token" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__regHost::token -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="unregHost">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:unRegHoststring" minOccurs="0" maxOccurs="1"/><!-- zkreg__unregHost::zkreg__unRegHoststring -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="unregHostResponse">
+   <complexType>
+    <sequence>
+     <element name="code" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__unregHost::code -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="regService">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:regServiceReq" minOccurs="0" maxOccurs="1"/><!-- zkreg__regService::zkreg__regServiceReq -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="regServiceResponse">
+   <complexType>
+    <sequence>
+     <element name="token" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__regService::token -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="unregService">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:unregServicestring" minOccurs="0" maxOccurs="1"/><!-- zkreg__unregService::zkreg__unregServicestring -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="unregServiceResponse">
+   <complexType>
+    <sequence>
+     <element name="code" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__unregService::code -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="regDevice">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:regDeviceReq" minOccurs="0" maxOccurs="1"/><!-- zkreg__regDevice::zkreg__regDeviceReq -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="regDeviceResponse">
+   <complexType>
+    <sequence>
+     <element name="token" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__regDevice::token -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="unregDevice">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:unregDevciestring" minOccurs="0" maxOccurs="1"/><!-- zkreg__unregDevice::zkreg__unregDevciestring -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="unregDeviceResponse">
+   <complexType>
+    <sequence>
+     <element name="code" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__unregDevice::code -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="regLogic">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:regLogicReq" minOccurs="0" maxOccurs="1"/><!-- zkreg__regLogic::zkreg__regLogicReq -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="regLogicResponse">
+   <complexType>
+    <sequence>
+     <element name="token" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__regLogic::token -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="delMse">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:delMseNameReq" minOccurs="0" maxOccurs="1"/><!-- zkreg__delMse::zkreg__delMseNameReq -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="delMseResponse">
+   <complexType>
+    <sequence>
+     <element name="code" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__delMse::code -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="heartBeat">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:heartBeatTokenReq" minOccurs="0" maxOccurs="1"/><!-- zkreg__heartBeat::zkreg__heartBeatTokenReq -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="heartBeatResponse">
+   <complexType>
+    <sequence>
+     <element name="code" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__heartBeat::code -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="setShowName">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:setShowNameReq" minOccurs="0" maxOccurs="1"/><!-- zkreg__setShowName::zkreg__setShowNameReq -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__setShowName::showname -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="setShowNameResponse">
+   <complexType>
+    <sequence>
+     <element name="code" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__setShowName::code -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="bind">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:bindLogicName" minOccurs="0" maxOccurs="1"/><!-- zkreg__bind::zkreg__bindLogicName -->
+     <element name="msename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__bind::msename -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="bindResponse">
+   <complexType>
+    <sequence>
+     <element name="code" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__bind::code -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="unbind">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:bindLogicName" minOccurs="0" maxOccurs="1"/><!-- zkreg__unbind::zkreg__bindLogicName -->
+     <element name="msename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__unbind::msename -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="unbindResponse">
+   <complexType>
+    <sequence>
+     <element name="code" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__unbind::code -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="setParent">
+   <complexType>
+    <sequence>
+     <element ref="zkreg:setParentName" minOccurs="0" maxOccurs="1"/><!-- zkreg__setParent::zkreg__setParentName -->
+     <element name="msename" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__setParent::msename -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="setParentResponse">
+   <complexType>
+    <sequence>
+     <element name="code" type="xsd:int" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__setParent::code -->
+    </sequence>
+   </complexType>
+  </element>
+ </schema>
+
+ <schema targetNamespace="http://www.zonekey.com/sysmgrt/query"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:zkreg="http://www.zonekey.com/sysmgrt/register"
+  xmlns:zkq="http://www.zonekey.com/sysmgrt/query"
+  xmlns:zkcfg="http://www.zonekey.com/sysmgrt/config"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  attributeFormDefault="qualified">
+  <import namespace="http://www.zonekey.com/sysmgrt/register"/>
+  <import namespace="http://www.zonekey.com/sysmgrt/config"/>
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="Ips"><!-- zkreg__Ips -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Urls"><!-- zkreg__Urls -->
+
+   <sequence>
+    <element name="item" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Strs"><!-- zkreg__Strs -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Mses"><!-- zkreg__Mses -->
+
+   <sequence>
+    <element name="item" type="zkreg:Mse" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Hosts"><!-- zkreg__Hosts -->
+
+   <sequence>
+    <element name="item" type="zkreg:Host" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Services"><!-- zkreg__Services -->
+
+   <sequence>
+    <element name="item" type="zkreg:Service" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Devices"><!-- zkreg__Devices -->
+
+   <sequence>
+    <element name="item" type="zkreg:Device" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Logics"><!-- zkreg__Logics -->
+
+   <sequence>
+    <element name="item" type="zkreg:Logic" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Brother"><!-- zkq__Brother -->
+
+   <sequence>
+     <element name="parent" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkq__Brother::parent -->
+     <element name="brothers" type="zkreg:Strs" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkq__Brother::brothers -->
+   </sequence>
+  </complexType>
+  <complexType name="Brothers"><!-- zkq__Brothers -->
+
+   <sequence>
+    <element name="item" type="zkq:Brother" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Keys"><!-- zkcfg__Keys -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <element name="getAllMsesoffline" type="xsd:boolean"/>
+  <element name="getAllHostsoffline" type="xsd:boolean"/>
+  <element name="getAllServiceoffline" type="xsd:boolean"/>
+  <element name="getAllDevicesoffline" type="xsd:boolean"/>
+  <element name="getAllLogicsoffline" type="xsd:boolean"/>
+  <element name="getServiceByTypeoffline" type="xsd:boolean"/>
+  <element name="getParentName" type="xsd:string"/>
+  <element name="getBrothersName" type="xsd:string"/>
+  <element name="getMseName" type="xsd:string"/>
+  <element name="getHostName" type="xsd:string"/>
+  <element name="getServiceName" type="xsd:string"/>
+  <element name="getDeviceName" type="xsd:string"/>
+  <element name="getLogicName" type="xsd:string"/>
+ </schema>
+
+ <schema targetNamespace="http://www.zonekey.com/sysmgrt/config"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:zkreg="http://www.zonekey.com/sysmgrt/register"
+  xmlns:zkq="http://www.zonekey.com/sysmgrt/query"
+  xmlns:zkcfg="http://www.zonekey.com/sysmgrt/config"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  attributeFormDefault="qualified">
+  <import namespace="http://www.zonekey.com/sysmgrt/register"/>
+  <import namespace="http://www.zonekey.com/sysmgrt/query"/>
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="Ips"><!-- zkreg__Ips -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Urls"><!-- zkreg__Urls -->
+
+   <sequence>
+    <element name="item" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Strs"><!-- zkreg__Strs -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Mses"><!-- zkreg__Mses -->
+
+   <sequence>
+    <element name="item" type="zkreg:Mse" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Hosts"><!-- zkreg__Hosts -->
+
+   <sequence>
+    <element name="item" type="zkreg:Host" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Services"><!-- zkreg__Services -->
+
+   <sequence>
+    <element name="item" type="zkreg:Service" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Devices"><!-- zkreg__Devices -->
+
+   <sequence>
+    <element name="item" type="zkreg:Device" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Logics"><!-- zkreg__Logics -->
+
+   <sequence>
+    <element name="item" type="zkreg:Logic" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Brothers"><!-- zkq__Brothers -->
+
+   <sequence>
+    <element name="item" type="zkq:Brother" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Keys"><!-- zkcfg__Keys -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Ret"><!-- zkcfg__Ret -->
+
+   <sequence>
+     <element name="result" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- zkcfg__Ret::result -->
+     <element name="value" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkcfg__Ret::value -->
+   </sequence>
+  </complexType>
+  <element name="KeysRes" type="zkcfg:Keys"/>
+  <element name="getValueKeyRequest" type="xsd:string"/>
+  <element name="setValueKeyRequest" type="xsd:string"/>
+  <element name="delKeyRequest" type="xsd:string"/>
+  <!-- operation response element -->
+  <element name="RetRes" type="zkcfg:Ret"/>
+ </schema>
+
+</types>
+
+<message name="versionRequest">
+ <part name="Body" element="zkreg:version"/><!-- zkreg__version::zkreg__version -->
+</message>
+
+<message name="versionResponse">
+ <part name="Body" element="zkreg:versionResponse"/>
+</message>
+
+<message name="regHostRequest">
+ <part name="Body" element="zkreg:regHost"/><!-- zkreg__regHost::zkreg__regHost -->
+</message>
+
+<message name="regHostResponse">
+ <part name="Body" element="zkreg:regHostResponse"/>
+</message>
+
+<message name="unregHostRequest">
+ <part name="Body" element="zkreg:unregHost"/><!-- zkreg__unregHost::zkreg__unregHost -->
+</message>
+
+<message name="unregHostResponse">
+ <part name="Body" element="zkreg:unregHostResponse"/>
+</message>
+
+<message name="regServiceRequest">
+ <part name="Body" element="zkreg:regService"/><!-- zkreg__regService::zkreg__regService -->
+</message>
+
+<message name="regServiceResponse">
+ <part name="Body" element="zkreg:regServiceResponse"/>
+</message>
+
+<message name="unregServiceRequest">
+ <part name="Body" element="zkreg:unregService"/><!-- zkreg__unregService::zkreg__unregService -->
+</message>
+
+<message name="unregServiceResponse">
+ <part name="Body" element="zkreg:unregServiceResponse"/>
+</message>
+
+<message name="regDeviceRequest">
+ <part name="Body" element="zkreg:regDevice"/><!-- zkreg__regDevice::zkreg__regDevice -->
+</message>
+
+<message name="regDeviceResponse">
+ <part name="Body" element="zkreg:regDeviceResponse"/>
+</message>
+
+<message name="unregDeviceRequest">
+ <part name="Body" element="zkreg:unregDevice"/><!-- zkreg__unregDevice::zkreg__unregDevice -->
+</message>
+
+<message name="unregDeviceResponse">
+ <part name="Body" element="zkreg:unregDeviceResponse"/>
+</message>
+
+<message name="regLogicRequest">
+ <part name="Body" element="zkreg:regLogic"/><!-- zkreg__regLogic::zkreg__regLogic -->
+</message>
+
+<message name="regLogicResponse">
+ <part name="Body" element="zkreg:regLogicResponse"/>
+</message>
+
+<message name="delMseRequest">
+ <part name="Body" element="zkreg:delMse"/><!-- zkreg__delMse::zkreg__delMse -->
+</message>
+
+<message name="delMseResponse">
+ <part name="Body" element="zkreg:delMseResponse"/>
+</message>
+
+<message name="heartBeatRequest">
+ <part name="Body" element="zkreg:heartBeat"/><!-- zkreg__heartBeat::zkreg__heartBeat -->
+</message>
+
+<message name="heartBeatResponse">
+ <part name="Body" element="zkreg:heartBeatResponse"/>
+</message>
+
+<message name="setShowNameRequest">
+ <part name="Body" element="zkreg:setShowName"/><!-- zkreg__setShowName::zkreg__setShowName -->
+</message>
+
+<message name="setShowNameResponse">
+ <part name="Body" element="zkreg:setShowNameResponse"/>
+</message>
+
+<message name="bindRequest">
+ <part name="Body" element="zkreg:bind"/><!-- zkreg__bind::zkreg__bind -->
+</message>
+
+<message name="bindResponse">
+ <part name="Body" element="zkreg:bindResponse"/>
+</message>
+
+<message name="unbindRequest">
+ <part name="Body" element="zkreg:unbind"/><!-- zkreg__unbind::zkreg__unbind -->
+</message>
+
+<message name="unbindResponse">
+ <part name="Body" element="zkreg:unbindResponse"/>
+</message>
+
+<message name="setParentRequest">
+ <part name="Body" element="zkreg:setParent"/><!-- zkreg__setParent::zkreg__setParent -->
+</message>
+
+<message name="setParentResponse">
+ <part name="Body" element="zkreg:setParentResponse"/>
+</message>
+
+<portType name="zkregPortType">
+ <operation name="version">
+  <documentation>Service definition of function zkreg__version</documentation>
+  <input message="tns:versionRequest"/>
+  <output message="tns:versionResponse"/>
+ </operation>
+ <operation name="regHost">
+  <documentation>Service definition of function zkreg__regHost</documentation>
+  <input message="tns:regHostRequest"/>
+  <output message="tns:regHostResponse"/>
+ </operation>
+ <operation name="unregHost">
+  <documentation>Service definition of function zkreg__unregHost</documentation>
+  <input message="tns:unregHostRequest"/>
+  <output message="tns:unregHostResponse"/>
+ </operation>
+ <operation name="regService">
+  <documentation>Service definition of function zkreg__regService</documentation>
+  <input message="tns:regServiceRequest"/>
+  <output message="tns:regServiceResponse"/>
+ </operation>
+ <operation name="unregService">
+  <documentation>Service definition of function zkreg__unregService</documentation>
+  <input message="tns:unregServiceRequest"/>
+  <output message="tns:unregServiceResponse"/>
+ </operation>
+ <operation name="regDevice">
+  <documentation>Service definition of function zkreg__regDevice</documentation>
+  <input message="tns:regDeviceRequest"/>
+  <output message="tns:regDeviceResponse"/>
+ </operation>
+ <operation name="unregDevice">
+  <documentation>Service definition of function zkreg__unregDevice</documentation>
+  <input message="tns:unregDeviceRequest"/>
+  <output message="tns:unregDeviceResponse"/>
+ </operation>
+ <operation name="regLogic">
+  <documentation>Service definition of function zkreg__regLogic</documentation>
+  <input message="tns:regLogicRequest"/>
+  <output message="tns:regLogicResponse"/>
+ </operation>
+ <operation name="delMse">
+  <documentation>Service definition of function zkreg__delMse</documentation>
+  <input message="tns:delMseRequest"/>
+  <output message="tns:delMseResponse"/>
+ </operation>
+ <operation name="heartBeat">
+  <documentation>Service definition of function zkreg__heartBeat</documentation>
+  <input message="tns:heartBeatRequest"/>
+  <output message="tns:heartBeatResponse"/>
+ </operation>
+ <operation name="setShowName">
+  <documentation>Service definition of function zkreg__setShowName</documentation>
+  <input message="tns:setShowNameRequest"/>
+  <output message="tns:setShowNameResponse"/>
+ </operation>
+ <operation name="bind">
+  <documentation>Service definition of function zkreg__bind</documentation>
+  <input message="tns:bindRequest"/>
+  <output message="tns:bindResponse"/>
+ </operation>
+ <operation name="unbind">
+  <documentation>Service definition of function zkreg__unbind</documentation>
+  <input message="tns:unbindRequest"/>
+  <output message="tns:unbindResponse"/>
+ </operation>
+ <operation name="setParent">
+  <documentation>Service definition of function zkreg__setParent</documentation>
+  <input message="tns:setParentRequest"/>
+  <output message="tns:setParentResponse"/>
+ </operation>
+</portType>
+
+<binding name="zkreg" type="tns:zkregPortType">
+ <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="version">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="regHost">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="unregHost">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="regService">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="unregService">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="regDevice">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="unregDevice">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="regLogic">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="delMse">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="heartBeat">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="setShowName">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="bind">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="unbind">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="setParent">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="zkreg">
+ <documentation>gSOAP 2.8.17r generated service definition</documentation>
+ <port name="zkreg" binding="tns:zkreg">
+  <SOAP:address location="http://localhost:80"/>
+ </port>
+</service>
+
+</definitions>

@@ -1,0 +1,5 @@
+EXPORTS
+	util_get_myip
+	util_get_myip_real
+	util_get_mymac
+	util_get_nic_name

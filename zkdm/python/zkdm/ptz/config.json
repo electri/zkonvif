@@ -1,0 +1,18 @@
+{
+	"ptzs": [
+		{
+			"name": "teacher",
+			"config": {
+				"serial": "COM3",
+				"addr":1
+			}
+		},
+		{
+			"name": "student",
+			"config": {
+				"serial": "/dev/vktty.2",
+				"addr":1
+			}
+		}
+	]
+}

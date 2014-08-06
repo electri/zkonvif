@@ -3,6 +3,10 @@
 import LocalConfig
 import subprocess, shlex
 import threading, time
+import sys, re
+
+sys.path.append('../')
+from common.utils import zkutils
 
 
 # 本地配置文件
@@ -21,15 +25,23 @@ class ServicesManager:
 		XXX: 如果服务已经启动了，怎么办？..
 	'''
 	def __init__(self):
+		u = zkutils()
+		self.__ip = u.myip()			# 可能是交换机映射后的 ip
+		self.__ip_real = u.myip_real()
 		self.__activated = [] # (p, sd)
 		self.__start_all_enabled()
 
 
 	def list_services(self):
-		''' 返回所有服务列表
+		''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
 		'''
 		ssd = LocalConfig.load_config(FNAME)
-		return ssd['services']
+		ss = ssd['services']
+		for s in ss:
+			if 'url' in s:
+				new_url = self.__fix_url(s['url'])
+				s['url'] = new_url
+		return ss
 
 
 	def dump_activated(self):
@@ -66,6 +78,18 @@ class ServicesManager:
 			   self.__stop_service(x)
 			   return True
 		return False
+
+
+	def __fix_url(self, url):
+		''' 将 url 中的 ip 部分换成本机 ip
+			在配置中，url 的格式为：
+			  <protocol>://<ip>:<port>/path
+
+			  如 http://<ip>:10001/event
+			  需要就 <ip> 替换为本机实际 ip 地址
+		'''
+		return url.replace(r'<ip>', self.__ip)
+
 
 
 	def __start_all_enabled(self):

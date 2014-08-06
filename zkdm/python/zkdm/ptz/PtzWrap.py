@@ -3,17 +3,41 @@
 from ctypes import *
 import platform, os
 
+
+
 _ptz_so = 'libzkptz.so.0.0.0'
-if os.environ.get("ptzso"):
-	_ptz_so = os.environ.get("ptz.so")
+
+plat = platform.uname()[0]
+
+if plat == 'Darwin':
+	_ptz_so = './osx/libzkptz.dylib'
+elif plat == 'Windows':
+	_ptz_so = r'win32\zkptz.dll'
+elif plat == 'Linux':
+	if platform.uname()[4].find('arm') >= 0:
+		_ptz_so = './arm/libzkptz.so.0.0.0'
+	else:
+		_ptz_so = './linux/libzkptz.so.0.0.0'
+elif plat.find('CYGWIN') >= 0:
+	_ptz_so = './cygwin64/zkptz.dll'
+else:
+	_ptz_so = None
+
+print 'using PTZ mod:', _ptz_so
 
 
-class Ptz(object):
+
+class PtzWrap(object):
 	''' 封装 libzkptz.so 的调用
 	'''
 	def __init__(self):
+		cpath = os.getcwd()
+		tpath = os.path.dirname(os.path.abspath(__file__))
+		os.chdir(tpath)
 		self.__ptr = self.__load_ptz_module()
 		self.__ptz = None
+		os.chdir(cpath)
+
 
 	def open(self, serial, addr):
 		''' 打开串口...
@@ -24,10 +48,12 @@ class Ptz(object):
 		else:
 			return False
 
+
 	def close(self):
 		if self.__ptz:
 			self.__ptr['func_close'](self.__ptz)
 			self.__ptz = None
+
 	
 	def call(self, method, params):
 		''' 执行 method 命令，使用 params 作为参数 ...
@@ -57,12 +83,14 @@ class Ptz(object):
 			ret.update({'result':'error', 'info':'method NOT supported'})
 		return ret
 
+
 	def stop(self):
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
 		else:
 			self.__ptr['func_stop'](self.__ptz)
 			return { 'info':'completed' }
+
 
 	def left(self, params):
 		if not self.__ptz:
@@ -74,6 +102,7 @@ class Ptz(object):
 			self.__ptr['func_left'](self.__ptz, speed)
 			return { 'info':'completed' }
 
+
 	def right(self, params):
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
@@ -83,6 +112,7 @@ class Ptz(object):
 				speed = int(params['speed'][0])
 			self.__ptr['func_right'](self.__ptz, speed)
 			return { 'info':'completed' }
+
 
 	def up(self, params):
 		if not self.__ptz:
@@ -94,6 +124,7 @@ class Ptz(object):
 			self.__ptr['func_up'](self.__ptz, speed)
 			return { 'info':'completed' }
 
+
 	def down(self, params):
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
@@ -104,6 +135,7 @@ class Ptz(object):
 			self.__ptr['func_down'](self.__ptz, speed)
 			return { 'info':'completed' }
 
+
 	def get_pos(self):
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
@@ -111,9 +143,10 @@ class Ptz(object):
 			x = c_int()
 			y = c_int()
 			if self.__ptr['func_get_pos'](self.__ptz, byref(x), byref(y)) == 0:
-				return { 'value': {'x': x.value, 'y': y.value} }
+				return { 'value': { 'type':'position', 'data': {'x': x.value, 'y': y.value} } }
 			else:
 				return { 'result':'error', 'info':'get_pos failure' }
+
 
 	def set_pos(self, params):
 		if not self.__ptz:
@@ -134,15 +167,17 @@ class Ptz(object):
 			self.__ptr['func_set_pos'](self.__ptz, x, y, sx, sy)
 			return { 'info':'completed' }
 
+
 	def get_zoom(self):
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
 		else:
 			z = c_int()
 			if self.__ptr['func_get_zoom'](self.__ptz, byref(z)) == 0:
-				return {'value': { 'z':z.value }}
+				return {'value': { 'type':'position', 'data': {'z':z.value }}}
 			else:
 				return {'result':'error', 'info':'get_zoom failure' }
+
 
 	def set_zoom(self, params):
 		if not self.__ptz:
@@ -153,6 +188,7 @@ class Ptz(object):
 				z = int(params['z'][0])
 			self.__ptr['func_set_zoom'](self.__ptz, z)
 			return { 'info':'completed' }
+
 
 	def __load_ptz_module(self):
 		''' 加载 ptz 模块 '''
