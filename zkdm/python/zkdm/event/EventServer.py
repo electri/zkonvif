@@ -4,11 +4,16 @@
 from tornado.web import *
 from tornado.ioloop import IOLoop
 from tornado.gen import  *
-import sys, time
+import sys, time, os
 import threading, Queue
 from socket import *
 from functools import wraps
 import json
+
+
+# 必须设置工作目录 ...
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 
 sys.path.append('../')
 
@@ -156,7 +161,7 @@ class PullPoint:
 
 
 	def __repr__(self):
-		return 'pp: ##' + str(self.__pid)
+		return str(self.__pid)
 
 		
 	def __get_all_pending(self):

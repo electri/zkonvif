@@ -10,11 +10,10 @@ from PtzWrap import PtzWrap
 
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
-cpath = os.getcwd()
-tpath = os.path.dirname(os.path.abspath(__file__))
-os.chdir(tpath)
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-os.chdir(cpath)
 
 
 def all_ptzs_config():
@@ -56,7 +55,9 @@ _all_ptzs = load_all_ptzs()
 
 
 class HelpHandler(RequestHandler):
-	''' 返回 help '''
+	''' 返回 help 
+		 晕啊，必须考虑当前目录的问题 ...
+	'''
 	def get(self):
 		self.render('help.html')
 
