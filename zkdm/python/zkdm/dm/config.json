@@ -7,7 +7,7 @@
          "type" : "event",
          "path" : "python ../event/EventServer.py",
          "title" : "事件服务",
-		 "url" : "http://localhost:10001"
+		 "url" : "http://<ip>:10001/event"
       },
       {
          "enable" : false,
@@ -16,7 +16,7 @@
          "type" : "eval",
          "path" : "cardlive.exe 1",
          "title" : "教师特写摄像头",
-	 	 "url" : "tcp://localhost:3000"
+	 	 "url" : "tcp://<ip>:3000"
       },
 	  {
 		  "enable" : true,
@@ -25,7 +25,7 @@
 		  "type": "ptz",
 		  "path" : "python ../ptz/PtzServer.py",
 		  "title" : "云台服务",
-		  "url" : "http://localhost:10003"
+		  "url" : "http://<ip>:10003/ptz"
 	  }
    ]
 }

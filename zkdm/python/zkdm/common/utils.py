@@ -1,6 +1,6 @@
 # coding: utf-8
 
-import platform
+import platform, os
 from ctypes import *
 
 _uname = platform.uname()
@@ -21,7 +21,7 @@ elif _uname[0] == 'Windows':
 		_soname = 'win32/zkutils.dll'
 elif _uname[0].find('CYGWIN') >= 0:
 	if _uname[4] == 'x86_64':
-		_soname = 'win64/zkutils.dll'
+		_soname = './win64/zkutils.dll'
 	else:
 		_soname = 'win32/zkutils.dll'
 else:
@@ -38,7 +38,11 @@ else:
 class zkutils:
 	''' 封装 libzkutil.so '''
 	def __init__(self):
+		curr_path = os.getcwd()
+		t_path = os.path.dirname(os.path.abspath(__file__))
+		os.chdir(t_path)
 		self.__so = CDLL(_soname)
+		os.chdir(curr_path)
 		self.__get_myip = self.__so.util_get_myip
 		self.__get_myip.restype = c_char_p
 

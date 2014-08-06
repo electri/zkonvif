@@ -4,17 +4,22 @@ from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application, url
 from ctypes import *
 import re, sys
-import json, io
+import json, io, os
 from PtzWrap import PtzWrap
 
 
 # 从 config.json 文件中加载配置信息
+# WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
+cpath = os.getcwd()
+tpath = os.path.dirname(os.path.abspath(__file__))
+os.chdir(tpath)
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
+os.chdir(cpath)
 
 
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
-	global _all_config
+	print _all_config
 	return _all_config['ptzs']
 
 		

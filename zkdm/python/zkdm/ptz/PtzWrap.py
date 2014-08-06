@@ -31,8 +31,12 @@ class PtzWrap(object):
 	''' 封装 libzkptz.so 的调用
 	'''
 	def __init__(self):
+		cpath = os.getcwd()
+		tpath = os.path.dirname(os.path.abspath(__file__))
+		os.chdir(tpath)
 		self.__ptr = self.__load_ptz_module()
 		self.__ptz = None
+		os.chdir(cpath)
 
 
 	def open(self, serial, addr):
