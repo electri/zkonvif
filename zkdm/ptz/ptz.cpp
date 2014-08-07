@@ -22,7 +22,7 @@ namespace {
 
 		bool pos_changed, zoom_changed;
 		int last_x, last_y, last_z;
-		bool set_posing;	// set_pos() 非常耗时，需要连续 get_pos() 不变后，才认为到位了
+		int set_posing;	// set_pos() 非常耗时，需要连续 get_pos() 不变后，才认为到位了
 	};
 
 	struct Serial
@@ -51,12 +51,10 @@ ptz_t *ptz_open(const char *name, int addr)
 
 		serial->iface.broadcast = 0;
 
-		fprintf(stderr, "DEBUG: %s: serial opened '%s'\n", __func__, name);
-
 		for (int i = 0; i < 7; i++) {
 			Ptz *ptz = new Ptz;
 			ptz->pos_changed = ptz->zoom_changed = true;
-			ptz->set_posing = false;
+			ptz->set_posing = 1;
 			ptz->serial = serial;
 			ptz->addr = i+1;
 			ptz->cam.address = ptz->addr;
@@ -92,6 +90,7 @@ int ptz_stop(ptz_t *ptz)
 {
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) == VISCA_SUCCESS) {
+		p->pos_changed = false;
 		return 0;
 	}
 	return -1;
@@ -141,25 +140,33 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 {
 	Ptz *p = (Ptz*)ptz;
 
-	if (p->set_posing) {
-		// FIXME: 
+/*
+	if (p->set_posing > 0) {
+		fprintf(stderr, "%s: set_posing=%d\n", __func__, p->set_posing);
+
 		if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) {
 			if (p->last_x == *x && p->last_y == *y) {
-				// 说明到位了？？？ 
-				p->set_posing = false;
+				p->set_posing --;
+				return 0;
+			}
+			else {
+				p->last_x = *x, p->last_y = *y;
 				return 0;
 			}
 		}
+		else
+			return -1;
 	}
 
 	if (!p->pos_changed) {
+		fprintf(stderr, "%s: pos_changed ...\n", __func__);
 		*x = p->last_x, *y = p->last_y;
 		return 0;
 	}
-
+*/
+	VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y);
 	if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) {
 		p->last_x = *x, p->last_y = *y;
-		p->pos_changed = false;
 		return 0;
 	}
 
@@ -170,7 +177,7 @@ int ptz_set_pos(ptz_t *ptz, int x, int y, int sx, int sy)
 {
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
-		p->set_posing = true;
+		p->set_posing = 5;	// 连续5次 get_pos() 不变才认为完成了 
 		p->pos_changed = true;
 		return 0;
 	}
@@ -200,6 +207,7 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 	if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) == VISCA_SUCCESS) {
 		*z = (short)v;
 		p->last_z = *z;
+		p->zoom_changed = false;
 		return 0;
 	}
 	return -1;

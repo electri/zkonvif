@@ -87,6 +87,8 @@ _VISCA_send_packet(VISCAInterface_t *iface, VISCACamera_t *camera, VISCAPacket_t
   // append footer
   _VISCA_append_byte(packet,VISCA_TERMINATOR);
 
+  PurgeComm(iface->port_fd, PURGE_RXCLEAR);
+
   for (nTrials = 0; nTrials < 3 && rVal == 0; nTrials++) {
     if (nTrials > 0)
       ClearCommError(iface->port_fd, &errors, &stat);
