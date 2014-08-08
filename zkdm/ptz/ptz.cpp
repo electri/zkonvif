@@ -31,8 +31,10 @@ namespace {
 	static SERIALS _serials;
 };
 
+
 ptz_t *ptz_open(const char *name, int addr)
 {
+		//XXX:当 addr = 0时, 程序最后三行会出问题
 	if (!name) return 0;
 	if (addr > 7 || addr < 0) return 0;
 
@@ -119,14 +121,16 @@ int ptz_stop(ptz_t *ptz)
 {
 	Ptz *p = (Ptz*)ptz;
 	fprintf(stderr, "=====> stop\n");
-	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) == VISCA_SUCCESS)
-		return 0;
+	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) == VISCA_SUCCESS) {
+			return 0
+	};
 	return -1;
 }
 
 int ptz_left(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
+	if (VISCA_open_serial(
 	fprintf(stderr, "=====> %s: %d\n", __func__, speed);
 	if (VISCA_set_pantilt_left(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS)
 		return 0;
