@@ -3,6 +3,7 @@
 		{
 			"name": "teacher",
 			"config": {
+<<<<<<< HEAD
 				"serial": "COM4",
 				"addr":1
 			}
@@ -10,7 +11,7 @@
 		{
 			"name": "student",
 			"config": {
-				"serial": "/dev/vktty.2",
+				"serial": "COM2",
 				"addr":1
 			}
 		}

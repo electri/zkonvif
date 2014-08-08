@@ -84,7 +84,7 @@ class ControllingHandler(RequestHandler):
 
 	def __exec_ptz_method(self, name, method, params):
 		global _all_ptzs
-		print 'name:', name, ' method:', method, ' params:', params
+		# print 'name:', name, ' method:', method, ' params:', params
 		if name in _all_ptzs:
 			if _all_ptzs[name]['ptz']:
 				return _all_ptzs[name]['ptz'].call(method, params)

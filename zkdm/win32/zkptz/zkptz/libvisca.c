@@ -155,7 +155,6 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 
 	// skip ack messages
 	while (iface->type == VISCA_RESPONSE_ACK) {
-		fprintf(stderr, "---> ack got\n");
 		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
 			return VISCA_FAILURE;
 		iface->type = iface->ibuf[1] & 0xF0;
@@ -163,19 +162,15 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 
 	switch (iface->type) {
 	case VISCA_RESPONSE_CLEAR:
-		fprintf(stderr, "---> res: clear\n");
 		return VISCA_SUCCESS;
 		break;
 	case VISCA_RESPONSE_ADDRESS:
-		fprintf(stderr, "---> res: address\n");
 		return VISCA_SUCCESS;
 		break;
 	case VISCA_RESPONSE_COMPLETED:
-		fprintf(stderr, "---> res: completed\n");
 		return VISCA_SUCCESS;
 		break;
 	case VISCA_RESPONSE_ERROR:
-		fprintf(stderr, "---> res: error\n");
 		return VISCA_SUCCESS;
 		break;
 	}
@@ -215,8 +210,6 @@ VISCA_API uint32_t VISCA_set_address(VISCAInterface_t * iface, int *camera_num)
 #ifdef VK3344
 	iface->want_result = 0;
 #endif 
-
-	fprintf(stderr, "DEBUG: %s calling ...\n", __func__);
 
 	_VISCA_init_packet(&packet);
 	_VISCA_append_byte(&packet, 0x30);
@@ -1779,12 +1772,6 @@ VISCA_get_zoom_value(VISCAInterface_t * iface, VISCACamera_t * camera,
 
 #ifdef VK3344
 	iface->want_result = 1;
-#else
-#ifdef WIN32
-	PurgeComm(iface->port_fd, PURGE_RXCLEAR);	//
-#else
-	tcflush(iface->port_fd, TCIFLUSH);
-#endif				//
 #endif
 
 	_VISCA_init_packet(&packet);
@@ -1800,7 +1787,6 @@ VISCA_get_zoom_value(VISCAInterface_t * iface, VISCACamera_t * camera,
 		    (iface->ibuf[4] << 4) + iface->ibuf[5];
 		return VISCA_SUCCESS;
 	}
-
 }
 
 VISCA_API uint32_t
@@ -2557,8 +2543,6 @@ VISCA_set_pantilt_right_without_reply(VISCAInterface_t * iface,
 {
 	VISCAPacket_t packet;
 
-	fprintf(stderr, "---------%s calling \n", __func__);
-
 	_VISCA_init_packet(&packet);
 	_VISCA_append_byte(&packet, VISCA_COMMAND);
 	_VISCA_append_byte(&packet, VISCA_CATEGORY_PAN_TILTER);
@@ -3118,12 +3102,6 @@ VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 
 #ifdef VK3344
 	iface->want_result = 1;
-#else
-#ifdef WIN32
-	PurgeComm(iface->port_fd, PURGE_RXCLEAR);
-#else
-	tcflush(iface->port_fd, TCIFLUSH);
-#endif
 #endif
 
 	_VISCA_init_packet(&packet);

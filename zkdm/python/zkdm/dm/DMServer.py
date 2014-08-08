@@ -55,9 +55,18 @@ class ListServiceHandler(RequestHandler):
 		result = { 'result':'ok', 'info':'', 'value':ssd }
 		self.write(result)
 
+_ggg = 0
+class TestHandler(RequestHandler):
+	def get(self):
+		global _ggg
+		_ggg += 1
+		dic = { "result":"ok", "info":_ggg }
+		self.write(dic)
+
 
 def make_app():
 	return Application([
+			url(r'/dm/test', TestHandler),
 			url(r'/dm/help', HelpHandler),
 			url(r'/dm/list', ListServiceHandler),
 			url(r'/dm/([^/]+)/(.*)', ServiceHandler),

@@ -99,6 +99,7 @@ class PtzWrap(object):
 			speed = 1
 			if 'speed' in params:
 				speed = int(params['speed'][0])
+				
 			self.__ptr['func_left'](self.__ptz, speed)
 			return { 'info':'completed' }
 
@@ -110,6 +111,7 @@ class PtzWrap(object):
 			speed = 1
 			if 'speed' in params:
 				speed = int(params['speed'][0])
+				
 			self.__ptr['func_right'](self.__ptz, speed)
 			return { 'info':'completed' }
 
@@ -121,6 +123,7 @@ class PtzWrap(object):
 			speed = 1
 			if 'speed' in params:
 				speed = int(params['speed'][0])
+				
 			self.__ptr['func_up'](self.__ptz, speed)
 			return { 'info':'completed' }
 
@@ -132,6 +135,7 @@ class PtzWrap(object):
 			speed = 1
 			if 'speed' in params:
 				speed = int(params['speed'][0])
+				
 			self.__ptr['func_down'](self.__ptz, speed)
 			return { 'info':'completed' }
 
@@ -164,6 +168,7 @@ class PtzWrap(object):
 				sx = int(params['sx'][0])
 			if 'sy' in params:
 				sy = int(params['sy'][0])
+				
 			self.__ptr['func_set_pos'](self.__ptz, x, y, sx, sy)
 			return { 'info':'completed' }
 
@@ -193,11 +198,7 @@ class PtzWrap(object):
 	def __load_ptz_module(self):
 		''' 加载 ptz 模块 '''
 		ptz = {}
-		global _ptz_so
-		if _ptz_so is None:
-			_ptz_so = './libzkptz.dylib'
 		ptz['so'] = CDLL(_ptz_so)
-		print ptz['so']
 		ptz['func_open'] = ptz['so'].ptz_open
 		ptz['func_open'].restype = c_void_p
 		ptz['func_close'] = ptz['so'].ptz_close

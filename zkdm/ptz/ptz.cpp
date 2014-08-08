@@ -19,6 +19,10 @@ namespace {
 		Serial *serial;
 		int addr;
 		VISCACamera_t cam;
+
+		bool pos_changed, zoom_changed;
+		int last_x, last_y, last_z;
+		int set_posing;	// set_pos() 非常耗时，需要连续 get_pos() 不变后，才认为到位了
 	};
 
 	struct Serial
@@ -49,42 +53,10 @@ ptz_t *ptz_open(const char *name, int addr)
 
 		serial->iface.broadcast = 0;
 
-		fprintf(stderr, "DEBUG: %s: serial opened '%s'\n", __func__, name);
-
-#if 0
-		// FIXME: 不管了，认为调用者知道有几个云台吧 ...
-		// set address, 得到所有云台 ...
-		int m;
-		if (VISCA_set_address(&serial->iface, &m) == VISCA_FAILURE) {
-			fprintf(stderr, "ERR: %s: set address for '%s'\n", __func__, name);
-			VISCA_close_serial(&serial->iface);
-			_serials[name] = serial;
-			return 0;
-		}
-
-		fprintf(stderr, "DEBUG: %s: set address ok, m=%d\n", __func__, m);
-
-		// 初始化所有 ...
-		for (int i = 0; i < m; i++) {
-			Ptz *ptz = new Ptz;
-			ptz->serial = serial;
-			ptz->addr = i+1;
-
-			ptz->cam.address = ptz->addr;
-			//VISCA_clear(&serial->iface, &ptz->cam);
-			VISCA_get_camera_info(&serial->iface, &ptz->cam);
-			fprintf(stdout, "DEBUG: %s: found ptz: addr=%d, vendor=%04x, model=%04x, rom=%04x\n",
-					__func__, ptz->addr, ptz->cam.vendor, ptz->cam.model, ptz->cam.rom_version);
-
-			if (i == 0)
-				serial->cams.push_back(ptz); // 多放一个，这样 addr=0 和 1 时，都使用相同的 ..
-
-			serial->cams.push_back(ptz);
-
-		}
-#else
 		for (int i = 0; i < 7; i++) {
 			Ptz *ptz = new Ptz;
+			ptz->pos_changed = ptz->zoom_changed = true;
+			ptz->set_posing = 1;
 			ptz->serial = serial;
 			ptz->addr = i+1;
 			ptz->cam.address = ptz->addr;
@@ -93,7 +65,6 @@ ptz_t *ptz_open(const char *name, int addr)
 				serial->cams.push_back(ptz);
 			serial->cams.push_back(ptz);
 		}
-#endif
 
 		_serials[name] = serial;
 		return ptz_open(name, addr);
@@ -120,47 +91,50 @@ void ptz_close(ptz_t *ptz)
 int ptz_stop(ptz_t *ptz)
 {
 	Ptz *p = (Ptz*)ptz;
-	fprintf(stderr, "=====> stop\n");
 	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) == VISCA_SUCCESS) {
-			return 0
-	};
+		p->pos_changed = false;
+		return 0;
+	}
 	return -1;
 }
 
 int ptz_left(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
-	if (VISCA_open_serial(
-	fprintf(stderr, "=====> %s: %d\n", __func__, speed);
-	if (VISCA_set_pantilt_left(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS)
+	if (VISCA_set_pantilt_left(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS) {
+		p->pos_changed = true;
 		return 0;
+	}
 	return -1;
 }
 
 int ptz_right(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
-	fprintf(stderr, "=====> %s: %d\n", __func__, speed);
-	if (VISCA_set_pantilt_right(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS)
+	if (VISCA_set_pantilt_right(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS) {
+		p->pos_changed = true;
 		return 0;
+	}
 	return -1;
 }
 
 int ptz_up(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
-	fprintf(stderr, "=====> %s: %d\n", __func__, speed);
-	if (VISCA_set_pantilt_up(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS)
+	if (VISCA_set_pantilt_up(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS) {
+		p->pos_changed = true;
 		return 0;
+	}
 	return -1;
 }
 
 int ptz_down(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
-	fprintf(stderr, "=====> %s: %d\n", __func__, speed);
-	if (VISCA_set_pantilt_down(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS)
+	if (VISCA_set_pantilt_down(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS) {
+		p->pos_changed = true;
 		return 0;
+	}
 	return -1;
 }
 
@@ -168,33 +142,57 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 {
 	Ptz *p = (Ptz*)ptz;
 
-	fprintf(stderr, "=====> %s: calling\n", __func__);
-	// FIXME: 这里必须获取两次，否则可能失败，不知道啥原因？？？ ...
+/*
+	if (p->set_posing > 0) {
+		fprintf(stderr, "%s: set_posing=%d\n", __func__, p->set_posing);
+
+		if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) {
+			if (p->last_x == *x && p->last_y == *y) {
+				p->set_posing --;
+				return 0;
+			}
+			else {
+				p->last_x = *x, p->last_y = *y;
+				return 0;
+			}
+		}
+		else
+			return -1;
+	}
+
+	if (!p->pos_changed) {
+		fprintf(stderr, "%s: pos_changed ...\n", __func__);
+		*x = p->last_x, *y = p->last_y;
+		return 0;
+	}
+*/
 	VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y);
 	if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) {
-		fprintf(stderr, "\tx=%d, y=%d\n", *x, *y);
+		p->last_x = *x, p->last_y = *y;
 		return 0;
 	}
 
-	fprintf(stderr, "\terror \n");
 	return -1;
 }
 
 int ptz_set_pos(ptz_t *ptz, int x, int y, int sx, int sy)
 {
 	Ptz *p = (Ptz*)ptz;
-	fprintf(stderr, "======> set pos: %d, %d, %d, %d\n", x, y, sx, sy);
-	if (VISCA_set_pantilt_absolute_position(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS)
+	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
+		p->set_posing = 5;	// 连续5次 get_pos() 不变才认为完成了 
+		p->pos_changed = true;
 		return 0;
+	}
 	return -1;
 }
 
 int ptz_set_zoom(ptz_t *ptz, int z)
 {
 	Ptz *p = (Ptz*)ptz;
-	fprintf(stderr, "=====> set zoom: %d\n", z);
-	if (VISCA_set_zoom_value(&p->serial->iface, &p->cam, z) == VISCA_SUCCESS)
+	if (VISCA_set_zoom_value(&p->serial->iface, &p->cam, z) == VISCA_SUCCESS) {
+		p->zoom_changed = true;
 		return 0;
+	}
 	return -1;
 }
 
@@ -202,13 +200,17 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 {
 	Ptz *p = (Ptz*)ptz;
 	uint16_t v;
-	fprintf(stderr, "=====> get zoom: calling\n");
-	VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v);
+
+	if (!p->zoom_changed) {
+		*z = p->last_z;
+		return 0;
+	}
+
 	if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) == VISCA_SUCCESS) {
-		fprintf(stderr, "... v=%u\n", v);
 		*z = (short)v;
+		p->last_z = *z;
+		p->zoom_changed = false;
 		return 0;
 	}
 	return -1;
 }
-
