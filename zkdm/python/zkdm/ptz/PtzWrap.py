@@ -195,6 +195,36 @@ class PtzWrap(object):
 			return { 'info':'completed' }
 
 
+	def zoom_wide(self, params):
+		if not self.__ptz:
+			return {'result':'error', 'info':'NO ptz'}
+		else:
+			s = 1
+			if 'speed' in params:
+				s = int(params['speed'][0])
+			self.__ptr['func_zoom_wide'](self,__ptr, speed)
+			return {'info':'completed'}
+
+
+	def zoom_tele(self, params):
+		if not self.__ptr:
+			retrun {'result':'error', 'info':'NO ptz'}
+		else:
+			s = 1
+			if 'speed' in params:
+				s = int(params['speed'][0])
+			self.__ptr['func_zoom_tele'](self.__ptr, speed)
+			return {'info':'complete'}
+
+
+	def zoom_stop(self, params):
+		if not self.__ptr:
+			return {'result':'error', 'info':'NO ptz'}
+		else:
+			self.__ptr['func_zoom_stop'](self.__ptr)
+			return {'info':'complete'}
+
+
 	def __load_ptz_module(self):
 		''' 加载 ptz 模块 '''
 		ptz = {}
@@ -221,6 +251,12 @@ class PtzWrap(object):
 		ptz['func_set_zoom'].argtypes = [c_void_p, c_int]
 		ptz['func_get_zoom'] = ptz['so'].ptz_get_zoom
 		ptz['func_get_zoom'].argtypes = [c_void_p, POINTER(c_int)]
+		ptz['func_zoom_wide'] = ptz['so'].ptz_zoom_wide
+		ptz['func_zoom_wide'].argtypes = [c_void_p, c_int]
+		ptz['func_zoom_tele'] = ptz['so'].ptz_zoom_tele
+		ptz['func_zoom_tele'].argtypes = [c_void_p, c_int]
+		ptz['func_zoom_stop'] = ptz['so'].ptz_zoom_stop
+		ptz['func_zoom_stop'].argtypes = [c_void_p]
 		return ptz
 
 
