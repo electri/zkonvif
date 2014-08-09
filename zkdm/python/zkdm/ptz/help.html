@@ -40,5 +40,26 @@
 <br>
 <br>
 		method: <B> left, right, up, down, stop, set_pos, get_pos, set_zoom, get_zoom </B>
+
+
+		method 具体描述:
+
+		<ul> <B>无返回值:</B>
+			<li>/ptz/WHO/left?speed=N : 向左转动云台, 速度范围从 1 到 30 加快.</li>
+			<li>/ptz/WHO/right?speed=N: 右转 </li>
+			<li>/ptz/WHO/up?speed=N : 向上 </li>
+			<li>/ptz/WHO/down?speed=N : 向下 </li>
+			<li>/ptz/WHO/stop : 停止上面四个转动 </li>
+			<li>/ptz/WHO/set_pos?x=X&ampy=Y&ampsx=SX&ampsy=SY : 转动到指定位置, X,Y 为绝对位置, SX, SY 为转动速度</li>
+			<li>/ptz/WHO/set_zoom?z=Z : 设置倍率 </li>
+		</ul>
+
+		<ul> <B> 有返回值, 返回 json 格式 </B>
+			<li>/ptz/WHO/get_pos: 返回云台当前位置, 具体格式为: { "result":"ok", "info":"", "value":{"type":"position","data":{"x":X, "y":Y}}}
+			</li>
+			<li>/ptz/WHO/get_zoom: 返回倍率值, 具体格式位: {"result":"ok","info":"","value":{"type":"position","data":{"z":Z}}}
+			</li>
+		</ul>
+		
 </body>
 </html>
