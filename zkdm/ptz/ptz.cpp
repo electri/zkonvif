@@ -214,3 +214,21 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 	}
 	return -1;
 }
+
+int ptz_preset_save(ptz_t *ptz, int id)
+{
+	Ptz *p = (Ptz*)ptz;
+	return VISCA_memory_set_without_reply(&p->serial->iface, &p->cam, id);
+}
+
+int ptz_preset_call(ptz_t *ptz, int id)
+{
+	Ptz *p = (Ptz*)ptz;
+	return VISCA_memory_recall_without_reply(&p->serial->iface, &p->cam, id);
+}
+
+int ptz_preset_clear(ptz_t *ptz, int id)
+{
+	Ptz *p = (Ptz*)ptz;
+	return VISCA_memory_reset_without_reply(&p->serial->iface, &p->cam, id);
+}

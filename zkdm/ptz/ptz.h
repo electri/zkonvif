@@ -22,6 +22,10 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y);
 int ptz_set_zoom(ptz_t *ptz, int z);
 int ptz_get_zoom(ptz_t *ptz, int *z);
 
+int ptz_preset_save(ptz_t *ptz, int id);
+int ptz_preset_call(ptz_t *ptz, int id);
+int ptz_preset_clear(ptz_t *ptz, int id);
+
 #ifdef __cplusplus
 }
 #endif // c++

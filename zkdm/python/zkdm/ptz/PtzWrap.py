@@ -71,6 +71,12 @@ class PtzWrap(object):
 			ret.update(self.up(params))
 		elif method == 'down':
 			ret.update(self.down(params))
+		elif method == 'preset_save':
+			ret.update(self.preset_save(params))
+		elif method == 'preset_call':
+			ret.update(self.preset_call(params))
+		elif method == 'preset_clear':
+			ret.update(self.preset_clear(params))
 		elif method == 'get_pos':
 			ret.update(self.get_pos())
 		elif method == 'set_pos':
@@ -139,6 +145,38 @@ class PtzWrap(object):
 			self.__ptr['func_down'](self.__ptz, speed)
 			return { 'info':'completed' }
 
+	def preset_save(self, params):
+		if not self.__ptz:
+			return {'result':'error', 'info':'NO ptz'}
+		else:
+			if 'id' in params:
+				id = int(params['id'][0])
+				self.__ptr['func_preset_save'](self.__ptz, id)
+				return {'info':'completed'}
+			else:
+				return {'result':'error', 'info':'NO liuwenen id'}
+		
+	def preset_call(self, params):
+		if not self.__ptz:
+			return {'result':'error', 'info':'NO ptz'}
+		else:
+			if 'id' in params:
+				id = int(params['id'][0])
+				self.__ptr['func_preset_call'](self.__ptz, id)
+				return {'info':'completed'}
+			else:
+				return {'result':'error', 'info':'NO id'}
+
+	def preset_clear(self, params):
+		if not self.__ptz:
+			return {'result':'error', 'info':'NO ptz'}
+		else:
+			if 'id' in params:
+				id = int(params['id'][0])
+				self.__ptr['func_preset_clear'](self.__ptz, id)
+				return {'info':'completed'}
+			else:
+				return {'result':'error', 'info':'NO id'}			
 
 	def get_pos(self):
 		if not self.__ptz:
@@ -207,6 +245,12 @@ class PtzWrap(object):
 		ptz['func_get_pos'].argtypes = [c_void_p, POINTER(c_int), POINTER(c_int)]
 		ptz['func_set_pos'] = ptz['so'].ptz_set_pos
 		ptz['func_set_pos'].argtypes = [c_void_p, c_int, c_int, c_int, c_int]
+		ptz['func_preset_save'] = ptz['so'].ptz_preset_save
+		ptz['func_preset_save'].argtypes = [c_void_p, c_int]
+		ptz['func_preset_call'] = ptz['so'].ptz_preset_call
+		ptz['func_preset_call'].argtypes = [c_void_p, c_int]
+		ptz['func_preset_clear'] = ptz['so'].ptz_preset_clear
+		ptz['func_preset_clear'].argtypes = [c_void_p, c_int]
 		ptz['func_left'] = ptz['so'].ptz_left
 		ptz['func_left'].argtypes = [c_void_p, c_int]
 		ptz['func_right'] = ptz['so'].ptz_right

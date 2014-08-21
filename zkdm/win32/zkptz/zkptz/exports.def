@@ -14,3 +14,7 @@ EXPORTS
 	ptz_set_zoom
 	ptz_get_zoom
 
+	ptz_preset_save
+	ptz_preset_call
+	ptz_preset_clear
+
