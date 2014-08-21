@@ -20,7 +20,7 @@ namespace {
 		int addr;
 		VISCACamera_t cam;
 
-		bool pos_changed, zoom_changed;
+		bool pos_changing, zoom_changed, zoom_changing, first_get_pos;
 		int last_x, last_y, last_z;
 		int set_posing;	// set_pos() 非常耗时，需要连续 get_pos() 不变后，才认为到位了
 	};
@@ -55,7 +55,9 @@ ptz_t *ptz_open(const char *name, int addr)
 
 		for (int i = 0; i < 7; i++) {
 			Ptz *ptz = new Ptz;
-			ptz->pos_changed = ptz->zoom_changed = true;
+			ptz->zoom_changed = true;
+			ptz->pos_changing = ptz->zoom_changing = false;
+			ptz->first_get_pos = true;
 			ptz->set_posing = 1;
 			ptz->serial = serial;
 			ptz->addr = i+1;
@@ -85,14 +87,13 @@ void ptz_close(ptz_t *ptz)
 	// TODO: 应该根据串口的引用计数关闭 ...
 	Ptz *p = (Ptz*)ptz;
 	VISCA_close_serial(&p->serial->iface);
-
 }
 
 int ptz_stop(ptz_t *ptz)
 {
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) == VISCA_SUCCESS) {
-		p->pos_changed = false;
+		p->pos_changing = false;
 		return 0;
 	}
 	return -1;
@@ -102,7 +103,7 @@ int ptz_left(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_left(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS) {
-		p->pos_changed = true;
+		p->pos_changing = true;
 		return 0;
 	}
 	return -1;
@@ -112,7 +113,7 @@ int ptz_right(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_right(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS) {
-		p->pos_changed = true;
+		p->pos_changing = true;
 		return 0;
 	}
 	return -1;
@@ -122,7 +123,7 @@ int ptz_up(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_up(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS) {
-		p->pos_changed = true;
+		p->pos_changing = true;
 		return 0;
 	}
 	return -1;
@@ -132,7 +133,7 @@ int ptz_down(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_down(&p->serial->iface, &p->cam, speed, speed) == VISCA_SUCCESS) {
-		p->pos_changed = true;
+		p->pos_changing = true;
 		return 0;
 	}
 	return -1;
@@ -142,10 +143,8 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 {
 	Ptz *p = (Ptz*)ptz;
 
-/*
 	if (p->set_posing > 0) {
-		fprintf(stderr, "%s: set_posing=%d\n", __func__, p->set_posing);
-
+		// 此时说明 set_pos() 刚刚调用, 需要连续检查 pos 是否变化 ..
 		if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) {
 			if (p->last_x == *x && p->last_y == *y) {
 				p->set_posing --;
@@ -156,31 +155,35 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 				return 0;
 			}
 		}
-		else
+		else {
 			return -1;
+		}
 	}
-
-	if (!p->pos_changed) {
-		fprintf(stderr, "%s: pos_changed ...\n", __func__);
-		*x = p->last_x, *y = p->last_y;
-		return 0;
+	else {
+		if (!p->set_posing && !p->first_get_pos) {
+			// 返回上次 ...
+			*x = p->last_x, *y = p->last_y;
+			return 0;
+		}
+		else {
+			if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) {
+				p->first_get_pos = false;
+				*x = p->last_x, *y = p->last_y;
+				return 0;
+			}
+			else {
+				return -1;
+			}
+		}
 	}
-*/
-	VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y);
-	if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) {
-		p->last_x = *x, p->last_y = *y;
-		return 0;
-	}
-
-	return -1;
 }
 
 int ptz_set_pos(ptz_t *ptz, int x, int y, int sx, int sy)
 {
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
-		p->set_posing = 5;	// 连续5次 get_pos() 不变才认为完成了 
-		p->pos_changed = true;
+		p->set_posing = 3;	// 连续N次 get_pos() 不变才认为完成了 
+		p->pos_changing = true;
 		return 0;
 	}
 	return -1;
@@ -200,6 +203,16 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 {
 	Ptz *p = (Ptz*)ptz;
 	uint16_t v;
+
+	if (p->zoom_changing) {
+		if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) == VISCA_SUCCESS) {
+			*z = (short)v;
+			return 0;
+		}
+		else {
+			return -1;
+		}
+	}
 
 	if (!p->zoom_changed) {
 		*z = p->last_z;
@@ -232,3 +245,45 @@ int ptz_preset_clear(ptz_t *ptz, int id)
 	Ptz *p = (Ptz*)ptz;
 	return VISCA_memory_reset_without_reply(&p->serial->iface, &p->cam, id);
 }
+
+int ptz_zoom_tele(ptz_t *ptz, int s)
+{
+	Ptz *p = (Ptz*)ptz;
+
+	if (VISCA_set_zoom_tele_speed(&p->serial->iface, &p->cam, s) == VISCA_SUCCESS) {
+		p->zoom_changing = true;
+		p->zoom_changed = true;
+		return 0;
+	}
+	else {
+		return -1;
+	}
+}
+
+int ptz_zoom_wide(ptz_t *ptz, int s)
+{
+	Ptz *p = (Ptz *)ptz;
+
+	if (VISCA_set_zoom_wide_speed(&p->serial->iface, &p->cam, s) == VISCA_SUCCESS) {
+		p->zoom_changing = true;
+		p->zoom_changed = true;
+		return 0;
+	}
+	else {
+		return -1;
+	}
+}
+
+int ptz_zoom_stop(ptz_t *ptz)
+{
+	Ptz *p = (Ptz*)ptz;
+
+	if (VISCA_set_zoom_stop(&p->serial->iface, &p->cam) == VISCA_SUCCESS) {
+		p->zoom_changing = false;
+		return 0;
+	}
+	else {
+		return -1;
+	}
+}
+
