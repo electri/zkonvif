@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zkptz", "zkptz\zkptz.vcxproj", "{0D313507-6D12-4869-83F0-1A9120070821}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_zkptz", "test_zkptz\test_zkptz.vcxproj", "{D27BAFDC-9052-40F6-840F-4AAF1873B8D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{0D313507-6D12-4869-83F0-1A9120070821}.Debug|Win32.Build.0 = Debug|Win32
 		{0D313507-6D12-4869-83F0-1A9120070821}.Release|Win32.ActiveCfg = Release|Win32
 		{0D313507-6D12-4869-83F0-1A9120070821}.Release|Win32.Build.0 = Release|Win32
+		{D27BAFDC-9052-40F6-840F-4AAF1873B8D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D27BAFDC-9052-40F6-840F-4AAF1873B8D7}.Debug|Win32.Build.0 = Debug|Win32
+		{D27BAFDC-9052-40F6-840F-4AAF1873B8D7}.Release|Win32.ActiveCfg = Release|Win32
+		{D27BAFDC-9052-40F6-840F-4AAF1873B8D7}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
