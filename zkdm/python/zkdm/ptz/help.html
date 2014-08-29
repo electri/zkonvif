@@ -39,7 +39,7 @@
 <br> 如: /ptz/teacher/left?speed=1
 <br>
 <br>
-		method: <B> left, right, up, down, stop, set_pos, get_pos, set_zoom, get_zoom </B>
+		method: <B> left, right, up, down, stop, set_pos, get_pos, set_zoom, get_zoom, preset_save, preset_call, preset_clear, zoom_tele, zoom_wide, zoom_stop, mouse_trace</B>
 
 
 		method 具体描述:
@@ -51,7 +51,14 @@
 			<li>/ptz/WHO/down?speed=N : 向下 </li>
 			<li>/ptz/WHO/stop : 停止上面四个转动 </li>
 			<li>/ptz/WHO/set_pos?x=X&ampy=Y&ampsx=SX&ampsy=SY : 转动到指定位置, X,Y 为绝对位置, SX, SY 为转动速度</li>
+			<li>/ptz/WHO/mouse_trace?x=X&y=Y&sx=SX&sy=Sy : 转动到鼠标指定图像位置,X,Y 为像素点, SX, SY 为转动速度</li>
 			<li>/ptz/WHO/set_zoom?z=Z : 设置倍率 </li>
+			<li>/ptz/WHO/preset_save?id=ID : 保存预置位, ID为预置位序号</li>
+			<li>/ptz/WHO/preset_call?id=ID : 调用预置位, ID同上</li>
+			<li>/ptz/WHO/preset_clear?id=ID : 删除预置位, ID同上</li>
+			<li>/ptz/WHO/zoom_tele?speed=SPEED : 镜头拉远, SPEED为速度 </li>
+			<li>/ptz/WHO/zoom_wide?speed=SPEED : 镜头拉近, SPEED同上</li>
+			<li>/ptz/WHO/zoom_wid : 停止拉近或拉远镜头</li>
 		</ul>
 
 		<ul> <B> 有返回值, 返回 json 格式 </B>

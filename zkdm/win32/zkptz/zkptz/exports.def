@@ -18,3 +18,9 @@ EXPORTS
 	ptz_preset_call
 	ptz_preset_clear
 
+	ptz_zoom_tele
+	ptz_zoom_wide
+	ptz_zoom_stop
+
+	ptz_mouse_trace
+

@@ -3,14 +3,14 @@
 		{
 			"name": "teacher",
 			"config": {
-				"serial": "COM4",
+				"serial": "COM6",
 				"addr":1
 			}
 		},
 		{
 			"name": "student",
 			"config": {
-				"serial": "COM4",
+				"serial": "COM3",
 				"addr":1
 			}
 		}

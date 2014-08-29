@@ -18,7 +18,6 @@ _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
-	print _all_config
 	return _all_config['ptzs']
 
 		
@@ -31,12 +30,14 @@ def load_ptz(config):
 		'ptz': None
 	}
 	# 此处打开 ...
-	try:
+	if True:
 		ptz['ptz'] = PtzWrap()
 	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
 		ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
-	except:
+		print 'open success'
+	else:
 		ptz['ptz'] = None
+		print 'open failure'
 	return ptz
 
 
@@ -51,8 +52,6 @@ def load_all_ptzs():
 
 # 这里保存所有云台
 _all_ptzs = load_all_ptzs()
-
-
 
 class HelpHandler(RequestHandler):
 	''' 返回 help 

@@ -12,7 +12,7 @@ plat = platform.uname()[0]
 if plat == 'Darwin':
 	_ptz_so = './osx/libzkptz.dylib'
 elif plat == 'Windows':
-	_ptz_so = r'win32\zkptz.dll'
+	_ptz_so = r'win32/zkptz.dll'
 elif plat == 'Linux':
 	if platform.uname()[4].find('arm') >= 0:
 		_ptz_so = './arm/libzkptz.so.0.0.0'
@@ -23,8 +23,8 @@ elif plat.find('CYGWIN') >= 0:
 else:
 	_ptz_so = None
 
-print 'using PTZ mod:', _ptz_so
 
+#raw_input("press ")
 
 
 class PtzWrap(object):
@@ -85,6 +85,14 @@ class PtzWrap(object):
 			ret.update(self.get_zoom())
 		elif method == 'set_zoom':
 			ret.update(self.set_zoom(params))
+		elif method == 'zoom_tele':
+			ret.update(self.zoom_tele(params))
+		elif method == 'zoom_wide':
+			ret.update(self.zoom_wide(params))
+		elif method == 'zoom_stop':
+			ret.update(self.zoom_stop())
+		elif method == 'mouse_trace':
+			ret.update(self.mouse_trace(params))
 		else:
 			ret.update({'result':'error', 'info':'method NOT supported'})
 		return ret
@@ -210,6 +218,24 @@ class PtzWrap(object):
 			self.__ptr['func_set_pos'](self.__ptz, x, y, sx, sy)
 			return { 'info':'completed' }
 
+	def mouse_trace(self, params):
+			if not self.__ptz:
+				return {'return':'error', 'info':'NO ptz'}
+			else:
+				x = 0
+				y = 0
+				sx = 30
+				sy = 30
+				if 'x' in params:
+					x = int(params['x'][0])
+				if 'y' in params:
+					y = int(params['y'][0])
+				if 'sx' in params:
+					sx = int(params['sx'][0])
+				if 'sy' in params:
+					sy = int(params['sy'][0])
+				self.__ptr['func_mouse_trace'](self.__ptz, x, y, sx, sy)
+				return {'info':'completed'}
 
 	def get_zoom(self):
 		if not self.__ptz:
@@ -237,29 +263,29 @@ class PtzWrap(object):
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
 		else:
-			s = 1
+			speed = 1
 			if 'speed' in params:
-				s = int(params['speed'][0])
-			self.__ptr['func_zoom_wide'](self,__ptr, speed)
+				speed = int(params['speed'][0])
+			self.__ptr['func_zoom_wide'](self.__ptz, speed)
 			return {'info':'completed'}
 
 
 	def zoom_tele(self, params):
 		if not self.__ptr:
-			retrun {'result':'error', 'info':'NO ptz'}
+			return {'result':'error', 'info':'NO ptz'}
 		else:
-			s = 1
+			speed = 1
 			if 'speed' in params:
 				s = int(params['speed'][0])
-			self.__ptr['func_zoom_tele'](self.__ptr, speed)
+			self.__ptr['func_zoom_tele'](self.__ptz, speed)
 			return {'info':'complete'}
 
 
-	def zoom_stop(self, params):
+	def zoom_stop(self):
 		if not self.__ptr:
 			return {'result':'error', 'info':'NO ptz'}
 		else:
-			self.__ptr['func_zoom_stop'](self.__ptr)
+			self.__ptr['func_zoom_stop'](self.__ptz)
 			return {'info':'complete'}
 
 
@@ -267,6 +293,8 @@ class PtzWrap(object):
 		''' 加载 ptz 模块 '''
 		ptz = {}
 		ptz['so'] = CDLL(_ptz_so)
+		ptz['so']
+
 		ptz['func_open'] = ptz['so'].ptz_open
 		ptz['func_open'].restype = c_void_p
 		ptz['func_close'] = ptz['so'].ptz_close
@@ -301,6 +329,11 @@ class PtzWrap(object):
 		ptz['func_zoom_tele'].argtypes = [c_void_p, c_int]
 		ptz['func_zoom_stop'] = ptz['so'].ptz_zoom_stop
 		ptz['func_zoom_stop'].argtypes = [c_void_p]
+		ptz['func_mouse_trace'] = ptz['so'].ptz_mouse_trace
+		ptz['func_mouse_trace'].argtypes = [c_void_p, c_int, c_int, c_int, c_int] 
+
 		return ptz
+
+
 
 
