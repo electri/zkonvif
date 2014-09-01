@@ -47,7 +47,6 @@ static double ptz_zoom_ratio_of_value(double v)
 	double focal = 58.682*pow(zx,6) - 257.08*pow(zx,5)+
 			445.88*pow(zx,4) - 369.8*pow(zx,3) +
 			150.84*pow(zx,2) -18.239*zx + 4.2017;
-	fprintf(stdout, "focal = %f\n", focal);
 	return focal / 4.2017;
 }
 

@@ -34,7 +34,6 @@ def load_ptz(config):
 		ptz['ptz'] = PtzWrap()
 	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
 		ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
-		print 'open success'
 	else:
 		ptz['ptz'] = None
 		print 'open failure'
@@ -66,6 +65,7 @@ class GetConfigHandler(RequestHandler):
 	''' 返回云台配置 '''
 	def get(self, path):
 		cfg = self.__load_config()
+		self.set_header('Content-Type', 'application/json')
 		self.write(cfg)
 
 	def __load_config(self):
@@ -79,6 +79,7 @@ class ControllingHandler(RequestHandler):
 		''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
 		'''
 		ret = self.__exec_ptz_method(name, method, self.request.arguments)
+		self.set_header('Content-Type', 'application/json')
 		self.write(ret)
 
 	def __exec_ptz_method(self, name, method, params):
