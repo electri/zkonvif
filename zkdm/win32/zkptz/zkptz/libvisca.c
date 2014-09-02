@@ -3108,6 +3108,7 @@ VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 	_VISCA_append_byte(&packet, VISCA_INQUIRY);
 	_VISCA_append_byte(&packet, VISCA_CATEGORY_PAN_TILTER);
 	_VISCA_append_byte(&packet, VISCA_PT_POSITION_INQ);
+
 	err = _VISCA_send_packet_with_reply(iface, camera, &packet);
 	if (err != VISCA_SUCCESS)
 		return err;
