@@ -7,8 +7,8 @@ import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
 
-#sys.path.append("../")
-#from common.Log import Log
+sys.path.append("../")
+from common.Log import Log
 
 
 # 从 config.json 文件中加载配置信息
@@ -81,6 +81,9 @@ class ControllingHandler(RequestHandler):
 	def get(self, name, method):
 		''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
 		'''
+		log = Log('ptz')
+		log.log('name:' + name + ', method:' + method)
+
 		ret = self.__exec_ptz_method(name, method, self.request.arguments)
 		self.set_header('Content-Type', 'application/json')
 		self.write(ret)

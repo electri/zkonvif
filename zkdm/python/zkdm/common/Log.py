@@ -10,7 +10,7 @@ class Log:
 	def __init__(self, project, base_url = None):
 		self.__project = project
 		if base_url is None:
-			self.__base_url = 'http://localhost:10005/log'
+			self.__base_url = 'http://127.0.0.1:10005/log'
 		else:
 			self.__base_url = base_url
 
@@ -21,10 +21,11 @@ class Log:
 			这么使用 urllib2，很神奇啊 ...
 		'''
 		opener = urllib2.build_opener(urllib2.HTTPHandler)
-		req = urllib2.Request(self.__base_url + '/save', self.__build_body(level, content))
+		req = urllib2.Request(self.__base_url + '/save', self.__build_body(level, str(content)))
 		req.add_header('Content-Type', 'application/json')
 		req.get_method = lambda: 'PUT'
-		print opener
+		print opener, 'url:', self.__base_url + '/save' 
+
 		url = opener.open(req)
 
 	
