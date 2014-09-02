@@ -45,6 +45,7 @@ class SaveHandler(RequestHandler):
 
 
 	def put(self):
+		print 'PUT ...'
 		if 'Content-Type' not in self.request.headers:
 			self.__my_err('Content-Type: MUST be application/json')
 		else:
@@ -52,7 +53,9 @@ class SaveHandler(RequestHandler):
 			if ct.find('application/json') == -1:
 				self.__my_err('Content-Type: MUST be application/json')
 			else:
-				item = json.load(self.request.body)
+				print self.request.body
+				print type(self.request.body)
+				item = json.loads(self.request.body)
 				print item
 				if not self.__save(item):
 					self.__my_err('format err')
@@ -68,11 +71,12 @@ class SaveHandler(RequestHandler):
 
 
 	def __save(self, item):
+		print item, type(item)
 		if 'project' in item and 'level' in item and 'content' in item:
 			if 'stamp' in item:
 				stamp = item['stamp']
 			else:
-				stamp = time.time()
+				stamp = int(time.time())
 			db = DBHlp()
 			db.save(item['project'], item['level'], stamp, item['content'])
 			return True

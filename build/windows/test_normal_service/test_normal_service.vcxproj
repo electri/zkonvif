@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\HTTPServer.cpp" />
     <ClCompile Include="..\..\..\common\utils.cpp" />
     <ClCompile Include="..\..\..\libzkonvif\test\test_normal_service.cpp" />
   </ItemGroup>
@@ -93,6 +94,9 @@
     <ProjectReference Include="..\libzkreg\libzkreg.vcxproj">
       <Project>{293ae6da-a3e8-40de-8f90-76c90fc04145}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\HTTPServer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

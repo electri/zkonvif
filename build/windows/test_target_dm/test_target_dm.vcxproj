@@ -14,7 +14,7 @@
     <ProjectGuid>{55A03E01-1CB2-42B2-ADC3-009779648320}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>test_target_dm</RootNamespace>
- </PropertyGroup>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
