@@ -30,6 +30,7 @@ class DBHlp:
 	def save(self, project, level, stamp, content):
 		c = self.__db_open()
 		s0 = r'insert into log (project, level, stamp, content) values ("{}",{},{},"{}")'.format(project, level, stamp, content)
+		print s0
 		c.execute(s0)
 		self.__db_close()
 
