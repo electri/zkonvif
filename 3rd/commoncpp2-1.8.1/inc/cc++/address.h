@@ -44,9 +44,7 @@
 #ifndef CCXX_ADDRESS_H_
 #define CCXX_ADDRESS_H_
 
-#ifndef CCXX_CONFIG_H_
 #include <cc++/config.h>
-#endif
 
 #ifndef CCXX_MISSING_H_
 #include <cc++/missing.h>

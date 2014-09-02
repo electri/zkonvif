@@ -13,6 +13,7 @@
 #else
 #	include "../src/linux/sysperf.h"
 #endif // 
+#include <cc++/socketport.h>
 
 #ifdef WITH_OPENSSL
 
@@ -156,8 +157,29 @@ private:
 	}
 };
 
-int main(int argc, char **argv)
+class MyService : ost::SocketService
 {
+public:
+
+};
+
+class MySocket : ost::SocketPort
+{
+public:
+	MySock
+};
+
+static void test_sss()
+{
+	ost::IPV4Address addr;
+	ost::TCPSocket ss(addr, 20000);
+
+
+}
+
+int main2(int argc, char **argv)
+{
+	test_sss();
 	log_init();
 
 //	ost::Thread::setStack(16384);

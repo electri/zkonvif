@@ -21,5 +21,13 @@
     <ClCompile Include="..\..\..\common\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\3rd\commoncpp2-1.8.1\src\HTTPServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\3rd\commoncpp2-1.8.1\inc\cc++\HTTPServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

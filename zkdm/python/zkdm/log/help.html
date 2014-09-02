@@ -1,0 +1,81 @@
+<html>
+<head>
+	<title>日志服务</title>
+</head>
+<body>
+
+日志服务对本机提供存储日志的功能，对系统平台提供日志查询功能。
+
+<p>
+
+典型的日志结构为：<br>
+<br>{
+<br>	"<B>project</B>": "日志的项目名字，用于区分日志的来历", 
+<br>	"<B>level</B>": N,		// level 定义了日志的紧急程度，一般选择 0,1,2...，值越小，越重要
+<br>	"<B>stamp</B>": NNN，	// 日志的时间，采用 Unix 时间戳
+<br>	"<B>content</B>": "日志的内容，这里不强制具体格式，但是建议使用字典类型存储",
+<br>}
+
+<p>
+<p>
+
+查询功能：<br>
+<B>/query?project=XXX&amplevel=N&ampstamp_begin=XXX&ampstamp_end=XXX</B><br>
+<ul>
+	<li>project: 可选，如果指定，则只返回project匹配的日志；</li>
+	<li>level: 可选，如果指定，将返回level或更重要的日志; </li>
+	<li>stamp_begin: 可选，如果指定，将返回 stamp_begin 之后发生的日志，如果不指定，则返回最新1分钟之内的日志；</li>
+	<li>stamp_end: 可选，如果知道，将返回 stamp_end 之前发生的日志，如果不知道，缺省为当前；</li>
+</ul>
+
+返回结果格式：Content-Type: application/json
+<br>{
+<br>	"result":"ok",
+<br>	"info":"",
+<br>	"value":
+<br>	{
+<br>		"type":"list",
+<br>		"data": 
+<br>			[
+<br>				{ "project":XX, "level":N, "stamp":NN, "content":XXX },
+<br>				....
+<br>			]
+<br>	}
+<br>}
+<br>
+	其中 "data" 为数组类型...
+
+<p><p>
+
+保存日志：支持 GET/PUT 两种方式，GET 用于短小的，PUT 用于长记录 <br>
+
+<B>GET /save?project=XXX&amplevel=N&ampstamp=NN&content=XXX</B><br>
+<ul>
+	<li>project: 必需</li>
+	<li>level: 可选，缺省 99</li>
+	<li>stamp: 可选，缺省当前时间</li>
+	<li>content: 可选，缺省当前时间<li>
+</ul>
+
+<p>
+<B>PUT /save</B>
+<br> request Content-Type 必须为 application/json，body 为上面提到的json格式 ...
+
+<br>
+save 返回：Content-Type: application/json
+
+<br>{
+<br>	"result":"ok",
+<br>	"info”:"log saved",
+<br>}
+<br>
+<br>或者错误时：目前为没有提供 project
+<br>
+<br>{
+<br>	"result":"err",
+<br>	"info":"project MUST be supplied!!"
+<br>}
+<br>
+
+</body>
+</html>
