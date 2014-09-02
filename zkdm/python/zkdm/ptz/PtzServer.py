@@ -7,6 +7,9 @@ import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
 
+#sys.path.append("../")
+#from common.Log import Log
+
 
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
@@ -87,6 +90,8 @@ class ControllingHandler(RequestHandler):
 		# print 'name:', name, ' method:', method, ' params:', params
 		if name in _all_ptzs:
 			if _all_ptzs[name]['ptz']:
+				#log = Log('ptz')
+				#log.log("method:" + method + ", params:" + str(params))
 				return _all_ptzs[name]['ptz'].call(method, params)
 			else:
 				return { 'result':'error', 'info':'ptz config failure' }
