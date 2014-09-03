@@ -25,7 +25,7 @@ bool KVConfig::has_key(const char *key)
 
 bool KVConfig::del_key(const char *key)
 {
-	KVS::const_iterator itf = kvs_.find(key);
+	KVS::iterator itf = kvs_.find(key);
 	if (itf != kvs_.end()) {
 		kvs_.erase(itf);
 		return true;
