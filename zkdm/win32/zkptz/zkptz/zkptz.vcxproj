@@ -70,8 +70,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../../../../../image_trace/runtime/include;$(IncludePath)</IncludePath>
-    <LibraryPath>../../../../../image_trace/runtime/lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -123,7 +123,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
-      <AdditionalDependencies>libkvconfig.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -146,12 +146,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\ptz\KVConfig.cpp" />
+    <ClCompile Include="..\..\..\ptz\polyfit.cpp" />
     <ClCompile Include="..\..\..\ptz\ptz.cpp" />
+    <ClCompile Include="..\..\..\ptz\ZoomValueConvert.cpp" />
     <ClCompile Include="libvisca.c" />
     <ClCompile Include="libvisca_win32.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\ptz\KVConfig.h" />
+    <ClInclude Include="..\..\..\ptz\polyfit.h" />
     <ClInclude Include="..\..\..\ptz\ptz.h" />
+    <ClInclude Include="..\..\..\ptz\ZoomValueConvert.h" />
     <ClInclude Include="libvisca.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 EXPORTS
 	ptz_open
+	ptz_open_with_config
 	ptz_close
 
 	ptz_left
@@ -24,3 +25,4 @@ EXPORTS
 
 	ptz_mouse_trace
 
+	ptz_ext_get_scals

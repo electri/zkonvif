@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <KVConfig.h>
+#include "KVConfig.h"
 #include <vector>
 #include <map>
 #include <string>
 #include <math.h>
+
 #ifdef WIN32
 #	define VISCA_WIN
 #	include "../win32/zkptz/zkptz/libvisca.h"
@@ -13,10 +14,9 @@
 #	include <visca/libvisca.h>
 #endif 
 #include "ptz.h"
+#include "ZoomValueConvert.h"
 
 namespace {
-
-	KVConfig *_cfg;
 
 	struct Serial;
 	struct Ptz
@@ -29,6 +29,8 @@ namespace {
 		int last_x, last_y, last_z;
 		int set_posing;	// set_pos() 非常耗时，需要连续 get_pos() 不变后，才认为到位了
 
+		ZoomValueConvert *zvc;
+		KVConfig *cfg;
 	};
 
 	struct Serial
@@ -65,28 +67,18 @@ ptz_t *ptz_open(const char *name, int addr)
 			return 0;
 		}
 
-#if 1
+#if 0
 		int m;
 		VISCA_set_address(&serial->iface, &m);
 		fprintf(stdout, "DEBUG: %s: %s: m=%d\n", __FUNCTION__, name);
 #endif 
 		
 		printf("name = %s, addr = %d\n", name, addr); 
+
 		serial->iface.broadcast = 0;
 
-		for (int i = 0; i < 7; i++) {
-			Ptz *ptz = new Ptz;
-			ptz->zoom_changed = true;
-			ptz->pos_changing = ptz->zoom_changing = false;
-			ptz->first_get_pos = true;
-			ptz->set_posing = 1;
-			ptz->serial = serial;
-			ptz->addr = i+1;
-			ptz->cam.address = ptz->addr;
-
-			if (i == 0)
-				serial->cams.push_back(ptz);
-			serial->cams.push_back(ptz);
+		for (int i = 0; i < 8; i++) {
+			serial->cams.push_back(0);
 		}
 
 		_serials[name] = serial;
@@ -94,23 +86,49 @@ ptz_t *ptz_open(const char *name, int addr)
 	}
 	else {
 		Serial *serial = itf->second;
-		if (addr > serial->cams.size()) {
-			fprintf(stderr, "ERROR: %s: addr=%d but range=[1..%d]\n", __func__, addr, itf->second->cams.size());
-			return 0;
+		if (!serial->cams[addr]) {
+			Ptz *ptz = new Ptz;
+			ptz->cfg = 0;
+			ptz->zvc = 0;
+			ptz->zoom_changed = true;
+			ptz->pos_changing = ptz->zoom_changing = false;
+			ptz->first_get_pos = true;
+			ptz->set_posing = 1;
+			ptz->serial = serial;
+			ptz->addr = addr;
+			ptz->cam.address = ptz->addr;
+
+			serial->cams[addr] = ptz;
 		}
-		
-		char *path = getenv("ptz");
-		if (path == 0)
-			path = "ptz.config";
-		_cfg = new KVConfig(path);
+		else {
+			fprintf(stderr, "WARNING: %s: ptz has been opened!!!\n", __FUNCTION__);
+		}
 
 		return (ptz_t*)serial->cams[addr];
 	}
 }
 
+ptz_t *ptz_open_with_config(const char *cfg_name)
+{
+	KVConfig *cfg = new KVConfig(cfg_name);
+	
+	const char *serial_name = cfg->get_value("ptz_serial_name", "COMX");
+	int addr = atoi(cfg->get_value("ptz_addr", "1"));
+
+	ptz_t *p = ptz_open(serial_name, addr);
+	if (p) {
+		Ptz *ptz = (Ptz*)p;
+		ptz->cfg = cfg;
+		ptz->zvc = new ZoomValueConvert(ptz->cfg);
+	}
+
+	return p;
+}
+
 void ptz_close(ptz_t *ptz)
 {
 	// TODO: 应该根据串口的引用计数关闭 ...
+	// FIXME:  ...
 	Ptz *p = (Ptz*)ptz;
 	VISCA_close_serial(&p->serial->iface);
 }
@@ -323,14 +341,16 @@ int ptz_zoom_stop(ptz_t *ptz)
 
 int ptz_mouse_trace(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 {
-
-	int WIDTH = atoi(_cfg->get_value("width", "960"));
-	int HEIGHT = atoi(_cfg->get_value("height", "540"));
-	double CCD_WIDTH = atof(_cfg->get_value("ccd_width", "4.8"));
-	double CCD_HEIGHT = atof(_cfg->get_value("ccd_height", "2.7"));
-	double F = atof(_cfg->get_value("f", "4.2017"));
-
 	Ptz *p = (Ptz*)ptz; 
+
+	if (!p->cfg)
+		return -1;	// 必须使用 ptz_open_with_config() 
+
+	int WIDTH = atoi(p->cfg->get_value("width", "960"));
+	int HEIGHT = atoi(p->cfg->get_value("height", "540"));
+	double CCD_WIDTH = atof(p->cfg->get_value("ccd_width", "4.8"));
+	double CCD_HEIGHT = atof(p->cfg->get_value("ccd_height", "2.7"));
+	double F = atof(p->cfg->get_value("f", "4.2017"));
 
 	double hr = double(x - WIDTH/2) / WIDTH;
 	fprintf(stdout, "hr = %f\n", hr);
@@ -351,23 +371,13 @@ int ptz_mouse_trace(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 	int v = (int)(vv/0.075);
 	fprintf(stdout, "h = %d, v = %d\n", h, v);
 	return VISCA_set_pantilt_relative_position(&p->serial->iface, &p->cam , sx, sy, h, v);
-
-	/*
-	double hr = (x - WIDTH) / WIDTH;
-	double vr = (y - HEIGHT) / HEIGHT;
-
-	int zv;
-	ptz_get_zoom(ptz, &zv);
-	double zr = ptz_zoom_ratio_of_value(zv);
-	double f = zr * F;
-
-	double hh = atan(2.4 * hr / f);
-	double vv = atan(1.35 * vr / sqrt(2.4 * hr *2.4 * hr + f * f));
-
-	int h = (int)(hh>0 ? (hh/STEP_ANGLE+0.5) :(hh/STEP_ANGLE-0.5));
-	int v = (int)(vv>0 ? (vv/STEP_ANGLE+0.5) : (vv/STEP_ANGLE-0.5));
-
-	return ptz_set_pos(ptz, h, v, SPEED, SPEED);
-	*/
 }
 
+double ptz_ext_get_scals(ptz_t *ptz, int z)
+{
+	Ptz *p = (Ptz*)ptz;
+	if (p->zvc)
+		return p->zvc->mp_zoom(z);
+	else
+		return 1.0;
+}
