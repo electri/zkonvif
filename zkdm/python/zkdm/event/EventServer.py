@@ -333,6 +333,26 @@ class EventHandler(RequestHandler):
 		self.write({'result':'ok', 'info':'unsubscribed' })
 
 
+_ioloop = None # 用于支持外面的结束 ...
+
+
+class InternalHandler(RequestHandler):
+	def get(self):
+		rc = {}
+		rc['result'] = 'ok'
+		rc['info'] = ''
+
+		command = self.get_argument('command', 'nothing')
+		if command == 'exit':
+			rc['info'] = 'exit!!!!'
+			self.write(rc)
+			_ioloop.stop()
+		elif command == 'version':
+			rc['info'] = 'now version not supported!'
+			rc['result'] = 'err'
+			self.write(rc)
+
+
 
 def make_app():
 	return Application([
@@ -340,6 +360,7 @@ def make_app():
 			url(r'/event/list', ListHandler),
 			url(r'/event/create_pp', CreatePPHandler),
 			url(r'/event/([0-9]+)/(.+)', EventHandler),
+			url(r'/event/internal', InternalHandler),
 			])
 
 
@@ -349,8 +370,11 @@ if __name__ == '__main__':
 	recver.start()
 	app = make_app()
 	app.listen(10001)
-	try:
-		IOLoop.instance().start()
-		recver.join()
-	except:
-		print 'end ...'
+	_ioloop = IOLoop.instance()
+	_ioloop.start()
+
+	# 此时说明收到 exit
+	print 'Event end ...'
+
+	#recver.join()
+

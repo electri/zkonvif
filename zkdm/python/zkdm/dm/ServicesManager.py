@@ -28,7 +28,7 @@ class ServicesManager:
 		u = zkutils()
 		self.__ip = u.myip()			# 可能是交换机映射后的 ip
 		self.__ip_real = u.myip_real()
-		self.__activated = [] # (p, sd)
+		self.__activated = [] # (p, sd, url)
 		self.__start_all_enabled()
 
 
@@ -54,9 +54,9 @@ class ServicesManager:
 
 	def close(self):
 		''' 强制关闭所有启动的服务 ???? '''
-		for x in self.__activated:
-			print ' ==> to kill "', x[1]['name'], '"'
-			x[0].kill()
+		while len(self.__activated) > 0:
+			print ' ==> to kill "', self.__activated[0][1]['name'], '"'
+			self.__stop_service(self.__activated[0][1])
 
 
 	def start_service(self, name):
@@ -78,6 +78,7 @@ class ServicesManager:
 			   self.__stop_service(x)
 			   return True
 		return False
+
 
 
 	def __fix_url(self, url):
@@ -120,15 +121,30 @@ class ServicesManager:
 		print ' ==> start', args
 		p = subprocess.Popen(args)
 		print '        pid:', p.pid
-		return (p, sd)
+		return (p, sd, self.__fix_url(sd['url']))
 		
 
 	def __stop_service(self, sd):
-		''' 停止服务
+		''' 停止服务, 通过发送 internal?command=exit 结束
 		'''
+		print '--- try stop "' + sd['name'] + '"'
 		for s in self.__activated:
 			if s[1]['name'] == sd['name']:
-				s[0].kill()
+				# 首先发出 internal?command=exit 
+				url = s[2] + '/internal?command=exit'
+				print 'url:', url
+				import urllib2, time
+				urllib2.urlopen(url)
+				
+				time.sleep(0.5) # FIXME: 这里等待500ms，然后再强制杀掉 ？？？..
+
+				try:
+					s[0].kill()
+				except: # 一般情况下， exit command 就能结束 ..
+					pass
+
+				print 'service:', s[1]['name'], ' has killed!'
+
 				self.__activated.remove(s)
 				break
 
