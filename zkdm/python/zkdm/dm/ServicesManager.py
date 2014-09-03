@@ -28,7 +28,7 @@ class ServicesManager:
 		u = zkutils()
 		self.__ip = u.myip()			# 可能是交换机映射后的 ip
 		self.__ip_real = u.myip_real()
-		self.__activated = [] # (p, sd)
+		self.__activated = [] # (p, sd, url)
 		self.__start_all_enabled()
 
 
@@ -120,14 +120,21 @@ class ServicesManager:
 		print ' ==> start', args
 		p = subprocess.Popen(args)
 		print '        pid:', p.pid
-		return (p, sd)
+		return (p, sd, self.__fix_url(sd['url']))
 		
 
 	def __stop_service(self, sd):
-		''' 停止服务
+		''' 停止服务, 通过发送 internal?command=exit 结束
 		'''
 		for s in self.__activated:
 			if s[1]['name'] == sd['name']:
+				# 首先发出 internal?command=exit 
+				url = s[2] + '/internal?command=exit'
+				import urllib2, time
+				urllib2.open(url)
+				
+				time.sleep(500) # FIXME: 这里等待500ms，然后再强制杀掉 ？？？..
+
 				s[0].kill()
 				self.__activated.remove(s)
 				break
