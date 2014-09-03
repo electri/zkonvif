@@ -191,6 +191,9 @@ def main():
 	_ioloop = IOLoop.instance()
 	_ioloop.start()
 
+	# 结束 ..
+	print 'Log service end ...'
+
 
 
 if __name__ == '__main__':

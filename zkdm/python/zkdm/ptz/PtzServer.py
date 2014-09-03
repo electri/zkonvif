@@ -103,18 +103,49 @@ class ControllingHandler(RequestHandler):
 
 
 
+_ioloop = None # 为了支持 exit command
+
+
+class InternalHandler(RequestHandler):
+	def get(self):
+		rc = {}
+		rc['result'] = 'ok'
+		rc['info'] = ''
+
+		command = self.get_argument('command', 'nothing')
+
+		if command == 'exit':
+			rc['info'] = 'exit!!!'
+			global _ioloop
+			_ioloop.stop()
+			self.write(rc)
+		elif command == 'version':
+			rc['info'] = 'now version unsupported!!'
+			rc['result'] = 'err'
+			self.write(rc)
+
+
+
+
 def make_app():
 	return Application([
 			url(r'/ptz/help', HelpHandler),
 			url(r"/ptz/config(/?)", GetConfigHandler),
 			url(r'/ptz/([^\/]+)/([^\?]+)', ControllingHandler),
+			url(r'/ptz/internal', InternalHandler),
 			])
 
 
 def main():
 	app = make_app()
 	app.listen(10003)
-	IOLoop.current().start()
+	_ioloop = IOLoop.instance()
+	_ioloop.start()
+
+	# 此时说明结束 ...
+	print 'ptz service end ...'
+
+
 
 
 if __name__ == '__main__':
