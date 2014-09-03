@@ -6,6 +6,11 @@ from tornado.web import RequestHandler, Application, url
 from dbhlp import DBHlp
 import time, json
 
+
+VERSION = 0.9
+VERSION_INFO = 'Log Service ...'
+
+
 class SaveHandler(RequestHandler):
 	''' 保存 
 
@@ -14,9 +19,15 @@ class SaveHandler(RequestHandler):
 	'''
 	def get(self):
 		p = self.request.arguments
+		rc = {}
+		rc['result'] = 'ok'
+		rc['info'] = ''
+		rc['value'] = {}
 
 		if 'project' not in p:
-			self.__my_err('"project" MUST be supplied!')
+			rc['result'] = 'err'
+			rc['info'] = '"project" MUST be supplied!'
+			self.write(rc)
 			return
 
 		project = p['project'][0]
@@ -39,7 +50,7 @@ class SaveHandler(RequestHandler):
 		db = DBHlp()
 		db.save(project, level, stamp, content)
 
-		rc = { 'result':'ok', 'info':'log saved' }
+		rc['info'] = 'log saved'
 		self.write(rc)
 		
 
@@ -47,29 +58,29 @@ class SaveHandler(RequestHandler):
 	def put(self):
 		print 'PUT ...'
 		if 'Content-Type' not in self.request.headers:
-			self.__my_err('Content-Type: MUST be application/json')
+			rc['result'] = 'err'
+			rc['info'] = 'Content-Type: MUST be application/json'
+			self.write(rc)
+			return
 		else:
 			ct = self.request.headers.get('Content-Type')
 			if ct.find('application/json') == -1:
-				self.__my_err('Content-Type: MUST be application/json')
+				rc['result'] = 'err'
+				rc['info'] = 'Content-Type: MUST be application/json'
+				self.write(rc)
+				return
 			else:
-				print self.request.body
-				print type(self.request.body)
 				item = json.loads(self.request.body)
-				print item
 				if not self.__save(item):
-					self.__my_err('format err')
+					rc['result'] = 'err'
+					rc['info'] = 'format err'
+					self.write(rc)
+					return
 				else:
-					rc = { 'result':'ok', 'info':'log saved' }
+					rc['info'] = 'log saved'
 					self.write(rc)
 
-
 	
-	def __my_err(self, info):
-		rc = { 'result': 'err', 'info': info }
-		self.write(rc)
-
-
 	def __save(self, item):
 		print item, type(item)
 		if 'project' in item and 'level' in item and 'content' in item:
@@ -94,6 +105,10 @@ class HelpHandler(RequestHandler):
 class QueryHandler(RequestHandler):
 	''' 查询 '''
 	def get(self):
+		rc = {}
+		rc['result'] = 'ok'
+		rc['info'] = ''
+
 		p = self.request.arguments
 		print p
 		project = self.__param('project', p)
@@ -103,11 +118,12 @@ class QueryHandler(RequestHandler):
 			stamp_begin = str(time.time() - 60) # 缺省返回最近一分钟的日志
 		stamp_end = self.__param('stamp_end', p)
 		db = DBHlp()
-		rc = db.query(project, level, stamp_begin, stamp_end)
-		x = { 'result':'ok', 'info':'', 'value': { 'type': 'list',
-			'data': rc } }
-		self.set_header('Content-Type', 'application/json')
-		self.write(x)
+		logs = db.query(project, level, stamp_begin, stamp_end)
+		value = {}
+		value['type'] = 'list'
+		value['data'] = logs
+		rc['value'] = value
+		self.write(rc)
 
 
 	def __param(self, key, params):
@@ -117,18 +133,63 @@ class QueryHandler(RequestHandler):
 		return None
 
 
+# 只是为了支持 internal?command=exit, 可以优雅的结束 ...
+_ioloop = None
+
+
+class InternalHandler(RequestHandler):
+	''' 处理内部命令 '''
+	def get(self):
+		rc = {}
+		rc['result'] = 'ok'
+		rc['info'] = ''
+
+		cmd = self.__param('command')
+		if cmd is None:
+			rc['result'] = 'err'
+			rc['info'] = '"command" MUST be suppiled!'
+			self.write(rc)
+			return
+
+		if cmd == 'version':
+			ver = {}
+			ver['version'] = VERSION
+			ver['descr'] = VERSION_INFO
+			data = {}
+			data['type'] = 'version'
+			data['data'] = ver
+			rc['value'] = data
+			self.write(rc)
+
+		if cmd == 'exit':
+			global _ioloop
+			rc['info'] = 'exit!!!'
+			self.write(rc)
+			_ioloop.stop()
+		
+
+	def __param(self, key):
+		if key in self.request.arguments:
+			return self.request.arguments[key][0]
+		else:
+			return None
+
+
 def make_app():
 	return Application([
 			url(r'/log/save', SaveHandler),
 			url(r'/log/query', QueryHandler),
 			url(r'/log/help', HelpHandler),
+			url(r'/log/internal', InternalHandler),
 			])
 
 
 def main():
 	app = make_app()
 	app.listen(10005)
-	IOLoop.current().start()
+	global _ioloop
+	_ioloop = IOLoop.instance()
+	_ioloop.start()
 
 
 
