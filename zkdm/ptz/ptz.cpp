@@ -214,8 +214,7 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 {
 	Ptz *p = (Ptz*)ptz;
-	if (VISCA_set_pantilt_absolute_position(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
-	//if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
+	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
 		//p->set_posing = 3;	// 连续N次 get_pos() 不变才认为完成了 
 		//p->pos_changing = true;
 		fprintf(stderr, "%s calling\n", __FUNCTION__);
