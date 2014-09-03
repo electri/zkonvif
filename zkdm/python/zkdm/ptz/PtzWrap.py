@@ -40,11 +40,20 @@ class PtzWrap(object):
 
 
 	def open(self, serial, addr):
-		''' 打开串口...
+		''' 已经废弃，应该使用 open_with_config()
 		'''
 		if self.__ptr['so']:
 			self.__ptz = self.__ptr['func_open'](serial, addr)
 			return (self.__ptz != None)
+		else:
+			return False
+
+
+	def open_with_config(self, cfg_filename):
+		''' 优先使用该方法，支持 mouse_track, ptz_ext_xxx '''
+		if self.__ptr['so']:
+			self.__ptz = self.__ptr['func_open2'](cfg_filename)
+			return (self.__ptz is not None)
 		else:
 			return False
 
@@ -292,45 +301,69 @@ class PtzWrap(object):
 	def __load_ptz_module(self):
 		''' 加载 ptz 模块 '''
 		ptz = {}
+		print 'en ........ to load:', _ptz_so
 		ptz['so'] = CDLL(_ptz_so)
-		ptz['so']
 
 		ptz['func_open'] = ptz['so'].ptz_open
 		ptz['func_open'].restype = c_void_p
+
+		ptz['func_open2'] = ptz['so'].ptz_open_with_config
+		ptz['func_open2'].restype = c_void_p
+
 		ptz['func_close'] = ptz['so'].ptz_close
 		ptz['func_close'].argtypes = [c_void_p]
+
 		ptz['func_get_pos'] = ptz['so'].ptz_get_pos
 		ptz['func_get_pos'].argtypes = [c_void_p, POINTER(c_int), POINTER(c_int)]
+
 		ptz['func_set_pos'] = ptz['so'].ptz_set_pos
 		ptz['func_set_pos'].argtypes = [c_void_p, c_int, c_int, c_int, c_int]
+
 		ptz['func_preset_save'] = ptz['so'].ptz_preset_save
 		ptz['func_preset_save'].argtypes = [c_void_p, c_int]
+
 		ptz['func_preset_call'] = ptz['so'].ptz_preset_call
 		ptz['func_preset_call'].argtypes = [c_void_p, c_int]
+
 		ptz['func_preset_clear'] = ptz['so'].ptz_preset_clear
 		ptz['func_preset_clear'].argtypes = [c_void_p, c_int]
+
 		ptz['func_left'] = ptz['so'].ptz_left
 		ptz['func_left'].argtypes = [c_void_p, c_int]
+
 		ptz['func_right'] = ptz['so'].ptz_right
 		ptz['func_right'].argtypes = [c_void_p, c_int]
+
 		ptz['func_up'] = ptz['so'].ptz_up
 		ptz['func_up'].argtypes = [c_void_p, c_int]
+
 		ptz['func_down'] = ptz['so'].ptz_down
 		ptz['func_down'].argtypes = [c_void_p, c_int]
+
 		ptz['func_stop'] = ptz['so'].ptz_stop
 		ptz['func_stop'].argtypes = [c_void_p]
+
 		ptz['func_set_zoom'] = ptz['so'].ptz_set_zoom
 		ptz['func_set_zoom'].argtypes = [c_void_p, c_int]
+
 		ptz['func_get_zoom'] = ptz['so'].ptz_get_zoom
 		ptz['func_get_zoom'].argtypes = [c_void_p, POINTER(c_int)]
+
 		ptz['func_zoom_wide'] = ptz['so'].ptz_zoom_wide
 		ptz['func_zoom_wide'].argtypes = [c_void_p, c_int]
+
 		ptz['func_zoom_tele'] = ptz['so'].ptz_zoom_tele
 		ptz['func_zoom_tele'].argtypes = [c_void_p, c_int]
+
 		ptz['func_zoom_stop'] = ptz['so'].ptz_zoom_stop
 		ptz['func_zoom_stop'].argtypes = [c_void_p]
+
 		ptz['func_mouse_trace'] = ptz['so'].ptz_mouse_trace
 		ptz['func_mouse_trace'].argtypes = [c_void_p, c_int, c_int, c_int, c_int] 
+
+		ptz['func_ext_get_scales'] = ptz['so'].ptz_ext_get_scals
+		ptz['func_ext_get_scales'].argtypes = [c_void_p, c_int]
+		ptz['func_ext_get_scales'].restype = c_double
 
 		return ptz
 
