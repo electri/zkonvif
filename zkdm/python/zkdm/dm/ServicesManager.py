@@ -54,9 +54,9 @@ class ServicesManager:
 
 	def close(self):
 		''' 强制关闭所有启动的服务 ???? '''
-		for x in self.__activated:
-			print ' ==> to kill "', x[1]['name'], '"'
-			x[0].kill()
+		while len(self.__activated) > 0:
+			print ' ==> to kill "', self.__activated[0][1]['name'], '"'
+			self.__stop_service(self.__activated[0][1])
 
 
 	def start_service(self, name):
@@ -78,6 +78,7 @@ class ServicesManager:
 			   self.__stop_service(x)
 			   return True
 		return False
+
 
 
 	def __fix_url(self, url):
@@ -126,16 +127,24 @@ class ServicesManager:
 	def __stop_service(self, sd):
 		''' 停止服务, 通过发送 internal?command=exit 结束
 		'''
+		print '--- try stop "' + sd['name'] + '"'
 		for s in self.__activated:
 			if s[1]['name'] == sd['name']:
 				# 首先发出 internal?command=exit 
 				url = s[2] + '/internal?command=exit'
+				print 'url:', url
 				import urllib2, time
-				urllib2.open(url)
+				urllib2.urlopen(url)
 				
-				time.sleep(500) # FIXME: 这里等待500ms，然后再强制杀掉 ？？？..
+				time.sleep(0.5) # FIXME: 这里等待500ms，然后再强制杀掉 ？？？..
 
-				s[0].kill()
+				try:
+					s[0].kill()
+				except: # 一般情况下， exit command 就能结束 ..
+					pass
+
+				print 'service:', s[1]['name'], ' has killed!'
+
 				self.__activated.remove(s)
 				break
 
