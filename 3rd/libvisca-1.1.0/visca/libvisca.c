@@ -147,6 +147,19 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 #else
 
 VISCA_API uint32_t
+_VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
+{
+	iface->type = iface->ibuf[1] & 0xF0;
+	while (iface->ibuf[1] & 0x0F != 0)
+	{
+		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+			return VISCA_FAILURE;
+	}
+
+	return VISCA_SUCCESS;
+}
+
+VISCA_API uint32_t
 _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
 	// first message: -------------------
@@ -1783,6 +1796,8 @@ VISCA_get_zoom_value(VISCAInterface_t * iface, VISCACamera_t * camera,
 	if (err != VISCA_SUCCESS)
 		return err;
 	else {
+		if (_VISCA_get_reply_accurate(iface, camera) != VISCA_SUCCESS)
+			return err;
 		*value =
 		    (iface->ibuf[2] << 12) + (iface->ibuf[3] << 8) +
 		    (iface->ibuf[4] << 4) + iface->ibuf[5];
@@ -3111,9 +3126,11 @@ VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 	_VISCA_append_byte(&packet, VISCA_PT_POSITION_INQ);
 
 	err = _VISCA_send_packet_with_reply(iface, camera, &packet);
-	if (err != VISCA_SUCCESS || iface->ibuf[1] & 0x0F !=0)
+	if (err != VISCA_SUCCESS)
 		return err;
 	else {
+		if (_VISCA_get_reply_accurate(iface, camera) != VISCA_SUCCESS)
+			return err;
 		pan_pos =
 		    ((iface->
 		      ibuf[2] & 0xf) << 12) | ((iface->ibuf[3] & 0xf) << 8) |
