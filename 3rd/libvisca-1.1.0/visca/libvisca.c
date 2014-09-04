@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <string.h>
 #ifdef VISCA_WIN
-#include <Windows.h>
 #ifdef _DEBUG
 #define DEBUG 1
 #else

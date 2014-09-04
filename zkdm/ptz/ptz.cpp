@@ -8,7 +8,7 @@
 
 #ifdef WIN32
 #	define VISCA_WIN
-#	include "../win32/zkptz/zkptz/libvisca.h"
+#   include "../../3rd/libvisca-1.1.0/visca/libvisca.h"
 #	include <Windows.h>
 #else
 #	include <visca/libvisca.h>

@@ -24,6 +24,7 @@
 
 #if 1
 #if defined(_WIN32)||defined(WIN32)||defined(__WIN32__)||defined(_MSC_VER)
+#	define __func__ __FUNCTION__
 #	ifdef DLL
 #ifdef DLL_EXPORTS
 #define VISCA_API __declspec(dllexport)
