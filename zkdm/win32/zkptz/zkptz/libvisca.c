@@ -23,12 +23,14 @@
 #include <stdio.h>
 #include <string.h>
 #ifdef VISCA_WIN
+#include <Windows.h>
 #ifdef _DEBUG
 #define DEBUG 1
 #else
 #undef DEBUG
 #endif
 #endif
+
 
 /********************************/
 /*      PRIVATE FUNCTIONS       */
@@ -3110,7 +3112,7 @@ VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 	_VISCA_append_byte(&packet, VISCA_PT_POSITION_INQ);
 
 	err = _VISCA_send_packet_with_reply(iface, camera, &packet);
-	if (err != VISCA_SUCCESS)
+	if (err != VISCA_SUCCESS || iface->ibuf[1] & 0x0F !=0)
 		return err;
 	else {
 		pan_pos =

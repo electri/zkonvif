@@ -168,7 +168,6 @@ int ptz_down(ptz_t *ptz, int speed)
 int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 {
 	Ptz *p = (Ptz*)ptz;
-	fprintf(stdout, "%s: serial=%d, cam:%d, \n", __FUNCTION__, p->serial->iface.port_fd, p->cam.address);
 	if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) 
 		return 0;
 	else {
@@ -214,6 +213,7 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 {
 	Ptz *p = (Ptz*)ptz;
+	//if (VISCA_set_pantilt_absolute_position(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
 		//p->set_posing = 3;	// 连续N次 get_pos() 不变才认为完成了 
 		//p->pos_changing = true;
