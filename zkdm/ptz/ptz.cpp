@@ -54,6 +54,8 @@ static double ptz_zoom_ratio_of_value(double v)
 
 ptz_t *ptz_open(const char *name, int addr)
 {
+	fprintf(stderr, "DEBUG: %s: try to open serial name: %s, addr=%d\n", __FUNCTION__, name, addr);
+
 		//XXX:当 addr = 0时, 程序最后三行会出问题
 	if (!name) return 0;
 	if (addr > 7 || addr < 0) return 0;
@@ -86,6 +88,12 @@ ptz_t *ptz_open(const char *name, int addr)
 	}
 	else {
 		Serial *serial = itf->second;
+		if (serial->cams.empty()) {
+			// 说明该串口曾经测试过，不可用 ...
+			printf("ERR: %s: can't open '%s'\n", __func__, name);
+			return 0;
+		}
+
 		if (!serial->cams[addr]) {
 			Ptz *ptz = new Ptz;
 			ptz->cfg = 0;
@@ -110,6 +118,8 @@ ptz_t *ptz_open(const char *name, int addr)
 
 ptz_t *ptz_open_with_config(const char *cfg_name)
 {
+	fprintf(stderr, "DEBUG: %s: cfg_name=%s\n", __FUNCTION__, cfg_name);
+
 	KVConfig *cfg = new KVConfig(cfg_name);
 	
 	const char *serial_name = cfg->get_value("ptz_serial_name", "COMX");
@@ -122,6 +132,7 @@ ptz_t *ptz_open_with_config(const char *cfg_name)
 		ptz->zvc = new ZoomValueConvert(ptz->cfg);
 	}
 
+	fprintf(stderr, "DEBUG: %s: ret %p\n", __FUNCTION__, p);
 	return p;
 }
 
@@ -376,8 +387,14 @@ int ptz_mouse_trace(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 double ptz_ext_get_scals(ptz_t *ptz, int z)
 {
 	Ptz *p = (Ptz*)ptz;
-	if (p->zvc)
+	if (p->zvc) {
+		if (z < 0) {
+			if (ptz_get_zoom(ptz, &z) < 0)
+				return 1.0;
+		}
+
 		return p->zvc->mp_zoom(z);
+	}
 	else
 		return 1.0;
 }
