@@ -32,14 +32,25 @@ def load_ptz(config):
 		'addr': config['config']['addr'],
 		'ptz': None
 	}
+
+	if 'extent' in config['config']:
+		ptz['cfgfile'] = config['config']['extent']
+
 	# 此处打开 ...
 	if True:
 		ptz['ptz'] = PtzWrap()
 	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
-		ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
+		if 'cfgfile' in ptz:
+			filename = ptz['cfgfile'].encode('ascii')
+			print 'open with cfg:', filename
+			ptz['ptz'].open_with_config(filename)
+		else:
+			print 'open ptz:', ptz['serial'], 'addr:', ptz['addr']
+			ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
 	else:
 		ptz['ptz'] = None
 		print 'open failure'
+
 	return ptz
 
 
@@ -81,8 +92,8 @@ class ControllingHandler(RequestHandler):
 	def get(self, name, method):
 		''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
 		'''
-		log = Log('ptz')
-		log.log('name:' + name + ', method:' + method)
+		#log = Log('ptz')
+		#log.log('name:' + name + ', method:' + method)
 
 		ret = self.__exec_ptz_method(name, method, self.request.arguments)
 		self.set_header('Content-Type', 'application/json')

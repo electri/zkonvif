@@ -102,6 +102,8 @@ class PtzWrap(object):
 			ret.update(self.zoom_stop())
 		elif method == 'mouse_trace':
 			ret.update(self.mouse_trace(params))
+		elif method == 'ext_get_scales':
+			ret.update(self.ext_get_scales())
 		else:
 			ret.update({'result':'error', 'info':'method NOT supported'})
 		return ret
@@ -184,6 +186,7 @@ class PtzWrap(object):
 			else:
 				return {'result':'error', 'info':'NO id'}
 
+
 	def preset_clear(self, params):
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
@@ -195,6 +198,7 @@ class PtzWrap(object):
 			else:
 				return {'result':'error', 'info':'NO id'}			
 
+
 	def get_pos(self):
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
@@ -205,6 +209,13 @@ class PtzWrap(object):
 				return { 'value': { 'type':'position', 'data': {'x': x.value, 'y': y.value} } }
 			else:
 				return { 'result':'error', 'info':'get_pos failure' }
+
+
+	def ext_get_scales(self):
+		if not self.__ptz:
+			return { 'result':'error', 'info':'NO ptz' }
+		else:
+			return { 'value': { 'type':'double', 'data': self.__ptr['func_ext_get_scales'](self.__ptz, -1) } }
 
 
 	def set_pos(self, params):
@@ -308,6 +319,7 @@ class PtzWrap(object):
 		ptz['func_open'].restype = c_void_p
 
 		ptz['func_open2'] = ptz['so'].ptz_open_with_config
+		ptz['func_open2'].argtypes = [c_char_p]
 		ptz['func_open2'].restype = c_void_p
 
 		ptz['func_close'] = ptz['so'].ptz_close
