@@ -7,6 +7,7 @@ extern "C" {
 typedef struct ptz_t ptz_t;
 
 ptz_t *ptz_open(const char *serial_name, int addr);
+ptz_t *ptz_open_with_config(const char *cfg_name);
 void ptz_close(ptz_t *ptz);
 
 int ptz_left(ptz_t *ptz, int speed);
@@ -29,6 +30,9 @@ int ptz_preset_clear(ptz_t *ptz, int id);
 int ptz_zoom_tele(ptz_t *ptz, int s);
 int ptz_zoom_wide(ptz_t *ptz, int s);
 int ptz_zoom_stop(ptz_t *ptz);
+
+/// 从 zoom value 计算返回实际倍率 ..
+double ptz_ext_get_scals(ptz_t *ptz, int z);
 
 #ifdef __cplusplus
 }

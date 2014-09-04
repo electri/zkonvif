@@ -1,0 +1,134 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "KVConfig.h"
+
+#ifdef WIN32
+#	define snprintf _snprintf
+#	pragma warning(disable:4819)
+#	pragma warning(disable:4996)
+#endif 
+
+KVConfig::KVConfig(const char *filename)
+{
+	this->filename_ = filename;
+	load_from_file(filename);
+}
+
+KVConfig::~KVConfig(void)
+{
+}
+
+bool KVConfig::has_key(const char *key)
+{
+	return get_value(key) != 0;
+}
+
+bool KVConfig::del_key(const char *key)
+{
+	KVS::iterator itf = kvs_.find(key);
+	if (itf != kvs_.end()) {
+		kvs_.erase(itf);
+		return true;
+	}
+	else
+		return false;
+}
+
+const char *KVConfig::get_value(const char *key, const char *def)
+{
+	KVS::const_iterator itf = kvs_.find(key);
+	if (itf != kvs_.end())
+		return itf->second.c_str();
+	return def;
+}
+
+std::vector<std::string> KVConfig::keys()
+{
+	std::vector<std::string> ks;
+	KVS::const_iterator it;
+	for (it = kvs_.begin(); it != kvs_.end(); ++it)
+		ks.push_back(it->first);
+
+	return ks;
+}
+
+int KVConfig::set_value(const char *key, const char *value)
+{
+	KVS::iterator itf = kvs_.find(key);
+	if (itf == kvs_.end()) {
+		if (value) {
+			kvs_[key] = value;
+		}
+	}
+	else {
+		if (value) {
+			itf->second = value;
+		}
+		else {
+			kvs_.erase(itf);
+		}
+	}
+
+	return 0;
+}
+
+int KVConfig::set_value(const char *key, int v)
+{
+	char info[64];
+	snprintf(info, sizeof(info), "%d", v);
+	return set_value(key, info);
+}
+
+int KVConfig::save_as(const char *filename)
+{
+	if (!filename)
+		filename = filename_.c_str();
+
+	FILE *fp = fopen(filename, "w");
+	if (!fp) return -1;
+
+	KVS::const_iterator it;
+	for (it = kvs_.begin(); it != kvs_.end(); ++it) {
+		fprintf(fp, "%s=%s\n", it->first.c_str(), it->second.c_str());
+	}
+	fclose(fp);
+
+	return 0;
+}
+
+int KVConfig::reload()
+{
+	load_from_file(filename_.c_str());
+	return 0;
+}
+
+void KVConfig::clear()
+{
+	kvs_.clear();
+}
+
+void KVConfig::load_from_file(const char *filename)
+{
+	kvs_.clear();
+
+	FILE *fp = fopen(filename, "r");
+	if (!fp) {
+		fprintf(stderr, "ERR: %s: can't open file '%s'\n", __FUNCTION__, filename);
+		return;
+	}
+
+	while (!feof(fp)) {
+		char line[1024];	// FIXME: 这里简单的假设一行不会超过 1024 字节
+		char *p = fgets(line, sizeof(line), fp);
+		if (!p) continue;
+		while (p && isspace(*p)) p++;	// 去除行首空格
+		if (*p == '#') continue;		// 注释行
+
+		char key[64], value[512];	// FIXME：
+		if (sscanf(p, "%63[^=] = %511[^\r\n]", key, value) == 2) {
+			kvs_[key] = value;
+		}
+	}
+
+	fclose(fp);
+}

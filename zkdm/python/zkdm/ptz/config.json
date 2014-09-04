@@ -2,16 +2,20 @@
 	"ptzs": [
 		{
 			"name": "teacher",
-			"config": {
+			"config": 
+			{
 				"serial": "COM6",
-				"addr":1
+				"addr":1,
+				"extent": "teacher.config"
 			}
 		},
 		{
 			"name": "student",
-			"config": {
+			"config": 
+			{
 				"serial": "COM3",
-				"addr":1
+				"addr":1,
+				"extent": "student.config"
 			}
 		}
 	]
