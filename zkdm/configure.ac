@@ -12,7 +12,9 @@ AC_PROG_CXX
 AC_PROG_CC
 AC_PROG_LIBTOOL
 
-LT_INIT([dlopen win32-dll shared])
+LT_INIT([win32-dll shared])
+AC_LIBTOOL_WIN32_DLL
+
 
 # Checks for libraries.
 
@@ -23,6 +25,14 @@ AC_CHECK_HEADERS([visca/libvisca.h])
 # Checks for typedefs, structures, and compiler characteristics.
 
 # Checks for library functions.
+
+AC_CANONICAL_HOST
+
+VISCA_EXT=../../3rd/libvisca-1.0.0/visca/libvisca_posix.c
+
+PLATFORM=$(uname -r)
+
+
 
 AC_OUTPUT([
 		Makefile
