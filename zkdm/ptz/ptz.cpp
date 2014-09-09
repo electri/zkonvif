@@ -17,7 +17,7 @@
 #include "ZoomValueConvert.h"
 
 namespace {
-
+	bool isSetPos = false;
 	struct Serial;
 	struct Ptz
 	{
@@ -149,6 +149,14 @@ int ptz_stop(ptz_t *ptz)
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) == VISCA_SUCCESS) {
 		p->pos_changing = false;
+		if (isSetPos == true) {
+		int x = 0, y = 0;
+		ptz_get_pos(ptz, &x, &y);
+		ptz_set_pos(ptz, x, y, 5, 5);
+		fprintf(stdout, "stop x = %d, y = %d\n", x, y);
+		isSetPos = false;
+		}
+
 		return 0;
 	}
 	return -1;
@@ -246,6 +254,7 @@ int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
 		//p->set_posing = 3;	// 连续N次 get_pos() 不变才认为完成了 
 		//p->pos_changing = true;
+		isSetPos = true;
 		fprintf(stderr, "%s calling\n", __FUNCTION__);
 		return 0;
 	}
