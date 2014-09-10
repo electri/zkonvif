@@ -2,6 +2,7 @@
 
 from tornado.web import Application,RequestHandler,url
 from tornado.ioloop import IOLoop
+from Stat import PerformanceMonitor
 
 
 def _param(req, key):
@@ -11,6 +12,14 @@ def _param(req, key):
 		return None
 		
 
+_pm = None
+
+
+class HelpHandler(RequestHandler):
+	def get(self):
+		self.render('help.html')
+
+
 
 class HostUtilsHandler(RequestHandler):
 	''' 实现一组 host 相关的服务，如“关机” 等 ...
@@ -18,6 +27,7 @@ class HostUtilsHandler(RequestHandler):
 	def get(self):
 		rc = { 'result': 'ok', 'info': '' }
 		cmd = _param(self, 'command')
+
 		if cmd is None:
 			rc['result'] = 'err'
 			rc['info'] = '"command" MUST be supplied!'
@@ -25,13 +35,31 @@ class HostUtilsHandler(RequestHandler):
 			return
 
 		if cmd == 'poweroff':
-			pass
+			self.__poweroff(rc)
 
 		if cmd == 'reboot':
-			pass
+			self.__reboot(rc)
 
 		if cmd == 'stat':
-			pass
+			if _pm is None:
+				rc['result'] = 'err'
+				rc['info'] = 'Unsupported for Performance Stats'
+				self.write(rc)
+			else:
+				rc['value'] = { 'type': 'dict', 'data': _pm.get_all() }
+				self.write(rc)
+
+
+	def __poweroff(self, rc):
+		rc['info'] = 'will poweroff atonce'
+		self.write(rc)
+		# TODO: 关机 ....
+
+
+	def __reboot(self, rc):
+		rc['info'] = 'will reboot atonce'
+		self.write(rc)
+		# TODO: 重启 ....
 
 
 
@@ -67,9 +95,15 @@ class InternalHandler(RequestHandler):
 def main():
 	app = Application([
 			url(r'/host/util', HostUtilsHandler),
-			url(r'/host/internal', InternalHandler)
+			url(r'/host/internal', InternalHandler),
+			url(r'/host/help', HelpHandler),
 			])
 	app.listen(10004)
+
+	global _pm
+	_pm = PerformanceMonitor()
+	_pm.start()
+
 	global _ioloop
 	_ioloop = IOLoop.instance()
 	_ioloop.start()

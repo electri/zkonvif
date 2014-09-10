@@ -7,7 +7,37 @@ import threading, time
 
 
 class PerformanceMonitor(threading.Thread):
-	''' 性能对象，用于查询主机的性能参数，如 cpu, 内存，网络 .... '''
+	''' 性能对象，用于查询主机的性能参数，如 cpu, 内存，网络 .... 
+
+			{
+				"cpu_rate": 0.05,					# cpu 占用百分比
+
+				"net_bits": 						# 每秒接收，发送 bits 数
+				{ 
+					"recv": 9938.12, 
+					"sent" 15333.2 
+				},	
+
+				"memory": 
+				{ 
+					"availabled": 54533321102,		# 可用物理内存
+					"committed": 3110029282,		# 已用内存
+				}
+
+				"disk": [							# 磁盘返回每个分区的使用情况
+				{
+					"name": "c:",
+					"freedMB": 49383280,
+					"totalMB": 89388277,
+				}
+				{
+					"name": "d:",
+					...
+				}
+				...
+				]
+			}
+	'''
 	def __init__(self):
 		self.__lock = threading.RLock()
 		self.__stats = {}
@@ -22,30 +52,18 @@ class PerformanceMonitor(threading.Thread):
 		pythoncom.CoInitialize()
 		c = wmi.WMI()
 
-		first = True
-		net_bits_last = (0, 0)
-		last = time.time()
-		interval = 1.0
-
 		while not self.__quit:
 			now = time.time()
 			cpu_rate = self.__get_cpu_rate(c)
-			net_bits = self.__get_nic_bits_in_out(c) # (recved bits, sent bits)
+			net_bits = self.__get_nic_bits_in_out(c)
+			mem = self.__get_mem_info(c)
+			disk = self.__get_disk_info(c)
 
-			if first:
-				first = False
-				net_bits_delta = (0, 0)
-				interval = 1.0
-			else:
-				interval = now - last
-				net_bits_delta = ((net_bits[0]-net_bits_last[0])/interval, (net_bits[1]-net_bits_last[1])/interval)
-			
-			last = now
-			net_bits_last = net_bits
-			
 			self.__lock.acquire()
 			self.__stats['cpu_rate'] = cpu_rate
-			self.__stats['net_bits'] = net_bits_delta
+			self.__stats['net_bits'] = net_bits
+			self.__stats['memory'] = mem
+			self.__stats['disk'] = disk
 			self.__lock.release()
 
 			time.sleep(1.0)
@@ -61,6 +79,36 @@ class PerformanceMonitor(threading.Thread):
 		return data
 
 
+	def __get_mem_info(self, c):
+		''' 返回内存占用情况
+
+		'''
+		x = c.Win32_PerfFormattedData_PerfOS_Memory()
+		ms = [(int(m.AvailableBytes), int(m.CommittedBytes)) for m in x]
+		m = ms[0]
+		return { 'availabled': m[0], 'committed': m[1] }
+
+
+	def __get_disk_info(self, c):
+		''' 返回磁盘占用情况
+
+			
+		'''
+		x = c.Win32_PerfFormattedData_PerfDisk_LogicalDisk()
+		xr = [( i.name, int(i.FreeMegabytes), int(i.PercentFreeSpace)) for i in x]
+		rc = []
+		for m in xr:
+			i = { "name": m[0], "freedMB": m[1], "totalMB": m[1] * 100 / m[2] }
+			rc.append(i)
+		return rc
+
+
+	def __get_disk_storage(self, c):
+		''' 返回磁盘总空间，剩余空间 ...
+		'''
+		pass
+
+
 	def __get_cpu_rate(self, c):
 		cs = [cpu.LoadPercentage for cpu in c.Win32_Processor()]
 		for i, item in enumerate(cs):
@@ -72,14 +120,15 @@ class PerformanceMonitor(threading.Thread):
 
 
 	def __get_nic_bits_in_out(self, c):
-		d = ([(int(net_interface.BytesReceivedPerSec), int(net_interface.BytesSentPerSec))
-				for net_interface in c.Win32_PerfRawData_Tcpip_NetworkInterface()])
+		x = c.Win32_PerfFormattedData_Tcpip_NetworkInterface()
+		d = ([(int(n.BytesReceivedPerSec), int(n.BytesSentPerSec)) for n in x])
 		trs = 0
 		tss = 0
 		for t in d:
 			trs += t[0]
 			tss += t[1]
-		return (trs * 8, tss * 8)
+		return { 'recv': trs * 8, 'sent': tss * 8 }
+
 
 
 if __name__ == '__main__':
