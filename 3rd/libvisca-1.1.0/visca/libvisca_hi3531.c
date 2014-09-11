@@ -84,12 +84,13 @@ static int _poll(VISCAInterface_t *i, int timeout)
 
 static void dump(int out, const unsigned char *buf, int len)
 {
+	int i;
 	if (out)
 		fprintf(stderr, "========= SENT =========\n");
 	else
 		fprintf(stderr, "========= RECV =========\n");
 
-	for (int i = 0; i < len; i++)
+	for (i = 0; i < len; i++)
 		fprintf(stderr, "%02X ", buf[i]);
 
 	fprintf(stderr, "\n----------------------\n");
@@ -208,7 +209,7 @@ uint32_t VISCA_open_serial(VISCAInterface_t * iface, const char *device_name)
 
 	iface->port_fd = fd;
 	iface->address = 0;
-	iface->want_result = 0;
+	//iface->want_result = 0;
 
 	return VISCA_SUCCESS;
 }
