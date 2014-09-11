@@ -73,9 +73,11 @@ def __check_init():
 	''' 检查数据库是否准备好 '''
 	conn = sqlite3.connect(DBNAME)
 	c = conn.cursor()
-	
 	# 检查 log 表是否存在 ...
 	s1 = 'select COUNT(*) from sqlite_master where name="' + TABLENAME + '"'
+	v = c.execute(s1)
+	print type(v)
+
 	exist = (c.execute(s1).next()[0] != 0)
 	if not exist:
 		print 'to init db ...'
