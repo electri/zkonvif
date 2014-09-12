@@ -42,7 +42,7 @@ class RecordingCommand():
 		return rc
 
 	def pause(self):
-		rc=self.send_commad('RecordCmd=PauseRecord')
+		rc=self.send_command('RecordCmd=PauseRecord')
 		return  rc
 
 	def stop(self):
