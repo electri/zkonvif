@@ -1,0 +1,429 @@
+﻿<html>
+<head>
+	<title>Recording help</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	录像服务接口:为录像提供启动、停止、暂停等操作接口，同时能提供录像参数设置接口。
+ 
+    <p>
+        <strong>一、录像操作</strong></p>
+    <p>
+        1）<strong>/recording/start:</strong><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">录像开始</span></p>
+    <p>
+        2)<strong>/recording/stop:</strong>录像停止</p>
+    <p>
+        3）<strong>/recording/pause:</strong>录像暂停</p>
+    <p>
+        4）<strong>/recording/resume:</strong>录像恢复</p>
+        <p>
+
+        返回：application/json</p>
+
+    <p>
+
+        //成功&quot;result&quot;=&quot;ok&quot;,&quot;info&quot;=&quot;&quot;,失败&quot;result&quot;=&quot;error&quot;,&quot;info&quot;=&quot;失败原因&quot;</p>
+
+    <p>
+
+        {</p>
+
+    <p>
+
+        &quot;result&quot;:&quot;ok&quot;</p>
+
+    <p>
+
+        &quot;info&quot;:&quot;&quot;</p>
+
+    <p>
+
+        }</p>
+
+    <p>
+        二<strong>、录制模式设置</strong></p>
+    <p>
+        //目前RecordMode支持All（全景模式）、Resource（资源模式）和Movie（电影模式）三种模式</p>
+    <p>
+        {</p>
+    <p>
+        &quot;RecordMode&quot;:&quot;All&quot;</p>
+    <p>
+        }</p>
+    <p>
+        <strong>设置为电影模式的示例:/recording/setRecordMode?RecordMode=Movie</strong></p>
+      <p>
+
+        返回：application/json</p>
+
+    <p>
+
+        //成功&quot;result&quot;=&quot;ok&quot;,&quot;info&quot;=&quot;&quot;,失败&quot;result&quot;=&quot;error&quot;,&quot;info&quot;=&quot;失败原因&quot;</p>
+
+    <p>
+
+        {</p>
+
+    <p>
+
+        &quot;result&quot;:&quot;ok&quot;</p>
+
+    <p>
+
+        &quot;info&quot;:&quot;&quot;</p>
+
+    <p>
+
+        }</p>
+    <p>
+
+        <strong>三、录像文件路径</strong></p>
+    <p>
+
+        <strong>1）总路径：</strong></p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;FileFormat&quot;:&quot;mp4&quot;</p>
+    <p>
+
+        &quot;ToatlFilePath&quot;:&quot;D:/rec&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        <strong>设置文件格式为mp4，路径存储在&quot;D:/rec&quot;的示例：/recording/setFileProperty?FileFormat=mp4&amp;ToatlFilePath=D:/rec</strong></p>
+    <p>
+
+        <strong>2）子路径：</strong></p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;SubFileFolder&quot;:&quot;yyyy-MM-dd HH.mm.ss&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        <strong>设置子路径为2014-08-19 08.08.08的示例：/recording/setFileFolder?SubFileFolder=2014-08-19 08.08.08</strong></p>
+    <p>
+
+        <strong>四、片头设置</strong></p>
+    <p>
+
+        <strong>1）图片：</strong></p>
+    <p>
+
+        <strong>1.图片路径：</strong></p>
+    <p>
+
+        //Key=3100用来标示片头</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;FilePath&quot;:&quot;&quot;</p>
+    <p>
+
+        &quot;Key&quot;:&quot;&quot;</p>
+    <p>
+
+        &quot;StartTime&quot;:&quot;&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        示例：/recording/OpenPicFile?FilePath=<a href="file:///D:/image.png">D:\image.png</a>&amp;Key=3100&amp;StartTime=0</p>
+    <p>
+
+        <strong>2.开启图片片头：/recording/PlayPicFile?Key=3100</strong></p>
+    <p>
+
+        //Key=3100用来标示片头</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;Key&quot;:&quot;3100&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        <strong>3.关闭图片片头：/recording/StopPicFile?Key=3100</strong></p>
+    <p>
+
+        //Key=3100用来标示片头</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;Key&quot;:&quot;3100&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        <strong>2）视频：</strong></p>
+    <p>
+
+        <strong>1.视频路径：</strong></p>
+    <p>
+
+        //Key=3100用来标示片头</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;FilePath&quot;:&quot;&quot;</p>
+    <p>
+
+        &quot;Key&quot;:&quot;&quot;</p>
+    <p>
+
+        &quot;StartTime&quot;:&quot;&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        示例：/recording/OpenVideoFile?FilePath=<a 
+            href="file:///D:/video.mp4">D:\video.mp4</a>&amp;Key=3100&amp;StartTime=0</p>
+    <p>
+
+        <strong>2.开启视频片头：/recording/PlayVideoFile?Key=3100</strong></p>
+    <p>
+
+        json数据</p>
+    <p>
+
+        //Key=3100用来标示片头</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;Key&quot;:&quot;3100&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        &nbsp;</p>
+    <p>
+
+        <strong>3.关闭视频片头：/recording/StopVideoFile?Key=3100</strong></p>
+    <p>
+
+        json数据</p>
+    <p>
+
+        //Key=3100用来标示片头</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;Key&quot;:&quot;3100&quot;</p>
+    <p>
+
+        }</p>
+      <p>
+
+        返回：application/json</p>
+
+    <p>
+
+        //成功&quot;result&quot;=&quot;ok&quot;,&quot;info&quot;=&quot;&quot;,失败&quot;result&quot;=&quot;error&quot;,&quot;info&quot;=&quot;失败原因&quot;</p>
+
+    <p>
+
+        {</p>
+
+    <p>
+
+        &quot;result&quot;:&quot;ok&quot;</p>
+
+    <p>
+
+        &quot;info&quot;:&quot;&quot;</p>
+
+    <p>
+
+        }</p>
+    <p>
+
+        <strong>五、片尾设置</strong></p>
+    <p>
+
+        <strong>1）图片：</strong></p>
+    <p>
+
+        <strong>1.图片路径：</strong></p>
+    <p>
+
+        //Key=3101用来标示片尾</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;FilePath&quot;:&quot;&quot;</p>
+    <p>
+
+        &quot;Key&quot;:&quot;3101&quot;</p>
+    <p>
+
+        &quot;StartTime&quot;:&quot;&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        示例：/recording/OpenPicFile?FilePath=<a href="file:///D:/image.png">D:\image.png</a>&amp;Key=3101&amp;StartTime=0</p>
+    <p>
+
+        <strong>2.开启图片片尾：/recording/PlayPicFile?Key=3101</strong></p>
+    <p>
+
+        json数据</p>
+    <p>
+
+        //Key=3101用来标示片尾</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;Key&quot;:&quot;3101&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        <strong>3.关闭图片片尾：/recording/StopPicFile?Key=3101</strong></p>
+    <p>
+
+        json数据</p>
+    <p>
+
+        //Key=3101用来标示片尾</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;Key&quot;:&quot;3101&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        <strong>2）视频：</strong></p>
+    <p>
+
+        <strong>1.视频路径：</strong></p>
+    <p>
+
+        //Key=3101用来标示片尾</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;FilePath&quot;:&quot;&quot;</p>
+    <p>
+
+        &quot;Key&quot;:&quot;&quot;</p>
+    <p>
+
+        &quot;StartTime&quot;:&quot;&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        示例：/recording/OpenVideoFile?FilePath=<a 
+            href="file:///D:/video.mp4">D:\video.mp4</a>&amp;Key=3101&amp;StartTime=0</p>
+    <p>
+
+        <strong>2.开启视频片尾：/recording/PlayVideoFile?Key=3101</strong></p>
+    <p>
+
+        json数据</p>
+    <p>
+
+        //Key=3101用来标示片尾</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;Key&quot;:&quot;3101&quot;</p>
+    <p>
+
+        }</p>
+    <p>
+
+        <strong>3.关闭视频片尾：/recording/StopVideoFile?Key=3101</strong></p>
+    <p>
+
+        json数据</p>
+    <p>
+
+        //Key=3101用来标示片尾</p>
+    <p>
+
+        {</p>
+    <p>
+
+        &quot;Key&quot;:&quot;3101&quot;</p>
+    <p>
+
+        }</p>
+      <p>
+
+        返回：application/json</p>
+
+    <p>
+
+        //成功&quot;result&quot;=&quot;ok&quot;,&quot;info&quot;=&quot;&quot;,失败&quot;result&quot;=&quot;error&quot;,&quot;info&quot;=&quot;失败原因&quot;</p>
+
+    <p>
+
+        {</p>
+
+    <p>
+
+        &quot;result&quot;:&quot;ok&quot;</p>
+
+    <p>
+
+        &quot;info&quot;:&quot;&quot;</p>
+
+    <p>
+
+        }</p>
+    <p>
+
+        &nbsp;</p>
+    <p>
+
+        &nbsp;</p>
+
+    <p>
+
+        &nbsp;</p>
+</body>
+</html>
