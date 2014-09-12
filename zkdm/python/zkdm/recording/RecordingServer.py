@@ -14,7 +14,7 @@ define("port", default=8888, help="run on the given port", type=int)
 
 def _param(req, key):
 	if key in req.request.arguments:
-		return req.request.arguments[key][0]
+		return req.request.arguments
 	else:
 		return None
 
@@ -34,25 +34,144 @@ class CmdHandler(tornado.web.RequestHandler):
 		rc['result']='ok'
 		rc['info']=''
 
-		cmd = _param(self, 'command')
+		cmd = _param(self, 'RecordCmd')
 
 		if cmd is None:
 			rc['result'] = 'err'
-			rc['info'] = '"command" MUST be supplied!'
+			rc['info'] = '"RecordCmd" MUST be supplied!'
 			self.write(rc)
 			return
-		if cmd == 'start':
+		elif cmd['RecordCmd'] == ['StartRecord']:
 			rc=_rcmd.start()
 			self.write(rc)
 
-		if cmd=='pause':
-			_rcmd.pause()
+		elif cmd['RecordCmd']==['PauseRecord']:
+			rc=_rcmd.pause()
+			self.write(rc)
 
-		if  cmd=='stop':
-			_rcmd.stop()
+		elif  cmd['RecordCmd']==['StopRecord']:
+			rc=_rcmd.stop()
+			self.write(rc)
 
-		if cmd=='resume':
-			_rcmd.resume()
+		elif cmd['RecordCmd']==['ResumeRecord']:
+			rc=_rcmd.resume()
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['OpenPicFile']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['PlayPicFile']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['StopPicFile']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['OpenVideoFile']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['OpenVideoFile']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['ChangeCard']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['StopVideoFile']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetRecordMode']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetFileProperty']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetFileProperty']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetCourseInfo']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetResRecordEnable']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetVolume']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetFilmParams']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetResParams']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetDisSolve']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetCardInfo']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['ChangeCard']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetCardEffect']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetAllEffect']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetPicInPicCardPort']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetPicInPicMode']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['ChangePicInPic']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetPositionAndSize']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['ClosePicInPic']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetCaption']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['CaptionClose']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['SetLogo']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['LogoClose']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['ManualTrace']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['AutoTrace']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['MouseTrace']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['Zoom']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['QueryRAllInfo']:
+			self.write(rc)
+
+		elif cmd['RecordCmd']==['FtpUrl']:
+			rc['info']='ftp url!'
+			self.write(rc)
+
+		else:
+			print cmd
+			print cmd['StartTime']
+			print cmd['RecordCmd']
+			rc['result'] = 'err'
+			rc['info'] = 'command not Support!'
+			self.write(rc)
+		return
+
 
 def main():
 
