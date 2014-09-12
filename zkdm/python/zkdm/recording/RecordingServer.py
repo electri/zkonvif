@@ -10,7 +10,7 @@ from tornado.options import define, options
 from tornado.web import RequestHandler, Application, url
 from RecordingCommand import RecordingCommand
 
-define("port", default=8889, help="run on the given port", type=int)
+define("port", default=8888, help="run on the given port", type=int)
 
 def _param(req, key):
 	if key in req.request.arguments:
@@ -42,7 +42,8 @@ class CmdHandler(tornado.web.RequestHandler):
 			self.write(rc)
 			return
 		if cmd == 'start':
-			_rcmd.start()
+			rc=_rcmd.start()
+			self.write(rc)
 
 		if cmd=='pause':
 			_rcmd.pause()
@@ -52,7 +53,6 @@ class CmdHandler(tornado.web.RequestHandler):
 
 		if cmd=='resume':
 			_rcmd.resume()
-
 
 def main():
 
