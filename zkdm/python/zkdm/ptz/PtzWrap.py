@@ -280,6 +280,7 @@ class PtzWrap(object):
 
 
 	def zoom_wide(self, params):
+		print 'zoom_wide calling'
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
 		else:
