@@ -148,7 +148,6 @@ int ptz_stop(ptz_t *ptz)
 {
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) == VISCA_SUCCESS) {
-		p->pos_changing = false;
 		if (isSetPos == true) {
 		int x = 0, y = 0;
 		ptz_get_pos(ptz, &x, &y);
@@ -211,49 +210,13 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 		fprintf(stdout, "ptz_get_pos is failure\n");
 		return -1;
 	}
-	/*
-	if (p->set_posing > 0) {
-		// 此时说明 set_pos() 刚刚调用, 需要连续检查 pos 是否变化 ..
-		if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) {
-			if (p->last_x == *x && p->last_y == *y) {
-				p->set_posing --;
-				return 0;
-			}
-			else {
-				p->last_x = *x, p->last_y = *y;
-				return 0;
-			}
-		}
-		else {
-			return -1;
-		}
-	}
-	else {
-		if (!p->set_posing && !p->first_get_pos) {
-			// 返回上次 ...
-			*x = p->last_x, *y = p->last_y;
-			return 0;
-		}
-		else {
-			if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) == VISCA_SUCCESS) {
-				p->first_get_pos = false;
-				*x = p->last_x, *y = p->last_y;
-				return 0;
-			}
-			else {
-				return -1;
-			}
-		}
-	}*/
 }
 
 int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 {
 	Ptz *p = (Ptz*)ptz;
-	//if (VISCA_set_pantilt_absolute_position(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
+
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) == VISCA_SUCCESS) {
-		//p->set_posing = 3;	// 连续N次 get_pos() 不变才认为完成了 
-		//p->pos_changing = true;
 		isSetPos = true;
 		fprintf(stderr, "%s calling\n", __FUNCTION__);
 		return 0;
@@ -323,8 +286,6 @@ int ptz_zoom_tele(ptz_t *ptz, int s)
 	Ptz *p = (Ptz*)ptz;
 
 	if (VISCA_set_zoom_tele_speed(&p->serial->iface, &p->cam, s) == VISCA_SUCCESS) {
-		p->zoom_changing = true;
-		p->zoom_changed = true;
 		return 0;
 	}
 	else {
@@ -337,8 +298,6 @@ int ptz_zoom_wide(ptz_t *ptz, int s)
 	Ptz *p = (Ptz *)ptz;
 
 	if (VISCA_set_zoom_wide_speed(&p->serial->iface, &p->cam, s) == VISCA_SUCCESS) {
-		p->zoom_changing = true;
-		p->zoom_changed = true;
 		return 0;
 	}
 	else {

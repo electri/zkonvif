@@ -94,6 +94,8 @@ class PtzWrap(object):
 			ret.update(self.get_zoom())
 		elif method == 'set_zoom':
 			ret.update(self.set_zoom(params))
+		elif method == 'get_pos_zoom':
+			ret.update(self.get_pos_zoom())
 		elif method == 'zoom_tele':
 			ret.update(self.zoom_tele(params))
 		elif method == 'zoom_wide':
@@ -210,7 +212,22 @@ class PtzWrap(object):
 			else:
 				return { 'result':'error', 'info':'get_pos failure' }
 
-
+	def get_pos_zoom(self):
+			if not self.__ptz:
+				return {'result':'error', 'info':'No PTZ'}
+			else:
+				x = c_int()
+				y = c_int()
+				z = c_int()
+				
+				is_pos = self.__ptz['func_get_pos'](self.__ptz, byref(x), byref(y))
+				is_zoom = self.__ptz['func_get_zoom'](self.__ptz, byref(z))
+				
+				if (is_pos==0)&&(is_zoom==0):
+						return {'value': { 'type':'position', 'data': {'x': x.value, 'y': y.value, 'z': z.value} } }
+				else:
+					return {'result':'error', 'info':'No PTZ'}
+			
 	def ext_get_scales(self):
 		if not self.__ptz:
 			return { 'result':'error', 'info':'NO ptz' }
