@@ -4,7 +4,7 @@
 			"name": "teacher",
 			"config": 
 			{
-				"serial": "COM6",
+				"serial": "COMX",
 				"addr":1,
 				"extent": "teacher.config"
 			}
@@ -13,7 +13,7 @@
 			"name": "student",
 			"config": 
 			{
-				"serial": "COM3",
+				"serial": "COMX",
 				"addr":1,
 				"extent": "student.config"
 			}
