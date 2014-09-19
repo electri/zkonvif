@@ -160,6 +160,18 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 #else
 
 VISCA_API uint32_t
+_VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
+{
+	iface->type = iface->ibuf[1] & 0xF0;
+	while (iface->ibuf[1] != 0x50)
+	{
+		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+			return VISCA_FAILURE;
+	}
+
+	return VISCA_SUCCESS;
+}
+
 _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
 	// first message: -------------------
