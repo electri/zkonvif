@@ -209,7 +209,8 @@ uint32_t VISCA_open_serial(VISCAInterface_t * iface, const char *device_name)
 
 	iface->port_fd = fd;
 	iface->address = 0;
-	//iface->want_result = 0;
+	iface->want_result = 0;
+	iface->temp_len = 0;
 
 	return VISCA_SUCCESS;
 }
