@@ -1,5 +1,6 @@
 调度服务
 
 
-输入采用类似 cron 格式 ...
+import crontab
+...
 
