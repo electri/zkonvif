@@ -47,6 +47,19 @@ void _VISCA_init_packet(VISCAPacket_t * packet)
 	// packet sending function. This function will also append a terminator.
 	packet->length = 1;
 }
+VISCA_API uint32_t
+_VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
+{
+	iface->type = iface->ibuf[1] & 0xF0;
+	while (iface->ibuf[1] & 0x0F != 0)
+	{
+		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+			return VISCA_FAILURE;
+	}
+
+	return VISCA_SUCCESS;
+}
+
 
 #ifdef VK3344
 typedef struct Packet
@@ -150,7 +163,7 @@ VISCA_API uint32_t
 _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
 	iface->type = iface->ibuf[1] & 0xF0;
-	while ((iface->ibuf[1] & 0x0F) != 0)
+	while (iface->ibuf[1] != 0x50)
 	{
 		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
 			return VISCA_FAILURE;
@@ -159,7 +172,6 @@ _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
 	return VISCA_SUCCESS;
 }
 
-VISCA_API uint32_t
 _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
 	// first message: -------------------
