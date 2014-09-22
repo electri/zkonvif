@@ -11,6 +11,7 @@ libvisca_la_SOURCES =  \
 		libvisca.h		\
 		libvisca_hi3531.c
 
+libvisca_la_CFLAGS= -DVK3344
 # headers to be installed
 pkginclude_HEADERS = libvisca.h
 

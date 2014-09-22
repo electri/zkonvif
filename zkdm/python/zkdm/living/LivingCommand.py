@@ -1,14 +1,16 @@
 # coding: utf-8
 
 import socket
+import codecs
 import getopt, sys
 
-class RecordingCommand():
+class LivingCommand():
     """
     """
     def __init__(self):
-        pass
-	
+        pass	
+
+
     #录像程序的命令接收端口号固定为1230
     def send_command(self,command):
         rc={}
@@ -34,28 +36,22 @@ class RecordingCommand():
             return rc
 
     def start(self):
-        rc=self.send_command('RecordCmd=StartRecord')
+        rc=self.send_command('BroadCastCmd=StartBroadCast')
         return rc
-
-    def pause(self):
-        rc=self.send_command('RecordCmd=PauseRecord')
-        return  rc
 
     def stop(self):
-        rc=self.send_command('RecordCmd=StopRecord')
-        return rc
-	
-    def resume(self):
-        rc=self.send_command('RecordCmd=ResumeRecord')
+        rc=self.send_command('BroadCastCmd=StopBroadCast')
         return rc
 
-    def other_command(self,args):
+    def property(self,args):
         rc=self.send_command(args)
         return rc
 
+
 def main():
-    ss=RecordingCommand()
+    ss=LivingCommand()
     ss.start()
+
 
 if __name__ == "__main__":
     main()

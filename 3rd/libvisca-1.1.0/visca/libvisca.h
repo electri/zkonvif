@@ -465,6 +465,9 @@ extern "C" {
 
 /* This is the interface for the POSIX platform.
  */
+#ifdef VK3344
+# include CircQue.h
+#endif
 	typedef struct _VISCA_interface {
 		// RS232 data:
 		int port_fd;
@@ -482,7 +485,9 @@ extern "C" {
 
 #ifdef VK3344
 		int want_result;	// 需要解析得到 9x 50 xx xx 的 ..
-							// 如 get_pos, get_zoom 之类 ..
+								// 如 get_pos, get_zoom 之类 ..
+		struct List list;
+
 #endif				//
 
 	} VISCAInterface_t;

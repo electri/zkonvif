@@ -219,12 +219,11 @@ class PtzWrap(object):
 				x = c_int()
 				y = c_int()
 				z = c_int()
-				
 				is_pos = self.__ptr['func_get_pos'](self.__ptz, byref(x), byref(y))
 				is_zoom = self.__ptr['func_get_zoom'](self.__ptz, byref(z))
 				
-				if (is_pos==0)&&(is_zoom==0):
-						return {'value': { 'type':'position', 'data': {'x': x.value, 'y': y.value, 'z': z.value} } }
+				if (is_pos==0) and (is_zoom==0):
+					return {'value': { 'type':'position', 'data': {'x': x.value, 'y': y.value, 'z': z.value} } }
 				else:
 					return {'result':'error', 'info':'No PTZ'}
 			

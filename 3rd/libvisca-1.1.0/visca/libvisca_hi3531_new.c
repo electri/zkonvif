@@ -154,11 +154,30 @@ _VISCA_send_packet(VISCAInterface_t * iface, VISCACamera_t * camera,
 	return _VISCA_write_packet_data(iface, camera, packet);
 }
 
+void _temination_get_packet(VISCAInterface_t *iface, int list_len, int &lpos)
+{
+	for (int i = 0; i < list_len; i++) {
+		char ch;
+		circque_front(&iface->list, &ch);
+		circque_pop(&iface->list);
+		*(iface->ibuf + *pos) = ch; // xxx:fixme ...
+		iface->bytes = *pos + 1;
+		if (ch == 0xFF) {
+			return VISCA_SUCCESS;
+		}
+		if (iface->bytes > VISCA_INPUT_BUFFER_SIZE) {
+			return VISCA_FAILURE;
+		}
+		(*pos)++;
+	}
+}
+
 uint32_t _VISCA_get_packet(VISCAInterface_t * iface)
 {
 	int pos = 0;
 	int bytes_read;
-
+	unsigned char temp[VISCA_INPUT_BUFFER_SIZE];
+	int list_len = 0;
 	// 300ms 超时
 	if (_poll(iface, 300) == 0) {
 		fprintf(stderr, "WARNING: %s: timeout\n", __func__);
@@ -166,17 +185,28 @@ uint32_t _VISCA_get_packet(VISCAInterface_t * iface)
 	}
 
 	// 对于驱动vk3344，要求必须一次都读出来 :( 
-	bytes_read = read(iface->port_fd, iface->ibuf, VISCA_INPUT_BUFFER_SIZE);
-	if (bytes_read <= 0) {
-		return VISCA_FAILURE;
+	//bytes_read = read(iface->port_fd, iface->ibuf, VISCA_INPUT_BUFFER_SIZE);
+	list_len = circque_get_len(&iface->ifac->list);
+	if (list_len > 0) {
+		 _temination_get_packet(VISCAInterface_t *iface, list_len, &pos);
 	}
+	else {
+		while(list_len == 0) {
+			bytes_read = read(iface->port_fd, temp, VISCA_INPUT_BUFFER_SIZE);
+			if (bytes_read <= 0) {
+				return VISCA_FAILURE;
+			}
 
-	iface->bytes = bytes_read;
-
-	dump(0, iface->ibuf, iface->bytes);
-
-	return VISCA_SUCCESS;
-}
+			for (int i = 0; i < bytes_read; i++) {
+				circque_push(&iface->list, *(temp + i));
+			}
+		
+			list_len = circque_get_len(&iface->list);
+			 _temination_get_packet(VISCAInterface_t *iface, list_len, &pos);
+			list_len = circque_get_len(&iface->list);
+		}
+	}
+}		
 
 /***********************************/
 /*       SYSTEM  FUNCTIONS         */
@@ -211,6 +241,8 @@ uint32_t VISCA_open_serial(VISCAInterface_t * iface, const char *device_name)
 	iface->address = 0;
 	iface->want_result = 0;
 	iface->temp_len = 0;
+
+	circque_init(&iface->list);
 
 	return VISCA_SUCCESS;
 }
