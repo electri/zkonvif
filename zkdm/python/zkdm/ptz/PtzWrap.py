@@ -65,7 +65,7 @@ class PtzWrap(object):
 
 	
 	def call(self, method, params):
-		''' 执行 method 命令，使用 params 作为参数 ...
+		''' 执行 method 命令，使用 params 作为参数 .tr..
 		'''
 		# TODO：应该检查参数 ... 
 		ret = {'result':'ok', 'info':''}
@@ -220,8 +220,8 @@ class PtzWrap(object):
 				y = c_int()
 				z = c_int()
 				
-				is_pos = self.__ptz['func_get_pos'](self.__ptz, byref(x), byref(y))
-				is_zoom = self.__ptz['func_get_zoom'](self.__ptz, byref(z))
+				is_pos = self.__ptr['func_get_pos'](self.__ptz, byref(x), byref(y))
+				is_zoom = self.__ptr['func_get_zoom'](self.__ptz, byref(z))
 				
 				if (is_pos==0)&&(is_zoom==0):
 						return {'value': { 'type':'position', 'data': {'x': x.value, 'y': y.value, 'z': z.value} } }
@@ -297,7 +297,6 @@ class PtzWrap(object):
 
 
 	def zoom_wide(self, params):
-		print 'zoom_wide calling'
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
 		else:
