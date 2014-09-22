@@ -65,7 +65,7 @@ class PtzWrap(object):
 
 	
 	def call(self, method, params):
-		''' 执行 method 命令，使用 params 作为参数 ...
+		''' 执行 method 命令，使用 params 作为参数 .tr..
 		'''
 		# TODO：应该检查参数 ... 
 		ret = {'result':'ok', 'info':''}
@@ -296,7 +296,6 @@ class PtzWrap(object):
 
 
 	def zoom_wide(self, params):
-		print 'zoom_wide calling'
 		if not self.__ptz:
 			return {'result':'error', 'info':'NO ptz'}
 		else:
