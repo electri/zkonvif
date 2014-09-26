@@ -7,7 +7,6 @@ import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
 
-i = 0;
 
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
@@ -30,15 +29,21 @@ def load_ptz(config):
 		'addr': config['config']['addr'],
 		'ptz': None
 	}
+
+	if 'extent' in config['config']:
+		ptz['cfgfile'] = config['config']['extent']
+
 	# 此处打开 ...
 	if True:
 		ptz['ptz'] = PtzWrap()
 	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
-		ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
-		global i
-		i = i + 1
-		print i
-		print 'open success'
+		if 'cfgfile' in ptz:
+			filename = ptz['cfgfile'].encode('ascii')
+			print 'open with cfg:' , filename
+			ptz['ptz'].open_with_config(filename)
+		else:
+			print 'open ptz:' , ptz['serial'], 'addr:', ptz['addr']
+			ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
 	else:
 		ptz['ptz'] = None
 		print 'open failure'
