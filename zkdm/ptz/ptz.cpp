@@ -199,12 +199,24 @@ int ptz_down(ptz_t *ptz, int speed)
 	return VISCA_SUCCESS;
 }
 
+#ifdef WIN32
 #include <Windows.h>
 
 static double now()
 {
 	return GetTickCount() / 1000.0;
 }
+#else
+#include <sys/time.h>
+
+static double now()
+{
+	struct timeval tv;
+	gettimeofday(&tv, 0);
+	return tv.tv_sec + tv.tv_usec / 1000000.0;
+}
+
+#endif
 
 class TimeUsed
 {
@@ -374,38 +386,35 @@ int ptz_zoom_stop(ptz_t *ptz)
 	return VISCA_SUCCESS;
 }
 
-int ptz_mouse_trace(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
+int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx, int sy)
 {
+	fprintf(stdout, "hvs = %f, vvs = %f\n", hvs, vvs);
 	Ptz *p = (Ptz*)ptz; 
 
-	if (!p->cfg)
-		return -1;	// 必须使用 ptz_open_with_config() 
+	if (!p->cfg) {
+		fprintf(stdout, "no configuration file\n");
+		return -1;
+	}
 
-	int WIDTH = atoi(p->cfg->get_value("width", "960"));
-	int HEIGHT = atoi(p->cfg->get_value("height", "540"));
-	double CCD_WIDTH = atof(p->cfg->get_value("ccd_width", "4.8"));
-	double CCD_HEIGHT = atof(p->cfg->get_value("ccd_height", "2.7"));
-	double F = atof(p->cfg->get_value("f", "4.2017"));
+	double HVA = atof(p->cfg->get_value("hva", "72.5"));
+	double VVA = atof(p->cfg->get_value("vva", "44.8"));
 
-	double hr = double(x - WIDTH/2) / WIDTH;
-	fprintf(stdout, "hr = %f\n", hr);
-	double vr = double(y - HEIGHT/2) / HEIGHT;
-	fprintf(stdout, "vr=%f\n", vr);
+	fprintf(stdout, "HVA = %f, VVA = %f\n", HVA, VVA);
+
 	int zv;
 	if (ptz_get_zoom(ptz, &zv) != 0)
 		return -1;
 	fprintf(stdout, "zv = %d\n", zv);
-	double zr = ptz_zoom_ratio_of_value(zv);
-	fprintf(stdout, "zr=%f\n", zr);
-	double f = zr * F;
-	fprintf(stdout, "f = %f\n", f);
-	double hh = atan(CCD_WIDTH*hr / f);
-	double vv = atan(CCD_HEIGHT*vr /f);
-	fprintf(stdout, "hh = %f, vv = %f\n", hh, vv);
-	int h = (int)(hh/0.075);
-	int v = (int)(vv/0.075);
-	fprintf(stdout, "h = %d, v = %d\n", h, v);
-	return VISCA_set_pantilt_relative_position(&p->serial->iface, &p->cam , sx, sy, h, v);
+	int zs = ptz_ext_get_scals(ptz, zv);
+	fprintf(stdout, "zs = %d\n", zs);
+
+	double hva = HVA / zs;
+	double vva = VVA / zs;
+
+	int h_rpm = (int)(hva*(hvs-0.5) / 0.075);
+	int v_rpm = (int)(vva*(0.5-vvs) /0.075);
+	fprintf(stdout, "h_rpm = %d, v_rpm = %d\n", h_rpm, v_rpm);
+	return VISCA_set_pantilt_relative_position(&p->serial->iface, &p->cam , sx, sy, h_rpm, v_rpm);
 }
 
 double ptz_ext_get_scals(ptz_t *ptz, int z)

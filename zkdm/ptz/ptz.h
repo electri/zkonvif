@@ -31,6 +31,7 @@ int ptz_zoom_tele(ptz_t *ptz, int s);
 int ptz_zoom_wide(ptz_t *ptz, int s);
 int ptz_zoom_stop(ptz_t *ptz);
 
+int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx = 5, int sy = 5);
 /// 从 zoom value 计算返回实际倍率 ..
 double ptz_ext_get_scals(ptz_t *ptz, int z);
 

@@ -258,14 +258,14 @@ class PtzWrap(object):
 			if not self.__ptz:
 				return {'return':'error', 'info':'NO ptz'}
 			else:
-				x = 0
-				y = 0
+				x = 0.0
+				y = 0.0
 				sx = 30
 				sy = 30
 				if 'x' in params:
-					x = int(params['x'][0])
+					x = float(params['x'][0])
 				if 'y' in params:
-					y = int(params['y'][0])
+					y = float(params['y'][0])
 				if 'sx' in params:
 					sx = int(params['sx'][0])
 				if 'sy' in params:
@@ -387,7 +387,7 @@ class PtzWrap(object):
 		ptz['func_zoom_stop'].argtypes = [c_void_p]
 
 		ptz['func_mouse_trace'] = ptz['so'].ptz_mouse_trace
-		ptz['func_mouse_trace'].argtypes = [c_void_p, c_int, c_int, c_int, c_int] 
+		ptz['func_mouse_trace'].argtypes = [c_void_p, c_double, c_double, c_int, c_int] 
 
 		ptz['func_ext_get_scales'] = ptz['so'].ptz_ext_get_scals
 		ptz['func_ext_get_scales'].argtypes = [c_void_p, c_int]
