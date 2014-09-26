@@ -199,12 +199,24 @@ int ptz_down(ptz_t *ptz, int speed)
 	return VISCA_SUCCESS;
 }
 
+#ifdef WIN32
 #include <Windows.h>
 
 static double now()
 {
 	return GetTickCount() / 1000.0;
 }
+#else
+#include <sys/time.h>
+
+static double now()
+{
+	struct timeval tv;
+	gettimeofday(&tv, 0);
+	return tv.tv_sec + tv.tv_usec / 1000000.0;
+}
+
+#endif
 
 class TimeUsed
 {
