@@ -22,6 +22,8 @@
 #include "libvisca.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>
 #ifdef VISCA_WIN
 #ifdef _DEBUG
 #define DEBUG 1
@@ -46,18 +48,6 @@ void _VISCA_init_packet(VISCAPacket_t * packet)
 	// we start writing at byte 1, the first byte will be filled by the
 	// packet sending function. This function will also append a terminator.
 	packet->length = 1;
-}
-VISCA_API uint32_t
-_VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
-{
-	iface->type = iface->ibuf[1] & 0xF0;
-	while (iface->ibuf[1] & 0x0F != 0)
-	{
-		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
-			return VISCA_FAILURE;
-	}
-
-	return VISCA_SUCCESS;
 }
 
 
@@ -161,28 +151,40 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 
 VISCA_API uint32_t
 _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
-{
-	iface->type = iface->ibuf[1] & 0xF0;
+{ 
+	int loop;
+	loop = 0;
+
 	while (iface->ibuf[1] != 0x50)
 	{
+		loop++;
+		iface->type = iface->ibuf[1] & 0xF0;
 		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
 			return VISCA_FAILURE;
 	}
-
+	if (loop > 10)
+		fprintf(stdout, "loop = %d\n", loop);
+	//fprintf(stdout, "low_byte = %d\n", iface->ibuf[1] & 0x0F);
 	return VISCA_SUCCESS;
 }
 
+VISCA_API uint32_t
 _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
 	// first message: -------------------
 	if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+	{
+		fprintf(stdout, "first get_packet fail \n");
 		return VISCA_FAILURE;
+	}
 	iface->type = iface->ibuf[1] & 0xF0;
 
 	// skip ack messages
 	while (iface->type == VISCA_RESPONSE_ACK) {
-		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+		if (_VISCA_get_packet(iface) != VISCA_SUCCESS) {
+			fprintf(stdout, "second get_packet fail \n");
 			return VISCA_FAILURE;
+		}
 		iface->type = iface->ibuf[1] & 0xF0;
 	}
 
@@ -200,6 +202,7 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 		return VISCA_SUCCESS;
 		break;
 	}
+	fprintf(stdout, "third get_packet fail \n");
 	return VISCA_FAILURE;
 }
 #endif // 
@@ -207,13 +210,15 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 VISCA_API uint32_t
 _VISCA_send_packet_with_reply(VISCAInterface_t * iface,
 			      VISCACamera_t * camera, VISCAPacket_t * packet)
-{
+{	
+	clock_t t1, t2;
+	t1 = clock();
 	if (_VISCA_send_packet(iface, camera, packet) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	t2 = _interval_time("send", t1);
 	if (_VISCA_get_reply(iface, camera) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	_interval_time("get", t2);
 	return VISCA_SUCCESS;
 }
 
@@ -3120,10 +3125,22 @@ VISCA_get_pantilt_maxspeed(VISCAInterface_t * iface, VISCACamera_t * camera,
 	}
 }
 
+clock_t _interval_time(char *str, clock_t t)
+{
+	clock_t t1 = clock();
+	double interval = (t1 - t) /1000;
+	if (interval >0.01) {
+		//fprintf(stdout, "%s using time = %f\n", str, interval);
+	}
+	return t1;
+}
+
 VISCA_API uint32_t
 VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 			   int *pan_position, int *tilt_position)
 {
+	clock_t t1, t2, t3, t4;
+	double interval;
 	VISCAPacket_t packet;
 	uint32_t err;
 	uint16_t pan_pos, tilt_pos;
@@ -3136,13 +3153,17 @@ VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 	_VISCA_append_byte(&packet, VISCA_INQUIRY);
 	_VISCA_append_byte(&packet, VISCA_CATEGORY_PAN_TILTER);
 	_VISCA_append_byte(&packet, VISCA_PT_POSITION_INQ);
-
+	
+	t1 = clock();
 	err = _VISCA_send_packet_with_reply(iface, camera, &packet);
+	t2 = _interval_time("base", t1);
+
 	if (err != VISCA_SUCCESS)
 		return err;
 	else {
 		if (_VISCA_get_reply_accurate(iface, camera) != VISCA_SUCCESS)
 			return err;
+		t3 = _interval_time("accurate", t2);
 		pan_pos =
 		    ((iface->
 		      ibuf[2] & 0xf) << 12) | ((iface->ibuf[3] & 0xf) << 8) |
@@ -3165,7 +3186,7 @@ VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 			*tilt_position = tilt_pos;
 		else
 			*tilt_position = ((int)tilt_pos) - 65536;
-
+		_interval_time("end", t3);
 		return VISCA_SUCCESS;
 	}
 }
