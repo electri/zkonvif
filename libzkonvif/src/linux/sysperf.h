@@ -11,6 +11,12 @@ class SysPerf : ost::Thread
 	double disk_tot_, disk_used_;
 	double net_sr_, net_rr_;
 
+	long last_r_, last_s_;
+	double last_stamp_;
+
+	long last_cpu_u_, last_cpu_n_, last_cpu_s_, last_cpu_i_;
+	double last_cpu_stamp_;
+
 	bool quit_;
 
 	char *dp_, *nic_;
@@ -43,9 +49,6 @@ private:
 	void update_mem();
 	void update_disk();
 	void update_net();
-
-	long last_r_, last_s_;
-	double last_stamp_;
 };
 
 #endif // 

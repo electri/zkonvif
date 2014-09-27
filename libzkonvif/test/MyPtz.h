@@ -26,6 +26,12 @@ private:
 		// FIXME: 这里应该照着规矩来 ...
 		return "ptz";
 	}
+	const char *sid() const
+	{
+		//FIXME:应该用mac +ns+ id的形式作为唯一标识，这里先把mac默认为00000000000000
+		return "000000000000ptz0";
+	}
+	const char *desc() const { return ""; }
 	//ptz Node
 	virtual int GetNodes(_tptz__GetNodes *tptz__GetNodes, _tptz__GetNodesResponse *tptz__GetNodesResponse);
 	virtual int GetNode(_tptz__GetNode *tptz__GetNode, _tptz__GetNodeResponse *tptz_GetNodeResponse);

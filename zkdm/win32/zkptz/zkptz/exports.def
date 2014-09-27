@@ -1,0 +1,28 @@
+EXPORTS
+	ptz_open
+	ptz_open_with_config
+	ptz_close
+
+	ptz_left
+	ptz_right
+	ptz_up
+	ptz_down
+	ptz_stop
+
+	ptz_set_pos
+	ptz_get_pos
+
+	ptz_set_zoom
+	ptz_get_zoom
+
+	ptz_preset_save
+	ptz_preset_call
+	ptz_preset_clear
+
+	ptz_zoom_tele
+	ptz_zoom_wide
+	ptz_zoom_stop
+
+	ptz_mouse_trace
+
+	ptz_ext_get_scals

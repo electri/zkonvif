@@ -1,7 +1,7 @@
-/** ²âÊÔ³ÌĞò£º ²âÊÔ test_target_dm: 
-		1. ÊäÈë devicemgrt url:
-		2. ´Ó devicemgrt ½Ó¿Ú£¬²éÑ¯µÃµ½ÆäËû·şÎñ½Ó¿Ú (url) .
-		3. ¶Ô url ½øĞĞ²âÊÔ ...
+/** æµ‹è¯•ç¨‹åºï¼š æµ‹è¯• test_target_dm: 
+		1. è¾“å…¥ devicemgrt url:
+		2. ä» devicemgrt æ¥å£ï¼ŒæŸ¥è¯¢å¾—åˆ°å…¶ä»–æœåŠ¡æ¥å£ (url) .
+		3. å¯¹ url è¿›è¡Œæµ‹è¯• ...
  */
 
 #include <stdio.h>
@@ -11,17 +11,17 @@
 #include "../soap/soapDeviceBindingProxy.h"
 #include "../soap/soapPTZBindingProxy.h"
 
-typedef void(*pfn_test_service)(const tds__Service *service);
+typedef void(*pfn_test_service)(const zonekey__ZonekeyDMServiceType *service);
 
 struct TestServiceFunc
 {
-	const char *ns;  // ¶ÔÓ¦ tds__Service µÄ namespace, ÓÃÓÚÇø·Ö²âÊÔÀà±ğ ...
+	const char *ns;  // å¯¹åº” tds__Service çš„ namespace, ç”¨äºåŒºåˆ†æµ‹è¯•ç±»åˆ« ...
 	pfn_test_service func;
 };
 
-extern void test_ptz(const tds__Service *);
-extern void test_event(const tds__Service *);
-extern void test_devicemgrt(const tds__Service*);
+extern void test_ptz(const zonekey__ZonekeyDMServiceType *);
+extern void test_event(const zonekey__ZonekeyDMServiceType *);
+extern void test_devicemgrt(const zonekey__ZonekeyDMServiceType*);
 
 static TestServiceFunc _test_service_func_table[] = {
 		{ "ptz", test_ptz, },	// FIXME: 
@@ -70,10 +70,10 @@ int main(int argc, char **argv)
 		return -2;
 	}
 
-	// ²âÊÔÃ¿¸ö·şÎñ .
-	std::vector<tds__Service *>::const_iterator it;
+	// æµ‹è¯•æ¯ä¸ªæœåŠ¡ .
+	std::vector<zonekey__ZonekeyDMServiceType *>::const_iterator it;
 	for (it = res_gs.Service.begin(); it != res_gs.Service.end(); ++it) {
-		const char *ns = (*it)->Namespace.c_str();
+		const char *ns = (*it)->ns.c_str();
 		pfn_test_service func = get_test_ptr(ns);
 		if (func) func(*it);
 	}

@@ -29,7 +29,7 @@ class MyPullPoint : PullPointSubscriptionBindingService
 				  , public ServiceInf
 {
 	MyEvent *evt_;
-	std::string ns_, url_;
+	std::string ns_, url_,sid_;
 	bool quit_;
 	int port_;
 	unsigned timeout_without_connection_;	// 当持续此秒后，如果没有新的 pull message，则主动结束 ..
@@ -51,10 +51,11 @@ class MyPullPoint : PullPointSubscriptionBindingService
 
 public:
 	// FIXME: 根据 ns 构造通知点的匹配属性 ...
-	MyPullPoint(MyEvent *evt, const char *ns, unsigned timeout = 30)
+	MyPullPoint(MyEvent *evt, const char *ns, const char *sid ,unsigned timeout = 30)
 	{
 		evt_ = evt;
 		ns_ = ns;
+		sid_ = sid;
 
 		timeout_without_connection_ = timeout;
 		time_to_end_ = time(0) + timeout;
@@ -86,6 +87,12 @@ public:
 	{
 		return ns_.c_str();
 	}
+
+	const char *sid() const
+	{
+		return sid_.c_str();
+	}
+
 
 private:
 	void run();
@@ -146,6 +153,11 @@ private:
 	}
 
 	const char *ns() const
+	{
+		return "";
+	}
+
+	const char *sid() const
 	{
 		return "";
 	}
@@ -219,6 +231,11 @@ private:
 	{
 		// FIXME: 这里应该照着规矩来 ...
 		return "event";
+	}
+	const char *sid() const
+	{
+		//FIXME:应该用mac +ns+ id的形式作为唯一标识，这里先把mac默认为00000000000000
+		return "000000000000event0";
 	}
 
 	/// 将消息发送到匹配的通知点 ...

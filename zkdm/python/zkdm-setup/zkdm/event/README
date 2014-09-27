@@ -1,0 +1,10 @@
+模仿onvif的“发布者/订阅者”模型实现.
+
+/event: 返回所有 PullPoint
+/event/create_pp: 创建 PullPoint ...
+/event/<pid>/pull: 阻塞返回消息
+/event/<pid>/unsubscribe: 删除 PullPoint ..
+
+TODO:
+   create_pp 应该增加超时参数，当长时间没有调用 pull 时，应该主动释放 ...
+

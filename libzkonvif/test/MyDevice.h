@@ -5,22 +5,81 @@
 #include "../../common/utils.h"
 #include "myservice.inf.h"
 #include "../../common/log.h"
+#include <map>
+#include <sstream>
 
-/** ÊµÏÖÒ»¸ö½Ó¿Ú,±¾ÖÊ¾ÍÊÇÖØÔØ gsoap Éú³ÉµÄ xxxServiceÀà, È»ºó¾ßÌåÊµÏÖËùÓĞ"´¿Ğéº¯Êı"
+/** å®ç°ä¸€ä¸ªæ¥å£,æœ¬è´¨å°±æ˜¯é‡è½½ gsoap ç”Ÿæˆçš„ xxxServiceç±», ç„¶åå…·ä½“å®ç°æ‰€æœ‰"çº¯è™šå‡½æ•°"
+
+
+  	WARNING: GetAllServices() è¿”å›æ‰€æœ‰é…ç½®çš„æœåŠ¡ï¼Œè¿™ä¸ªé…ç½®äºåŠ¨æ€æ³¨å†Œéœ€è¦åŒ¹é…èµ·æ¥ ...
  */
 class MyDevice : DeviceBindingService
-				, ost::Thread
+			   , ost::Thread
 {
 	int listen_port_;
 	std::string url_;
 	std::string id_;
-	std::vector<ServiceInf *> services_; // Õâ¸öÉè±¸ÉÏ, ¾ÛºÏµÄËùÓĞ·şÎñµÄÁĞ±í ...
-	std::vector<tt__User *> users_; //Õâ¸öÉè±¸ÉÏ£¬¾ÛºÏµÄËùÓĞuserµÄÁĞ±í...
+	typedef std::vector<ServiceInf *> SERVICES;
+	SERVICES services_; // è¿™ä¸ªè®¾å¤‡ä¸Š, èšåˆçš„æ‰€æœ‰æœåŠ¡çš„åˆ—è¡¨ ...
+	std::vector<tt__User *> users_; //è¿™ä¸ªè®¾å¤‡ä¸Šï¼Œèšåˆçš„æ‰€æœ‰userçš„åˆ—è¡¨...
+
+	// æ¨¡æ‹Ÿæœ¬åœ°æœåŠ¡ ..
+	class LocalService : public ServiceInf
+	{
+		std::string ns_, url_, desc_, sid_, service_name_;
+		double stamp_;	// ç”¨äºæ£€æµ‹æ˜¯å¦è¶…æ—¶ ...
+		int id_;
+
+	public:
+		LocalService(const char *ns, const char *url, 
+				const char *desc, const char *sid, const char *service_name, int id)
+		{
+			ns_ = ns, desc_ = desc, url_ = url;
+			sid_ = sid, service_name_ = service_name;
+			id_ = id;
+			stamp_ = util_now();
+		}
+
+		const char *ns() const { return ns_.c_str(); }
+		const char *desc() const { return desc_.c_str(); }
+		const char *url() const { return url_.c_str(); }
+		const char *sid() const { return sid_.c_str(); }
+		const char *name() const { return service_name_.c_str(); }
+		const int id() const { return id_; }
+
+		bool is_service() const 
+		{
+			// FIXME: é€šè¿‡åˆ¤æ–­ service_name_ ä¸­æ˜¯å¦åŒ…å«ç›®å½•åˆ†éš”ç¬¦å·æ¥åˆ¤æ–­ ..
+#ifdef WIN32
+			return strchr(name(), '\\') != 0;
+#else
+			return strchr(name(), '/') != 0;
+#endif // 
+		}
+
+#define HB_TIMEOUT 25.0
+		bool is_timeout(double curr) const
+		{
+			return curr - stamp_ > HB_TIMEOUT;
+		}
+
+		void update_hb()
+		{
+			stamp_ = util_now();
+		}
+	};
+
+
+	typedef std::map<int, LocalService*> LSERVICES;	
+	LSERVICES local_services_;
+	ost::Mutex cs_local_services_;
 
 public:
 	MyDevice(int listen_port, const std::vector<ServiceInf *> &services)
 	{
-		services_ = services;
+		std::vector<ServiceInf*>::const_iterator it;
+		for (it = services.begin(); it != services.end(); ++it)
+			services_.push_back(*it);
 
 		listen_port_ = listen_port;
 		char buf[128];
@@ -30,11 +89,11 @@ public:
 
 		log(LOG_INFO, "%s: device mgrt using url='%s'\n", __func__, url_.c_str());
 
-		/** Ê¹ÓÃ mac µØÖ·×÷Îª id */
+		/** ä½¿ç”¨ mac åœ°å€ä½œä¸º id */
 		snprintf(buf, sizeof(buf), "urn:uuid:%s", util_get_mymac());
 		id_ = buf;
 
-		start();	// Æô¶¯¹¤×÷Ïß³Ì
+		start();	// å¯åŠ¨å·¥ä½œçº¿ç¨‹
 	}
 
 	const char *id() const { return id_.c_str(); }
@@ -45,12 +104,30 @@ private:
 	{
 		DeviceBindingService::run(listen_port_);
 	}
+
+	std::string next_sid(const char *ns)
+	{
+		static unsigned int _nid = 1;
+		std::stringstream ss;
+		ss << util_get_mymac() << '_' << ns << '_' << _nid++;
+		return ss.str();
+	}
+
+	int next_id()
+	{
+		static int _id = 1;
+		return _id++;
+	}
+
+	void check_hb_timeouted();
+
 private:
-	/// ÏÂÃæÊµÏÖ device mgrt ½Ó¿Ú...
+	/// ä¸‹é¢å®ç° device mgrt æ¥å£...
 	virtual int GetServices(_tds__GetServices *tds__GetServices, _tds__GetServicesResponse *tds__GetServicesResponse);
 
-	// ²âÊÔ¹¤¾ß»áµ÷ÓÃÕâÀï,Ìî³äĞÅÏ¢ ...
-	virtual int GetDeviceInformation(_tds__GetDeviceInformation *tds__GetDeviceInformation, _tds__GetDeviceInformationResponse *tds__GetDeviceInformationResponse);
+	// æµ‹è¯•å·¥å…·ä¼šè°ƒç”¨è¿™é‡Œ,å¡«å……ä¿¡æ¯ ...
+	virtual int GetDeviceInformation(_tds__GetDeviceInformation *tds__GetDeviceInformation, 
+			_tds__GetDeviceInformationResponse *tds__GetDeviceInformationResponse);
 
 	// This operation lists the registered users and along with their user levels
 	virtual	int GetUsers(_tds__GetUsers *tds__GetUsers, _tds__GetUsersResponse *tds__GetUsersResponse);
@@ -64,5 +141,10 @@ private:
 	// This operation updates the settings for one or several users on a device for authentication
 	virtual	int SetUser(_tds__SetUser *tds__SetUser, _tds__SetUserResponse *tds__SetUserResponse);
 
-
+	/** ç»´æŠ¤æœ¬åœ°æœåŠ¡åˆ—è¡¨ ... 
+	 */
+	virtual int RegService(_tds__ServMgrtRegService *req, _tds__ServMgrtRegServiceResponse *res);
+	virtual int UnregService(_tds__ServMgrtUnregService *req, _tds__ServMgrtUnregServiceResponse *res);
+	virtual int Heartbeat(_tds__ServMgrtHeartbeat *req, _tds__ServMgrtHeartbeatResponse *res);
 };
+

@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="zkcfg"
+ targetNamespace="http://www.zonekey.com/sysmgrt/config"
+ xmlns:tns="http://www.zonekey.com/sysmgrt/config"
+ xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+ xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:zkreg="http://www.zonekey.com/sysmgrt/register"
+ xmlns:zkq="http://www.zonekey.com/sysmgrt/query"
+ xmlns:zkcfg="http://www.zonekey.com/sysmgrt/config"
+ xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
+ xmlns:HTTP="http://schemas.xmlsoap.org/wsdl/http/"
+ xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
+ xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
+ xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
+ xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+<types>
+
+ <schema targetNamespace="http://www.zonekey.com/sysmgrt/register"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:zkreg="http://www.zonekey.com/sysmgrt/register"
+  xmlns:zkq="http://www.zonekey.com/sysmgrt/query"
+  xmlns:zkcfg="http://www.zonekey.com/sysmgrt/config"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  attributeFormDefault="qualified">
+  <import namespace="http://www.zonekey.com/sysmgrt/query"/>
+  <import namespace="http://www.zonekey.com/sysmgrt/config"/>
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <simpleType name="Catalog"><!-- zkreg__Catalog -->
+
+   <restriction base="xsd:string">
+    <enumeration value="Host"/><!-- zkreg__Catalog::zkreg__Catalog__Host -->
+    <!-- = 0 -->
+    <enumeration value="Service"/><!-- zkreg__Catalog::zkreg__Catalog__Service -->
+    <!-- = 1 -->
+    <enumeration value="Device"/><!-- zkreg__Catalog::zkreg__Catalog__Device -->
+    <!-- = 2 -->
+    <enumeration value="Logic"/><!-- zkreg__Catalog::zkreg__Catalog__Logic -->
+    <!-- = 3 -->
+   </restriction>
+  </simpleType>
+  <complexType name="Ips"><!-- zkreg__Ips -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Urls"><!-- zkreg__Urls -->
+
+   <sequence>
+    <element name="item" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Strs"><!-- zkreg__Strs -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Mse"><!-- zkreg__Mse -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Mse::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Mse::catalog -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Mse::parent -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Mse::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Mses"><!-- zkreg__Mses -->
+
+   <sequence>
+    <element name="item" type="zkreg:Mse" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Host"><!-- zkreg__Host -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Host::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Host::catalog -->
+     <element name="ips" type="zkreg:Ips" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Host::ips -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Host::parent -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Host::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Hosts"><!-- zkreg__Hosts -->
+
+   <sequence>
+    <element name="item" type="zkreg:Host" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Service"><!-- zkreg__Service -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Service::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Service::catalog -->
+     <element name="hostname" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Service::hostname -->
+     <element name="type" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Service::type -->
+     <element name="urls" type="zkreg:Urls" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Service::urls -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Service::parent -->
+     <element name="version" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Service::version -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Service::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Services"><!-- zkreg__Services -->
+
+   <sequence>
+    <element name="item" type="zkreg:Service" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Device"><!-- zkreg__Device -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Device::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Device::catalog -->
+     <element name="hostname" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Device::hostname -->
+     <element name="type" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Device::type -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::parent -->
+     <element name="vendor" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::vendor -->
+     <element name="model" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::model -->
+     <element name="serial" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::serial -->
+     <element name="version" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::version -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Device::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Devices"><!-- zkreg__Devices -->
+
+   <sequence>
+    <element name="item" type="zkreg:Device" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Logic"><!-- zkreg__Logic -->
+
+   <sequence>
+     <element name="name" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Logic::name -->
+     <element name="catalog" type="zkreg:Catalog" minOccurs="1" maxOccurs="1"/><!-- zkreg__Logic::catalog -->
+     <element name="children" type="zkreg:Strs" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkreg__Logic::children -->
+     <element name="parent" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Logic::parent -->
+     <element name="showname" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkreg__Logic::showname -->
+   </sequence>
+  </complexType>
+  <complexType name="Logics"><!-- zkreg__Logics -->
+
+   <sequence>
+    <element name="item" type="zkreg:Logic" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Brothers"><!-- zkq__Brothers -->
+
+   <sequence>
+    <element name="item" type="zkq:Brother" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Keys"><!-- zkcfg__Keys -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <element name="regHostReq" type="zkreg:Host"/>
+  <element name="unRegHoststring" type="xsd:string"/>
+  <element name="regServiceReq" type="zkreg:Service"/>
+  <element name="unregServicestring" type="xsd:string"/>
+  <element name="regDeviceReq" type="zkreg:Device"/>
+  <element name="unregDevciestring" type="xsd:string"/>
+  <element name="regLogicReq" type="zkreg:Logic"/>
+  <element name="delMseNameReq" type="xsd:string"/>
+  <element name="heartBeatTokenReq" type="xsd:string"/>
+  <element name="setShowNameReq" type="xsd:string"/>
+  <element name="bindLogicName" type="xsd:string"/>
+  <element name="setParentName" type="xsd:string"/>
+ </schema>
+
+ <schema targetNamespace="http://www.zonekey.com/sysmgrt/query"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:zkreg="http://www.zonekey.com/sysmgrt/register"
+  xmlns:zkq="http://www.zonekey.com/sysmgrt/query"
+  xmlns:zkcfg="http://www.zonekey.com/sysmgrt/config"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  attributeFormDefault="qualified">
+  <import namespace="http://www.zonekey.com/sysmgrt/register"/>
+  <import namespace="http://www.zonekey.com/sysmgrt/config"/>
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="Ips"><!-- zkreg__Ips -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Urls"><!-- zkreg__Urls -->
+
+   <sequence>
+    <element name="item" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Strs"><!-- zkreg__Strs -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Mses"><!-- zkreg__Mses -->
+
+   <sequence>
+    <element name="item" type="zkreg:Mse" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Hosts"><!-- zkreg__Hosts -->
+
+   <sequence>
+    <element name="item" type="zkreg:Host" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Services"><!-- zkreg__Services -->
+
+   <sequence>
+    <element name="item" type="zkreg:Service" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Devices"><!-- zkreg__Devices -->
+
+   <sequence>
+    <element name="item" type="zkreg:Device" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Logics"><!-- zkreg__Logics -->
+
+   <sequence>
+    <element name="item" type="zkreg:Logic" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Brother"><!-- zkq__Brother -->
+
+   <sequence>
+     <element name="parent" type="xsd:string" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkq__Brother::parent -->
+     <element name="brothers" type="zkreg:Strs" minOccurs="1" maxOccurs="1" nillable="true"/><!-- zkq__Brother::brothers -->
+   </sequence>
+  </complexType>
+  <complexType name="Brothers"><!-- zkq__Brothers -->
+
+   <sequence>
+    <element name="item" type="zkq:Brother" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Keys"><!-- zkcfg__Keys -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <element name="getAllMsesoffline" type="xsd:boolean"/>
+  <element name="getAllHostsoffline" type="xsd:boolean"/>
+  <element name="getAllServiceoffline" type="xsd:boolean"/>
+  <element name="getAllDevicesoffline" type="xsd:boolean"/>
+  <element name="getAllLogicsoffline" type="xsd:boolean"/>
+  <element name="getServiceByTypeoffline" type="xsd:boolean"/>
+  <element name="getParentName" type="xsd:string"/>
+  <element name="getBrothersName" type="xsd:string"/>
+  <element name="getMseName" type="xsd:string"/>
+  <element name="getHostName" type="xsd:string"/>
+  <element name="getServiceName" type="xsd:string"/>
+  <element name="getDeviceName" type="xsd:string"/>
+  <element name="getLogicName" type="xsd:string"/>
+ </schema>
+
+ <schema targetNamespace="http://www.zonekey.com/sysmgrt/config"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:zkreg="http://www.zonekey.com/sysmgrt/register"
+  xmlns:zkq="http://www.zonekey.com/sysmgrt/query"
+  xmlns:zkcfg="http://www.zonekey.com/sysmgrt/config"
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified"
+  attributeFormDefault="qualified">
+  <import namespace="http://www.zonekey.com/sysmgrt/register"/>
+  <import namespace="http://www.zonekey.com/sysmgrt/query"/>
+  <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+  <complexType name="Ips"><!-- zkreg__Ips -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Urls"><!-- zkreg__Urls -->
+
+   <sequence>
+    <element name="item" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Strs"><!-- zkreg__Strs -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Mses"><!-- zkreg__Mses -->
+
+   <sequence>
+    <element name="item" type="zkreg:Mse" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Hosts"><!-- zkreg__Hosts -->
+
+   <sequence>
+    <element name="item" type="zkreg:Host" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Services"><!-- zkreg__Services -->
+
+   <sequence>
+    <element name="item" type="zkreg:Service" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Devices"><!-- zkreg__Devices -->
+
+   <sequence>
+    <element name="item" type="zkreg:Device" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Logics"><!-- zkreg__Logics -->
+
+   <sequence>
+    <element name="item" type="zkreg:Logic" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Brothers"><!-- zkq__Brothers -->
+
+   <sequence>
+    <element name="item" type="zkq:Brother" minOccurs="0" maxOccurs="unbounded" nillable="false"/>
+   </sequence>
+  </complexType>
+  <complexType name="Keys"><!-- zkcfg__Keys -->
+
+   <sequence>
+    <element name="item" type="xsd:string" minOccurs="0" maxOccurs="unbounded" nillable="true"/>
+   </sequence>
+  </complexType>
+  <complexType name="Ret"><!-- zkcfg__Ret -->
+
+   <sequence>
+     <element name="result" type="xsd:int" minOccurs="1" maxOccurs="1"/><!-- zkcfg__Ret::result -->
+     <element name="value" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkcfg__Ret::value -->
+   </sequence>
+  </complexType>
+  <element name="KeysRes" type="zkcfg:Keys"/>
+  <element name="getValueKeyRequest" type="xsd:string"/>
+  <element name="setValueKeyRequest" type="xsd:string"/>
+  <element name="delKeyRequest" type="xsd:string"/>
+  <!-- operation request element -->
+  <element name="getAllKeys">
+   <complexType>
+    <sequence>
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="getAllKeysResponse">
+   <complexType>
+    <sequence>
+     <element ref="zkcfg:KeysRes" minOccurs="0" maxOccurs="1"/><!-- zkcfg__getAllKeys::zkcfg__KeysRes -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="getValue">
+   <complexType>
+    <sequence>
+     <element ref="zkcfg:getValueKeyRequest" minOccurs="0" maxOccurs="1"/><!-- zkcfg__getValue::zkcfg__getValueKeyRequest -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="setValue">
+   <complexType>
+    <sequence>
+     <element ref="zkcfg:setValueKeyRequest" minOccurs="0" maxOccurs="1"/><!-- zkcfg__setValue::zkcfg__setValueKeyRequest -->
+     <element name="value" type="xsd:string" minOccurs="0" maxOccurs="1" nillable="true"/><!-- zkcfg__setValue::value -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation request element -->
+  <element name="delKey">
+   <complexType>
+    <sequence>
+     <element ref="zkcfg:delKeyRequest" minOccurs="0" maxOccurs="1"/><!-- zkcfg__delKey::zkcfg__delKeyRequest -->
+    </sequence>
+   </complexType>
+  </element>
+  <!-- operation response element -->
+  <element name="RetRes" type="zkcfg:Ret"/>
+ </schema>
+
+</types>
+
+<message name="getAllKeysRequest">
+ <part name="Body" element="zkcfg:getAllKeys"/><!-- zkcfg__getAllKeys::zkcfg__getAllKeys -->
+</message>
+
+<message name="getAllKeysResponse">
+ <part name="Body" element="zkcfg:getAllKeysResponse"/>
+</message>
+
+<message name="getValue">
+ <part name="Body" element="zkcfg:getValue"/><!-- zkcfg__getValue::zkcfg__getValue -->
+</message>
+
+<message name="Ret">
+ <part name="Body" element="zkcfg:RetRes"/>
+</message>
+
+<message name="setValue">
+ <part name="Body" element="zkcfg:setValue"/><!-- zkcfg__setValue::zkcfg__setValue -->
+</message>
+
+<message name="delKey">
+ <part name="Body" element="zkcfg:delKey"/><!-- zkcfg__delKey::zkcfg__delKey -->
+</message>
+
+<portType name="zkcfgPortType">
+ <operation name="getAllKeys">
+  <documentation>Service definition of function zkcfg__getAllKeys</documentation>
+  <input message="tns:getAllKeysRequest"/>
+  <output message="tns:getAllKeysResponse"/>
+ </operation>
+ <operation name="getValue">
+  <documentation>Service definition of function zkcfg__getValue</documentation>
+  <input message="tns:getValue"/>
+  <output message="tns:Ret"/>
+ </operation>
+ <operation name="setValue">
+  <documentation>Service definition of function zkcfg__setValue</documentation>
+  <input message="tns:setValue"/>
+  <output message="tns:Ret"/>
+ </operation>
+ <operation name="delKey">
+  <documentation>Service definition of function zkcfg__delKey</documentation>
+  <input message="tns:delKey"/>
+  <output message="tns:Ret"/>
+ </operation>
+</portType>
+
+<binding name="zkcfg" type="tns:zkcfgPortType">
+ <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="getAllKeys">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="getValue">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="setValue">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+ <operation name="delKey">
+  <SOAP:operation soapAction=""/>
+  <input>
+     <SOAP:body parts="Body" use="literal"/>
+  </input>
+  <output>
+     <SOAP:body parts="Body" use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="zkcfg">
+ <documentation>gSOAP 2.8.17r generated service definition</documentation>
+ <port name="zkcfg" binding="tns:zkcfg">
+  <SOAP:address location="http://localhost:80"/>
+ </port>
+</service>
+
+</definitions>

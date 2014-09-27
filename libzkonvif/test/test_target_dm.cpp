@@ -11,7 +11,11 @@
 #ifdef WIN32
 #	include "../src/win/sysperf.h"
 #else
+#	include "../src/linux/sysperf.h"
 #endif // 
+#include <cc++/socketport.h>
+
+#ifdef WITH_OPENSSL
 
 #ifdef _POSIX_THREADS 
 # include <pthread.h>
@@ -99,6 +103,7 @@ void CRYPTO_thread_cleanup()
 	free(mutex_buf);
 	mutex_buf = NULL;
 }
+#endif // with openssl
 
 /** rtmp 服务接口, 这个仅仅为了演示如何使用 ServiceInf
 */
@@ -122,6 +127,11 @@ private:
 		// FIXME: 这里应该照着规矩来 ...
 		return "media";
 	}
+	const char *sid() const
+	{
+		//FIXME:应该用mac +ns+ id的形式作为唯一标识，这里先把mac默认为00000000000000
+		return "000000000000media0";
+	}
 
 private:
 	void run()
@@ -129,7 +139,7 @@ private:
 		int code = 0;
 
 		/// 测试：每隔1000豪秒，发出一个通知 ...
-		while (1) {
+		while (0) {
 			sink_->post(this->ns(), "test", code++, "...");
 			sleep(1000);
 		}
@@ -147,15 +157,45 @@ private:
 	}
 };
 
-int main(int argc, char **argv)
+class MyService : ost::SocketService
 {
+public:
+
+};
+
+class MySocket : ost::SocketPort
+{
+public:
+	MySock
+};
+
+static void test_sss()
+{
+	ost::IPV4Address addr;
+	ost::TCPSocket ss(addr, 20000);
+
+
+}
+
+int main2(int argc, char **argv)
+{
+	test_sss();
 	log_init();
 
+//	ost::Thread::setStack(16384);
+//	fprintf(stdout, "en, using thread stack size: %u\n", 16384);
+
 	// 初始化 openssl ...
+#ifdef WITH_OPENSSL
 	soap_ssl_init();
 	CRYPTO_thread_setup();
+#endif
 
+#ifdef WIN32
 	SysPerf sp("c:", util_get_nic_name());
+#else
+	SysPerf sp("/home", util_get_nic_name());
+#endif
 
 	std::vector<ServiceInf *> services;
 

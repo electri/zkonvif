@@ -1,25 +1,28 @@
 #include "../soap/soapPullPointSubscriptionBindingProxy.h"
-#include "../soap/wsseapi.h"
+#ifdef WITH_OPENSSL
+#	include "../soap/wsseapi.h"
+#endif
 #include "../../common/log.h"
 #include "../../common/utils.h"
 #include "../../common/KVConfig.h"
 
-// ²âÊÔÊÂ¼þ ...
-void test_event(const tds__Service *service)
+// æµ‹è¯•äº‹ä»¶ ...
+void test_event(const zonekey__ZonekeyDMServiceType *service)
 {
+	return;
 	int rc;
-	fprintf(stdout, "\n\n%s: url=%s\n", __FUNCTION__, service->XAddr.c_str());
+	fprintf(stdout, "\n\n%s: url=%s\n", __FUNCTION__, service->url.c_str());
 
-	PullPointSubscriptionBindingProxy pps, pps_p;	// pps ÓÃÓÚ CreatePullPointSubscription, pps_p ÓÃÓÚ PullMessage, ...
+	PullPointSubscriptionBindingProxy pps, pps_p;	// pps ç”¨äºŽ CreatePullPointSubscription, pps_p ç”¨äºŽ PullMessage, ...
 
-	// Ê¹ÓÃ WS-usernameToken£¬²Î¿¼ wsseapi.h 
-	soap_wsse_add_UsernameTokenDigest(pps.soap, "id", "zonekey", "yekenoz");
+	// ä½¿ç”¨ WS-usernameTokenï¼Œå‚è€ƒ wsseapi.h 
 
 #ifdef WITH_OPENSSL
-	// Ê¹ÓÃ tls ..
+	soap_wsse_add_UsernameTokenDigest(pps.soap, "id", "zonekey", "yekenoz");
+	// ä½¿ç”¨ tls ..
 	KVConfig cfg("client.config");
 
-	// ca-certs µÄÎÄ¼þÖÐ£¬±£´æ×ÅÇ©Êð server Ö¤ÊéµÄ ca ...
+	// ca-certs çš„æ–‡ä»¶ä¸­ï¼Œä¿å­˜ç€ç­¾ç½² server è¯ä¹¦çš„ ca ...
 	rc = soap_ssl_client_context(pps.soap, SOAP_SSL_DEFAULT | SOAP_SSL_SKIP_HOST_CHECK, 0, 0, cfg.get_value("cacerts", "cacerts.pem"), 0, 0);
 	if (rc != SOAP_OK) {
 		log(LOG_FAULT, "%s: soap_ssl_client_context faulure, code=%d, using cacerts='%s'\n", __func__, rc, cfg.get_value("cacerts", "cacerts.pem"));
@@ -36,7 +39,7 @@ void test_event(const tds__Service *service)
 		/// GetServiceCapabilities
 		_tev__GetServiceCapabilities req;
 		_tev__GetServiceCapabilitiesResponse res;
-		rc = pps.GetServiceCapabilities(service->XAddr.c_str(), 0, &req, &res);
+		rc = pps.GetServiceCapabilities(service->url.c_str(), 0, &req, &res);
 		if (rc != SOAP_OK) {
 			log(LOG_ERROR, "%s: GetServiceCapablities err, code=%d\n", __func__, rc);
 			soap_print_fault(pps.soap, stderr);
@@ -53,7 +56,7 @@ void test_event(const tds__Service *service)
 		_tev__CreatePullPointSubscription req;
 		_tev__CreatePullPointSubscriptionResponse res;
 
-		rc = pps.CreatePullPointSubscription(service->XAddr.c_str(), 0, &req, &res);
+		rc = pps.CreatePullPointSubscription(service->url.c_str(), 0, &req, &res);
 		if (rc != SOAP_OK) {
 			log(LOG_ERROR, "%s: CreatePullPointSubscription err, code=%d\n", __func__, rc);
 			soap_print_fault(pps.soap, stderr);
@@ -82,7 +85,7 @@ void test_event(const tds__Service *service)
 				_tev__PullMessagesResponse res;
 
 				req.MessageLimit = 0;
-				req.Timeout = 10;	// 10 Ãë³¬Ê± ??? .
+				req.Timeout = 10;	// 10 ç§’è¶…æ—¶ ??? .
 
 				rc = pps_p.PullMessages(endpoint, 0, &req, &res);
 				if (rc != SOAP_OK) {

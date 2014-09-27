@@ -15,11 +15,11 @@ AM_PROG_AR
 AC_PROG_RANLIB
 
 AC_SUBST(GLOBAL_CXXFLAGS)
-GLOBAL_CXXFLAGS='-DZONEKEY_SOURCE'
+GLOBAL_CXXFLAGS='-DZONEKEY_SOURCE -DMAX_STACK=8192'
 
 # Checks for libraries.
 AC_CHECK_LIB(ssl, ssl2_enc_init, 
-		[ GLOBAL_CXXFLAGS="${GLOBAL_CXXFLAGS} -DUSING_OPENSSL=1"  ], 
+		[ GLOBAL_CXXFLAGS="${GLOBAL_CXXFLAGS}"  ], 
 		[ echo "Warning: NO openssl lib!" ])
 
 # Checks for header files.
@@ -30,7 +30,8 @@ AC_CHECK_HEADER_STDBOOL
 AC_C_INLINE
 AC_TYPE_SIZE_T
 
+
 # Checks for library functions.
 
-AC_OUTPUT([ Makefile src/Makefile test/Makefile
+AC_OUTPUT([ Makefile src/Makefile test/Makefile libzkreg/Makefile
 		 ])

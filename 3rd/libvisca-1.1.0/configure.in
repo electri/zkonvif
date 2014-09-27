@@ -28,4 +28,4 @@ pkgincludedir='$(includedir)/visca'
 AC_SUBST(pkgincludedir)
 
 CFLAGS="$CFLAGS -Wall -Wunused"
-AC_OUTPUT([ Makefile visca/Makefile examples/Makefile VC2005/Makefile])
+AC_OUTPUT([ Makefile visca/Makefile examples/Makefile ])

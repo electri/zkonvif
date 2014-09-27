@@ -1,0 +1,3 @@
+EXPORTS
+	lc_reg
+	lc_unreg

@@ -1,0 +1,13 @@
+; dlltool --export-all-symbols --output-def ../zkutil/exports.def zkutil/.libs/libzkutils.a
+EXPORTS
+	util_get_nic_name @ 1
+	".refptr._ZNSsD1Ev" @ 2 DATA
+	".refptr.__dso_handle" @ 3 DATA
+;	is_vm_mac(char const*)
+	_Z9is_vm_macPKc @ 4
+;	std::vector<NetInf, std::allocator<NetInf> >::~vector()
+	_ZNSt6vectorI6NetInfSaIS0_EED1Ev @ 5
+	util_get_myip @ 6
+	util_get_myip_real @ 7
+	util_get_mymac @ 8
+	".refptr._ZNSs4_Rep20_S_empty_rep_storageE" @ 9 DATA

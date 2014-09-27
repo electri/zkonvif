@@ -122,7 +122,7 @@ WIN32_LEAN_AND_MEAN
 
 // Require for compiling with critical sections.
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
+#define _WIN32_WINNT 0x0600
 #endif
 
 // Make sure we're consistent with _WIN32_WINNT
@@ -143,9 +143,7 @@ WIN32_LEAN_AND_MEAN
 #undef _CCXX_WIN32_LEAN_AND_MEAN_
 #endif
 
-#if _WIN32_WINNT >= 0x0501
 #define CCXX_IPV6
-#endif
 
 #endif /* #ifndef CCXX_WIN32 */
 

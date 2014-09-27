@@ -84,6 +84,12 @@
     <ClCompile Include="..\..\..\libzkonvif\gsoap\dom.cpp">
       <Filter>gsoap</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapRecordingBindingProxy.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libzkonvif\soap\soapRecordingBindingService.cpp">
+      <Filter>gsoap_gen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\libzkonvif\soap\soapDeviceBindingProxy.h">
@@ -141,6 +147,12 @@
       <Filter>gsoap_gen</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\libzkonvif\soap\wsseapi.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapRecordingBindingProxy.h">
+      <Filter>gsoap_gen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libzkonvif\soap\soapRecordingBindingService.h">
       <Filter>gsoap_gen</Filter>
     </ClInclude>
   </ItemGroup>

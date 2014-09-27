@@ -35,12 +35,12 @@ namespace test_cs_client
             dm.Url = dm_url;
 
             string url0 = null;
-            zonvif_dm.Service[] services = dm.GetServices(false);
-            foreach (zonvif_dm.Service s in services) {
-                string url = s.XAddr;
-                string ns = s.Namespace;
+            zonvif_dm.ZonekeyDMServiceType[] services = dm.GetServices(false);
+            foreach (zonvif_dm.ZonekeyDMServiceType s in services) {
+                string url = s.url;
+                string ns = s.ns;
                 if (url != null && ns != null) {
-                    Console.WriteLine("INFO: Service '" + s.Namespace + "', url='" + url + "'");
+                    Console.WriteLine("INFO: Service '" + s.ns + "', url='" + url + "'");
                     if (ns == "ptz") {
                         // FIXME: 仅仅测试云台模块 ...
                         url0 = url;

@@ -1,0 +1,40 @@
+{
+   "services" : [
+      {
+         "enable" : true,
+         "fork" : true,
+         "url" : "http://<ip>:10001/event",
+         "name" : "event service",
+         "type" : "event",
+         "path" : "python ../event/EventServer.py",
+         "title" : "事件服务"
+      },
+      {
+         "enable" : false,
+         "fork" : true,
+         "url" : "tcp://<ip>:3000",
+         "name" : "teacher video 1",
+         "type" : "eval",
+         "path" : "cardlive.exe 1",
+         "title" : "教师特写摄像头"
+      },
+      {
+         "enable" : false,
+         "fork" : true,
+         "url" : "http://<ip>:10003/ptz",
+         "name" : "ptzs service",
+         "type" : "ptz",
+         "path" : "python ../ptz/PtzServer.py",
+         "title" : "云台服务"
+      },
+	  {
+		  "enable": true,
+		  "fork": true,
+		  "url": "http://<ip>:10005/log",
+		  "name": "Log service",
+		  "type": "log",
+		  "path" : "python ../log/LogServer.py",
+		  "title": "日志服务"
+	  }
+   ]
+}

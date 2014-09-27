@@ -70,6 +70,7 @@ _VISCA_send_packet(VISCAInterface_t *iface, VISCACamera_t *camera, VISCAPacket_t
     // append footer
     _VISCA_append_byte(packet,VISCA_TERMINATOR);
 
+
     return _VISCA_write_packet_data(iface,camera,packet);
 }
 
