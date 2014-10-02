@@ -49,10 +49,6 @@ void _VISCA_init_packet(VISCAPacket_t * packet)
 	// packet sending function. This function will also append a terminator.
 	packet->length = 1;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 00850fa87d988cf388df1d9dbfcfa3c4c76aad99
 
 #ifdef VK3344
 typedef struct Packet
@@ -154,26 +150,14 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 
 VISCA_API uint32_t
 _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
-<<<<<<< HEAD
-{ 
-	int loop;
-	loop = 0;
-
-	while (iface->ibuf[1] != 0x50)
-	{
-		loop++;
-=======
 {
 	while (iface->ibuf[1] != 0x50)
 	{
->>>>>>> 00850fa87d988cf388df1d9dbfcfa3c4c76aad99
 		iface->type = iface->ibuf[1] & 0xF0;
 		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
 			return VISCA_FAILURE;
 	}
-	if (loop > 10)
-		fprintf(stdout, "loop = %d\n", loop);
-	//fprintf(stdout, "low_byte = %d\n", iface->ibuf[1] & 0x0F);
+
 	return VISCA_SUCCESS;
 }
 
@@ -1824,9 +1808,12 @@ VISCA_get_zoom_value(VISCAInterface_t * iface, VISCACamera_t * camera,
 	else {
 		if (_VISCA_get_reply_accurate(iface, camera) != VISCA_SUCCESS)
 			return err;
+		fprintf(stdout, "%02x %02x %02x %02x\n", iface->ibuf[2],
+			iface->ibuf[3], iface->ibuf[4], iface->ibuf[5]);
 		*value =
 		    (iface->ibuf[2] << 12) + (iface->ibuf[3] << 8) +
 		    (iface->ibuf[4] << 4) + iface->ibuf[5];
+
 		return VISCA_SUCCESS;
 	}
 }
