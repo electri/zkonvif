@@ -1,0 +1,105 @@
+﻿<html>
+<head>
+	<title>Living help</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	直播服务接口:为直播提供启动、停止、暂停等操作接口，同时能提供直播信息设置接口。
+ 
+    <p>
+        <strong>一、获取直播列表:/living/list_streaming</strong></p>
+    <p>
+        返回：application/json</p>
+    <p>
+        {</p>
+    <p>
+        &quot;result&quot;:&quot;ok&quot;</p>
+    <p>
+        &quot;info&quot;:&quot;&quot;</p>
+    <p>
+        &quot;value&quot;:{</p>
+    <p>
+        &quot;type&quot;:&quot;list&quot;</p>
+    <p>
+        &quot;&quot;:[</p>
+    <p>
+        {</p>
+    <p>
+        &quot;Living_id&quot;:&quot;living0&quot;</p>
+    <p>
+        &quot;Living_Name&quot;:&quot;直播一&quot;</p>
+    <p>
+        &quot;Living_Address&quot;:&quot;rtmp://192.168.1.10/live/09700_0&quot;</p>
+    <p>
+        }</p>
+    <p>
+        {</p>
+    <p>
+        &quot;Living_id&quot;:&quot;living1&quot;</p>
+    <p>
+        &quot;Living_Name&quot;:&quot;直播二&quot;</p>
+    <p>
+        &quot;Living_Address&quot;:&quot;rtmp://192.168.1.10/live/09700_1&quot;</p>
+    <p>
+        }</p>
+    <p>
+        }</p>
+    <p>
+        }</p>
+    <p>
+        <strong>一、直播操作</strong></p>
+    <p>
+        1）<strong>/living/(living_id)/start:</strong><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">直播开始</span></p>
+    <p>
+        2)<strong>/living/(living_id)/stop:</strong>直播停止</p>
+      <p>
+        返回：application/json</p>
+    <p>
+        //成功&quot;result&quot;=&quot;ok&quot;,&quot;info&quot;=&quot;&quot;,失败&quot;result&quot;=&quot;error&quot;,&quot;info&quot;=&quot;失败原因&quot;</p>
+    <p>
+        {</p>
+    <p>
+        &quot;result&quot;:&quot;ok&quot;</p>
+    <p>
+        &quot;info&quot;:&quot;&quot;</p>
+    <p>
+        }</p>
+    <p>
+        <strong>二、直播信息设置</strong></p>
+    <p>
+        //json数据格式</p>
+    <p>
+        {</p>
+    <p>
+        &quot;Width&quot;:&quot;&quot;</p>
+    <p>
+        &quot;Heitht&quot;:&quot;&quot;</p>
+    <p>
+        &quot;FrameRate&quot;:&quot;&quot;</p>
+    <p>
+        &quot;BitRate&quot;:&quot;&quot;</p>
+    <p>
+        &quot;ServerIp&quot;:&quot;&quot;</p>
+    <p>
+        &quot;StreamName&quot;:&quot;&quot;</p>
+    <p>
+        &quot;LivingNum&quot;:&quot;&quot;</p>
+    <p>
+        &quot;LivingType&quot;:&quot;&quot;</p>
+    <p>
+        &quot;Account&quot;:&quot;&quot;</p>
+    <p>
+        &quot;Passward&quot;:&quot;&quot;</p>
+    <p>
+        &quot;NetPort&quot;:&quot;&quot;</p>
+    <p>
+        &quot;RtmpServerName&quot;:&quot;&quot;</p>
+    <p>
+        }</p>
+    <p>
+        例子：/living/(living_id)/setProperty?Width=1920&amp;Height=1080&amp;FrameRate=30&amp;BitRate=192&amp;ServerIP=192.168.1.10&amp;StreamName=test&amp;LivingNum=5&amp;Account=admin&amp;Passward=admin&amp;NetPort=8888&amp;RtmpServerName=test</p>
+    <p>
+        &nbsp;</p>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<html>
+<head>
+	<title>PTZ help</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	云天控制接口:
+	<p>
+
+	using "http://ip:port/config" to get all configured ptz.
+<br>		返回 application/json:
+<br>		{
+<br>			"result":"ok",
+<br>			"info": "",
+<br>			"value": {
+<br>				"type": "list",
+<br>				"data": [
+<br>					{
+<br>						"name": "teacher",
+<br>						"config": {
+<br>							"serial": "com1",
+<br>							"addr": 1
+<br>						}
+<br>					}
+<br>					{
+<br>						"name": "student",
+<br>						"config": {
+<br>							"serial": "com3",
+<br>							"addr": 1
+<br>						}
+<br>					}
+<br>				]
+<br>			}
+<br>		}
+<br>
+<br>
+
+	using "http://ip:port/ptz/<b>which</b>/<b>method</b>?<b>params...</b>" to control.
+<br> 如: /ptz/teacher/left?speed=1
+<br>
+<br>
+		method: <B> left, right, up, down, stop, set_pos, get_pos, set_zoom, get_zoom, preset_save, preset_call, preset_clear, zoom_tele, zoom_wide, zoom_stop, mouse_trace</B>
+
+
+		method 具体描述:
+
+		<ul> <B>无返回值:</B>
+			<li>/ptz/WHO/left?speed=N : 向左转动云台, 速度范围从 1 到 30 加快.</li>
+			<li>/ptz/WHO/right?speed=N: 右转 </li>
+			<li>/ptz/WHO/up?speed=N : 向上 </li>
+			<li>/ptz/WHO/down?speed=N : 向下 </li>
+			<li>/ptz/WHO/stop : 停止上面四个转动 </li>
+			<li>/ptz/WHO/set_pos?x=X&ampy=Y&ampsx=SX&ampsy=SY : 转动到指定位置, X,Y 为绝对位置, SX, SY 为转动速度</li>
+			<li>/ptz/WHO/mouse_trace?x=X&y=Y&sx=SX&sy=Sy : 转动到鼠标指定图像位置,X,Y 为像素点, SX, SY 为转动速度</li>
+			<li>/ptz/WHO/set_zoom?z=Z : 设置倍率 </li>
+			<li>/ptz/WHO/preset_save?id=ID : 保存预置位, ID为预置位序号</li>
+			<li>/ptz/WHO/preset_call?id=ID : 调用预置位, ID同上</li>
+			<li>/ptz/WHO/preset_clear?id=ID : 删除预置位, ID同上</li>
+			<li>/ptz/WHO/zoom_tele?speed=SPEED : 镜头拉远, SPEED为速度 </li>
+			<li>/ptz/WHO/zoom_wide?speed=SPEED : 镜头拉近, SPEED同上</li>
+			<li>/ptz/WHO/zoom_stop: 停止拉近或拉远镜头</li>
+		</ul>
+
+		<ul> <B> 有返回值, 返回 json 格式 </B>
+			<li>/ptz/WHO/get_pos: 返回云台当前位置, 具体格式为: { "result":"ok", "info":"", "value":{"type":"position","data":{"x":X, "y":Y}}}
+			</li>
+			<li>/ptz/WHO/get_zoom: 返回倍率值, 具体格式位: {"result":"ok","info":"","value":{"type":"position","data":{"z":Z}}}
+			</li>
+			<li>/ptz/WHO/ext_get_scales: 返回当前镜头的实际倍率，注意，这个值与 get_zoom 返回的含义不同, 具体格式为： {"result":"ok", "info":"", "value":{"type":"double", "data":XXX }} </li>
+		</ul>
+		
+</body>
+</html>
