@@ -386,8 +386,8 @@ class PtzWrap(object):
 		ptz['func_zoom_stop'] = ptz['so'].ptz_zoom_stop
 		ptz['func_zoom_stop'].argtypes = [c_void_p]
 
-		ptz['func_mouse_trace'] = ptz['so'].ptz_mouse_trace
-		ptz['func_mouse_trace'].argtypes = [c_void_p, c_int, c_int, c_int, c_int] 
+#		ptz['func_mouse_trace'] = ptz['so'].ptz_mouse_trace
+#		ptz['func_mouse_trace'].argtypes = [c_void_p, c_int, c_int, c_int, c_int] 
 
 		ptz['func_ext_get_scales'] = ptz['so'].ptz_ext_get_scals
 		ptz['func_ext_get_scales'].argtypes = [c_void_p, c_int]
