@@ -28,9 +28,10 @@ def register(port, _type, _id, rets, disc):
 		return True
 	else:
 		return False
+
 def heatbeat(poet, _type, _id, rets, disc):
 		ipconfg = get_ipconfg()
-		disc =
+		disc =  
 
 import threading
 

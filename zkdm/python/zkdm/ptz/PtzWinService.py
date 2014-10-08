@@ -131,8 +131,8 @@ import win32service
 import win32event
 import win32evtlogutil
 class PtzService(win32serviceutil.ServiceFramework):
-	_svc_name_ = "PtzService"
-	_svc_display_name_ = "PtzService"
+	_svc_name_ = "zonekeyPtz"
+	_svc_display_name_ = "zonekeyPtz"
 	_svc_deps_ = ["EventLog"]
 	
 	def __init__(self,args):
