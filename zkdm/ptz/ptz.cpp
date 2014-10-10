@@ -396,8 +396,8 @@ int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx, int sy)
 		return -1;
 	}
 
-	double HVA = atof(p->cfg->get_value("hva", "72.5"));
-	double VVA = atof(p->cfg->get_value("vva", "44.8"));
+	double HVA = atof(p->cfg->get_value("hva", "55.2"));
+	double VVA = atof(p->cfg->get_value("vva", "42.1"));
 
 	fprintf(stdout, "HVA = %f, VVA = %f\n", HVA, VVA);
 

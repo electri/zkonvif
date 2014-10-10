@@ -1,26 +1,16 @@
 @echo on
-@echo now setup python 2.7.8
+@echo 安装 python 2.7.8
 python-2.7.8.msi
-
-@echo now cover c:\Python27
+@echo 覆盖 c:\Python27
 xcopy .\Python27 c:\Python27 /EY
+@echo 拷贝 .\zkdm 到 c:\zkdm
 
-@echo copy .\zkdm to c:\zkdm
 mkdir c:\zkdm
+
 xcopy .\zkdm c:\zkdm /EY
 
-@echo now setup pywin32
+@echo 安装 pywin32
 pywin32-218.win32-py2.7.exe
-
-@echo now,we must set envirenment:
-
-@echo if you setup in default
-@echo 	path=c:\Python27\
-
-
-@echo now we best restart computer
-@echo ctrl + break then exit
 @echo off
-
-
-
+cd  c:\zkdm\ptz
+install_ptz_winservice.bat
