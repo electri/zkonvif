@@ -330,6 +330,9 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("Use the /card/help for more help !")
 
+class HelpHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('help.html')
 
 class ResourceListHandler(tornado.web.RequestHandler):
     def get(self):
@@ -370,6 +373,7 @@ def main():
     tornado.options.parse_command_line()
     application = tornado.web.Application([
         url(r"/", MainHandler),
+        url(r"/help", HelpHandler)
         url(r"/card/ResourceList", ResourceListHandler),
         url(r"/card/ResourceListS", ResourceListSHandler),
         ])
