@@ -1,4 +1,4 @@
                                                                      安装之后,需要做如下处理
 在windows services中,查看 zonekey.service.ptz 是否存在? 若存在:
-1 进入c:\zkdm\ptz目录,修改配置文件teacher.config和student.config(hva,vva分别为水平视角,垂直视角,以度为单位)
-2 启动 zonekey.service.ptz 服务
+1 进入c:\zkdm\ptz目录,修改配置文件teacher.config和student.config
+2 启动zonekey.service.ptz服务 或者 重启计算机
