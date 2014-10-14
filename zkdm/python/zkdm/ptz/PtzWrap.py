@@ -106,10 +106,21 @@ class PtzWrap(object):
 			ret.update(self.mouse_trace(params))
 		elif method == 'ext_get_scales':
 			ret.update(self.ext_get_scales())
+		elif method == 'is_prepared':
+			ret.update(self.is_prepared())
 		else:
 			ret.update({'result':'error', 'info':'method NOT supported'})
 		return ret
 
+	def is_prepared(self):
+		if not self.__ptz:
+			return {'result':'error', 'info':'NO ptz'}
+		else:
+			r = self.__ptr['is_prepared'](self.__ptz)
+			if r is 0:
+				return { 'info': 'completed'}
+			else:
+				return { 'result':'error', 'info': 'NO ptz prepared'}
 
 	def stop(self):
 		if not self.__ptz:
@@ -330,6 +341,10 @@ class PtzWrap(object):
 		ptz = {}
 		print 'en ........ to load:', _ptz_so
 		ptz['so'] = CDLL(_ptz_so)
+
+		ptz['is_prepared'] = ptz['so'].is_prepared
+		ptz['is_prepared'].argtypes = [c_void_p]
+		ptz['is_prepared'].restype =c_int
 
 		ptz['func_open'] = ptz['so'].ptz_open
 		ptz['func_open'].restype = c_void_p

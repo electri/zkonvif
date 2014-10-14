@@ -12,7 +12,25 @@ from PtzWrap import PtzWrap
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+def getLogger(filePath):
+	import logging
+	import os
+	import inspect
 
+	logger = logging.getLogger("[zonekey.service.ptz]")
+
+	this_file = inspect.getfile(inspect.currentframe())
+	dirpath = os.path.abspath(os.path.dirname(this_file))
+	handler = logging.FileHandler(os.path.join(dirpath, filePath))
+	formatter = logging.Formatter('%(levelname)-8s %(message)s')
+	handler.setFormatter(formatter)
+		
+	logger.addHandler(handler)
+	logger.setLevel(logging.NOTSET)
+
+	return logger
+
+ptz_logger = getlogger('zonekey.service.ptz.log')
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
 
@@ -39,14 +57,17 @@ def load_ptz(config):
 	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
 		if 'cfgfile' in ptz:
 			filename = ptz['cfgfile'].encode('ascii')
-			print 'open with cfg:' , filename
+#print 'open with cfg:' , filename
+			ptz_logger.info(filename)
 			ptz['ptz'].open_with_config(filename)
 		else:
-			print 'open ptz:' , ptz['serial'], 'addr:', ptz['addr']
+#		print 'open ptz:' , ptz['serial'], 'addr:', ptz['addr']
+			logger.info('open ptz: %s, addr: %s', str(ptz['serial']), str(ptz['addr'])
 			ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
 	else:
 		ptz['ptz'] = None
-		print 'open failure'
+#print 'open failure'
+		ptz_logger.error('open failure')
 	return ptz
 
 
@@ -124,7 +145,6 @@ class PtzThread(threading.Thread):
 
 	def run(self):
 		main()
-		print 'run'
 
 import win32serviceutil
 import win32service

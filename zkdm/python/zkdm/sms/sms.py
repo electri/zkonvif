@@ -1,5 +1,9 @@
 from tornado import *
 import regHb
+import json
+#with open('c:\...','r') as f:
+#	d1 = json.load(f)
+#   json.dump(disc, f)
 class Application(requestion):
 	def __init__(self, url, port)
 		requestion.__init__(self)

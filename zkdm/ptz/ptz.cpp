@@ -431,3 +431,10 @@ double ptz_ext_get_scals(ptz_t *ptz, int z)
 	else
 		return 1.0;
 }
+
+int is_prepared(ptz_t *ptz)
+{
+	uint8_t power;
+	Ptz *p = (Ptz*)ptz;
+	return VISCA_get_power(&p->serial->iface, &p->cam, &power);
+}
