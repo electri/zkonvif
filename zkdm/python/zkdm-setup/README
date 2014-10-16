@@ -1,8 +1,0 @@
-1 如果你还没有安装python运行环境,请在命令行下运行 setup.bat(建议默认安装)
-2 设置python,py2exe所在路径的环境变量,若默认安装,设置如下:
-path=c:\Python27\
-path=c:\Python27\Scripts\
-		
-3 重启计算机
-
-4 读取zkdm\ptz下的INSTALL说明安装PtzWinService服务

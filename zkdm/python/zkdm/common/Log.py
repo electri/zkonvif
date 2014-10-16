@@ -39,15 +39,20 @@ class Log:
 		data["stamp"] = int(time.time())
 		data["content"] = content
 
-		# FIXME: 这种提供替换方式有问题，content 中可能有 .... 
-		s = str(data).replace('\'', '\"')
-		print s
+		# XXX: json 的 dumps 支持 dict, list, tuple, str, unicode, int, double, long, True
+		#			False, None
+		# 			不支持 object ....
+		s = json.dumps(data)
 		return s
 
 
 
 
 if __name__ == '__main__':
-	log = Log('testing')
-	log.log('abcd')
+	#log = Log('testing')
+	#log.log('abcd')
+	
+	dic = { "result":"ok", "info":'', 'value': 123 }
+	s = json.dumps(dic)
+	print s
 

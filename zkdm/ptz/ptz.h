@@ -6,6 +6,7 @@ extern "C" {
 
 typedef struct ptz_t ptz_t;
 
+int is_prepared(ptz_t *ptz);
 ptz_t *ptz_open(const char *serial_name, int addr);
 ptz_t *ptz_open_with_config(const char *cfg_name);
 void ptz_close(ptz_t *ptz);

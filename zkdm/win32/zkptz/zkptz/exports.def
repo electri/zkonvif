@@ -1,4 +1,5 @@
 EXPORTS
+	is_prepared
 	ptz_open
 	ptz_open_with_config
 	ptz_close

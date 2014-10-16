@@ -151,13 +151,18 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 VISCA_API uint32_t
 _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
+	int loop = 0;
 	while (iface->ibuf[1] != 0x50)
 	{
-		iface->type = iface->ibuf[1] & 0xF0;
-		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+		if (_VISCA_get_packet(iface) != VISCA_SUCCESS) {
+			iface->type = iface->ibuf[1] & 0xF0;
 			return VISCA_FAILURE;
+		}
+		loop++;
+		if (loop > 100)
+			fprintf(stdout, "INFO: %s run get_packet %d times\n", __FUNCTION__, loop);
 	}
-
+	iface->type = iface->ibuf[1] & 0xF0;
 	return VISCA_SUCCESS;
 }
 
@@ -167,7 +172,7 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 	// first message: -------------------
 	if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
 	{
-		fprintf(stdout, "first get_packet fail \n");
+		fprintf(stdout, "first get packet fail from ptz\n");
 		return VISCA_FAILURE;
 	}
 	iface->type = iface->ibuf[1] & 0xF0;
