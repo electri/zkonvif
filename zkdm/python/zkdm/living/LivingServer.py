@@ -56,6 +56,10 @@ class CmdHandler(tornado.web.RequestHandler):
             args = (self.request.uri.split('?'))[1]
             rc=_lcmd.property(args)
             self.write(rc)
+        else:
+            args = (self.request.uri.split('?'))[1]
+            rc=_lcmd.property(args)
+            self.write(rc)
 
 
 def main():
