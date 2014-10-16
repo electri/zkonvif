@@ -2,7 +2,7 @@ import win32serviceutil
 import win32service
 import win32event
 
-
+a
 alive = "I am liuwenwen live"
 
 def getLogger(filePath):

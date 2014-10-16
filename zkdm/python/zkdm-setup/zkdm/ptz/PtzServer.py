@@ -32,7 +32,11 @@ def load_ptz(config):
 		'addr': config['config']['addr'],
 		'ptz': None
 	}
-
+	print 'ptz'
+	print type(ptz['name'])
+	print type(ptz['serial'])
+	print type(ptz['addr'])
+	print type(ptz['ptz'])
 	if 'extent' in config['config']:
 		ptz['cfgfile'] = config['config']['extent']
 

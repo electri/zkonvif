@@ -1,1 +1,13 @@
-﻿
+
+1 open c:\zkdm\ptz, in configuration file, we must write hva(Horazontal viewing angle) and vva(Vertical viewing angle) for function of mousetrace, indegrees.
+such as 
+hva=72.5
+vva=44.8
+配置若不懂,请联系曹工
+
+2 打开cmd,进入根目录c:\zkdm\ptz,运行 install_ptz_winservice.bat
+
+3 此时程序以windows服务的形式存在,需要你启动.详情请参考windows服务.
+
+
+注:若不想利用脚本,运行cmd命令python PtzWinService.py后,会显示操作的详细提示

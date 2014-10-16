@@ -6,33 +6,14 @@ from ctypes import *
 import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
-
-
+import logging
+import inspect
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-def getLogger(filePath):
-	import logging
-	import os
-	import inspect
-
-	logger = logging.getLogger("[zonekey.service.ptz]")
-
-	this_file = inspect.getfile(inspect.currentframe())
-	dirpath = os.path.abspath(os.path.dirname(this_file))
-	handler = logging.FileHandler(os.path.join(dirpath, filePath))
-	formatter = logging.Formatter('%(levelname)-8s %(message)s')
-	handler.setFormatter(formatter)
-		
-	logger.addHandler(handler)
-	logger.setLevel(logging.NOTSET)
-
-	return logger
-
-ptz_logger = getlogger('zonekey.service.ptz.log')
-_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-
+#global _all_config
+#global _all_ptzs
+#_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
@@ -48,6 +29,7 @@ def load_ptz(config):
 		'ptz': None
 	}
 
+
 	if 'extent' in config['config']:
 		ptz['cfgfile'] = config['config']['extent']
 
@@ -57,17 +39,14 @@ def load_ptz(config):
 	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
 		if 'cfgfile' in ptz:
 			filename = ptz['cfgfile'].encode('ascii')
-#print 'open with cfg:' , filename
-			ptz_logger.info(filename)
+			print 'open with cfg:' , filename
 			ptz['ptz'].open_with_config(filename)
 		else:
-#		print 'open ptz:' , ptz['serial'], 'addr:', ptz['addr']
-			logger.info('open ptz: %s, addr: %s', str(ptz['serial']), str(ptz['addr'])
+			print 'open ptz:' , ptz['serial'], 'addr:', ptz['addr']
 			ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
 	else:
 		ptz['ptz'] = None
-#print 'open failure'
-		ptz_logger.error('open failure')
+		print 'open failure'
 	return ptz
 
 
@@ -81,7 +60,7 @@ def load_all_ptzs():
 
 
 # 这里保存所有云台
-_all_ptzs = load_all_ptzs()
+#_all_ptzs = load_all_ptzs()
 
 class HelpHandler(RequestHandler):
 	''' 返回 help 
@@ -149,17 +128,21 @@ class PtzThread(threading.Thread):
 import win32serviceutil
 import win32service
 import win32event
-import win32evtlogutil
 class PtzService(win32serviceutil.ServiceFramework):
 	_svc_name_ = "zonekey.service.ptz"
 	_svc_display_name_ = "zonekey.service.ptz"
 	_svc_deps_ = ["EventLog"]
-	
+
 	def __init__(self,args):
 		win32serviceutil.ServiceFramework.__init__(self,args)
 		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None) 
 		self.ptz_thread_ = PtzThread()
+		global _all_config
+		global _all_ptzs
+		_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
+		_all_ptzs = load_all_ptzs()
 
+		
 	def SvcStop(self):
 		win32event.SetEvent(self.hWaitStop)
 
