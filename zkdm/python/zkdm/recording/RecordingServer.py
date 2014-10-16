@@ -10,7 +10,7 @@ from tornado.options import define, options
 from tornado.web import RequestHandler, Application, url
 from RecordingCommand import RecordingCommand
 
-define("port", default=8888, help="run on the given port", type=int)
+define("port", default=10007, help="run on the given port", type=int)
 
 def _param(req, key):
     if key in req.request.arguments:

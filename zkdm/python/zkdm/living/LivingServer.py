@@ -10,7 +10,7 @@ from tornado.options import define, options
 from tornado.web import RequestHandler, Application, url
 from LivingCommand import LivingCommand
 
-define("port", default=8889, help="run on the given port", type=int)
+define("port", default=10008, help="run on the given port", type=int)
 
 def _param(req, key):
     if key in req.request.arguments:
@@ -63,7 +63,7 @@ def main():
     tornado.options.parse_command_line()
     application = tornado.web.Application([
         url(r"/", MainHandler),
-	url(r"/living/cmd",CmdHandler),
+    	url(r"/living/cmd",CmdHandler),
         url(r"/living/help", HelpHandler),
         ])
 

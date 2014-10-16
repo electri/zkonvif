@@ -2,24 +2,181 @@
 <head>
 	<title>Recording help</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        .style1
+        {
+            font-family: 宋体, Arial, Helvetica, sans-serif;
+        }
+        .style2
+        {
+            text-indent: 21.0000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin-left: 39.0000pt;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+        }
+        .style3
+        {
+            text-indent: 21.0000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin-left: 67.5000pt;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+        }
+        .style4
+        {
+            text-indent: 68.2500pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style5
+        {
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style6
+        {
+            text-indent: 99.7500pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style7
+        {
+            text-indent: 21.0000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin-left: 75.0000pt;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+        }
+        .style8
+        {
+            text-indent: 42.0000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style9
+        {
+            text-indent: 94.5000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style10
+        {
+            text-indent: 21.0000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin-left: 28.3500pt;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+        }
+        .style11
+        {
+            text-indent: 173.2500pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style12
+        {
+            text-indent: 204.7500pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style13
+        {
+            text-indent: 199.5000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style14
+        {
+            text-indent: 21.0000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin-left: 21.0000pt;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+        }
+        .style16
+        {
+            text-indent: 84.0000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style17
+        {
+            text-indent: 78.7500pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style18
+        {
+            text-indent: 76.0000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style19
+        {
+            text-indent: 36.7500pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+        .style20
+        {
+            text-indent: 21.0000pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin-left: 38.9550pt;
+            margin-top: 0pt;
+            margin-bottom: 0pt;
+        }
+        .style21
+        {
+            text-indent: 110.2500pt;
+            text-align: justify;
+            font-size: 10.5000pt;
+            font-family: Calibri;
+            margin: 0pt;
+        }
+    </style>
 </head>
 <body>
 	录像服务接口:为录像提供启动、停止、暂停等操作接口，同时能提供录像参数设置接口。
  
     <p>
-        <strong>一、录像操作</strong></p>
-    <p>
-        1）<strong>/recording/start:</strong><span 
-            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">录像开始</span></p>
-    <p>
-        2)<strong>/recording/stop:</strong>录像停止</p>
-    <p>
-        3）<strong>/recording/pause:</strong>录像暂停</p>
-    <p>
-        4）<strong>/recording/resume:</strong>录像恢复</p>
-        <p>
-
-        返回：application/json</p>
+        <strong>1）调用方法：/recording/cmd</strong></p>
 
     <p>
 
@@ -42,379 +199,521 @@
         }</p>
 
     <p>
-        二<strong>、录制模式设置</strong></p>
-    <p>
-        //目前RecordMode支持All（全景模式）、Resource（资源模式）和Movie（电影模式）三种模式</p>
-    <p>
-        {</p>
-    <p>
-        &quot;RecordMode&quot;:&quot;All&quot;</p>
-    <p>
-        }</p>
-    <p>
-        <strong>设置为电影模式的示例:/recording/setRecordMode?RecordMode=Movie</strong></p>
-      <p>
-
-        返回：application/json</p>
-
-    <p>
-
-        //成功&quot;result&quot;=&quot;ok&quot;,&quot;info&quot;=&quot;&quot;,失败&quot;result&quot;=&quot;error&quot;,&quot;info&quot;=&quot;失败原因&quot;</p>
-
-    <p>
-
-        {</p>
-
-    <p>
-
-        &quot;result&quot;:&quot;ok&quot;</p>
-
-    <p>
-
-        &quot;info&quot;:&quot;&quot;</p>
-
-    <p>
-
-        }</p>
-    <p>
-
-        <strong>三、录像文件路径</strong></p>
-    <p>
-
-        <strong>1）总路径：</strong></p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;FileFormat&quot;:&quot;mp4&quot;</p>
-    <p>
-
-        &quot;ToatlFilePath&quot;:&quot;D:/rec&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        <strong>设置文件格式为mp4，路径存储在&quot;D:/rec&quot;的示例：/recording/setFileProperty?FileFormat=mp4&amp;ToatlFilePath=D:/rec</strong></p>
-    <p>
-
-        <strong>2）子路径：</strong></p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;SubFileFolder&quot;:&quot;yyyy-MM-dd HH.mm.ss&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        <strong>设置子路径为2014-08-19 08.08.08的示例：/recording/setFileFolder?SubFileFolder=2014-08-19 08.08.08</strong></p>
-    <p>
-
-        <strong>四、片头设置</strong></p>
-    <p>
-
-        <strong>1）图片：</strong></p>
-    <p>
-
-        <strong>1.图片路径：</strong></p>
-    <p>
-
-        //Key=3100用来标示片头</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;FilePath&quot;:&quot;&quot;</p>
-    <p>
-
-        &quot;Key&quot;:&quot;&quot;</p>
-    <p>
-
-        &quot;StartTime&quot;:&quot;&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        示例：/recording/OpenPicFile?FilePath=<a href="file:///D:/image.png">D:\image.png</a>&amp;Key=3100&amp;StartTime=0</p>
-    <p>
-
-        <strong>2.开启图片片头：/recording/PlayPicFile?Key=3100</strong></p>
-    <p>
-
-        //Key=3100用来标示片头</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;Key&quot;:&quot;3100&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        <strong>3.关闭图片片头：/recording/StopPicFile?Key=3100</strong></p>
-    <p>
-
-        //Key=3100用来标示片头</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;Key&quot;:&quot;3100&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        <strong>2）视频：</strong></p>
-    <p>
-
-        <strong>1.视频路径：</strong></p>
-    <p>
-
-        //Key=3100用来标示片头</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;FilePath&quot;:&quot;&quot;</p>
-    <p>
-
-        &quot;Key&quot;:&quot;&quot;</p>
-    <p>
-
-        &quot;StartTime&quot;:&quot;&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        示例：/recording/OpenVideoFile?FilePath=<a 
-            href="file:///D:/video.mp4">D:\video.mp4</a>&amp;Key=3100&amp;StartTime=0</p>
-    <p>
-
-        <strong>2.开启视频片头：/recording/PlayVideoFile?Key=3100</strong></p>
-    <p>
-
-        json数据</p>
-    <p>
-
-        //Key=3100用来标示片头</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;Key&quot;:&quot;3100&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        &nbsp;</p>
-    <p>
-
-        <strong>3.关闭视频片头：/recording/StopVideoFile?Key=3100</strong></p>
-    <p>
-
-        json数据</p>
-    <p>
-
-        //Key=3100用来标示片头</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;Key&quot;:&quot;3100&quot;</p>
-    <p>
-
-        }</p>
-      <p>
-
-        返回：application/json</p>
-
-    <p>
-
-        //成功&quot;result&quot;=&quot;ok&quot;,&quot;info&quot;=&quot;&quot;,失败&quot;result&quot;=&quot;error&quot;,&quot;info&quot;=&quot;失败原因&quot;</p>
-
-    <p>
-
-        {</p>
-
-    <p>
-
-        &quot;result&quot;:&quot;ok&quot;</p>
-
-    <p>
-
-        &quot;info&quot;:&quot;&quot;</p>
-
-    <p>
-
-        }</p>
-    <p>
-
-        <strong>五、片尾设置</strong></p>
-    <p>
-
-        <strong>1）图片：</strong></p>
-    <p>
-
-        <strong>1.图片路径：</strong></p>
-    <p>
-
-        //Key=3101用来标示片尾</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;FilePath&quot;:&quot;&quot;</p>
-    <p>
-
-        &quot;Key&quot;:&quot;3101&quot;</p>
-    <p>
-
-        &quot;StartTime&quot;:&quot;&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        示例：/recording/OpenPicFile?FilePath=<a href="file:///D:/image.png">D:\image.png</a>&amp;Key=3101&amp;StartTime=0</p>
-    <p>
-
-        <strong>2.开启图片片尾：/recording/PlayPicFile?Key=3101</strong></p>
-    <p>
-
-        json数据</p>
-    <p>
-
-        //Key=3101用来标示片尾</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;Key&quot;:&quot;3101&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        <strong>3.关闭图片片尾：/recording/StopPicFile?Key=3101</strong></p>
-    <p>
-
-        json数据</p>
-    <p>
-
-        //Key=3101用来标示片尾</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;Key&quot;:&quot;3101&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        <strong>2）视频：</strong></p>
-    <p>
-
-        <strong>1.视频路径：</strong></p>
-    <p>
-
-        //Key=3101用来标示片尾</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;FilePath&quot;:&quot;&quot;</p>
-    <p>
-
-        &quot;Key&quot;:&quot;&quot;</p>
-    <p>
-
-        &quot;StartTime&quot;:&quot;&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        示例：/recording/OpenVideoFile?FilePath=<a 
-            href="file:///D:/video.mp4">D:\video.mp4</a>&amp;Key=3101&amp;StartTime=0</p>
-    <p>
-
-        <strong>2.开启视频片尾：/recording/PlayVideoFile?Key=3101</strong></p>
-    <p>
-
-        json数据</p>
-    <p>
-
-        //Key=3101用来标示片尾</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;Key&quot;:&quot;3101&quot;</p>
-    <p>
-
-        }</p>
-    <p>
-
-        <strong>3.关闭视频片尾：/recording/StopVideoFile?Key=3101</strong></p>
-    <p>
-
-        json数据</p>
-    <p>
-
-        //Key=3101用来标示片尾</p>
-    <p>
-
-        {</p>
-    <p>
-
-        &quot;Key&quot;:&quot;3101&quot;</p>
-    <p>
-
-        }</p>
-      <p>
-
-        返回：application/json</p>
-
-    <p>
-
-        //成功&quot;result&quot;=&quot;ok&quot;,&quot;info&quot;=&quot;&quot;,失败&quot;result&quot;=&quot;error&quot;,&quot;info&quot;=&quot;失败原因&quot;</p>
-
-    <p>
-
-        {</p>
-
-    <p>
-
-        &quot;result&quot;:&quot;ok&quot;</p>
-
-    <p>
-
-        &quot;info&quot;:&quot;&quot;</p>
-
-    <p>
-
-        }</p>
+        <strong>2)调用例子：</strong></p>
+    <p>
+        实现录像开始的操作命令：/recording/cmd?<span class="style1" 
+            style="mso-spacerun: 'yes'; font-size: 10.5000pt;">RecordCmd</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">=StartRecord</span></p>
+    <p>
+
+        <strong>3)命令说明：</strong></p>
+    <p class="style14" style="mso-list: l12 level1 lfo1;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">一、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">录像控制协议</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l13 level1 lfo2;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">1、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">录像开始：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">=StartRecord</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l13 level1 lfo2;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">2、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">录像暂停：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">=PauseRecord</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l13 level1 lfo2;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">3、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">停止录像：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">=StopRecord</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l13 level1 lfo2;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">4、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">恢复录像：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">=ResumeRecord</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l13 level1 lfo2;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">5、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">片头设置：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style3" style="layout-grid-mode: char; mso-list: l11 level1 lfo3;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">（1）<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">图片：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=OpenPicFile&amp;FilePath={0}&amp;Key=3100&amp;StartTime=0<o:p></o:p></span></p>
+    <p class="style4" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd=PlayPicFile&amp;Key=3100<o:p></o:p></span></p>
+    <p class="style4" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p>
+        &nbsp;</o:p></span></p>
+    <p class="style4" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd=StopPicFile&amp;Key=3100<o:p></o:p></span></p>
+    <p class="style3" style="layout-grid-mode: char; mso-list: l11 level1 lfo3;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">（2）<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">视频：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=OpenVideoFile&amp;FilePath={0}&amp;Key=3100&amp;StartTime=0<o:p></o:p></span></p>
+    <p class="style5" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=PlayVideoFile&amp;Key=3100<o:p></o:p></span></p>
+    <p class="style6" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd=ChangeCard&amp;CardPort=3100&amp;isMain=true<o:p></o:p></span></p>
+    <p class="style6" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p>
+        &nbsp;</o:p></span></p>
+    <p class="style6" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd=StopVideoFile&amp;Key=3100<o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l13 level1 lfo2;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">6、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">片尾设置：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style3" style="layout-grid-mode: char; mso-list: l7 level1 lfo4;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">（1）<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">图片：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=OpenPicFile&amp;FilePath={0}&amp;Key=310</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">1</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">&amp;StartTime=0<o:p></o:p></span></p>
+    <p class="style6" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd=PlayPicFile&amp;Key=310</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">1</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style6" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p>
+        &nbsp;</o:p></span></p>
+    <p class="style6" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd=StopPicFile&amp;Key=310</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">1</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style3" style="layout-grid-mode: char; mso-list: l7 level1 lfo4;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">（2）<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">视频：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=OpenVideoFile&amp;FilePath={0}&amp;Key=310</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">1</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">&amp;StartTime=0<o:p></o:p></span></p>
+    <p class="style3" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=PlayVideoFile&amp;Key=310</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">1</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style4" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd=ChangeCard&amp;CardPort=310</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">1</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">&amp;isMain=true<o:p></o:p></span></p>
+    <p class="style4" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p>
+        &nbsp;</o:p></span></p>
+    <p class="style6" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd=StopVideoFile&amp;Key=310</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">1</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l13 level1 lfo2;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">7、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">录制模式：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetRecordMode&amp;RecordMode=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">All/Resource/Movie</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l13 level1 lfo2;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">8、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">录像文件路径：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style7" style="mso-list: l3 level1 lfo5;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">（1）<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">总路径：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetFileProperty&amp;FileFormat=mp4&amp;TotalFilePath=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">D:/rec</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style7" style="mso-list: l3 level1 lfo5;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">（2）<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">子路径：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetFileFolder&amp;SubFileFolder=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">yyyy-MM-dd&nbsp;HH.mm.ss</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l13 level1 lfo2;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">9、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">课程信息设置：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style8" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd=SetCourseInfo&amp;Department={0}&amp;Subject={1}&amp;CourseName={2}<o:p></o:p></span></p>
+    <p class="style9" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        &amp;Teacher={3}&amp;Address={4}&amp;DateTime={5}&amp;Description={6}<o:p></o:p></span></p>
+    <p class="style10" style="mso-list: l0 level1 lfo6;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">1、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">是否进行某路资源的录像：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style7" style="mso-list: l8 level1 lfo7;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">（1）<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">录制：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetResRecordEnable&amp;CardPort={0}&amp;IsRecord=true<o:p></o:p></span></p>
+    <p class="style7" style="mso-list: l8 level1 lfo7;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">（2）<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">不录制：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetResRecordEnable&amp;CardPort={0}&amp;IsRecord=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">false</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style10" style="mso-list: l0 level1 lfo6;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">2、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">设置每一路视频的声音：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetVolume&amp;CardPort={0}&amp;Volume={1}<o:p></o:p></span></p>
+    <p class="style10" style="mso-list: l0 level1 lfo6;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">3、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">电影录像参数设置：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetFilmParams&amp;&nbsp;BitRate={0}&amp;RecordFormat={1}<o:p></o:p></span></p>
+    <p class="style11">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        &amp;FrameRate={2}&amp;Width={3}&amp;Height={4}<o:p></o:p></span></p>
+    <p class="style10" style="mso-list: l0 level1 lfo6;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">4、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">每路资源的录像参数设置：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetResParams&amp;&nbsp;CardPort={0}&amp;BitRate={1}<o:p></o:p></span></p>
+    <p class="style12">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        &amp;RecordFormat={2</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">}</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style10" style="mso-list: l0 level1 lfo6;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">5、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">设置叠画持续时间：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetDisSolve&amp;DissolveDuraTime={0</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">}</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style10" style="mso-list: l0 level1 lfo6;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">6、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">每路源基本信息设置：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetCardInfo&amp;CardPort={0}&amp;IsUse={1}&amp;IsLock={2}<o:p></o:p></span></p>
+    <p class="style13">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        &amp;CardName={3</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">}</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style14" style="mso-list: l12 level1 lfo1;">
+        二<![if !supportLists]><span 
+            style="font-size:10.5000pt; font-family:'Calibri'; "><span 
+            style="mso-list:Ignore; ">、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">切换控制协议</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l2 level1 lfo9;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">1、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">切换窗口：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;=ChangeCard&amp;CardPort=3000&amp;isMain=true</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l2 level1 lfo9;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">2、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">窗口添加特效：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetCardEffect&amp;CardPort={0}&amp;IsOpen=true&amp;EffectType={1}<o:p></o:p></span></p>
+    <p class="style5" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        其中</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">EffectType</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">为<font 
+            face="Calibri">0-10</font><font face="宋体">，</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style16" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        {&nbsp;&quot;FadeInOut&quot;,&nbsp;&quot;0&quot;&nbsp;},</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">淡入淡出</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style17" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        &nbsp;{&nbsp;&quot;LtoR&quot;,&nbsp;&quot;1&quot;&nbsp;},&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">由左到右</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style16" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        {&nbsp;&quot;RtoL&quot;,&nbsp;&quot;2&quot;&nbsp;},&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">由右到左</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style16" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        {&nbsp;&quot;UtoD&quot;,&nbsp;&quot;3&quot;&nbsp;},&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">由上到下</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style16" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        {&nbsp;&quot;DtoU&quot;,&nbsp;&quot;4&quot;&nbsp;},&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">由下到上</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style16" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        {&nbsp;&quot;LUtoRD&quot;,&nbsp;&quot;5&quot;&nbsp;},&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">由左上到右下</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style18" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:9.5000pt; font-family:'新宋体'; ">&nbsp;&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">{&nbsp;&quot;RUtoLD&quot;,&nbsp;&quot;6&quot;&nbsp;},&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">有右上到左下</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style16" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        {&nbsp;&quot;LDtoRU&quot;,&nbsp;&quot;7&quot;&nbsp;},&nbsp;</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">由左下到右上</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style16" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        {&nbsp;&quot;RDtoLU&quot;,&nbsp;&quot;8&quot;&nbsp;},</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;由右下到左上</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style16" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        {&quot;WindowblindH&quot;,&quot;9&quot;},</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;水平百叶窗</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style16" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        {&quot;WindowblindC&quot;,&quot;10&quot;}</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">,&nbsp;<font 
+            face="宋体">垂直百叶窗</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l2 level1 lfo9;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">3、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">没有特效：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetCardEffect&amp;CardPort={0}&amp;IsOpen=false</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l2 level1 lfo9;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">4、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">全部命令设置：<o:p></o:p></span></p>
+    <p class="style2">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">=SetAllEffect&amp;EffectType={0}</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style14" style="mso-list: l12 level1 lfo1;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">三、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">画中画控制协议</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l6 level1 lfo10;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">1、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">子画面选取：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">=SetPicInPicCardPort&amp;CardPort=3000&amp;isMain=true</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l6 level1 lfo10;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">2、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">模式选取：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        RecordCmd</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">=SetPicInPicMode&amp;PicInPicMode=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">LeftRight/Tile</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&amp;isMain=true</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style5" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        如果模式为<font face="Calibri">Insert</font><font face="宋体">模式：</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetPicInPicMode&amp;PicInPicMode={0}&amp;Pos={1},{2}&amp;Size={3},{4}</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&amp;CurrPos=LU/LD/RU/RD</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">&amp;isMain={5}<o:p></o:p></span></p>
+    <p class="style19" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;&nbsp;&nbsp; 
+        如果模式为<font face="Calibri">Pnp</font><font face="宋体">模式（全景）：</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style19" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        RecordCmd=SetPnp&amp;CardPort={0}&amp;isMain=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">true<font 
+            face="宋体">（</font><font face="Calibri">port</font><font face="宋体">为主画面的端口号值）</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l6 level1 lfo10;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">3、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">更换主副画面：<font 
+            face="Calibri">RecordCmd=ChangePicInPic&amp;isMain=true</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l6 level1 lfo10;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">4、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">设置小画面的大小和位置：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetPositionAndSize&amp;Pos={0},{1}&amp;Size={2},{3}<o:p></o:p></span></p>
+    <p class="style14">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">
+        &amp;CurrPos=LU/LD/RU/RD</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">&amp;isMain=fals</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">e</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l6 level1 lfo10;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">5、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">关闭小画面：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=ClosePicInPic&amp;isMain=fals</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">e</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style14" style="mso-list: l12 level1 lfo1;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">四、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">获取信息类协议</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l4 level1 lfo11;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">1、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">获取<font 
+            face="Calibri">mac</font><font face="宋体">地址：</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">MetaInfoCmd=GetMac<o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l4 level1 lfo11;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">2、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">获取<font 
+            face="Calibri">ip</font><font face="宋体">地址：</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">BroadCastCmd=GetDeviceI</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">P</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l4 level1 lfo11;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">3、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">获取磁盘空间状态值：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=QueryDiskStatu</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">s</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l4 level1 lfo11;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">4、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">获取录像时间值：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">QueryRecordTime</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l4 level1 lfo11;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">5、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">获取系统时间：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=QuerySystemTime<o:p></o:p></span></p>
+    <p class="style14" style="mso-list: l12 level1 lfo1;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">五、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">云台文件传送控制</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l5 level1 lfo12;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">1、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">保存云台传回的文件信息</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        MetaInfoCmd=SaveFile&amp;FileName=UPLOADMETA&amp;FileContent={0}<o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l5 level1 lfo12;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">2、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">保存<font 
+            face="Calibri">metainfo</font><font face="宋体">信息</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="layout-grid-mode: char;">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        MetaInfoCmd=SetMetaInfo&amp;Guid={0}&amp;LoginName={1}&amp;CourseName={2}&amp;Teacher={3}&amp;Subject={4}&amp;Grade={5}<o:p></o:p></span></p>
+    <p class="style14" style="mso-list: l12 level1 lfo1;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">六、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">字幕台标类设置</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l9 level1 lfo13;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">1、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">字幕：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style5">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        （<font face="Calibri">1</font><font face="宋体">）开启：</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=SetCaption&amp;&nbsp;Content={0}&amp;Font={1}&amp;FontColor={2}&amp;BackColor={3}<o:p></o:p></span></p>
+    <p class="style20">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        &amp;FontOpacity={4}&amp;OutlineColor={5}&amp;isMain=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">true</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style5">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        （<font face="Calibri">2</font><font face="宋体">）关闭：</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=CaptionClose&amp;isMain=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">true</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l9 level1 lfo13;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">2、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">台标：</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style5">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        （<font face="Calibri">1</font><font face="宋体">）开启：</font><font face="Calibri">RecordCmd=SetLogo&amp;</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">&nbsp;PicPath={0}&amp;PicPos={1}&amp;PicSize={2}&amp;PicOpacity={3}<o:p></o:p></span></p>
+    <p class="style21">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">
+        &amp;LogoNum={4}<o:p></o:p></span></p>
+    <p class="style5">
+        <span style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        （<font face="Calibri">2</font><font face="宋体">）关闭：</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">RecordCmd=LogoClose&amp;LogoNum={0}&amp;isMain=</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">true</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style14" style="mso-list: l12 level1 lfo1;">
+        七<![if !supportLists]><span 
+            style="font-size:10.5000pt; font-family:'Calibri'; "><span 
+            style="mso-list:Ignore; ">、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">跟踪控制协议</span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l10 level1 lfo14;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">1、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">手动切换：<font 
+            face="Calibri">RecordCmd=</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">ManualTrace<o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l10 level1 lfo14;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">2、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">自动切换：<font 
+            face="Calibri">RecordCmd=</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; ">&nbsp;AutoTrace<o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l10 level1 lfo14;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">3、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">鼠标点击跟踪：<font 
+            face="Calibri">RecordCmd=MouseTrace&amp;Num={0}&amp;X={1}&amp;Y={2}</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
+    <p class="style2" style="mso-list: l10 level1 lfo14;">
+        <![if !supportLists]><span style="font-size:10.5000pt; font-family:'Calibri'; ">
+        <span style="mso-list:Ignore; ">4、<span>&nbsp;</span></span></span><![endif]><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'宋体'; ">变倍选择：<font 
+            face="Calibri">RecordCmd=Zoom&amp;Num={0}&amp;ZoomNum={1}</font></span><span 
+            style="mso-spacerun:'yes'; font-size:10.5000pt; font-family:'Calibri'; "><o:p></o:p></span></p>
     <p>
 
         &nbsp;</p>
