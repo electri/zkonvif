@@ -1813,9 +1813,12 @@ VISCA_get_zoom_value(VISCAInterface_t * iface, VISCACamera_t * camera,
 	else {
 		if (_VISCA_get_reply_accurate(iface, camera) != VISCA_SUCCESS)
 			return err;
+		fprintf(stdout, "%02x %02x %02x %02x\n", iface->ibuf[2],
+			iface->ibuf[3], iface->ibuf[4], iface->ibuf[5]);
 		*value =
 		    (iface->ibuf[2] << 12) + (iface->ibuf[3] << 8) +
 		    (iface->ibuf[4] << 4) + iface->ibuf[5];
+
 		return VISCA_SUCCESS;
 	}
 }

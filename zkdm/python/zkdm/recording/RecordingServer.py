@@ -10,7 +10,7 @@ from tornado.options import define, options
 from tornado.web import RequestHandler, Application, url
 from RecordingCommand import RecordingCommand
 
-define("port", default=8888, help="run on the given port", type=int)
+define("port", default=10007, help="run on the given port", type=int)
 
 def _param(req, key):
     if key in req.request.arguments:
@@ -37,26 +37,17 @@ class CmdHandler(tornado.web.RequestHandler):
         cmd = _param(self, 'RecordCmd')
 
         if cmd is None:
+            cmd = _param(self,'MetaInfoCmd')
+
+        if cmd is None:
+            cmd = _param(self,'BroadCastCmd')
+
+        if cmd is None:
             rc['result'] = 'err'
             rc['info'] = '"RecordCmd" MUST be supplied!'
             self.write(rc)
             return
 
-        elif cmd['RecordCmd'] == ['StartRecord']:
-            rc=_rcmd.start()
-            self.write(rc)
-
-        elif cmd['RecordCmd']==['PauseRecord']:
-            rc=_rcmd.pause()
-            self.write(rc)
-
-        elif  cmd['RecordCmd']==['StopRecord']:
-            rc=_rcmd.stop()
-            self.write(rc)
-
-        elif cmd['RecordCmd']==['ResumeRecord']:
-            rc=_rcmd.resume()
-            self.write(rc)
 
         else:
             args = (self.request.uri.split('?'))[1]

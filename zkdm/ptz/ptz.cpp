@@ -278,7 +278,7 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 
 	Ptz *p = (Ptz*)ptz;
 	uint16_t v = 0;
-
+	/*
 	if (p->is_zoom_init == true) {
 		if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS) {
 			return -1;
@@ -317,6 +317,12 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 			return VISCA_SUCCESS;
 		}
 	}
+	*/
+	if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS) {
+		return -1;
+	}
+	*z = v;
+	return VISCA_SUCCESS;
 }
 
 int ptz_preset_save(ptz_t *ptz, int id)
