@@ -43,6 +43,14 @@
 #define VISCA_API
 #define VISCA_WIN
 #endif
+
+enum BugFix
+{
+	BF_NONE = 0,
+	BF_STOP = 1,
+
+};
+
 /**********************/
 /* Message formatting */
 /**********************/
@@ -528,6 +536,9 @@ extern "C" {
 	} VISCAPacket_t;
 
 /* GENERAL FUNCTIONS */
+	VISCA_API void VISCA_set_bugfix(enum BugFix bfs);
+
+
 
 	VISCA_API uint32_t
 	    VISCA_set_address(VISCAInterface_t * iface, int *camera_num);

@@ -32,6 +32,13 @@
 #endif
 #endif
 
+enum BugFix _bfs = BF_NONE;
+
+void VISCA_set_bugfix(enum BugFix bfs)
+{
+	fprintf(stderr, "zkptz: %s: bfs=%08x\n", __FUNCTION__, bfs);
+	_bfs = bfs;
+}
 
 /********************************/
 /*      PRIVATE FUNCTIONS       */
@@ -180,7 +187,6 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 	// skip ack messages
 	while (iface->type == VISCA_RESPONSE_ACK) {
 		if (_VISCA_get_packet(iface) != VISCA_SUCCESS) {
-			fprintf(stdout, "second get_packet fail \n");
 			return VISCA_FAILURE;
 		}
 		iface->type = iface->ibuf[1] & 0xF0;
@@ -203,6 +209,18 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 	fprintf(stdout, "third get_packet fail \n");
 	return VISCA_FAILURE;
 }
+
+VISCA_API uint32_t _VISCA_get_one_package(VISCAInterface_t * iface, VISCACamera_t * camera)
+{
+	// first message: -------------------
+	if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+	{
+		fprintf(stdout, "first get packet fail from ptz\n");
+		return VISCA_FAILURE;
+	}
+	return VISCA_SUCCESS;
+}
+
 #endif // 
 
 VISCA_API uint32_t
@@ -215,6 +233,21 @@ _VISCA_send_packet_with_reply(VISCAInterface_t * iface,
 		return VISCA_FAILURE;
 	t2 = _interval_time("send", t1);
 	if (_VISCA_get_reply(iface, camera) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	_interval_time("get", t2);
+	return VISCA_SUCCESS;
+}
+
+VISCA_API uint32_t
+_VISCA_send_packet_with_one(VISCAInterface_t * iface,
+			      VISCACamera_t * camera, VISCAPacket_t * packet)
+{	
+	clock_t t1, t2;
+	t1 = clock();
+	if (_VISCA_send_packet(iface, camera, packet) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	t2 = _interval_time("send", t1);
+	if (_VISCA_get_one_package(iface, camera) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 	_interval_time("get", t2);
 	return VISCA_SUCCESS;
@@ -1813,8 +1846,6 @@ VISCA_get_zoom_value(VISCAInterface_t * iface, VISCACamera_t * camera,
 	else {
 		if (_VISCA_get_reply_accurate(iface, camera) != VISCA_SUCCESS)
 			return err;
-		fprintf(stdout, "%02x %02x %02x %02x\n", iface->ibuf[2],
-			iface->ibuf[3], iface->ibuf[4], iface->ibuf[5]);
 		*value =
 		    (iface->ibuf[2] << 12) + (iface->ibuf[3] << 8) +
 		    (iface->ibuf[4] << 4) + iface->ibuf[5];
@@ -2744,7 +2775,12 @@ VISCA_set_pantilt_stop(VISCAInterface_t * iface, VISCACamera_t * camera,
 	_VISCA_append_byte(&packet, tilt_speed);
 	_VISCA_append_byte(&packet, VISCA_PT_DRIVE_HORIZ_STOP);
 	_VISCA_append_byte(&packet, VISCA_PT_DRIVE_VERT_STOP);
-	return _VISCA_send_packet_with_reply(iface, camera, &packet);
+	if (_bfs & BF_STOP) {
+		return _VISCA_send_packet_with_one(iface, camera, &packet);
+	}
+	else {
+		return _VISCA_send_packet_with_reply(iface, camera, &packet);
+	}
 }
 
 VISCA_API uint32_t

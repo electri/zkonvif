@@ -3,8 +3,6 @@
 from ctypes import *
 import platform, os
 
-
-
 _ptz_so = 'libzkptz.so.0.0.0'
 
 plat = platform.uname()[0]
@@ -37,7 +35,6 @@ class PtzWrap(object):
 		self.__ptr = self.__load_ptz_module()
 		self.__ptz = None
 		os.chdir(cpath)
-
 
 	def open(self, serial, addr):
 		''' 已经废弃，应该使用 open_with_config()

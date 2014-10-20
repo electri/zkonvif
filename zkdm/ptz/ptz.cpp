@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <math.h>
+#include <time.h>
 
 #ifdef WIN32
 #	define VISCA_WIN
@@ -23,11 +24,8 @@ namespace {
 		Serial *serial;
 		int addr;
 		VISCACamera_t cam;
-
 		bool pos_changing, first_get_pos;
-		bool is_zoom_speed, is_zoom_value, is_zoom_init;
-		int exp_zoom;
-		int last_x, last_y, last_z;
+		int last_x, last_y;
 		int set_posing;	// set_pos() 非常耗时，需要连续 get_pos() 不变后，才认为到位了
 		
 
@@ -100,11 +98,7 @@ ptz_t *ptz_open(const char *name, int addr)
 			Ptz *ptz = new Ptz;
 			ptz->cfg = 0;
 			ptz->zvc = 0;
-			ptz->is_zoom_value = false;
-			ptz->is_zoom_speed = false;
-			ptz->is_zoom_init = true;
 			ptz->pos_changing = false;
-			ptz->exp_zoom = 0;
 			ptz->first_get_pos = true;
 			ptz->set_posing = 1;
 			ptz->serial = serial;
@@ -132,10 +126,15 @@ ptz_t *ptz_open_with_config(const char *cfg_name)
 
 	ptz_t *p = ptz_open(serial_name, addr);
 	if (p) {
+		fprintf(stdout, "$$$$$$$$\n");
 		Ptz *ptz = (Ptz*)p;
 		ptz->cfg = cfg;
+		std::string str;
+		str.assign(ptz->cfg->get_value("$$$$$$$$$$is_current", "false"));
 		ptz->zvc = new ZoomValueConvert(ptz->cfg);
 	}
+
+	VISCA_set_bugfix(BF_STOP);
 
 	fprintf(stderr, "DEBUG: %s: ret %p\n", __FUNCTION__, p);
 	return p;
@@ -149,12 +148,53 @@ void ptz_close(ptz_t *ptz)
 	VISCA_close_serial(&p->serial->iface);
 }
 
+#ifdef WIN32
+#include <Windows.h>
+
+static double now()
+{
+	return GetTickCount() / 1000.0;
+}
+#else
+#include <sys/time.h>
+
+static double now()
+{
+	struct timeval tv;
+	gettimeofday(&tv, 0);
+	return tv.tv_sec + tv.tv_usec / 1000000.0;
+}
+
+#endif
+
+class TimeUsed
+{
+	std::string info_;
+	double d_, b_;
+
+public:
+	TimeUsed(const char *info, double d = 0.05)
+	{
+		info_ = info;
+		d_ = d;
+		b_ = now();
+	}
+	
+	~TimeUsed()
+	{
+		double curr = now();
+		if (curr - b_ > d_) {
+			fprintf(stderr, "WARNING: Timeout: %s, using %.3f\n", info_.c_str(), curr - b_);
+		}
+	}
+};
+
 int ptz_stop(ptz_t *ptz)
 {
+	TimeUsed tu(__FUNCTION__);
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
 	p->pos_changing = false;
 	return VISCA_SUCCESS;
 }
@@ -199,47 +239,6 @@ int ptz_down(ptz_t *ptz, int speed)
 	return VISCA_SUCCESS;
 }
 
-#ifdef WIN32
-#include <Windows.h>
-
-static double now()
-{
-	return GetTickCount() / 1000.0;
-}
-#else
-#include <sys/time.h>
-
-static double now()
-{
-	struct timeval tv;
-	gettimeofday(&tv, 0);
-	return tv.tv_sec + tv.tv_usec / 1000000.0;
-}
-
-#endif
-
-class TimeUsed
-{
-	std::string info_;
-	double d_, b_;
-
-public:
-	TimeUsed(const char *info, double d = 0.05)
-	{
-		info_ = info;
-		d_ = d;
-		b_ = now();
-	}
-	
-	~TimeUsed()
-	{
-		double curr = now();
-		if (curr - b_ > d_) {
-			fprintf(stderr, "WARNING: Timeout: %s, using %.3f\n", info_.c_str(), curr - b_);
-		}
-	}
-};
-
 int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 {
 	TimeUsed tu(__FUNCTION__);
@@ -252,6 +251,7 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 
 int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 {
+	TimeUsed tu(__FUNCTION__);
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
@@ -261,63 +261,21 @@ int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 
 int ptz_set_zoom(ptz_t *ptz, int z)
 {
+	TimeUsed tu(__FUNCTION__);
 	Ptz *p = (Ptz*)ptz;
 	if (VISCA_set_zoom_value_without_reply(&p->serial->iface, &p->cam, z) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 
-	p->exp_zoom = z;
-	p->is_zoom_value = true;
-	if (p->is_zoom_init == true)
-		p->is_zoom_init = false;
 	return VISCA_SUCCESS;
 }
 
 int ptz_get_zoom(ptz_t *ptz, int *z)
 {
 	TimeUsed tu(__FUNCTION__);
-
+	int v1;
+	uint16_t v;
 	Ptz *p = (Ptz*)ptz;
-	uint16_t v = 0;
-	/*
-	if (p->is_zoom_init == true) {
-		if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS) {
-			return -1;
-		}
-		*z = v;
-		p->last_z = v;
-		p->is_zoom_init = false;
-		fprintf(stdout, "DEBUGGING  %s ...init zoom value ...\n", __FUNCTION__);
-		return VISCA_SUCCESS;
-	}
-	else {
-		if ((p->is_zoom_value==false) && (p->is_zoom_speed==false)) {
-			*z = p->last_z;
-			fprintf(stdout, "DEBUGGING %s ...return last value...\n", __FUNCTION__);
-			return VISCA_SUCCESS;
-		}
-		else if ((p->is_zoom_value==true) && (p->is_zoom_speed==false)) {
-			if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS) {
-				return VISCA_FAILURE;
-			}
-			*z = v;
-			if (abs(v - p->exp_zoom) < 10) {
-				p->last_z = v;
-				p->is_zoom_value = false;
-				fprintf(stdout, "DEBUGGING %s ...set p->last_z = v ...\n", __FUNCTION__);
-			}
-			else
-				fprintf(stdout, "DEBUGGING %s ...FAILE p->last_z = v ...%d, %d\n", __FUNCTION__, *z, p->exp_zoom);
-			return VISCA_SUCCESS;
-		}
-		else {
-			if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS)
-				return VISCA_FAILURE;
-			*z = v;
-			fprintf(stdout, "DEBUGGING %s ... other zoom style ...\n", __FUNCTION__);
-			return VISCA_SUCCESS;
-		}
-	}
-	*/
+	
 	if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS) {
 		return -1;
 	}
@@ -349,11 +307,11 @@ int ptz_zoom_tele(ptz_t *ptz, int s)
 
 	if (VISCA_set_zoom_tele_speed(&p->serial->iface, &p->cam, s) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	/*
 	p->is_zoom_speed = true;
 	if (p->is_zoom_init == true)
 		p->is_zoom_init = false;
-
+*/
 	return VISCA_FAILURE;
 
 }
@@ -365,10 +323,6 @@ int ptz_zoom_wide(ptz_t *ptz, int s)
 	if (VISCA_set_zoom_wide_speed(&p->serial->iface, &p->cam, s) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 
-	p->is_zoom_speed = true;
-	if (p->is_zoom_init == true)
-		p->is_zoom_init = false;
-
 	return VISCA_SUCCESS;
 
 }
@@ -379,15 +333,6 @@ int ptz_zoom_stop(ptz_t *ptz)
 
 	if (VISCA_set_zoom_stop(&p->serial->iface, &p->cam) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-	p->is_zoom_speed = false;
-	if (p->is_zoom_value == false) {
-		uint16_t v =  0;
-		if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) == VISCA_SUCCESS) {
-			p->last_z = v;
-			if (p->is_zoom_init == true)
-				p->is_zoom_init = false;
-		}
-	}
 
 	return VISCA_SUCCESS;
 }
