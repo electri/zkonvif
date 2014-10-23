@@ -367,6 +367,7 @@ class ResourceListSHandler(tornado.web.RequestHandler):
 def main():
 
     global client
+    # 这个 url 应该来自配置吧.
     wsdl_url = 'http://172.16.1.117:8086/UIServices?WSDL'  
     client = Client(wsdl_url) 
 
