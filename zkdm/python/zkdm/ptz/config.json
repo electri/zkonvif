@@ -1,23 +1,44 @@
 {
-	"ptzs": [
+	
+	"ptzs":
+	 [
+		
 		{
+			
 			"name": "teacher",
+			
 			"config": 
+			
 			{
+				
 				"serial": "COMX",
+				
 				"addr":1,
+				
 				"extent": "teacher.config"
-                "zm_unit_tm": "0"
+			
 			}
+		
 		},
+		
 		{
+			
 			"name": "student",
+			
 			"config": 
+			
 			{
+				
 				"serial": "COMX",
+				
 				"addr":1,
+				
 				"extent": "student.config"
+			
 			}
+		
 		}
+	
 	]
+
 }

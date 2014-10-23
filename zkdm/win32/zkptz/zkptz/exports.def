@@ -19,7 +19,7 @@ EXPORTS
 	ptz_preset_save
 	ptz_preset_call
 	ptz_preset_clear
-
+	
 	ptz_zoom_tele
 	ptz_zoom_wide
 	ptz_zoom_stop
@@ -27,3 +27,6 @@ EXPORTS
 	ptz_mouse_trace
 
 	ptz_ext_get_scals
+
+	ptz_set_zoom_with_reply
+	ptz_set_pos_with_reply

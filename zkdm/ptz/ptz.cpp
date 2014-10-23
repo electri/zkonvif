@@ -6,6 +6,7 @@
 #include <string>
 #include <math.h>
 #include <time.h>
+#include <sstream>
 
 #ifdef WIN32
 #	define VISCA_WIN
@@ -16,6 +17,47 @@
 #endif 
 #include "ptz.h"
 #include "ZoomValueConvert.h"
+
+#ifdef WIN32
+#include <Windows.h>
+
+static double now()
+{
+	return GetTickCount() / 1000.0;
+}
+#else
+#include <sys/time.h>
+
+static double now()
+{
+	struct timeval tv;
+	gettimeofday(&tv, 0);
+	return tv.tv_sec + tv.tv_usec / 1000000.0;
+}
+
+#endif
+
+class TimeUsed
+{
+	std::string info_;
+	double d_, b_;
+
+public:
+	TimeUsed(const char *info, double d = 0.05)
+	{
+		info_ = info;
+		d_ = d;
+		b_ = now();
+	}
+
+	~TimeUsed()
+	{
+		double curr = now();
+		if (curr - b_ > d_) {
+			fprintf(stderr, "WARNING: Timeout: %s, using %.3f\n", info_.c_str(), curr - b_);
+		}
+	}
+};
 
 namespace {
 	struct Serial;
@@ -43,26 +85,18 @@ namespace {
 	static SERIALS _serials;
 };
 
-static double ptz_zoom_ratio_of_value(double v)
-{
-	double zx = v/10000.0;
-	double focal = 58.682*pow(zx,6) - 257.08*pow(zx,5)+
-			445.88*pow(zx,4) - 369.8*pow(zx,3) +
-			150.84*pow(zx,2) -18.239*zx + 4.2017;
-	return focal / 4.2017;
-}
-
 ptz_t *ptz_open(const char *name, int addr)
 {
 	fprintf(stderr, "DEBUG: %s: try to open serial name: %s, addr=%d\n", __FUNCTION__, name, addr);
 
-		//XXX:当 addr = 0时, 程序最后三行会出问题
+		//XXX:当 addr = 0时, 程序最后三行会出问题 
 	if (!name) return 0;
 	if (addr > 7 || addr < 0) return 0;
 
 	SERIALS::const_iterator itf = _serials.find(name);
 	if (itf == _serials.end()) {
 		Serial *serial = new Serial;
+		_snprintf(serial->iface.name, sizeof(serial->iface.name), "%s", name);
 		if (VISCA_open_serial(&serial->iface, name) == VISCA_FAILURE) {
 			printf("ERR: %s: can't open '%s'\n", __func__, name);
 			_serials[name] = serial; // 下次没有必要再试了 ..
@@ -126,15 +160,11 @@ ptz_t *ptz_open_with_config(const char *cfg_name)
 
 	ptz_t *p = ptz_open(serial_name, addr);
 	if (p) {
-		fprintf(stdout, "$$$$$$$$\n");
 		Ptz *ptz = (Ptz*)p;
 		ptz->cfg = cfg;
-		std::string str;
-		str.assign(ptz->cfg->get_value("$$$$$$$$$$is_current", "false"));
 		ptz->zvc = new ZoomValueConvert(ptz->cfg);
+		VISCA_set_bugfix(&ptz->serial->iface, (BugFix)atoi(ptz->cfg->get_value("bug_fix", "0")));
 	}
-
-	VISCA_set_bugfix(BF_STOP);
 
 	fprintf(stderr, "DEBUG: %s: ret %p\n", __FUNCTION__, p);
 	return p;
@@ -148,51 +178,13 @@ void ptz_close(ptz_t *ptz)
 	VISCA_close_serial(&p->serial->iface);
 }
 
-#ifdef WIN32
-#include <Windows.h>
-
-static double now()
-{
-	return GetTickCount() / 1000.0;
-}
-#else
-#include <sys/time.h>
-
-static double now()
-{
-	struct timeval tv;
-	gettimeofday(&tv, 0);
-	return tv.tv_sec + tv.tv_usec / 1000000.0;
-}
-
-#endif
-
-class TimeUsed
-{
-	std::string info_;
-	double d_, b_;
-
-public:
-	TimeUsed(const char *info, double d = 0.05)
-	{
-		info_ = info;
-		d_ = d;
-		b_ = now();
-	}
-	
-	~TimeUsed()
-	{
-		double curr = now();
-		if (curr - b_ > d_) {
-			fprintf(stderr, "WARNING: Timeout: %s, using %.3f\n", info_.c_str(), curr - b_);
-		}
-	}
-};
 
 int ptz_stop(ptz_t *ptz)
 {
-	TimeUsed tu(__FUNCTION__);
 	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
 	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 	p->pos_changing = false;
@@ -241,8 +233,10 @@ int ptz_down(ptz_t *ptz, int speed)
 
 int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 {
-	TimeUsed tu(__FUNCTION__);
 	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
 	if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 
@@ -251,19 +245,48 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 
 int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 {
-	TimeUsed tu(__FUNCTION__);
 	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 
 	return VISCA_SUCCESS;
 }
 
+int ptz_set_pos_with_reply(ptz_t *ptz, int x, int y, int sx, int sy)
+{
+	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
+	if (VISCA_set_pantilt_absolute_position(&p->serial->iface, &p->cam, sx, sy, x, y) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+
+	return VISCA_SUCCESS;
+}
+
+
 int ptz_set_zoom(ptz_t *ptz, int z)
 {
-	TimeUsed tu(__FUNCTION__);
 	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
 	if (VISCA_set_zoom_value_without_reply(&p->serial->iface, &p->cam, z) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+
+	return VISCA_SUCCESS;
+}
+
+int ptz_set_zoom_with_reply(ptz_t *ptz, int z)
+{
+	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
+	if (VISCA_set_zoom_value(&p->serial->iface, &p->cam, z) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 
 	return VISCA_SUCCESS;
@@ -271,10 +294,11 @@ int ptz_set_zoom(ptz_t *ptz, int z)
 
 int ptz_get_zoom(ptz_t *ptz, int *z)
 {
-	TimeUsed tu(__FUNCTION__);
-	int v1;
-	uint16_t v;
 	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());	int v1;
+	uint16_t v;
 	
 	if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS) {
 		return -1;
@@ -307,11 +331,6 @@ int ptz_zoom_tele(ptz_t *ptz, int s)
 
 	if (VISCA_set_zoom_tele_speed(&p->serial->iface, &p->cam, s) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-	/*
-	p->is_zoom_speed = true;
-	if (p->is_zoom_init == true)
-		p->is_zoom_init = false;
-*/
 	return VISCA_FAILURE;
 
 }
@@ -389,3 +408,6 @@ int is_prepared(ptz_t *ptz)
 	Ptz *p = (Ptz*)ptz;
 	return VISCA_get_power(&p->serial->iface, &p->cam, &power);
 }
+
+
+

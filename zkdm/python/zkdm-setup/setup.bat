@@ -1,6 +1,5 @@
 @echo on
-
-@echo 安装 python 2.7.8
+@echo 安装python 2.7.8
 
 @python-2.7.8.msi
 
@@ -22,26 +21,22 @@
 
 @xcopy .\zkdm c:\zkdm /EY
 
-@if exist c:\Windows\SysWOW64 (xcopy .\SysWOW64 c:\Windows\SysWOW64 /EY copy .\System64\curl.exe c:\Windows\System32 /Y) else (copy .\System32\curl.exe  c:\Windows\System32 /Y)
-
-@echo 安装 pywin32
-
+@if exist c:\Windows\SysWOW64 (xcopy .\SysWOW64 c:\Windows\SysWOW64 /EY copy .\System64\curl.exe c:\Windows\System32 /Y) else copy .\System32\curl.exe  c:\Windows\System32 /Y
+@echo 安装pythonwin32
 @pywin32-218.win32-py2.7.exe
 
 @c:
 
 @cd c:\zkdm\ptz
-
 @echo 请修改教师的配置文件
-
 @notepad teacher.config
-pause
 
+@pause
 @echo 请修改学生的配置文件
-
 @echo off
 
 @notepad student.config
-pause
+
+@pause
 
 @install_ptz_winservice.bat

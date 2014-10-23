@@ -48,6 +48,7 @@ enum BugFix
 {
 	BF_NONE = 0,
 	BF_STOP = 1,
+	BF_GET_POS = 2,
 
 };
 
@@ -402,6 +403,9 @@ extern "C" {
 		// RS232 data:
 		HANDLE port_fd;
 		int baud;
+		char name[64];
+
+		enum BugFix bug_fix;
 
 		// VISCA data:
 		int address;
@@ -536,7 +540,7 @@ extern "C" {
 	} VISCAPacket_t;
 
 /* GENERAL FUNCTIONS */
-	VISCA_API void VISCA_set_bugfix(enum BugFix bfs);
+	VISCA_API void VISCA_set_bugfix(VISCAInterface_t *iface, enum BugFix bfs);
 
 
 
