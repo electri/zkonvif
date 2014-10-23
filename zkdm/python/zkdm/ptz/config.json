@@ -7,6 +7,7 @@
 				"serial": "COMX",
 				"addr":1,
 				"extent": "teacher.config"
+                "zm_unit_tm": "0"
 			}
 		},
 		{
