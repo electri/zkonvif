@@ -1,16 +1,16 @@
 # coding: utf-8
 
-import tornado.httpserver
-import tornado.ioloop
-import tornado.options
-import tornado.web
-import socket
+from tornado.web import *
+from tornado.ioloop import IOLoop
+from tornado.gen import  *
+from socket import *
+import json
 
-from tornado.options import define, options
-from tornado.web import RequestHandler, Application, url
 from RecordingCommand import RecordingCommand
 
-define("port", default=10007, help="run on the given port", type=int)
+
+# 必须设置工作目录 ...
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def _param(req, key):
     if key in req.request.arguments:
@@ -45,32 +45,54 @@ class CmdHandler(tornado.web.RequestHandler):
         if cmd is None:
             rc['result'] = 'err'
             rc['info'] = '"RecordCmd" MUST be supplied!'
+            self.set_header('Content-Type', 'application/json')
             self.write(rc)
             return
-
 
         else:
             args = (self.request.uri.split('?'))[1]
             rc=_rcmd.send_command(args)
+            self.set_header('Content-Type', 'application/json')
             self.write(rc)
 
         return
 
+_ioloop = None # 用于支持外面的结束 ...
+
+class InternalHandler(RequestHandler):
+    def get(self):
+        rc = {}
+        rc['result'] = 'ok'
+        rc['info'] = ''
+
+        command = self.get_argument('command', 'nothing')
+        if command == 'exit':
+            self.set_header('Content-Type', 'application/json')
+            rc['info'] = 'exit!!!!'
+            self.write(rc)
+            _ioloop.stop()
+        elif command == 'version':
+            self.set_header('Content-Type', 'application/json')
+            rc['info'] = 'now version not supported!'
+            rc['result'] = 'err'
+            self.write(rc)
+
 
 def main():
-
-    tornado.options.parse_command_line()
     application = tornado.web.Application([
         url(r"/", MainHandler),
         url(r"/recording/cmd",CmdHandler),
         url(r"/recording/help", HelpHandler),
+        url(r"/recording/internal",InternalHandler),
     ])
 
     global _rcmd
     _rcmd = RecordingCommand()
 
-    application.listen(options.port)
-    tornado.ioloop.IOLoop.instance().start()
+    application.listen(10007)
+    global _ioloop
+    _ioloop = IOLoop.instance()
+    _ioloop.start()
 
 if __name__ == "__main__":
     main()
