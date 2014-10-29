@@ -12,8 +12,6 @@ from tornado.web import RequestHandler, Application, url
 from suds.client import Client
 
 
-define("port", default=8889, help="run on the given port", type=int)
-
 def _param(req, key):
     if key in req.request.arguments:
         return req.request.arguments
@@ -168,11 +166,14 @@ def set_resource_info(data):
     except Exception as error:
         return str(error)
 
-def get_resource_info():
+def get_resource_info(method):
     rc={}
     rc['result'] = 'ok'
     rc['info'] = ''
-    resource_list = client.service.ResourceList()['message']['ResourceList'][0]
+    if method=='ResourceList':
+        resource_list = client.service.ResourceList()['message']['ResourceList'][0]
+    else:
+        resource_list = client.service.ResourceListD()['message']['ResourceList'][0]
 
     l={'ResourceList':[]}
 
@@ -337,8 +338,15 @@ class HelpHandler(tornado.web.RequestHandler):
 class ResourceListHandler(tornado.web.RequestHandler):
     def get(self):
         rc = {}
-        rc = get_resource_info()
-        self.write(rc)      
+        rc = get_resource_info('ResourceList')
+        self.write(rc)   
+
+class ResourceListDHandler(tornado.web.RequestHandler):
+    def get(self):
+        rc = {}
+        rc = get_resource_info('ResourceListD')
+        self.write(rc)  
+
 class ResourceListSHandler(tornado.web.RequestHandler):
     def get(self):
         rc = {}
@@ -363,25 +371,51 @@ class ResourceListSHandler(tornado.web.RequestHandler):
             rc['info'] = str(result)
             self.write(rc)
 
+_ioloop = None # 用于支持外面的结束 ...
+
+class InternalHandler(RequestHandler):
+    def get(self):
+        rc = {}
+        rc['result'] = 'ok'
+        rc['info'] = ''
+
+        command = self.get_argument('command', 'nothing')
+        if command == 'exit':
+            self.set_header('Content-Type', 'application/json')
+            rc['info'] = 'exit!!!!'
+            self.write(rc)
+            _ioloop.stop()
+        elif command == 'version':
+            self.set_header('Content-Type', 'application/json')
+            rc['info'] = 'now version not supported!'
+            rc['result'] = 'err'
+            self.write(rc)
 
 def main():
 
     global client
-    # 这个 url 应该来自配置吧.
-    wsdl_url = 'http://172.16.1.117:8086/UIServices?WSDL'  
+
+    wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL'  
+
+
     client = Client(wsdl_url) 
+    print client
 
     tornado.options.parse_command_line()
     application = tornado.web.Application([
         url(r"/", MainHandler),
-        url(r"/help", HelpHandler)
+        url(r"/help", HelpHandler),
         url(r"/card/ResourceList", ResourceListHandler),
+        url(r"/card/ResourceListD", ResourceListDHandler),
         url(r"/card/ResourceListS", ResourceListSHandler),
+        url(r"/card/internal", InternalHandler),
         ])
 
 
-    application.listen(options.port)
-    tornado.ioloop.IOLoop.instance().start()
+    application.listen(10008)
+    global _ioloop
+    _ioloop = tornado.ioloop.IOLoop.instance()
+    _ioloop.start()
 
 if __name__ == "__main__":
     main()
