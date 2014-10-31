@@ -1,22 +1,52 @@
 {
-	"ptzs": [
+	
+	"ptzs":
+	 [
 		{
+			"name": "bd",
+			"config":
+			{
+				"serial": "COMX",
+				"addr":1,
+				"extent": "bd.config"
+			}
+		},	
+		{
+			
 			"name": "teacher",
+			
 			"config": 
+			
 			{
+				
 				"serial": "COMX",
+				
 				"addr":1,
+				
 				"extent": "teacher.config"
+			
 			}
+		
 		},
+		
 		{
+			
 			"name": "student",
+			
 			"config": 
+			
 			{
+				
 				"serial": "COMX",
+				
 				"addr":1,
+				
 				"extent": "student.config"
+			
 			}
+		
 		}
+	
 	]
+
 }

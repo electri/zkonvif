@@ -2,7 +2,15 @@
 	
 	"ptzs":
 	 [
-		
+		{
+			"name": "bd",
+			"config":
+			{
+				"serial": "COMX",
+				"addr":1,
+				"extent": "bd.config"
+			}
+		},	
 		{
 			
 			"name": "teacher",
