@@ -1,5 +1,19 @@
 {
+    "regHbService":
+    {
+        "sip":"172.16.1.14",
+        "sport":"",
+    },
    "services" : [
+    {
+        "enable" true,
+        "fork" : true,
+        "url" : "http://<ip>:10003/ptz",
+        "name" : "ptz service",
+        "type" : "ptz"
+        "path" : "python ../ptz/PtzWinService.py",
+        "title" : "云台服务"
+    },
       {
          "enable" : true,
          "fork" : true,

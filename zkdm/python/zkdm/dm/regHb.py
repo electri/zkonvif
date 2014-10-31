@@ -1,3 +1,22 @@
+import sys
+import json
+import time
+sys.path.append('../')
+from common.utils import zkutils
+
+HB_TIME = 10
+
+def getRgHbSv(f):
+    return json.load(f) 
+
+def getLocalHost():
+    localIp = zkutils.myRealip()
+    localMac = zkutils.myMac()
+    localHost = {}
+    localHost['localIp'] = localIp
+    localHost['localMac'] = localMac
+    return localHost
+
 import urllib2
 
 def getUrl(client_params, fun_str):
@@ -24,7 +43,6 @@ def heatbeat(service_params):
 
 import threading
 
-_mutex = threading.Lock()
 
 class RegClass(threading.Thread):
 	def __init__(self, sv_urls, hb_list, mtx_reg, mtx_hb):
@@ -33,30 +51,34 @@ class RegClass(threading.Thread):
 		self.hb_list_ = hb_list
 		self.mtx_reg_ = mtx_reg
 		self.mtx_hb_ = mtx_hb
-		
+        self.info = {}
+        self.info.update(getRgHbSv('config.json'))
+        self.info.update(getLocalHost())
+
 	def run(self):
 		while True:
 			temp_urls = [] 
 			self.mtx_.acquire()
 			for e in self.sv_urls_:
-				f = urllib2.openurl(e + r'/internal/is_prepared')
-				jv = f.read(100)
+				f = urllib2.openurl(e + r'/internal/get_all_service')
+				jv = f.read(1000)
 				dv = json.loads(jv)
-				if dv['result'] is 'ok':
-					f = urllib2.openurl(e + r'/internal/get_all_service')
-					jv = f.read(100)
+				if dv['state'] is 'competed':
 					dv = json.loads(jv)
-					for e1 in dv['sevices']:
-						register(e1)
+                    self.info['type'] = dv['type']
+                    self.info['url'] = dv['url']
+
+					for e1 in dv['types']:
+                        isReg = False
+                        self.info['type'] = e1
+                        while not isReg:
+						    if register(self.info) is 'ok':
+                                isReg = True
 						heatbeat(e1)
 						self.mtx_hb_.acquire()
-						self.hb_list_.append(e1)
+						self.hb_list_.append(self.info)
 						self.mtx_hb_.release()
-				else:
-					temp_urls.append(e)
-			self.sv_urls_ = {}
-			for e in temp_urls_:
-				self.sv_urls_.append(e)
+				    self.sv_urls_.remove(e)
 			self.mtx_.release()			
 
 class HeartBeatClass(threading.Thread):
@@ -71,15 +93,4 @@ class HeartBeatClass(threading.Thread):
 			for e in self.hb_list_:
 				heartBeat(e)
 			self.mtx_hb_.release()
-
-_client_vector = []
-hb_background = HeartBeatClass(_client_vector)
-
-hb_background.start()
-
-_client_params = get_ipconfig()
-def reg_service(sip, sport, client_type,client_id):
-	info = {'sip':sip, 'sport':sport, 'type':client_type, 'id':client_id, 'url':'123'}
-	_client_params.update(info)
-	reg = RegClass(_client_params, _client_vector)
-	reg.start()
+            time.sleep(HB_TIME)
