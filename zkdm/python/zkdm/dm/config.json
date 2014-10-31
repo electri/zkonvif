@@ -11,7 +11,7 @@
         "url" : "http://<ip>:10003/ptz",
         "name" : "ptz service",
         "type" : "ptz"
-        "path" : "python ../ptz/PtzWinService.py",
+        "path" : "python ../ptz/PtzServer.py",
         "title" : "云台服务"
     },
       {

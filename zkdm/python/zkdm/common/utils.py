@@ -16,9 +16,11 @@ elif _uname[0] == 'Linux':
 		_soname = 'linux/libzkutils.so'
 elif _uname[0] == 'Windows':
 	if _uname[4] == 'AMD64':
+        print 'AMD64'
 		_soname = 'win32/zkutils.dll'
 	else:
 		_soname = 'win32/zkutils.dll'
+        print 'windows other'
 elif _uname[0].find('CYGWIN') >= 0:
 	if _uname[4] == 'x86_64':
 		_soname = './win64/zkutils.dll'
