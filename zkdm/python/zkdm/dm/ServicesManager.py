@@ -44,6 +44,7 @@ class ServicesManager:
 		''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
 		'''
 		ssd = LocalConfig.load_config(FNAME)
+#print ssd
 		ss = ssd['services']
 		for s in ss:
 			if 'url' in s:
