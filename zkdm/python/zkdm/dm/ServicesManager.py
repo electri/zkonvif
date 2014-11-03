@@ -31,14 +31,15 @@ class ServicesManager:
 		self.__ip_real = u.myip_real()
 		self.__activated = [] # (p, sd, url)
 		self.__start_all_enabled()
-        self.pcs_paras_ = []
-        self.services_ = []
-        self.mtx_reg_ = threading.Lock()
-        self.mtx_hb_ = threading.Lock() 
-        regThread = regHb.regClass(self.pcs_paras_, self.services_, self.mtx_reg_, self.mtx_hb_)  
-        hbThread = regHb.HbClass(self.services_, self.mtx_hb_)
-        regThread.start()
-        hbThread.start()
+		self.pcs_paras_ = []
+		self.services_ = []
+		self.mtx_reg_ = threading.Lock()
+		self.mtx_hb_ = threading.Lock() 
+		regThread = regHb.regClass(self.pcs_paras_, self.services_, self.mtx_reg_, self.mtx_hb_)  
+		hbThread = regHb.HbClass(self.services_, self.mtx_hb_)
+		regThread.start()
+		hbThread.start()
+
 	def list_services(self):
 		''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
 		'''

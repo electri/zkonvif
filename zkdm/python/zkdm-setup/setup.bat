@@ -31,12 +31,10 @@
 @echo 请修改教师的配置文件
 @notepad teacher.config
 
-@pause
 @echo 请修改学生的配置文件
 @echo off
 
 @notepad student.config
 
-@pause
-
+@notepad bd.config
 @install_ptz_winservice.bat
