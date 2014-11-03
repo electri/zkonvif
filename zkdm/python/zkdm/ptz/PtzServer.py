@@ -18,7 +18,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
-
+_service = { "state":"no completed", "ids":[]}
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
 	return _all_config['ptzs']
@@ -64,11 +64,17 @@ def load_all_ptzs():
 	ret = {}
 	for x in ptzs:
 		ret[x['name']] = (load_ptz(x))
-	return ret
+        	return ret
 
 
 # 这里保存所有云台
 _all_ptzs = load_all_ptzs()
+
+# 获取所有云台类型
+for ptz in _all_ptzs:
+    if ptz['name'] is not Null:
+        _service['ids'].append(ptz['name'])
+_service['state'] = 'completed'
 
 class HelpHandler(RequestHandler):
 	''' 返回 help 
@@ -138,9 +144,10 @@ class InternalHandler(RequestHandler):
 			rc['info'] = 'now version unsupported!!'
 			rc['result'] = 'err'
 			self.write(rc)
-
-
-
+        elif command == 'services'
+            global _service
+            self.set_header('Content-Type', 'application/json')
+            self.write(_service)    
 
 def make_app():
 	return Application([
