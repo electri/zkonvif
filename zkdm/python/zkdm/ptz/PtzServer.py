@@ -144,10 +144,10 @@ class InternalHandler(RequestHandler):
 			rc['info'] = 'now version unsupported!!'
 			rc['result'] = 'err'
 			self.write(rc)
-        elif command == 'services'
-            global _service
-            self.set_header('Content-Type', 'application/json')
-            self.write(_service)    
+		elif command == 'services'
+			global _service
+			self.set_header('Content-Type', 'application/json')
+			self.write(_service)    
 
 def make_app():
 	return Application([
