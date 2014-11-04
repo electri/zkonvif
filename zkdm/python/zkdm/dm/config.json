@@ -15,7 +15,7 @@
         "title" : "云台服务"
     },
       {
-         "enable" : true,
+         "enable" : false ,
          "fork" : true,
          "url" : "http://<ip>:10001/event",
          "name" : "event service",
@@ -31,15 +31,6 @@
          "type" : "eval",
          "path" : "cardlive.exe 1",
          "title" : "教师特写摄像头"
-      },
-      {
-         "enable" : false,
-         "fork" : true,
-         "url" : "http://<ip>:10003/ptz",
-         "name" : "ptzs service",
-         "type" : "ptz",
-         "path" : "python ../ptz/PtzServer.py",
-         "title" : "云台服务"
       },
 	  {
 		  "enable": true,
