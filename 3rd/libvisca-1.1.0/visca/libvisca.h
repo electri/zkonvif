@@ -43,6 +43,15 @@
 #define VISCA_API
 #define VISCA_WIN
 #endif
+
+enum BugFix
+{
+	BF_NONE = 0,
+	BF_STOP = 1,
+	BF_GET_POS = 2,
+
+};
+
 /**********************/
 /* Message formatting */
 /**********************/
@@ -394,6 +403,9 @@ extern "C" {
 		// RS232 data:
 		HANDLE port_fd;
 		int baud;
+		char name[64];
+
+		enum BugFix bug_fix;
 
 		// VISCA data:
 		int address;
@@ -465,6 +477,9 @@ extern "C" {
 
 /* This is the interface for the POSIX platform.
  */
+#ifdef VK3344
+# include CircQue.h
+#endif
 	typedef struct _VISCA_interface {
 		// RS232 data:
 		int port_fd;
@@ -482,7 +497,9 @@ extern "C" {
 
 #ifdef VK3344
 		int want_result;	// 需要解析得到 9x 50 xx xx 的 ..
-							// 如 get_pos, get_zoom 之类 ..
+								// 如 get_pos, get_zoom 之类 ..
+		struct List list;
+
 #endif				//
 
 	} VISCAInterface_t;
@@ -523,6 +540,9 @@ extern "C" {
 	} VISCAPacket_t;
 
 /* GENERAL FUNCTIONS */
+	VISCA_API void VISCA_set_bugfix(VISCAInterface_t *iface, enum BugFix bfs);
+
+
 
 	VISCA_API uint32_t
 	    VISCA_set_address(VISCAInterface_t * iface, int *camera_num);

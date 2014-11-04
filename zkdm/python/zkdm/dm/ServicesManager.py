@@ -4,9 +4,12 @@ import LocalConfig
 import subprocess, shlex
 import threading, time
 import sys, re
+import threading
 
 sys.path.append('../')
 from common.utils import zkutils
+
+import regHb
 
 
 # 本地配置文件
@@ -30,7 +33,15 @@ class ServicesManager:
 		self.__ip_real = u.myip_real()
 		self.__activated = [] # (p, sd, url)
 		self.__start_all_enabled()
-
+		self.pcses_= []
+		self.services_ = []
+		self.mtx_reg_ = threading.Lock()
+		self.mtx_hb_ = threading.Lock() 
+		print 'enter regThread'
+		regThread = regHb.RegClass(self.pcses_, self.services_, self.mtx_reg_, self.mtx_hb_)  
+		hbThread = regHb.HbClass(self.services_, self.mtx_hb_)
+		regThread.start()
+		hbThread.start()
 
 	def list_services(self):
 		''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
@@ -64,6 +75,13 @@ class ServicesManager:
 		ssd = self.list_services()
 		for x in ssd:
 			if x['name'] == name and x['enable']:
+				self.mtx_reg_.acquire()
+				pcs = {}
+				pcs['url'] = x['url']
+				pcs['type'] = x['type']
+				self.pcses_.append(pcs)
+				self.mtx_reg_.release()
+
 				self.__start_service(x)
 				return True
 		return False
@@ -113,6 +131,7 @@ class ServicesManager:
 			总是使用 subprocess.Popen class ..
 			TODO:  if !fork 直接启动 py 脚本？是否能在 arm 上节省点内存？ ..
 		'''
+
 		for s in self.__activated:
 			if s[1]['name'] == sd['name']:
 				return None # 已经启动 ..
@@ -130,6 +149,11 @@ class ServicesManager:
 		print '--- try stop "' + sd['name'] + '"'
 		for s in self.__activated:
 			if s[1]['name'] == sd['name']:
+				self.mtx_hb_.acquire()
+				for e in self.services_:
+					if e['type'] == sd['type']:
+						self.services_.remove(e)
+				self.mtx_hb_.release()
 				# 首先发出 internal?command=exit 
 				url = s[2] + '/internal?command=exit'
 				print 'url:', url

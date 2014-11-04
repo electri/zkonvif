@@ -5,6 +5,8 @@
 #include <map>
 #include <string>
 #include <math.h>
+#include <time.h>
+#include <sstream>
 
 #ifdef WIN32
 #	define VISCA_WIN
@@ -16,6 +18,47 @@
 #include "ptz.h"
 #include "ZoomValueConvert.h"
 
+#ifdef WIN32
+#include <Windows.h>
+
+static double now()
+{
+	return GetTickCount() / 1000.0;
+}
+#else
+#include <sys/time.h>
+
+static double now()
+{
+	struct timeval tv;
+	gettimeofday(&tv, 0);
+	return tv.tv_sec + tv.tv_usec / 1000000.0;
+}
+
+#endif
+
+class TimeUsed
+{
+	std::string info_;
+	double d_, b_;
+
+public:
+	TimeUsed(const char *info, double d = 0.05)
+	{
+		info_ = info;
+		d_ = d;
+		b_ = now();
+	}
+
+	~TimeUsed()
+	{
+		double curr = now();
+		if (curr - b_ > d_) {
+			fprintf(stderr, "WARNING: Timeout: %s, using %.3f\n", info_.c_str(), curr - b_);
+		}
+	}
+};
+
 namespace {
 	struct Serial;
 	struct Ptz
@@ -23,11 +66,16 @@ namespace {
 		Serial *serial;
 		int addr;
 		VISCACamera_t cam;
+<<<<<<< HEAD
 
 		bool pos_changing, first_get_pos;
 		bool is_zoom_speed, is_zoom_value, is_zoom_init;
 		int exp_zoom;
 		int last_x, last_y, last_z;
+=======
+		bool pos_changing, first_get_pos;
+		int last_x, last_y;
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 		int set_posing;	// set_pos() 非常耗时，需要连续 get_pos() 不变后，才认为到位了
 		
 
@@ -45,26 +93,18 @@ namespace {
 	static SERIALS _serials;
 };
 
-static double ptz_zoom_ratio_of_value(double v)
-{
-	double zx = v/10000.0;
-	double focal = 58.682*pow(zx,6) - 257.08*pow(zx,5)+
-			445.88*pow(zx,4) - 369.8*pow(zx,3) +
-			150.84*pow(zx,2) -18.239*zx + 4.2017;
-	return focal / 4.2017;
-}
-
 ptz_t *ptz_open(const char *name, int addr)
 {
 	fprintf(stderr, "DEBUG: %s: try to open serial name: %s, addr=%d\n", __FUNCTION__, name, addr);
 
-		//XXX:当 addr = 0时, 程序最后三行会出问题
+		//XXX:当 addr = 0时, 程序最后三行会出问题 
 	if (!name) return 0;
 	if (addr > 7 || addr < 0) return 0;
 
 	SERIALS::const_iterator itf = _serials.find(name);
 	if (itf == _serials.end()) {
 		Serial *serial = new Serial;
+		_snprintf(serial->iface.name, sizeof(serial->iface.name), "%s", name);
 		if (VISCA_open_serial(&serial->iface, name) == VISCA_FAILURE) {
 			printf("ERR: %s: can't open '%s'\n", __func__, name);
 			_serials[name] = serial; // 下次没有必要再试了 ..
@@ -100,11 +140,15 @@ ptz_t *ptz_open(const char *name, int addr)
 			Ptz *ptz = new Ptz;
 			ptz->cfg = 0;
 			ptz->zvc = 0;
+<<<<<<< HEAD
 			ptz->is_zoom_value = false;
 			ptz->is_zoom_speed = false;
 			ptz->is_zoom_init = true;
 			ptz->pos_changing = false;
 			ptz->exp_zoom = 0;
+=======
+			ptz->pos_changing = false;
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 			ptz->first_get_pos = true;
 			ptz->set_posing = 1;
 			ptz->serial = serial;
@@ -135,6 +179,7 @@ ptz_t *ptz_open_with_config(const char *cfg_name)
 		Ptz *ptz = (Ptz*)p;
 		ptz->cfg = cfg;
 		ptz->zvc = new ZoomValueConvert(ptz->cfg);
+		VISCA_set_bugfix(&ptz->serial->iface, (BugFix)atoi(ptz->cfg->get_value("bug_fix", "0")));
 	}
 
 	fprintf(stderr, "DEBUG: %s: ret %p\n", __FUNCTION__, p);
@@ -149,12 +194,21 @@ void ptz_close(ptz_t *ptz)
 	VISCA_close_serial(&p->serial->iface);
 }
 
+
 int ptz_stop(ptz_t *ptz)
 {
 	Ptz *p = (Ptz*)ptz;
+<<<<<<< HEAD
 	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 
+=======
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
+	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 	p->pos_changing = false;
 	return VISCA_SUCCESS;
 }
@@ -203,6 +257,7 @@ int ptz_down(ptz_t *ptz, int speed)
 
 static double now()
 {
+<<<<<<< HEAD
 	return GetTickCount() / 1000.0;
 }
 
@@ -236,6 +291,14 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 		fprintf(stdout, "ERR: %s\n", __FUNCTION__);
 		return VISCA_FAILURE;
 	}
+=======
+	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
+	if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 
 	return VISCA_SUCCESS;
 }
@@ -243,18 +306,27 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 {
 	Ptz *p = (Ptz*)ptz;
+<<<<<<< HEAD
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) != VISCA_SUCCESS) {
 		fprintf(stdout, "ERR: %s\n", __FUNCTION__);
 		return VISCA_FAILURE;
 	}
+=======
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
+	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 
 	return VISCA_SUCCESS;
 }
 
-int ptz_set_zoom(ptz_t *ptz, int z)
+int ptz_set_pos_with_reply(ptz_t *ptz, int x, int y, int sx, int sy)
 {
 	fprintf(stdout, "now start zoom test\0");
 	Ptz *p = (Ptz*)ptz;
+<<<<<<< HEAD
 	if (VISCA_set_zoom_value_without_reply(&p->serial->iface, &p->cam, z) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 
@@ -262,14 +334,24 @@ int ptz_set_zoom(ptz_t *ptz, int z)
 	p->is_zoom_value = true;
 	if (p->is_zoom_init == true)
 		p->is_zoom_init = false;
+=======
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
+	if (VISCA_set_pantilt_absolute_position(&p->serial->iface, &p->cam, sx, sy, x, y) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 	return VISCA_SUCCESS;
 }
 
-int ptz_get_zoom(ptz_t *ptz, int *z)
+
+int ptz_set_zoom(ptz_t *ptz, int z)
 {
 	TimeUsed tu(__FUNCTION__);
 
 	Ptz *p = (Ptz*)ptz;
+<<<<<<< HEAD
 	uint16_t v = 0;
 
 	if (p->is_zoom_init == true) {
@@ -310,6 +392,42 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 			return VISCA_SUCCESS;
 		}
 	}
+=======
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
+	if (VISCA_set_zoom_value_without_reply(&p->serial->iface, &p->cam, z) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+
+	return VISCA_SUCCESS;
+}
+
+int ptz_set_zoom_with_reply(ptz_t *ptz, int z)
+{
+	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
+	if (VISCA_set_zoom_value(&p->serial->iface, &p->cam, z) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+
+	return VISCA_SUCCESS;
+}
+
+int ptz_get_zoom(ptz_t *ptz, int *z)
+{
+	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());	int v1;
+	uint16_t v;
+	
+	if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS) {
+		return -1;
+	}
+	*z = v;
+	return VISCA_SUCCESS;
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 }
 
 int ptz_preset_save(ptz_t *ptz, int id)
@@ -337,27 +455,36 @@ int ptz_zoom_tele(ptz_t *ptz, int s)
 
 	if (VISCA_set_zoom_tele_speed(&p->serial->iface, &p->cam, s) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
+<<<<<<< HEAD
 
 	p->is_zoom_speed = true;
 	if (p->is_zoom_init == true)
 		p->is_zoom_init = false;
 
+=======
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 	return VISCA_FAILURE;
 
 }
 
 int ptz_zoom_wide(ptz_t *ptz, int s)
 { 
+<<<<<<< HEAD
 	TimeUsed tu(__FUNCTION__);
+=======
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 	Ptz *p = (Ptz *)ptz;
 
 	if (VISCA_set_zoom_wide_speed(&p->serial->iface, &p->cam, s) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 
+<<<<<<< HEAD
 	p->is_zoom_speed = true;
 	if (p->is_zoom_init == true)
 		p->is_zoom_init = false;
 
+=======
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 	return VISCA_SUCCESS;
 
 }
@@ -368,6 +495,7 @@ int ptz_zoom_stop(ptz_t *ptz)
 
 	if (VISCA_set_zoom_stop(&p->serial->iface, &p->cam) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
+<<<<<<< HEAD
 	p->is_zoom_speed = false;
 	if (p->is_zoom_value == false) {
 		uint16_t v =  0;
@@ -377,42 +505,41 @@ int ptz_zoom_stop(ptz_t *ptz)
 				p->is_zoom_init = false;
 		}
 	}
+=======
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 
 	return VISCA_SUCCESS;
 }
 
-int ptz_mouse_trace(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
+int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx, int sy)
 {
+	fprintf(stdout, "hvs = %f, vvs = %f\n", hvs, vvs);
 	Ptz *p = (Ptz*)ptz; 
 
-	if (!p->cfg)
-		return -1;	// 必须使用 ptz_open_with_config() 
+	if (!p->cfg) {
+		fprintf(stdout, "no configuration file\n");
+		return -1;
+	}
 
-	int WIDTH = atoi(p->cfg->get_value("width", "960"));
-	int HEIGHT = atoi(p->cfg->get_value("height", "540"));
-	double CCD_WIDTH = atof(p->cfg->get_value("ccd_width", "4.8"));
-	double CCD_HEIGHT = atof(p->cfg->get_value("ccd_height", "2.7"));
-	double F = atof(p->cfg->get_value("f", "4.2017"));
+	double HVA = atof(p->cfg->get_value("hva", "55.2"));
+	double VVA = atof(p->cfg->get_value("vva", "42.1"));
 
-	double hr = double(x - WIDTH/2) / WIDTH;
-	fprintf(stdout, "hr = %f\n", hr);
-	double vr = double(y - HEIGHT/2) / HEIGHT;
-	fprintf(stdout, "vr=%f\n", vr);
+	fprintf(stdout, "HVA = %f, VVA = %f\n", HVA, VVA);
+
 	int zv;
 	if (ptz_get_zoom(ptz, &zv) != 0)
 		return -1;
 	fprintf(stdout, "zv = %d\n", zv);
-	double zr = ptz_zoom_ratio_of_value(zv);
-	fprintf(stdout, "zr=%f\n", zr);
-	double f = zr * F;
-	fprintf(stdout, "f = %f\n", f);
-	double hh = atan(CCD_WIDTH*hr / f);
-	double vv = atan(CCD_HEIGHT*vr /f);
-	fprintf(stdout, "hh = %f, vv = %f\n", hh, vv);
-	int h = (int)(hh/0.075);
-	int v = (int)(vv/0.075);
-	fprintf(stdout, "h = %d, v = %d\n", h, v);
-	return VISCA_set_pantilt_relative_position(&p->serial->iface, &p->cam , sx, sy, h, v);
+	int zs = ptz_ext_get_scals(ptz, zv);
+	fprintf(stdout, "zs = %d\n", zs);
+
+	double hva = HVA / zs;
+	double vva = VVA / zs;
+
+	int h_rpm = (int)(hva*(hvs-0.5) / 0.075);
+	int v_rpm = (int)(vva*(0.5-vvs) /0.075);
+	fprintf(stdout, "h_rpm = %d, v_rpm = %d\n", h_rpm, v_rpm);
+	return VISCA_set_pantilt_relative_position(&p->serial->iface, &p->cam , sx, sy, h_rpm, v_rpm);
 }
 
 double ptz_ext_get_scals(ptz_t *ptz, int z)
@@ -429,3 +556,13 @@ double ptz_ext_get_scals(ptz_t *ptz, int z)
 	else
 		return 1.0;
 }
+
+int is_prepared(ptz_t *ptz)
+{
+	uint8_t power;
+	Ptz *p = (Ptz*)ptz;
+	return VISCA_get_power(&p->serial->iface, &p->cam, &power);
+}
+
+
+

@@ -22,6 +22,8 @@
 #include "libvisca.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <time.h>
 #ifdef VISCA_WIN
 #ifdef _DEBUG
 #define DEBUG 1
@@ -30,6 +32,11 @@
 #endif
 #endif
 
+void VISCA_set_bugfix(VISCAInterface_t *iface, enum BugFix bfs)
+{
+	fprintf(stderr, "zkptz: %s: bfs=%08x\n", __FUNCTION__, bfs);
+	iface->bug_fix = bfs;
+}
 
 /********************************/
 /*      PRIVATE FUNCTIONS       */
@@ -149,6 +156,7 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 VISCA_API uint32_t
 _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
+<<<<<<< HEAD
 	int loop_num = 0;
 	//XXXX:当不存在0x50时,会一直陷入死循环;根据中断有两个socket,
 	//共检测三次,否则退出
@@ -169,6 +177,20 @@ _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
 	}
 
 	fprintf(stdout, "DEBUGGING %s loop_num = %d\n", __FUNCTION__, loop_num);
+=======
+	int loop = 0;
+	while (iface->ibuf[1] != 0x50)
+	{
+		if (_VISCA_get_packet(iface) != VISCA_SUCCESS) {
+			iface->type = iface->ibuf[1] & 0xF0;
+			return VISCA_FAILURE;
+		}
+		loop++;
+		if (loop > 100)
+			fprintf(stdout, "INFO: %s run get_packet %d times\n", __FUNCTION__, loop);
+	}
+	iface->type = iface->ibuf[1] & 0xF0;
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 	return VISCA_SUCCESS;
 }
 
@@ -178,13 +200,105 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 	int err;
 	// first message: -------------------
 	if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+	{
+		fprintf(stdout, "first get packet fail from ptz\n");
 		return VISCA_FAILURE;
+	}
 	iface->type = iface->ibuf[1] & 0xF0;
 
 	// skip ack messages
 	while (iface->type == VISCA_RESPONSE_ACK) {
-		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+		if (_VISCA_get_packet(iface) != VISCA_SUCCESS) {
 			return VISCA_FAILURE;
+		}
+		iface->type = iface->ibuf[1] & 0xF0;
+	}
+
+	switch (iface->type) {
+	case VISCA_RESPONSE_CLEAR:
+		return VISCA_SUCCESS;
+		break;
+	case VISCA_RESPONSE_ADDRESS:
+		return VISCA_SUCCESS;
+		break;
+	case VISCA_RESPONSE_COMPLETED:
+		return VISCA_SUCCESS;
+		break;
+	case VISCA_RESPONSE_ERROR:
+		return VISCA_SUCCESS;
+		break;
+	}
+	fprintf(stdout, "third get_packet fail \n");
+	return VISCA_FAILURE;
+}
+
+VISCA_API uint32_t
+	_VISCA_get_reply3(VISCAInterface_t * iface, VISCACamera_t * camera)
+{
+	int i;
+	// first message: -------------------
+	if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+	{
+		fprintf(stdout, "first get packet fail from ptz\n");
+		return VISCA_FAILURE;
+	}
+	fprintf(stdout, "first==>");
+	for (i=0; i++; i <iface->bytes)
+		fprintf(stdout, "%02x ", iface->ibuf[i]);
+	iface->type = iface->ibuf[1] & 0xF0;
+	fprintf(stdout, "first close");
+	fprintf(stdout, "\n");
+	// skip ack messages
+	while (iface->type == VISCA_RESPONSE_ACK) {
+		if (_VISCA_get_packet(iface) != VISCA_SUCCESS) {
+			fprintf(stdout, "second==>");
+			for (i=0; i++; i <iface->bytes)
+				fprintf(stdout, "%02x ", iface->ibuf[i]);
+			iface->type = iface->ibuf[1] & 0xF0;
+			fprintf(stdout, "second close");
+			fprintf(stdout, "\n");
+			return VISCA_FAILURE;
+		}
+		iface->type = iface->ibuf[1] & 0xF0;
+	}
+
+	switch (iface->type) {
+	case VISCA_RESPONSE_CLEAR:
+		return VISCA_SUCCESS;
+		break;
+	case VISCA_RESPONSE_ADDRESS:
+		return VISCA_SUCCESS;
+		break;
+	case VISCA_RESPONSE_COMPLETED:
+		return VISCA_SUCCESS;
+		break;
+	case VISCA_RESPONSE_ERROR:
+		return VISCA_SUCCESS;
+		break;
+	}
+	fprintf(stdout, "third get_packet fail \n");
+	return VISCA_FAILURE;
+}
+
+VISCA_API uint32_t
+_VISCA_get_reply2(VISCAInterface_t * iface, VISCACamera_t * camera)
+{
+	int i = 0;
+
+	// first message: -------------------
+	if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+	{
+		fprintf(stdout, "first get packet fail from ptz\n");
+		return VISCA_FAILURE;
+	}
+	iface->type = iface->ibuf[1] & 0xF0;
+	if ( iface->type == 0x40)
+		return VISCA_FAILURE;
+	// skip ack messages
+	while (iface->type == VISCA_RESPONSE_ACK) {
+		if (_VISCA_get_packet(iface) != VISCA_SUCCESS) {
+			return VISCA_FAILURE;
+		}
 		iface->type = iface->ibuf[1] & 0xF0;
 	}
 
@@ -204,20 +318,80 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 		return VISCA_SUCCESS;
 		break;
 	}
+	fprintf(stdout, "third get_packet fail \n");
 	return VISCA_FAILURE;
 }
+
+VISCA_API uint32_t _VISCA_get_one_package(VISCAInterface_t * iface, VISCACamera_t * camera)
+{
+	// first message: -------------------
+	if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
+	{
+		fprintf(stdout, "first get packet fail from ptz\n");
+		return VISCA_FAILURE;
+	}
+	return VISCA_SUCCESS;
+}
+
 #endif // 
 
 VISCA_API uint32_t
 _VISCA_send_packet_with_reply(VISCAInterface_t * iface,
 			      VISCACamera_t * camera, VISCAPacket_t * packet)
-{
+{	
+	clock_t t1, t2;
+	t1 = clock();
 	if (_VISCA_send_packet(iface, camera, packet) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	t2 = _interval_time("send", t1);
 	if (_VISCA_get_reply(iface, camera) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
+	_interval_time("get", t2);
+	return VISCA_SUCCESS;
+}
 
+VISCA_API uint32_t
+_VISCA_send_packet_with_reply2(VISCAInterface_t * iface,
+			      VISCACamera_t * camera, VISCAPacket_t * packet)
+{	
+	clock_t t1, t2;
+	t1 = clock();
+	if (_VISCA_send_packet(iface, camera, packet) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	t2 = _interval_time("send", t1);
+	if (_VISCA_get_reply2(iface, camera) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	_interval_time("get", t2);
+	return VISCA_SUCCESS;
+}
+
+VISCA_API uint32_t
+	_VISCA_send_packet_with_reply3(VISCAInterface_t * iface,
+	VISCACamera_t * camera, VISCAPacket_t * packet)
+{	
+	clock_t t1, t2;
+	t1 = clock();
+	if (_VISCA_send_packet(iface, camera, packet) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	t2 = _interval_time("send", t1);
+	if (_VISCA_get_reply3(iface, camera) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	_interval_time("get", t2);
+	return VISCA_SUCCESS;
+}
+
+VISCA_API uint32_t
+_VISCA_send_packet_with_one(VISCAInterface_t * iface,
+			      VISCACamera_t * camera, VISCAPacket_t * packet)
+{	
+	clock_t t1, t2;
+	t1 = clock();
+	if (_VISCA_send_packet(iface, camera, packet) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	t2 = _interval_time("send", t1);
+	if (_VISCA_get_one_package(iface, camera) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	_interval_time("get", t2);
 	return VISCA_SUCCESS;
 }
 
@@ -1817,6 +1991,7 @@ VISCA_get_zoom_value(VISCAInterface_t * iface, VISCACamera_t * camera,
 		*value =
 		    (iface->ibuf[2] << 12) + (iface->ibuf[3] << 8) +
 		    (iface->ibuf[4] << 4) + iface->ibuf[5];
+
 		return VISCA_SUCCESS;
 	}
 }
@@ -2742,7 +2917,12 @@ VISCA_set_pantilt_stop(VISCAInterface_t * iface, VISCACamera_t * camera,
 	_VISCA_append_byte(&packet, tilt_speed);
 	_VISCA_append_byte(&packet, VISCA_PT_DRIVE_HORIZ_STOP);
 	_VISCA_append_byte(&packet, VISCA_PT_DRIVE_VERT_STOP);
-	return _VISCA_send_packet_with_reply(iface, camera, &packet);
+	if (iface->bug_fix & BF_STOP) {
+		return _VISCA_send_packet_with_one(iface, camera, &packet);
+	}
+	else {
+		return _VISCA_send_packet_with_reply(iface, camera, &packet);
+	}
 }
 
 VISCA_API uint32_t
@@ -3124,10 +3304,24 @@ VISCA_get_pantilt_maxspeed(VISCAInterface_t * iface, VISCACamera_t * camera,
 	}
 }
 
+clock_t _interval_time(char *str, clock_t t)
+{
+	clock_t t1 = clock();
+	double interval = (t1 - t) /1000;
+	if (interval >0.01) {
+		fprintf(stdout, "%s using time = %f\n", str, interval);
+	}
+	return t1;
+}
+
+
+
 VISCA_API uint32_t
 VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 			   int *pan_position, int *tilt_position)
 {
+	clock_t t1, t2, t3, t4;
+	double interval;
 	VISCAPacket_t packet;
 	uint32_t err;
 	uint16_t pan_pos, tilt_pos;
@@ -3140,13 +3334,19 @@ VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 	_VISCA_append_byte(&packet, VISCA_INQUIRY);
 	_VISCA_append_byte(&packet, VISCA_CATEGORY_PAN_TILTER);
 	_VISCA_append_byte(&packet, VISCA_PT_POSITION_INQ);
-
-	err = _VISCA_send_packet_with_reply(iface, camera, &packet);
+	if (iface->bug_fix & BF_GET_POS) {
+		err = _VISCA_send_packet_with_reply2(iface, camera, &packet);
+	}
+	else
+		err = _VISCA_send_packet_with_reply(iface, camera, &packet);
 	if (err != VISCA_SUCCESS)
 		return err;
 	else {
-		if (_VISCA_get_reply_accurate(iface, camera) != VISCA_SUCCESS)
-			return err;
+			{
+				if (_VISCA_get_reply_accurate(iface, camera) != VISCA_SUCCESS) {
+					return err;
+				}
+			}
 		pan_pos =
 		    ((iface->
 		      ibuf[2] & 0xf) << 12) | ((iface->ibuf[3] & 0xf) << 8) |
@@ -3169,7 +3369,7 @@ VISCA_get_pantilt_position(VISCAInterface_t * iface, VISCACamera_t * camera,
 			*tilt_position = tilt_pos;
 		else
 			*tilt_position = ((int)tilt_pos) - 65536;
-
+		_interval_time("end", t3);
 		return VISCA_SUCCESS;
 	}
 }

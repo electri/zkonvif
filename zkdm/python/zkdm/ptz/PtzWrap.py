@@ -3,14 +3,12 @@
 from ctypes import *
 import platform, os
 
-
-
 _ptz_so = 'libzkptz.so.0.0.0'
 
 plat = platform.uname()[0]
 
 if plat == 'Darwin':
-	_ptz_so = './osx/libzkptz.dylib'
+    _ptz_so = './osx/libzkptz.dylib'
 elif plat == 'Windows':
 	_ptz_so = r'win32/zkptz.dll'
 elif plat == 'Linux':
@@ -38,7 +36,6 @@ class PtzWrap(object):
 		self.__ptz = None
 		os.chdir(cpath)
 
-
 	def open(self, serial, addr):
 		''' 已经废弃，应该使用 open_with_config()
 		'''
@@ -65,7 +62,7 @@ class PtzWrap(object):
 
 	
 	def call(self, method, params):
-		''' 执行 method 命令，使用 params 作为参数 ...
+		''' 执行 method 命令，使用 params 作为参数 .tr..
 		'''
 		# TODO：应该检查参数 ... 
 		ret = {'result':'ok', 'info':''}
@@ -90,10 +87,16 @@ class PtzWrap(object):
 			ret.update(self.get_pos())
 		elif method == 'set_pos':
 			ret.update(self.set_pos(params))
+		elif method == 'set_pos_blocked':
+			ret.update(self.set_pos_blocked(params))
 		elif method == 'get_zoom':
 			ret.update(self.get_zoom())
 		elif method == 'set_zoom':
 			ret.update(self.set_zoom(params))
+		elif method == 'set_zoom_blocked':
+			ret.update(self.set_zoom_blocked(params))
+		elif method == 'get_pos_zoom':
+			ret.update(self.get_pos_zoom())
 		elif method == 'zoom_tele':
 			ret.update(self.zoom_tele(params))
 		elif method == 'zoom_wide':
@@ -104,10 +107,21 @@ class PtzWrap(object):
 			ret.update(self.mouse_trace(params))
 		elif method == 'ext_get_scales':
 			ret.update(self.ext_get_scales())
+		elif method == 'is_prepared':
+			ret.update(self.is_prepared())
 		else:
 			ret.update({'result':'error', 'info':'method NOT supported'})
 		return ret
 
+	def is_prepared(self):
+		if not self.__ptz:
+			return {'result':'error', 'info':'NO ptz'}
+		else:
+			r = self.__ptr['is_prepared'](self.__ptz)
+			if r is 0:
+				return { 'info': 'completed'}
+			else:
+				return { 'result':'error', 'info': 'NO ptz prepared'}
 
 	def stop(self):
 		if not self.__ptz:
@@ -210,13 +224,26 @@ class PtzWrap(object):
 			else:
 				return { 'result':'error', 'info':'get_pos failure' }
 
-
+	def get_pos_zoom(self):
+			if not self.__ptz:
+				return {'result':'error', 'info':'No PTZ'}
+			else:
+				x = c_int()
+				y = c_int()
+				z = c_int()
+				is_pos = self.__ptr['func_get_pos'](self.__ptz, byref(x), byref(y))
+				is_zoom = self.__ptr['func_get_zoom'](self.__ptz, byref(z))
+				
+				if (is_pos==0) and (is_zoom==0):
+					return {'value': { 'type':'position', 'data': {'x': x.value, 'y': y.value, 'z': z.value} } }
+				else:
+					return {'result':'error', 'info':'No PTZ'}
+			
 	def ext_get_scales(self):
 		if not self.__ptz:
 			return { 'result':'error', 'info':'NO ptz' }
 		else:
 			return { 'value': { 'type':'double', 'data': self.__ptr['func_ext_get_scales'](self.__ptz, -1) } }
-
 
 	def set_pos(self, params):
 		if not self.__ptz:
@@ -238,18 +265,39 @@ class PtzWrap(object):
 			self.__ptr['func_set_pos'](self.__ptz, x, y, sx, sy)
 			return { 'info':'completed' }
 
+	def set_pos_blocked(self, params):
+		if not self.__ptz:
+			return {'result':'error', 'info':'NO ptz'}
+		else:
+			x = 0
+			y = 0
+			sx = 30
+			sy = 30
+			if 'x' in params:
+				x = int(params['x'][0])
+			if 'y' in params:
+				y = int(params['y'][0])
+			if 'sx' in params:
+				sx = int(params['sx'][0])
+			if 'sy' in params:
+				sy = int(params['sy'][0])
+				
+			self.__ptr['func_set_pos_blocked'](self.__ptz, x, y, sx, sy)
+			return { 'info':'completed' }
+       
+            
 	def mouse_trace(self, params):
 			if not self.__ptz:
 				return {'return':'error', 'info':'NO ptz'}
 			else:
-				x = 0
-				y = 0
+				x = 0.0
+				y = 0.0
 				sx = 30
 				sy = 30
 				if 'x' in params:
-					x = int(params['x'][0])
+					x = float(params['x'][0])
 				if 'y' in params:
-					y = int(params['y'][0])
+					y = float(params['y'][0])
 				if 'sx' in params:
 					sx = int(params['sx'][0])
 				if 'sy' in params:
@@ -276,6 +324,16 @@ class PtzWrap(object):
 			if 'z' in params:
 				z = int(params['z'][0])
 			self.__ptr['func_set_zoom'](self.__ptz, z)
+			return { 'info':'completed' }
+
+	def set_zoom_blocked(self, params):
+		if not self.__ptz:
+			return {'result':'error', 'info':'NO ptz'}
+		else:
+			z = 0
+			if 'z' in params:
+				z = int(params['z'][0])
+			self.__ptr['func_set_zoom_blocked'](self.__ptz, z)
 			return { 'info':'completed' }
 
 
@@ -314,6 +372,10 @@ class PtzWrap(object):
 		ptz = {}
 		print 'en ........ to load:', _ptz_so
 		ptz['so'] = CDLL(_ptz_so)
+
+		ptz['is_prepared'] = ptz['so'].is_prepared
+		ptz['is_prepared'].argtypes = [c_void_p]
+		ptz['is_prepared'].restype =c_int
 
 		ptz['func_open'] = ptz['so'].ptz_open
 		ptz['func_open'].restype = c_void_p
@@ -371,12 +433,20 @@ class PtzWrap(object):
 		ptz['func_zoom_stop'].argtypes = [c_void_p]
 
 		ptz['func_mouse_trace'] = ptz['so'].ptz_mouse_trace
-		ptz['func_mouse_trace'].argtypes = [c_void_p, c_int, c_int, c_int, c_int] 
+		ptz['func_mouse_trace'].argtypes = [c_void_p, c_double, c_double, c_int, c_int] 
 
 		ptz['func_ext_get_scales'] = ptz['so'].ptz_ext_get_scals
 		ptz['func_ext_get_scales'].argtypes = [c_void_p, c_int]
 		ptz['func_ext_get_scales'].restype = c_double
 
+		ptz['func_set_zoom_blocked'] = ptz['so'].ptz_set_zoom_with_reply
+		ptz['func_set_zoom_blocked'].argtypes = [c_void_p, c_int]
+		ptz['func_set_zoom_blocked'].restype = c_int
+
+		ptz['func_set_pos_blocked'] = ptz['so'].ptz_set_pos_with_reply
+		ptz['func_set_pos_blocked'].argtypes = [c_void_p, c_int, c_int, c_int, c_int]
+		ptz['func_set_pos_blocked'].restype = c_int
+		
 		return ptz
 
 

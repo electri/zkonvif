@@ -1,0 +1,49 @@
+﻿处理设备的服务注册
+
+	<mac>,<type>,<id>不能为空
+	http://<ip>:<端口>/deviceService/registering?serviceinfo=<ip>_<mac>_<type>_<id>_<url>
+	
+处理设备的服务注销
+
+	http://<ip>:<端口>/deviceService/unRegistering?mac=<mac>
+	
+得到所有服务
+';
+	http://<ip>:<端口>/deviceService/listAll
+	
+得到mac的所有服务
+
+	http://<ip>:<端口>/deviceService/listByMac?mac=<mac>&id=<id>
+	
+	<mac>,<type>,<id>不能为空
+	http://<ip>:<端口>/deviceService/listByMac?serviceinfo=<ip>_<mac>_<type>_<id>_<url>
+	
+处理设备端发送的心跳数据
+
+	<mac>,<type>,<id>不能为空
+	http://<ip>:<端口>/deviceService/heartbeat?serviceinfo=<ip>_<mac>_<type>_<id>_<url>
+	
+手动执行  检测没有心跳脉冲注销服务
+	
+	http://<ip>:<端口>/deviceService/flushAll
+
+
+1 注册: http://serviceIp:servicePort/deviceService/registering?serviceinfo=<ip>_<mac>_<type>_<id>_<url>
+
+json 文件:
+serviceIP
+servicePort
+
+本机获取:
+ip, mac
+
+config.json获取:
+type,url
+
+内部获取(internal):
+id
+
+2 心跳 :up,
+
+3 http://url1 + r'/internal/servicees/is_prepaired'
+  http://url1 + r'/internal/services/all_list';

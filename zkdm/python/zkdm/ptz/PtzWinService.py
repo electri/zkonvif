@@ -6,16 +6,14 @@ from ctypes import *
 import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
-
-i = 0;
-
+import logging
+import inspect
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-
-_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-
+#global _all_config
+#global _all_ptzs
+#_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
@@ -30,15 +28,22 @@ def load_ptz(config):
 		'addr': config['config']['addr'],
 		'ptz': None
 	}
+
+
+	if 'extent' in config['config']:
+		ptz['cfgfile'] = config['config']['extent']
+
 	# 此处打开 ...
 	if True:
 		ptz['ptz'] = PtzWrap()
 	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
-		ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
-		global i
-		i = i + 1
-		print i
-		print 'open success'
+		if 'cfgfile' in ptz:
+			filename = ptz['cfgfile'].encode('ascii')
+			print 'open with cfg:' , filename
+			ptz['ptz'].open_with_config(filename)
+		else:
+			print 'open ptz:' , ptz['serial'], 'addr:', ptz['addr']
+			ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
 	else:
 		ptz['ptz'] = None
 		print 'open failure'
@@ -55,7 +60,7 @@ def load_all_ptzs():
 
 
 # 这里保存所有云台
-_all_ptzs = load_all_ptzs()
+#_all_ptzs = load_all_ptzs()
 
 class HelpHandler(RequestHandler):
 	''' 返回 help 
@@ -119,22 +124,30 @@ class PtzThread(threading.Thread):
 
 	def run(self):
 		main()
-		print 'run'
 
 import win32serviceutil
 import win32service
 import win32event
-import win32evtlogutil
 class PtzService(win32serviceutil.ServiceFramework):
+<<<<<<< HEAD
 	_svc_name_ = "zonekeyPtz"
 	_svc_display_name_ = "zonekeyPtz"
+=======
+	_svc_name_ = "zonekey.service.ptz"
+	_svc_display_name_ = "zonekey.service.ptz"
+>>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 	_svc_deps_ = ["EventLog"]
-	
+
 	def __init__(self,args):
 		win32serviceutil.ServiceFramework.__init__(self,args)
 		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None) 
 		self.ptz_thread_ = PtzThread()
+		global _all_config
+		global _all_ptzs
+		_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
+		_all_ptzs = load_all_ptzs()
 
+		
 	def SvcStop(self):
 		win32event.SetEvent(self.hWaitStop)
 

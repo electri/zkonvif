@@ -2,6 +2,11 @@ INSTALL
 install-sh
 aclocal.m4
 *~
+*.rar
+*.zip
+*.exe
+*.dll
+*.pyc
 configure
 Makefile.in
 Makefile
