@@ -32,10 +32,11 @@ def register(client_params):
 	regUrl = getUrl(client_params, 'deviceService/registering?serviceservice_')
 	s = urllib2.urlopen(regUrl)
 	ret = json.loads(s.read(100), 'utf-8')
-	print client_params
+	print 'register'
+	print ret
 	v = client_params['ip'] + '_' + client_params['mac'] + '_' + client_params['type'] + '_' + client_params['id']
 	print v
-	if v in ret:
+	if v in ret['info']:
 		return True
 	else:
 		return False
@@ -67,6 +68,8 @@ class RegClass(threading.Thread):
 			self.mtx_reg_.release()
 			for e in pcs_paras:
 				self.service_.update(e)
+				print 'pcs_paras'
+				print e
 				f = urllib2.openurl(e['url'] + r'/internal/get_all_service')
 				jv = f.read(1000)
 				dv = json.loads(jv, 'utf-8')
