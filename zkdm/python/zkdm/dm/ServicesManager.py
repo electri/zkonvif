@@ -32,12 +32,11 @@ class ServicesManager:
 		self.__ip = u.myip()			# 可能是交换机映射后的 ip
 		self.__ip_real = u.myip_real()
 		self.__activated = [] # (p, sd, url)
-		self.__start_all_enabled()
+		#self.__start_all_enabled()
 		self.pcses_= []
 		self.services_ = []
 		self.mtx_reg_ = threading.Lock()
 		self.mtx_hb_ = threading.Lock() 
-		print 'enter regThread'
 		regThread = regHb.RegClass(self.pcses_, self.services_, self.mtx_reg_, self.mtx_hb_)  
 		hbThread = regHb.HbClass(self.services_, self.mtx_hb_)
 		regThread.start()
@@ -72,16 +71,17 @@ class ServicesManager:
 
 	def start_service(self, name):
 		''' 启动服务，如果 name 存在 '''
+		print 'start_service .........'
 		ssd = self.list_services()
 		for x in ssd:
 			if x['name'] == name and x['enable']:
-				self.mtx_reg_.acquire()
 				pcs = {}
 				pcs['url'] = x['url']
 				pcs['type'] = x['type']
+
+				self.mtx_reg_.acquire()
 				self.pcses_.append(pcs)
 				self.mtx_reg_.release()
-
 				self.__start_service(x)
 				return True
 		return False
@@ -184,14 +184,3 @@ class ServicesManager:
 
 
 
-if __name__ == '__main__':
-	sm = ServicesManager()
-	all = sm.list_services()
-	print all
-	count = 10
-	while count > 0:
-		count -= 1
-		time.sleep(1.0)
-		sm.dump_activated()
-	sm.enable_service('event service', True)
-	sm.close()

@@ -105,7 +105,6 @@ if __name__ == '__main__':
 
 	# 服务管理器，何时 close ??
 	_sm = ServicesManager.ServicesManager()
-
 	app = make_app()
 	app.listen(DMS_PORT)
 

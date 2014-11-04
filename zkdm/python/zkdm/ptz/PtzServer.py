@@ -66,6 +66,7 @@ def load_all_ptzs():
 		ret[x['name']] = (load_ptz(x))
 		if ret[x['name']]['ptz'] is not None:
 			_service['ids'].append(ret[x['name']]['name'])
+	_service['state'] = 'completed'
 	return ret
 
 
@@ -132,10 +133,10 @@ class InternalHandler(RequestHandler):
 	def get(self):
 		rc = {}
 		rc['result'] = 'ok'
-		rc['info'] = ''
+		rc['info'] = 'dispear'
 
 		command = self.get_argument('command', 'nothing')
-
+		print command
 		if command == 'exit':
 			rc['info'] = 'exit!!!'
 			global _ioloop
@@ -148,6 +149,8 @@ class InternalHandler(RequestHandler):
 		elif command == 'services':
 			global _service
 			self.set_header('Content-Type', 'application/json')
+			print '=====>ptz'
+			print _service
 			self.write(_service)    
 
 def make_app():
