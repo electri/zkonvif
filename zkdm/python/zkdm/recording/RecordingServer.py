@@ -11,6 +11,7 @@ from RecordingCommand import RecordingCommand
 
 # 必须设置工作目录 ...
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+_service = {"state":"no complete","ids":[]}
 
 def _param(req, key):
     if key in req.request.arguments:
@@ -76,6 +77,10 @@ class InternalHandler(RequestHandler):
             rc['info'] = 'now version not supported!'
             rc['result'] = 'err'
             self.write(rc)
+        elif command =='services':
+            self.set_header('Content-Type', 'application/json')
+            self.write(_service)
+
 
 
 def main():
@@ -90,6 +95,10 @@ def main():
     _rcmd = RecordingCommand()
 
     application.listen(10007)
+
+    _service['ids'].append('recording')
+    _service['state']='complete'
+
     global _ioloop
     _ioloop = IOLoop.instance()
     _ioloop.start()
