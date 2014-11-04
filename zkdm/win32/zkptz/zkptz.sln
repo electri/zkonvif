@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zkptz", "zkptz\zkptz.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testPtz", "testPtz\testPtz.vcxproj", "{C604DA80-7D25-4918-93F6-97B42B380BEE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zonekey_ptz_verify", "..\zonekey_ptz_verify\zonekey_ptz_verify.vcxproj", "{E099CBA2-E7D6-45FD-837E-7E0669A20519}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,12 @@ Global
 		{C604DA80-7D25-4918-93F6-97B42B380BEE}.Release|Win32.ActiveCfg = Release|Win32
 		{C604DA80-7D25-4918-93F6-97B42B380BEE}.Release|Win32.Build.0 = Release|Win32
 		{C604DA80-7D25-4918-93F6-97B42B380BEE}.Release|x64.ActiveCfg = Release|Win32
+		{E099CBA2-E7D6-45FD-837E-7E0669A20519}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E099CBA2-E7D6-45FD-837E-7E0669A20519}.Debug|Win32.Build.0 = Debug|Win32
+		{E099CBA2-E7D6-45FD-837E-7E0669A20519}.Debug|x64.ActiveCfg = Debug|Win32
+		{E099CBA2-E7D6-45FD-837E-7E0669A20519}.Release|Win32.ActiveCfg = Release|Win32
+		{E099CBA2-E7D6-45FD-837E-7E0669A20519}.Release|Win32.Build.0 = Release|Win32
+		{E099CBA2-E7D6-45FD-837E-7E0669A20519}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

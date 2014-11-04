@@ -166,7 +166,7 @@ static int test_zoom(ptz_t *ptz, std::ostream &os)
 	int z;
 #define TO_Z 10000
 
-	rc = ptz_set_zoom_blocked(ptz, 0);
+	rc = ptz_set_zoom_with_reply(ptz, 0);
 	if (rc < 0) {
 		return -1;
 	}
@@ -184,7 +184,7 @@ static int test_zoom(ptz_t *ptz, std::ostream &os)
 	}
 
 	double t2 = util_now();
-	if (t2 - t1 > 0.200) {
+	if (t2 - t1 > 0.500) {
 		fprintf(stderr, "ERR: set_zoom/get_zoom 超时，使用了 %.3f 秒\n", t2 - t1);
 		return -2;
 	}
@@ -216,7 +216,7 @@ static int test_pos(ptz_t *ptz, std::ostream &os)
 	int x, y;
 	int rc;
 
-	rc = ptz_set_pos_blocked(ptz, 400, 400, 36, 36);
+	rc = ptz_set_pos_with_reply(ptz, 400, 400, 36, 36);
 	if (rc < 0) {
 		return -1;
 	}
@@ -234,7 +234,7 @@ static int test_pos(ptz_t *ptz, std::ostream &os)
 	}
 
 	double t2 = util_now();
-	if (t2 - t1 > 0.200) {
+	if (t2 - t1 > 0.500) {
 		fprintf(stderr, "ERR: set_pos/get_pos 超时，使用了 %.3f 秒\n", t2 - t1);
 		return -2;
 	}
