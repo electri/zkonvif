@@ -60,9 +60,12 @@ class RegClass(threading.Thread):
 		self.service_.update(getLocalHost())
 	def run(self):
 		while True:
-			temp_urls = [] 
+			pcs_paras = []	
 			self.mtx_reg_.acquire()
 			for e in self.pcs_paras_:
+				pcs_paras.append(e)
+			self.mtx_reg_.release()
+			for e in pcs_paras:
 				self.service_.update(e)
 				f = urllib2.openurl(e['url'] + r'/internal/get_all_service')
 				jv = f.read(1000)
@@ -78,8 +81,9 @@ class RegClass(threading.Thread):
 						self.mtx_hb_.acquire()
 						self.services_.append(self.service_)
 						self.mtx_hb_.release()
+				self.mtx_reg_.acquire()
 				self.pcs_paras_.remove(e)
-			self.mtx_reg_.release()			
+				self.mtx_reg_.release()			
 
 class HbClass(threading.Thread):
 	def __init__(self, services, mtx_hb):
@@ -89,8 +93,12 @@ class HbClass(threading.Thread):
 		
 	def run(self):
 		while True:
+			services = []	
 			self.mtx_hb_.acquire()		
 			for e in self.services_:
-				heartBeat(e)
+				services.append(e)
 			self.mtx_hb_.release()
+
+			for e in services:
+				heartBeat(e)
 			time.sleep(HB_TIME)
