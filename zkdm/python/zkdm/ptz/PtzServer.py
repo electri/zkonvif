@@ -18,7 +18,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
-_service = { "state":"no completed", "ids":[]}
+_service = { "complete": False, "ids":[]}
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
 	return _all_config['ptzs']
@@ -66,9 +66,6 @@ def load_all_ptzs():
 	ret = {}
 	for x in ptzs:
 		ret[x['name']] = (load_ptz(x))
-#		if ret[x['name']]['ptz'] is not None:
-#			_service['ids'].append(ret[x['name']]['name'])
-#	_service['state'] = 'completed'
 
 	return ret
 
@@ -80,7 +77,7 @@ _all_ptzs = load_all_ptzs()
 for e in _all_ptzs:
 	if _all_ptzs[e]['ptz'] != None:
 		_service['ids'].append(e)
-_service['state'] = 'completed'
+_service['complete'] = True
 
 class HelpHandler(RequestHandler):
 	''' 返回 help 
@@ -120,8 +117,6 @@ class ControllingHandler(RequestHandler):
 		# print 'name:', name, ' method:', method, ' params:', params
 		if name in _all_ptzs:
 			if _all_ptzs[name]['ptz']:
-				#log = Log('ptz')
-				#log.log("method:" + method + ", params:" + str(params))
 				return _all_ptzs[name]['ptz'].call(method, params)
 			else:
 				return { 'result':'error', 'info':'ptz config failure' }

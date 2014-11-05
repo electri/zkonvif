@@ -29,6 +29,8 @@ def getUrl(client_params, fun_str):
 def register(client_params):
 	regUrl = getUrl(client_params, 'deviceService/registering?serviceinfo')
 	s = urllib2.urlopen(regUrl)
+	print '============>register'
+	print regUrl
 	str = s.read(1000).decode('utf-8')
 	ret = json.loads(str)
 	v = client_params['localIp'] + '_' + client_params['localMac'] + '_' + client_params['type'] + '_' + client_params['id']
@@ -41,6 +43,8 @@ def register(client_params):
 def heartBeat(service_params):
 	heartBeatUrl = getUrl(service_params, 'deviceService/heartbeat?serviceinfo')
 	s = urllib2.urlopen(heartBeatUrl)
+	print '===========>heartbeat'
+	print heartBeatUrl
 
 import threading
 
@@ -69,7 +73,7 @@ class RegClass(threading.Thread):
 				f = urllib2.urlopen(service['url'] + r'/internal?command=services')
 				jv = f.read(1000)
 				dv = json.loads(jv, 'utf-8')
-				if dv['state'] == 'completed':
+				if dv['complete']: 
 					for e1 in dv['ids']:
 						isReg = False
 						service['id'] = e1
@@ -82,9 +86,9 @@ class RegClass(threading.Thread):
 						self.mtx_hb_.acquire()
 						self.services_.append(sv)
 						self.mtx_hb_.release()
-				self.mtx_reg_.acquire()
-				self.pcs_paras_.remove(e)
-				self.mtx_reg_.release()			
+					self.mtx_reg_.acquire()
+					self.pcs_paras_.remove(e)
+					self.mtx_reg_.release()			
 
 class HbClass(threading.Thread):
 	def __init__(self, services, mtx_hb):

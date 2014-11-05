@@ -33,7 +33,7 @@
          "title" : "教师特写摄像头"
       },
 	  {
-		  "enable": true,
+		  "enable": false,
 		  "fork": true,
 		  "url": "http://<ip>:10005/log",
 		  "name": "Log service",
@@ -42,7 +42,7 @@
 		  "title": "日志服务"
 	  },
       {
-          "enable":true,
+          "enable":false,
           "fork":true,
           "url":"http://<ip>:10006/recording",
           "name":"recording service",

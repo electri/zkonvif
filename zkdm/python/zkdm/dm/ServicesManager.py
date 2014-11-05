@@ -32,7 +32,6 @@ class ServicesManager:
 		self.__ip = u.myip()			# 可能是交换机映射后的 ip
 		self.__ip_real = u.myip_real()
 		self.__activated = [] # (p, sd, url)
-		#self.__start_all_enabled()
 		self.pcses_= []
 		self.services_ = []
 		self.mtx_reg_ = threading.Lock()
@@ -42,6 +41,8 @@ class ServicesManager:
 		regThread.start()
 		hbThread.start()
 
+		self.__start_all_enabled()
+		
 	def list_services(self):
 		''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
 		'''
@@ -75,13 +76,6 @@ class ServicesManager:
 		ssd = self.list_services()
 		for x in ssd:
 			if x['name'] == name and x['enable']:
-				pcs = {}
-				pcs['url'] = x['url']
-				pcs['type'] = x['type']
-
-				self.mtx_reg_.acquire()
-				self.pcses_.append(pcs)
-				self.mtx_reg_.release()
 				self.__start_service(x)
 				return True
 		return False
@@ -140,6 +134,14 @@ class ServicesManager:
 		print ' ==> start', args
 		p = subprocess.Popen(args)
 		print '        pid:', p.pid
+
+		pcs = {}
+		pcs['url'] = sd['url']
+		pcs['type'] = sd['type']
+		self.mtx_reg_.acquire()
+		self.pcses_.append(pcs)
+		self.mtx_reg_.release()
+
 		psu = (p, sd, self.__fix_url(sd['url']))
 		self.__activated.append(psu)
 		return	psu 
