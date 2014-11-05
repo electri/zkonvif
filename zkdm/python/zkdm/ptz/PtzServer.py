@@ -42,15 +42,18 @@ def load_ptz(config):
 
 	# 此处打开 ...
 	if True:
+		is_ptz = False
 		ptz['ptz'] = PtzWrap()
 	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
 		if 'cfgfile' in ptz:
 			filename = ptz['cfgfile'].encode('ascii')
 			print 'open with cfg:', filename
-			ptz['ptz'].open_with_config(filename)
+			is_ptz = ptz['ptz'].open_with_config(filename)
 		else:
 			print 'open ptz:', ptz['serial'], 'addr:', ptz['addr']
-			ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
+			is_ptz = ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
+		if not is_ptz:
+			ptz['ptz'] = None	
 	else:
 		ptz['ptz'] = None
 		print 'open failure'
@@ -64,19 +67,21 @@ def load_all_ptzs():
 	ret = {}
 	for x in ptzs:
 		ret[x['name']] = (load_ptz(x))
-		if ret[x['name']]['ptz'] is not None:
-			_service['ids'].append(ret[x['name']]['name'])
-	_service['state'] = 'completed'
+#		if ret[x['name']]['ptz'] is not None:
+#			_service['ids'].append(ret[x['name']]['name'])
+#	_service['state'] = 'completed'
+
 	return ret
 
 
 # 这里保存所有云台
 _all_ptzs = load_all_ptzs()
+		
 # 获取所有云台类型
-#for ptz in _all_ptzs:
-#	if ptz['name']['ptz'] is not None:
-#		_service['ids'].append(ptz['name'][name])
-#_service['state'] = 'completed'
+for e in _all_ptzs:
+	if _all_ptzs[e]['ptz'] != None:
+		_service['ids'].append(e)
+_service['state'] = 'completed'
 
 class HelpHandler(RequestHandler):
 	''' 返回 help 
