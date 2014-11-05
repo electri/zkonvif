@@ -40,6 +40,15 @@
 		  "type": "log",
 		  "path" : "python ../log/LogServer.py",
 		  "title": "日志服务"
-	  }
+	  },
+      {
+          "enable":true,
+          "fork":true,
+          "url":"http://<ip>:10006/recording",
+          "name":"recording service",
+          "type":"recording",
+          "path":"python ../recording/RecordingServer.py",
+          "title":"录播服务"          
+      }
    ]
 }

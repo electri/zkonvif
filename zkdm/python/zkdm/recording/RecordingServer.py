@@ -102,7 +102,7 @@ def main():
     global _rcmd
     _rcmd = RecordingCommand()
 
-    application.listen(10007)
+    application.listen(10006)
 
     _service['ids'].append('recording')
     _service['state']='complete'
