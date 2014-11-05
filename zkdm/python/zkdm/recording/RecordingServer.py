@@ -7,6 +7,7 @@ from socket import *
 import json
 
 from RecordingCommand import RecordingCommand
+from tornado.options import define, options
 
 
 # 必须设置工作目录 ...
@@ -50,7 +51,13 @@ class CmdHandler(tornado.web.RequestHandler):
             self.write(rc)
             return
 
+        elif cmd=={'RecordCmd':['RtspPreview']}:
+            rc = _rcmd.preview()
+            self.write(rc)
+            return
+
         else:
+            print cmd
             args = (self.request.uri.split('?'))[1]
             rc=_rcmd.send_command(args)
             self.set_header('Content-Type', 'application/json')
@@ -84,6 +91,7 @@ class InternalHandler(RequestHandler):
 
 
 def main():
+    tornado.options.parse_command_line()
     application = tornado.web.Application([
         url(r"/", MainHandler),
         url(r"/recording/cmd",CmdHandler),
