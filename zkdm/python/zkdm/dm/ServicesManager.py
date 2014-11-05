@@ -140,7 +140,9 @@ class ServicesManager:
 		print ' ==> start', args
 		p = subprocess.Popen(args)
 		print '        pid:', p.pid
-		return (p, sd, self.__fix_url(sd['url']))
+		psu = (p, sd, self.__fix_url(sd['url']))
+		self.__activated.append(psu)
+		return	psu 
 		
 
 	def __stop_service(self, sd):

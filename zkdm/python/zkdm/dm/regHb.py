@@ -28,8 +28,6 @@ def getUrl(client_params, fun_str):
 
 def register(client_params):
 	regUrl = getUrl(client_params, 'deviceService/registering?serviceinfo')
-	print '======>regUrl'
-	print regUrl
 	s = urllib2.urlopen(regUrl)
 	str = s.read(1000).decode('utf-8')
 	ret = json.loads(str)
@@ -42,8 +40,6 @@ def register(client_params):
 
 def heartBeat(service_params):
 	heartBeatUrl = getUrl(service_params, 'deviceService/heartbeat?serviceinfo')
-	print '===========>heartBeatUrl'
-	print heartBeatUrl
 	s = urllib2.urlopen(heartBeatUrl)
 
 import threading

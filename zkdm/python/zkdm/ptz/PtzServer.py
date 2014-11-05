@@ -32,7 +32,6 @@ def load_ptz(config):
 		'addr': config['config']['addr'],
 		'ptz': None
 	}
-	print 'ptz'
 	print type(ptz['name'])
 	print type(ptz['serial'])
 	print type(ptz['addr'])
@@ -130,8 +129,8 @@ class ControllingHandler(RequestHandler):
 			return { 'result':'error', 'info':name + ' NOT found' }
 
 
-
-_ioloop = None # 为了支持 exit command
+# 为了支持 exit command
+_ioloop = IOLoop.instance()
 
 
 class InternalHandler(RequestHandler):
@@ -154,8 +153,6 @@ class InternalHandler(RequestHandler):
 		elif command == 'services':
 			global _service
 			self.set_header('Content-Type', 'application/json')
-			print '=====>ptz'
-			print _service
 			self.write(_service)    
 
 def make_app():
@@ -170,9 +167,7 @@ def make_app():
 def main():
 	app = make_app()
 	app.listen(10003)
-	_ioloop = IOLoop.instance()
 	_ioloop.start()
-
 	# 此时说明结束 ...
 	print 'ptz service end ...'
 
