@@ -12,7 +12,7 @@ from tornado.options import define, options
 
 # 必须设置工作目录 ...
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-_service = {"state":"no complete","ids":[]}
+_service = {"complete":False,"ids":[]}
 
 def _param(req, key):
     if key in req.request.arguments:
@@ -105,7 +105,7 @@ def main():
     application.listen(10006)
 
     _service['ids'].append('recording')
-    _service['state']='complete'
+    _service['complete'] = True
 
     global _ioloop
     _ioloop = IOLoop.instance()
