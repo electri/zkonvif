@@ -68,8 +68,8 @@ class ListServiceHandler(RequestHandler):
 
 		self.write(rc)
 
-
-_ioloop = None # 全局，用于主动结束 ...
+# 全局，用于主动结束 ...
+_ioloop = IOLoop.instance()
 
 
 class InternalHandler(RequestHandler):
@@ -105,11 +105,8 @@ if __name__ == '__main__':
 
 	# 服务管理器，何时 close ??
 	_sm = ServicesManager.ServicesManager()
-
 	app = make_app()
 	app.listen(DMS_PORT)
-
-	_ioloop = IOLoop.instance()
 	_ioloop.start()
 
 	# 此时，必定执行了 internal?command=exit，可以执行销毁 ...

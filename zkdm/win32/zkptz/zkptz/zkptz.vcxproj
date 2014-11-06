@@ -146,15 +146,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\3rd\libvisca-1.1.0\visca\libvisca.c" />
-    <ClCompile Include="..\..\..\..\3rd\libvisca-1.1.0\visca\libvisca_win32.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\work\zkonvif\3rd\libvisca-1.1.0\visca\libvisca.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\work\zkonvif\3rd\libvisca-1.1.0\visca\libvisca_win32.c" />
     <ClCompile Include="..\..\..\ptz\KVConfig.cpp" />
     <ClCompile Include="..\..\..\ptz\polyfit.cpp" />
     <ClCompile Include="..\..\..\ptz\ptz.cpp" />
     <ClCompile Include="..\..\..\ptz\ZoomValueConvert.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\3rd\libvisca-1.1.0\visca\libvisca.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\work\zkonvif\3rd\libvisca-1.1.0\visca\libvisca.h" />
     <ClInclude Include="..\..\..\ptz\KVConfig.h" />
     <ClInclude Include="..\..\..\ptz\polyfit.h" />
     <ClInclude Include="..\..\..\ptz\ptz.h" />

@@ -1,45 +1,54 @@
 import sys
-import json
+import json,io
 import time
 sys.path.append('../')
 from common.utils import zkutils
 
+# heart beat time interval, unit is second
 HB_TIME = 10
 
+# get ip and port of host about register and heart beat 
 def getRgHbSv(f):
-    return json.load(f, 'utf-8')['regHbService'] 
+	ret = json.load(io.open('config.json', 'r', encoding='utf-8'))
+	return ret['regHbService']
 
+# get ip and port of local host
 def getLocalHost():
-    localIp = zkutils.myRealip()
-    localMac = zkutils.myMac()
-    localHost = {}
-    localHost['localIp'] = localIp
-    localHost['localMac'] = localMac
-    return localHost
+	u = zkutils()
+	localIp = u.myip_real()
+	localMac = u.mymac()
+	localHost = {}
+	localHost['localIp'] = localIp
+	localHost['localMac'] = localMac
+	return localHost
 
 import urllib2
 
+# get send string about register and heart beat 
 def getUrl(client_params, fun_str):
 	v =	client_params
-	ret = 'http://' + v['sip'] + ':' + v['sport'] + '/' + fun_str + '=' +v['ip'] + '_' + v['mac'] + '_' + v['type'] + '_' + v['id'] + '_' + v['url']
-	print ret
+	ret = 'http://' + v['sip'] + ':' + v['sport'] + '/' + fun_str + '=' +v['localIp'] + '_' + v['localMac'] + '_' + v['type'] + '_' + v['id'] + '_' + v['url']
 	return ret
 
 def register(client_params):
-	regUrl = getUrl(client_params, 'deviceService/registering?serviceservice_')
+	regUrl = getUrl(client_params, 'deviceService/registering?serviceinfo')
 	s = urllib2.urlopen(regUrl)
-	ret = s.read(100)
-	v = client_params['ip'] + '_' + client_params['mac'] + '_' + client_params['type' + '_' + 'id'
+	print '============>register'
+	print regUrl
+	str = s.read(1000).decode('utf-8')
+	ret = json.loads(str)
+	v = client_params['localIp'] + '_' + client_params['localMac'] + '_' + client_params['type'] + '_' + client_params['id']
 
-	if v in ret:
+	if v in ret['info']:
 		return True
 	else:
 		return False
 
-def heatbeat(service_params):
-	heartBeatUrl = get_url(service_params, 'deficeService/heartbeat?serviceservice_')
+def heartBeat(service_params):
+	heartBeatUrl = getUrl(service_params, 'deviceService/heartbeat?serviceinfo')
 	s = urllib2.urlopen(heartBeatUrl)
-	ret = s.read(100)	
+	print '===========>heartbeat'
+	print heartBeatUrl
 
 import threading
 
@@ -51,42 +60,53 @@ class RegClass(threading.Thread):
 		self.services_ = services
 		self.mtx_reg_ = mtx_reg
 		self.mtx_hb_ = mtx_hb
-        self.service_ = {}
-        self.service_.update(getRgHbSv('config.json'))
-        self.service_.update(getLocalHost())
-def run(self):
+		self.service_ = {}
+		self.service_.update(getRgHbSv('config.json'))
+		self.service_.update(getLocalHost())
+	def run(self):
 		while True:
-			temp_urls = [] 
-			self.mtx_.acquire()
+			pcs_paras = []
+			self.mtx_reg_.acquire()
 			for e in self.pcs_paras_:
-                self.service_.update(e)
-				f = urllib2.openurl(e['url'] + r'/internal/get_all_service')
+				pcs_paras.append(e)
+			self.mtx_reg_.release()
+			for e in pcs_paras:
+				service = {}
+				service.update(self.service_)
+				service.update(e)
+				f = urllib2.urlopen(service['url'] + r'/internal?command=services')
 				jv = f.read(1000)
 				dv = json.loads(jv, 'utf-8')
-				if dv['state'] is 'competed':
-    				for e1 in dv['ids']:
-                        isReg = False
-                        self.service_['id'] = e1
-                        while not isReg:
-						    if register(self.service_) is 'ok':
-                                isReg = True
-						heatbeat(e1)
+				if dv['complete']: 
+					for e1 in dv['ids']:
+						isReg = False
+						service['id'] = e1
+						while not isReg: # if can't register service, loop until register it
+							if register(service): 
+								isReg = True
+						heartBeat(service)
+						sv = {}
+						sv.update(service)
 						self.mtx_hb_.acquire()
-						self.services_.append(self.service_)
+						self.services_.append(sv)
 						self.mtx_hb_.release()
-				    self.pcs_paras_.remove(e)
-			self.mtx_.release()			
+					self.mtx_reg_.acquire()
+					self.pcs_paras_.remove(e) # only dv['complete'] is Ture, remove e(process)
+					self.mtx_reg_.release()			
 
 class HbClass(threading.Thread):
 	def __init__(self, services, mtx_hb):
 		threading.Thread.__init__(self)
 		self.services_ = services
-		self.mtx_hb = mtx_hb
+		self.mtx_hb_ = mtx_hb
 		
 	def run(self):
 		while True:
+			services = []	
 			self.mtx_hb_.acquire()		
 			for e in self.services_:
-				heartBeat(e)
+				services.append(e)
 			self.mtx_hb_.release()
-            time.sleep(HB_TIME)
+			for e in services:
+				heartBeat(e)
+			time.sleep(HB_TIME)

@@ -7,10 +7,12 @@ from socket import *
 import json
 
 from RecordingCommand import RecordingCommand
+from tornado.options import define, options
 
 
 # 必须设置工作目录 ...
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+_service = {"complete":False,"ids":[]}
 
 def _param(req, key):
     if key in req.request.arguments:
@@ -49,7 +51,13 @@ class CmdHandler(tornado.web.RequestHandler):
             self.write(rc)
             return
 
+        elif cmd=={'RecordCmd':['RtspPreview']}:
+            rc = _rcmd.preview()
+            self.write(rc)
+            return
+
         else:
+            print cmd
             args = (self.request.uri.split('?'))[1]
             rc=_rcmd.send_command(args)
             self.set_header('Content-Type', 'application/json')
@@ -76,9 +84,14 @@ class InternalHandler(RequestHandler):
             rc['info'] = 'now version not supported!'
             rc['result'] = 'err'
             self.write(rc)
+        elif command =='services':
+            self.set_header('Content-Type', 'application/json')
+            self.write(_service)
+
 
 
 def main():
+    tornado.options.parse_command_line()
     application = tornado.web.Application([
         url(r"/", MainHandler),
         url(r"/recording/cmd",CmdHandler),
@@ -89,7 +102,11 @@ def main():
     global _rcmd
     _rcmd = RecordingCommand()
 
-    application.listen(10007)
+    application.listen(10006)
+
+    _service['ids'].append('recording')
+    _service['complete'] = True
+
     global _ioloop
     _ioloop = IOLoop.instance()
     _ioloop.start()

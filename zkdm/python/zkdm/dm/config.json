@@ -6,7 +6,7 @@
     },
 	"services" : [
     {
-        "enable" : true,
+        "enable" : false,
         "fork" : true,
         "url" : "http://<ip>:10003/ptz",
         "name" : "ptz service",
@@ -15,7 +15,7 @@
         "title" : "云台服务"
     },
       {
-         "enable" : true,
+         "enable" : false ,
          "fork" : true,
          "url" : "http://<ip>:10001/event",
          "name" : "event service",
@@ -32,23 +32,23 @@
          "path" : "cardlive.exe 1",
          "title" : "教师特写摄像头"
       },
-      {
-         "enable" : false,
-         "fork" : true,
-         "url" : "http://<ip>:10003/ptz",
-         "name" : "ptzs service",
-         "type" : "ptz",
-         "path" : "python ../ptz/PtzServer.py",
-         "title" : "云台服务"
-      },
 	  {
-		  "enable": true,
+		  "enable": false,
 		  "fork": true,
 		  "url": "http://<ip>:10005/log",
 		  "name": "Log service",
 		  "type": "log",
 		  "path" : "python ../log/LogServer.py",
 		  "title": "日志服务"
-	  }
+	  },
+      {
+          "enable":true,
+          "fork":true,
+          "url":"http://<ip>:10006/recording",
+          "name":"recording service",
+          "type":"recording",
+          "path":"python ../recording/RecordingServer.py",
+          "title":"录播服务"          
+      }
    ]
 }
