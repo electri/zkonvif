@@ -212,9 +212,9 @@ VISCA_open_serial(VISCAInterface_t *iface, const char *device_name)
   }
 
   // FIXME: 这里需要修改 ...
-  cto.ReadIntervalTimeout = MAXDWORD;	
-  cto.ReadTotalTimeoutConstant = 30*1000;
-  cto.ReadTotalTimeoutMultiplier = MAXDWORD;
+  cto.ReadIntervalTimeout = 100;	
+  cto.ReadTotalTimeoutConstant = 2000;
+  cto.ReadTotalTimeoutMultiplier = 50;
   cto.WriteTotalTimeoutMultiplier = 500;
   cto.WriteTotalTimeoutConstant = 1000;
   if (!SetCommTimeouts(m_hCom,&cto))
