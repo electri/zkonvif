@@ -4,12 +4,15 @@ import time
 sys.path.append('../')
 from common.utils import zkutils
 
+# heart beat time interval, unit is second
 HB_TIME = 10
 
+# get ip and port of host about register and heart beat 
 def getRgHbSv(f):
 	ret = json.load(io.open('config.json', 'r', encoding='utf-8'))
 	return ret['regHbService']
 
+# get ip and port of local host
 def getLocalHost():
 	u = zkutils()
 	localIp = u.myip_real()
@@ -21,6 +24,7 @@ def getLocalHost():
 
 import urllib2
 
+# get send string about register and heart beat 
 def getUrl(client_params, fun_str):
 	v =	client_params
 	ret = 'http://' + v['sip'] + ':' + v['sport'] + '/' + fun_str + '=' +v['localIp'] + '_' + v['localMac'] + '_' + v['type'] + '_' + v['id'] + '_' + v['url']
@@ -77,7 +81,7 @@ class RegClass(threading.Thread):
 					for e1 in dv['ids']:
 						isReg = False
 						service['id'] = e1
-						while not isReg:
+						while not isReg: # if can't register service, loop until register it
 							if register(service): 
 								isReg = True
 						heartBeat(service)
@@ -87,7 +91,7 @@ class RegClass(threading.Thread):
 						self.services_.append(sv)
 						self.mtx_hb_.release()
 					self.mtx_reg_.acquire()
-					self.pcs_paras_.remove(e)
+					self.pcs_paras_.remove(e) # only dv['complete'] is Ture, remove e(process)
 					self.mtx_reg_.release()			
 
 class HbClass(threading.Thread):

@@ -6,7 +6,7 @@
     },
 	"services" : [
     {
-        "enable" : true,
+        "enable" : false,
         "fork" : true,
         "url" : "http://<ip>:10003/ptz",
         "name" : "ptz service",
@@ -42,7 +42,7 @@
 		  "title": "日志服务"
 	  },
       {
-          "enable":false,
+          "enable":true,
           "fork":true,
           "url":"http://<ip>:10006/recording",
           "name":"recording service",

@@ -82,12 +82,16 @@
     <ClCompile Include="..\..\ptz\ptz.cpp" />
     <ClCompile Include="..\..\ptz\ZoomValueConvert.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SerialPort.cpp" />
+    <ClCompile Include="visca.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ptz\KVConfig.h" />
     <ClInclude Include="..\..\ptz\polyfit.h" />
     <ClInclude Include="..\..\ptz\ptz.h" />
     <ClInclude Include="..\..\ptz\ZoomValueConvert.h" />
+    <ClInclude Include="SerialPort.h" />
+    <ClInclude Include="visca.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,6 +6,9 @@
 #include <vector>
 #include <sstream>
 #include <math.h>
+#include "visca.h"
+
+#define TEST_MY_VISCA 1
 
 static double util_now()
 {
@@ -18,7 +21,7 @@ class TimeUsed
 	double max_, begin_;
 
 public:
-	TimeUsed(const char *info, double t = 0.100)
+	TimeUsed(const char *info, double t = 100.000)
 	{
 		begin_ = util_now();
 		info_ = info;
@@ -94,6 +97,170 @@ public:
 	}
 };
 
+#if TEST_MY_VISCA
+int main(int argc, const char **argv)
+{
+	const char *serial_name = "COM1";
+
+	if (argc > 1) {
+		serial_name = argv[1];
+	}
+
+	fprintf(stderr, "启动测试：使用串口 %s\n\n", serial_name);
+
+	int ret;
+	visca_t *visca = visca_open(serial_name, 1);
+	if (!visca) {
+		fprintf(stderr, "无法打开云台，使用串口 %s\n", serial_name);
+		return -1;
+	}
+
+	//int sx, sy;
+	//ret = visca_get_max_speed(visca, &sx, &sy);
+	//if (ret < 0) {
+	//	fprintf(stderr, "无法得到云台转动最大速度\n\n");
+	//}
+	//else {
+	//	fprintf(stderr, "云台最大转动速度：%d, %d\n", sx, sy);
+	//}
+
+	short x, y;
+#define X 300
+#define Y 300
+#define Z 8000
+
+	{
+		ret = visca_setpos_blocked(visca, 0 - X, 0 - Y, 32, 32);
+		if (ret < 0) {
+			fprintf(stderr, "云台测试失败!!!!\n");
+			return -1;
+		}
+		TimeUsed tu("云台归位");
+		fprintf(stderr, "\n测试云台归位： ....");
+		ret = visca_setpos_blocked(visca, 0, 0, 36, 36);
+		if (ret < 0) {
+			fprintf(stderr, "云台测试失败!!!!\n");
+			return -1;
+		}
+		visca_zoom_set_blocked(visca, 0);
+		fprintf(stderr, " 用时 %.3f 秒\n", tu.duration());
+	}
+
+	{
+		fprintf(stderr, "\n测试云台转动....左..");
+		ret = visca_left(visca, 3);
+		if (ret < 0) {
+			fprintf(stderr, "云台测试失败!!!!\n");
+			return -1;
+		}
+		Sleep(3000);
+		ret = visca_stop(visca);
+		if (ret < 0) {
+			fprintf(stderr, "云台测试失败!!!!\n");
+			return -1;
+		}
+
+		fprintf(stderr, "右..");
+		visca_right(visca, 3); 
+		Sleep(3000);
+		visca_stop(visca);
+
+		fprintf(stderr, "上..");
+		visca_up(visca, 3);
+		Sleep(3000);
+		visca_stop(visca);
+
+		fprintf(stderr, "下..");
+		visca_down(visca, 3);
+		Sleep(3000);
+		visca_stop(visca);
+		fprintf(stderr, "  通过\n");
+	}
+
+	{
+		fprintf(stderr, "\n测试 set_pos / get_pos ....\n");
+		{
+			TimeUsed tu("set_pos");
+			visca_setpos(visca, X, Y, 2, 2);
+			fprintf(stderr, "\t set_pos 用时 %.3f 秒\n");
+		}
+		
+		int n = 0;
+		do {
+			{
+				TimeUsed tu("get_pos");
+				visca_getpos(visca, &x, &y);
+				fprintf(stderr, "\t\t get_pos ret %d, %d，用时 %.3f 秒\n", x, y, tu.duration());
+				n++;
+			}
+			Sleep(200);
+		} while ((abs(x-X) > 5 || abs(y-Y) > 5) && n < 100);
+
+		if (n >= 100) {
+			fprintf(stderr, "嗯，这个云台转动不到 %d-%d ???\n", X, Y);
+		}
+		else if (n < 3) {
+			fprintf(stderr, "嗯，这个云台不支持 set_pos 未完成时获取云台位置\n");
+		}
+		else {
+			fprintf(stderr, "完美支持 set_pos/get_pos\n");
+		}
+	}
+
+	{
+		fprintf(stderr, "\n测试 set_zoom / get_zoom ...\n");
+		visca_zoom_set_blocked(visca, 5000);
+		Sleep(3000);	// FIXME: 貌似某些云台 ...
+		{
+			TimeUsed tu("");
+			visca_zoom_set_blocked(visca, 0);
+			fprintf(stderr, "\t zoom 从 5000 到 0 使用了 %.3f 秒\n", tu.duration());
+			Sleep(3000); // FIXME: ...
+		}
+
+		visca_zoom_set(visca, Z);
+		int n = 0;
+		int z = 0;
+		do {
+			{
+				TimeUsed tu("get");
+				visca_zoom_get(visca, &z);
+				fprintf(stderr, "\t\t get_zoom ret %d, 用时 %.3f 秒\n", z, tu,double());
+				n++;
+			}
+
+			Sleep(100);
+		} while (abs(z - Z) > 10 && n < 100);
+
+		if (n >= 100) {
+			fprintf(stderr, "嗯，这个云台的 set_zoom，必须等待执行完成后，才能发出 get_zoom 命令\n");
+		}
+		else if (n < 3) {
+			fprintf(stderr, "嗯，这个云台不支持 set_zoom 未到位时，获取当前zoom值\n");
+		}
+		else {
+			fprintf(stderr, "完美支持 set_zoom/get_zoom\n");
+		}
+	}
+
+#if 0
+	visca_left(visca, 1);
+	Sleep(5000);
+	visca_up(visca, 1);
+	Sleep(5000);
+	visca_right(visca, 1);
+	Sleep(5000);
+	visca_down(visca, 1);
+	Sleep(5000);
+	visca_stop(visca);
+#endif 
+
+	visca_close(visca);
+
+	return 0;
+}
+
+#else
 int main (int argc, char **argv)
 {
 	ptz_t *ptz = ptz_open_with_config("ptz.config");
@@ -133,6 +300,7 @@ int main (int argc, char **argv)
 
 	return 0;
 }
+#endif
 
 static int test_left(ptz_t *ptz, std::ostream &os)
 {
