@@ -6,7 +6,7 @@
     },
 	"services" : [
     {
-        "enable" : false,
+        "enable" : true,
         "fork" : true,
         "url" : "http://<ip>:10003/ptz",
         "name" : "ptz service",

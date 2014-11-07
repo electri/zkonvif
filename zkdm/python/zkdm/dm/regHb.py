@@ -46,8 +46,8 @@ def register(client_params):
 
 def heartBeat(service_params):
 	heartBeatUrl = getUrl(service_params, 'deviceService/heartbeat?serviceinfo')
+	print heartBeatUrl
 	s = urllib2.urlopen(heartBeatUrl)
-	print '===========>heartbeat'
 	print heartBeatUrl
 
 import threading
