@@ -50,8 +50,9 @@ class RegHt(threading.Thread):
             self._quit_notify.wait(5.000)  # 5秒后重试
 
         while not self._quit:
-            time.sleep(10.0) # 心跳间隔10秒
-            self._hb()
+            self._quit_notify.wait(10.0) # 心跳间隔10秒
+            if not self._quit:
+                self._hb()
 
         self._unreg()
 
