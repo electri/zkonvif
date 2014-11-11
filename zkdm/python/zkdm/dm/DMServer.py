@@ -6,9 +6,8 @@ import ServicesManager
 import sys, os
 
 sys.path.append('../')
-from host import Stat
-
-
+sys.path.append('../host')
+import Stat
 
 # DM Service 端口
 DMS_PORT = 10000
@@ -74,7 +73,7 @@ class ListServiceHandler(RequestHandler):
 
 # 全局，用于主动结束 ...
 _ioloop = IOLoop.instance()
-pm = PerformanceMonitor()
+pm = Stat.PerformanceMonitor()
 	
 
 
@@ -96,40 +95,43 @@ class InternalHandler(RequestHandler):
 			self.write(rc)
 
 class HostHandler(RequestHandler):
-	''' 返回主机类型 ''''
+	''' 返回主机类型 
 	'''
 	def get(self):
 		rc = {}
 		rc['result'] = 'ok'
 		rc['info'] = ''
 		command = self.get_argument('command', 'nothing')
-		if command = 'type':
+		if command == 'type':
+			print '====>enter type'
 			try:
-				f = io.open(r'host/config.json', 'utf8')
+				f = io.open(r'config.json')
+				print f
 				s = json.load(f)
-
+				print s
+				rc['info'] = s
+				f.close()
 			except:
 				rc['info'] = 'can\'t get host type'
 				rc['result'] = 'err'
-			finally:
-				rc['info'] = s
-				f.close()
-		elif command = 'exit':
+		elif command == 'exit':
 			rc['info'] = 'host is shutdowning ...'
 			io.system('shutdown')
-		elif command = 'restart':
+		elif command == 'restart':
 			rc['info'] = 'host is restarting ...'
 			io.system('restart')
-		elif command = 'performance':
+		elif command == 'performance':
 			stats = pm.get_all()	
 			rc['info'] = stats					
 		else:
-			
+			rc['info'] = 'can\'t support %s'%(command)
+			rc['result'] = 'err'	
+		self.write(rc)
 
 def make_app():
 	return Application([
 			url(r'/dm/help', HelpHandler),
-			url(r'/dm/host/type', hostTypeHandler),
+			url(r'/dm/host', HostHandler),
 			url(r'/dm/list', ListServiceHandler),
 			url(r'/dm/([^/]+)/(.*)', ServiceHandler),
 			url(r'/dm/internal', InternalHandler),
