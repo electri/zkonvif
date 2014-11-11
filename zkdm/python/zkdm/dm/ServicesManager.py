@@ -9,9 +9,6 @@ import threading
 sys.path.append('../')
 from common.utils import zkutils
 
-import regHb
-
-
 # 本地配置文件
 FNAME = 'config.json'
 
@@ -32,14 +29,6 @@ class ServicesManager:
 		self.__ip = u.myip()			# 可能是交换机映射后的 ip
 		self.__ip_real = u.myip_real()
 		self.__activated = [] # (p, sd, url)
-		self.pcses_= []
-		self.services_ = []
-		self.mtx_reg_ = threading.Lock()
-		self.mtx_hb_ = threading.Lock() 
-		regThread = regHb.RegClass(self.pcses_, self.services_, self.mtx_reg_, self.mtx_hb_)  
-		hbThread = regHb.HbClass(self.services_, self.mtx_hb_)
-		regThread.start()
-		hbThread.start()
 
 		self.__start_all_enabled()
 		
@@ -135,13 +124,6 @@ class ServicesManager:
 		p = subprocess.Popen(args)
 		print '        pid:', p.pid
 
-		pcs = {}
-		pcs['url'] = sd['url']
-		pcs['type'] = sd['type']
-		self.mtx_reg_.acquire()
-		self.pcses_.append(pcs)
-		self.mtx_reg_.release()
-
 		psu = (p, sd, self.__fix_url(sd['url']))
 		self.__activated.append(psu)
 		return	psu 
@@ -153,11 +135,6 @@ class ServicesManager:
 		print '--- try stop "' + sd['name'] + '"'
 		for s in self.__activated:
 			if s[1]['name'] == sd['name']:
-				self.mtx_hb_.acquire()
-				for e in self.services_:
-					if e['type'] == sd['type']:
-						self.services_.remove(e)
-				self.mtx_hb_.release()
 				# 首先发出 internal?command=exit 
 				url = s[2] + '/internal?command=exit'
 				print 'url:', url

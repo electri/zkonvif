@@ -3,6 +3,11 @@
 from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
 import ServicesManager
+import sys, os
+
+sys.path.append('../')
+from host import Stat
+
 
 
 # DM Service 端口
@@ -15,7 +20,6 @@ class HelpHandler(RequestHandler):
 	'''
 	def get(self):
 		self.render('./help.html')
-
 
 
 class ServiceHandler(RequestHandler):
@@ -70,6 +74,8 @@ class ListServiceHandler(RequestHandler):
 
 # 全局，用于主动结束 ...
 _ioloop = IOLoop.instance()
+pm = PerformanceMonitor()
+	
 
 
 class InternalHandler(RequestHandler):
@@ -89,10 +95,41 @@ class InternalHandler(RequestHandler):
 			rc['result'] = 'err'
 			self.write(rc)
 
+class HostHandler(RequestHandler):
+	''' 返回主机类型 ''''
+	'''
+	def get(self):
+		rc = {}
+		rc['result'] = 'ok'
+		rc['info'] = ''
+		command = self.get_argument('command', 'nothing')
+		if command = 'type':
+			try:
+				f = io.open(r'host/config.json', 'utf8')
+				s = json.load(f)
+
+			except:
+				rc['info'] = 'can\'t get host type'
+				rc['result'] = 'err'
+			finally:
+				rc['info'] = s
+				f.close()
+		elif command = 'exit':
+			rc['info'] = 'host is shutdowning ...'
+			io.system('shutdown')
+		elif command = 'restart':
+			rc['info'] = 'host is restarting ...'
+			io.system('restart')
+		elif command = 'performance':
+			stats = pm.get_all()	
+			rc['info'] = stats					
+		else:
+			
 
 def make_app():
 	return Application([
 			url(r'/dm/help', HelpHandler),
+			url(r'/dm/host/type', hostTypeHandler),
 			url(r'/dm/list', ListServiceHandler),
 			url(r'/dm/([^/]+)/(.*)', ServiceHandler),
 			url(r'/dm/internal', InternalHandler),
@@ -108,6 +145,7 @@ if __name__ == '__main__':
 	app = make_app()
 	app.listen(DMS_PORT)
 	_ioloop.start()
+	pm.start()
 
 	# 此时，必定执行了 internal?command=exit，可以执行销毁 ...
 	print 'DM end ....'
