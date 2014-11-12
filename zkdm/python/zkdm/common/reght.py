@@ -115,7 +115,7 @@ class RegHt(threading.Thread):
             f = urllib2.openurl(url)
             s = _get_utf8_body(self, f)
             ret = json.loads(s)
-            if '成功' in ret['info']
+            if '成功' in ret['info']:
                 self._log("_hb: url=" + url)
                 return True
             else:

@@ -78,7 +78,7 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 				"info":"can't get host type"
 			}
 
-			/dm/host?command=reformrance:
+			/dm/host?command=reformance:
 			成功:
 			{
 				"result" : "ok",
