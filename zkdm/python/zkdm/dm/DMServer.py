@@ -3,7 +3,7 @@
 from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
 import ServicesManager
-import sys, os
+import sys, os, io, json
 
 sys.path.append('../')
 sys.path.append('../host')
@@ -74,7 +74,7 @@ class ListServiceHandler(RequestHandler):
 # 全局，用于主动结束 ...
 _ioloop = IOLoop.instance()
 pm = Stat.PerformanceMonitor()
-	
+pm.start()
 
 
 class InternalHandler(RequestHandler):
@@ -103,12 +103,9 @@ class HostHandler(RequestHandler):
 		rc['info'] = ''
 		command = self.get_argument('command', 'nothing')
 		if command == 'type':
-			print '====>enter type'
 			try:
-				f = io.open(r'config.json')
-				print f
+				f = io.open(r'../host/config.json', 'r', encoding='utf-8')
 				s = json.load(f)
-				print s
 				rc['info'] = s
 				f.close()
 			except:
@@ -122,6 +119,7 @@ class HostHandler(RequestHandler):
 			io.system('restart')
 		elif command == 'performance':
 			stats = pm.get_all()	
+			print stats
 			rc['info'] = stats					
 		else:
 			rc['info'] = 'can\'t support %s'%(command)
@@ -147,7 +145,6 @@ if __name__ == '__main__':
 	app = make_app()
 	app.listen(DMS_PORT)
 	_ioloop.start()
-	pm.start()
 
 	# 此时，必定执行了 internal?command=exit，可以执行销毁 ...
 	print 'DM end ....'

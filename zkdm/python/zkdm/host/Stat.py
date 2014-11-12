@@ -86,7 +86,6 @@ class PerformanceMonitor(threading.Thread):
 			net_bits = self.__get_nic_bits_in_out(c)
 			mem = self.__get_mem_info(c)
 			disk = self.__get_disk_info(c)
-
 			self.__lock.acquire()
 			self.__stats['cpu_rate'] = cpu_rate
 			self.__stats['net'] = net_bits
@@ -241,7 +240,7 @@ class PerformanceMonitor(threading.Thread):
 
 
 
-
+'''
 if __name__ == '__main__':
 	pm = PerformanceMonitor()
 	pm.start()
@@ -250,4 +249,4 @@ if __name__ == '__main__':
 		stats = pm.get_all()
 		print stats
 		time.sleep(2.0)
-
+'''
