@@ -21,6 +21,7 @@ class RegHt(threading.Thread):
         self._service_type = service_type
         self._service_id = service_id
         self._service_url = service_url
+        self._loop_num = 0
         self._quit = False
         self._mgrt_baseurl = mgrt_baseurl
         self._quit_notify = threading.Event()
@@ -50,20 +51,21 @@ class RegHt(threading.Thread):
 
         while not self._quit:
             while not self._reg() and not self._quit:
+                print self._loop_num
                 self._quit_notify.wait(5.000)
+            self._loop_num = 0
             self._quit_notify.wait(10.0)
-            is_ht = True
-            while is_ht and not self._quit:
-                global loop_num 
-                if self._ht():
-                    loop_num = 0
+            is_hb = True
+            while is_hb and not self._quit:
+                if self._hb():
+                    self._loop_num = 0
                     self._quit_notify.wait(10.0)
                 else: 
                     self._quit_notify.wait(3.000)
-                    loop_num += 1
-                    if loop_num == 4:
+                    self._loop_num += 1
+                    if self._loop_num == 4:
                         self._quit_notify.wait(2.000)
-                        is_ht = False
+                        is_hb = False
 
         self._unreg()
 
@@ -73,10 +75,10 @@ class RegHt(threading.Thread):
 
     def _load_mgrt_baseurl(self):
         # TODO: 从配置中读取 ..
-    	ret = json.load(io.open(r'../dm/config.json', 'r', encoding='utf-8'))
+    	ret = json.load(io.open(r'../host/config.json', 'r', encoding='utf-8'))
         r = ret['regHbService']
 
-        return 'http://%s:%s/deviceService'%(r['sip'],r['sport'])
+        return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
 
     def _get_utf8_body(self, req):
         # FIXME: 更合理的应该是解析 Content-Type ...
@@ -95,9 +97,16 @@ class RegHt(threading.Thread):
             req = urllib2.urlopen(url)
             s = self._get_utf8_body(req)
             # TODO: 这里解析注册返回的 json ...
-            ret = json.loads(s) 
-            if '已经注册' not in ret['info']:
+            ret = {}
+            try:
+                ret.update(json.loads(s))
+            except:
                 return False
+            
+            if u'已经注册' not in ret['info']:
+                print ret['info']
+                return False
+                
         except urllib2.HTTPError:
             self._log('\tHTTPError: ')
             return False
@@ -112,10 +121,10 @@ class RegHt(threading.Thread):
         url = self._load_mgrt_baseurl() + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self._myip, self._mymac, self._service_type, self._service_id)
         if (self.callback == None) or (self.callback(self.callback_paras) == True):
-            f = urllib2.openurl(url)
-            s = _get_utf8_body(self, f)
+            f = urllib2.urlopen(url)
+            s = self._get_utf8_body(f)
             ret = json.loads(s)
-            if '成功' in ret['info']:
+            if u'成功' in ret['info']:
                 self._log("_hb: url=" + url)
                 return True
             else:
@@ -132,8 +141,8 @@ class RegHt(threading.Thread):
 
 
 if __name__ == '__main__':
-    th = RegHt('test-type', 'test-id', 'test://...')
-    time.sleep(20)
+    th = RegHt('', 'test-id', 'test://...')
+    time.sleep(100)
     th.join()
 
 
