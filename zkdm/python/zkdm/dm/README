@@ -31,7 +31,8 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 	/dm/<service name>/stop: 停止服务
 	/dm/<service name>/enable: 启用服务
 	/dm/<service name>/disable: 禁用服务
-
+	/dm/host?command=shutdown: 关机
+	/dm/host?command=restart: 重启计算机
 		返回：application/json
 			成功:
 				{
@@ -44,7 +45,32 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 					"info":"not found or disabled"
 				}
 
+	/dm/host?command=type: 获取主机类型
+	
+		返回: application/json
+			成功:
+			{
+				"result": "ok",
+				"info" : "",
+				"value":
+				{
+					"type":"dict",
+					"data": 
+					{
+						"type":"JP100"
+					}
+				}
 
+
+			}
+			
+			失败:
+			{
+				"result":"error",
+				"info":"can't get host type"
+			}
+
+	/dm/host?command=reformrance:
 	/dm/help: 显示上面的帮助信息 :)
 		
 		

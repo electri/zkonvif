@@ -92,7 +92,7 @@ class InternalHandler(RequestHandler):
 			_ioloop.stop()
 		elif command == 'version':
 			rc['info'] = 'now, not supported!!!'
-			rc['result'] = 'err'
+			rc['result'] = 'error'
 			self.write(rc)
 
 class HostHandler(RequestHandler):
@@ -105,12 +105,12 @@ class HostHandler(RequestHandler):
 		command = self.get_argument('command', 'nothing')
 		if command = 'type':
 			try:
-				f = io.open(r'host/config.json', 'utf8')
+				f = io.open(r'host/config.json', 'r', encoding='utf8')
 				s = json.load(f)
-
 			except:
 				rc['info'] = 'can\'t get host type'
-				rc['result'] = 'err'
+				rc['result'] = 'error'
+
 			finally:
 				rc['info'] = s
 				f.close()
