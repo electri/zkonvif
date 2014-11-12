@@ -31,9 +31,7 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 	/dm/<service name>/stop: 停止服务
 	/dm/<service name>/enable: 启用服务
 	/dm/<service name>/disable: 禁用服务
-	/dm/host?command=shutdown: 关机
-	/dm/host?command=restart: 重启计算机
-		返回：application/json
+			返回：application/json
 			成功:
 				{
 					"result":"ok",
@@ -44,6 +42,16 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 					"result":"error",
 					"info":"not found or disabled"
 				}
+
+	/dm/host?command=shutdown: 关机
+	/dm/host?command=restart: 重启计算机
+			返回: application/json
+			成功(唯一值):
+				{
+					"result": "ok",
+					"info": "host is XXXing ..."
+				}
+	
 
 	/dm/host?command=type: 获取主机类型
 	
@@ -57,7 +65,7 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 					"type":"dict",
 					"data": 
 					{
-						"type":"JP100"
+						"hostType":"JP100"
 					}
 				}
 
@@ -70,7 +78,62 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 				"info":"can't get host type"
 			}
 
-	/dm/host?command=reformrance:
+			/dm/host?command=reformrance:
+			成功:
+			{
+				"result" : "ok",
+				   "info" : "",
+
+				   "value" : {
+					  "type" : "dict",
+					  "data" : {
+						"cpu_rate" : 0.02,
+						 "memory" : {
+							"availabled" : 5344845824,
+							"committed" : 3702054912
+						 },
+
+						 "net" : [
+							{
+							   "name" : "Intel[R] 82579LM Gigabit Network Connection",
+							   "sent_rate" : 0,
+							   "recv_rate" : 5150
+							},
+							{
+							   "name" : "Intel[R] Centrino[R] Advanced-N 6205",
+							   "sent_rate" : 0,
+							   "recv_rate" : 0
+							},
+						 ],
+
+
+						 "disk" : [
+							{
+							   "name" : "_Total"
+							   "totalMB" : 719371,
+							   "freedMB" : 453204,
+							},
+							{
+							   "name" : "C:"
+							   "totalMB" : 718715,
+							   "freedMB" : 452791,
+							},
+							{
+							   "name" : "HarddiskVolume4"
+							   "totalMB" : 448,
+							   "freedMB" : 413,
+							}
+						 ]
+					  }
+				   }
+				}
+	
+			失败:
+			{
+				"result" : "ok",
+				"info" : "error"
+			}
+
 	/dm/help: 显示上面的帮助信息 :)
 		
 		
