@@ -106,20 +106,22 @@ class HostHandler(RequestHandler):
 			try:
 				f = io.open(r'../host/config.json', 'r', encoding='utf-8')
 				s = json.load(f)
-				rc['info'] = s
+				rc['value'] = {}
+				rc['value']['type'] = 'dict'
+				rc['value']['data'] = {}
+				rc['value']['data']['hostType'] = s['host']['type']
 				f.close()
 			except:
 				rc['info'] = 'can\'t get host type'
 				rc['result'] = 'err'
 		elif command == 'exit':
 			rc['info'] = 'host is shutdowning ...'
-			io.system('shutdown')
+			io.system('halt')
 		elif command == 'restart':
 			rc['info'] = 'host is restarting ...'
-			io.system('restart')
+			io.system('reboot')
 		elif command == 'performance':
 			stats = pm.get_all()	
-			print stats
 			rc['info'] = stats					
 		else:
 			rc['info'] = 'can\'t support %s'%(command)
