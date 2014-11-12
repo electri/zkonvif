@@ -352,6 +352,7 @@ class ResourceListSHandler(tornado.web.RequestHandler):
         rc = {}
         rc['result'] = 'error'
         rc['info'] = 'please use Post Methods!'
+        self.set_header("Content-Type", "text/plain")
         self.write(rc)
 
     def post(self):
@@ -370,6 +371,36 @@ class ResourceListSHandler(tornado.web.RequestHandler):
             rc['result'] = 'error'
             rc['info'] = str(result)
             self.write(rc)
+
+class LivingSHandler(tornado.web.RequestHandler):
+    def get(self):
+        rc = {}
+        url = self.get_argument('url', 'nothing')
+        print url
+        try:
+            living_info = client.factory.create('ns0:LivingInfo')
+            living_list = client.service.Living()['message']['LivingList'][0]
+            print living_list
+
+            for i in range(0,len(living_list)):
+                if i==0: #默认只开启一路直播
+                    if hasattr(living_list[i], 'Rtmp_fms'):
+                        living_list[i]['Rtmp']['ServerName'] = url
+                    if hasattr(living_list[i], 'LivingType'):
+                        living_list[i]['LivingType'] = 'RTMP'
+                living = client.factory.create('ns0:Living')
+                living = living_list[i]
+                living_info.LivingList[0].append(living)
+
+            client.service.LivingS(living_info)
+
+            rc['result'] = 'ok'
+            rc['info'] = ''
+        except Exception as error:
+            rc['result'] = 'error'
+            rc['info'] = str(error)
+
+        self.write(rc)
 
 _ioloop = None # 用于支持外面的结束 ...
 
@@ -392,14 +423,9 @@ class InternalHandler(RequestHandler):
             self.write(rc)
 
 def main():
-
     global client
-
     wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL'  
-
-
     client = Client(wsdl_url) 
-    print client
 
     tornado.options.parse_command_line()
     application = tornado.web.Application([
@@ -408,11 +434,12 @@ def main():
         url(r"/card/ResourceList", ResourceListHandler),
         url(r"/card/ResourceListD", ResourceListDHandler),
         url(r"/card/ResourceListS", ResourceListSHandler),
+        url(r"/card/LivingS",LivingSHandler),
         url(r"/card/internal", InternalHandler),
         ])
 
 
-    application.listen(10008)
+    application.listen(10007)
     global _ioloop
     _ioloop = tornado.ioloop.IOLoop.instance()
     _ioloop.start()
