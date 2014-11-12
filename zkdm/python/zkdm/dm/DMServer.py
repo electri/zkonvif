@@ -113,10 +113,10 @@ class HostHandler(RequestHandler):
 				rc['result'] = 'err'
 		elif command == 'exit':
 			rc['info'] = 'host is shutdowning ...'
-			io.system('shutdown')
+			os.system(r'c:/Windows/System32/shutdown.exe /s /t 3')
 		elif command == 'restart':
 			rc['info'] = 'host is restarting ...'
-			io.system('restart')
+			os.system(r'c:/Windows/System32/shutdown.exe /r /t 3')
 		elif command == 'performance':
 			stats = pm.get_all()	
 			print stats
