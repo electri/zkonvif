@@ -1,12 +1,7 @@
 {
-	"regHbService":
-	{
-		"sip":"172.16.1.14",
-        "sport":"8080"
-    },
 	"services" : [
     {
-        "enable" : true,
+        "enable" : false,
         "fork" : true,
         "url" : "http://<ip>:10003/ptz",
         "name" : "ptz service",
