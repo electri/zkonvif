@@ -130,7 +130,7 @@ class RegHt(threading.Thread):
             f = urllib2.urlopen(url)
             s = self._get_utf8_body(f)
             ret = json.loads(s)
-            if u'成功' in ret['info']:
+            if u'发送的心跳数据' in ret['info']:
                 self._log("_hb: url=" + url)
                 return True
             else:
@@ -144,13 +144,12 @@ class RegHt(threading.Thread):
         # TODO: url = self._load_mgrt_baseurl() + '?????'
         # fuchun zhang can't support unreging a certainly service 
         self._log("unreg  ...")
-
-
+'''
 if __name__ == '__main__':
     th = RegHt('', 'test-id', 'test://...')
     time.sleep(100)
     th.join()
-
+'''
 
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
