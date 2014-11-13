@@ -13,6 +13,12 @@ from utils import zkutils
 
 class RegHt(threading.Thread):
     ''' 注册/注销/心跳类, 本质是一个工作现场, 实现周期心跳 ...
+        callback: 回调函数,判断是否心跳的依据,默认为None,定义
+                  如下:
+                        def callback(callback_paras):
+                            ...
+                            ...
+                            return True(False)
     '''
     def __init__(self, service_type, service_id, service_url, mgrt_baseurl = None, callback = None, callback_paras = None):
         ''' 初始化并启动工作线程, 直到调用 join 结束
