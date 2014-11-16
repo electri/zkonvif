@@ -4,13 +4,15 @@ from tornado.web import *
 from tornado.ioloop import IOLoop
 from tornado.gen import  *
 import urllib, urllib2
-import thread, time
+import thread, time, sys
 import socket
 import json
 
 from RecordingCommand import RecordingCommand
 from tornado.options import define, options
 from CardServer import start_card_server
+sys.path.append('../')
+from common.utils import zkutils
 
 
 # 必须设置工作目录 ...
@@ -46,15 +48,28 @@ class CmdHandler(tornado.web.RequestHandler):
             self.write(rc)
             return
         elif cmd == 'RTMPLiving':
-            url = self.get_argument('RtmpUrl','nothing')
-            urllib2.Request('http://127.0.0.1:10007/card/LivingS?url='+url)
+            try:
+                req = urllib2.Request('http://host:port/repeater/prepublish')
+                data = {}
+                _utils = zkutils()
+                data['mac'] = _utils.mymac()
+                data['name'] = 'Living1'
+                data['type'] = 'rtmp'
+                data = urllibb.urlencode(data)
+                opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
+                response = opener.open(req,data)
+                response =response.read()
+                url = response['content']['stream_address']
 
-            time.sleep(1)
-
-            rc=_rcmd.send_command('RecordCmd=StartBroadCast')
-            self.set_header('Content-Type', 'application/json')
-            self.write(rc)
-
+                urllib2.Request('http://127.0.0.1:10007/card/LivingS?url='+url)
+                time.sleep(1)
+                rc=_rcmd.send_command('RecordCmd=StartBroadCast')
+                self.set_header('Content-Type', 'application/json')
+                self.write(rc)
+            except Exception as err:
+                rc['result'] = 'error'
+                rc['info'] = str(err)
+                self.write(rc)
             return
         else:
             args = (self.request.uri.split('?'))[1]
