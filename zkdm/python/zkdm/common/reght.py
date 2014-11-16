@@ -20,13 +20,13 @@ class RegHt(threading.Thread):
         '''
         self._service_type = service_type
         self._service_id = service_id
-        self._service_url = service_url
         self._quit = False
         self._mgrt_baseurl = mgrt_baseurl
         self._quit_notify = threading.Event()
         self._myip = zkutils().myip_real()
         self._mymac = zkutils().mymac()
         self.baseurl = 'http://%s:'%(self._myip)
+        self._service_url = self.baseurl + service_url
         threading.Thread.__init__(self)
         self.daemon = True # 因为有心跳, 不调用 unreg() 也是安全的
         self.start()    # 启动工作线程
