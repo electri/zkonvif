@@ -21,7 +21,7 @@
 
 @xcopy .\zkdm c:\zkdm /EY
 
-@if exist c:\Windows\SysWOW64 (xcopy .\SysWOW64 c:\Windows\SysWOW64 /EY copy .\System64\curl.exe c:\Windows\System32 /Y) else copy .\System32\curl.exe  c:\Windows\System32 /Y
+@if exist c:\Windows\SysWOW64 (xcopy .\SysWOW64 c:\Windows\SysWOW64 /EY copy .\System64\curl.exe c:\Windows\System32 /Y)
 @echo °²×°pythonwin32
 @pywin32-218.win32-py2.7.exe
 

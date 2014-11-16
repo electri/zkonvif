@@ -13,28 +13,19 @@ from utils import zkutils
 
 class RegHt(threading.Thread):
     ''' 注册/注销/心跳类, 本质是一个工作现场, 实现周期心跳 ...
-        callback: 回调函数,判断是否心跳的依据,默认为None,定义
-                  如下:
-                        def callback(callback_paras):
-                            ...
-                            ...
-                            return True(False)
-    '''
-    def __init__(self, service_type, service_id, service_url, mgrt_baseurl = None, callback = None, callback_paras = None):
+            '''
+    def __init__(self, service_type, service_id, service_url, mgrt_baseurl = None):
         ''' 初始化并启动工作线程, 直到调用 join 结束
             mgrt_baseurl 为名字服务的基础 url, 如 http://192.168.1.100:8080/deviceService
         '''
         self._service_type = service_type
         self._service_id = service_id
         self._service_url = service_url
-        self._loop_num = 0
         self._quit = False
         self._mgrt_baseurl = mgrt_baseurl
         self._quit_notify = threading.Event()
         self._myip = zkutils().myip_real()
         self._mymac = zkutils().mymac()
-        self.callback = callback
-        self.callback_paras = callback_paras
         threading.Thread.__init__(self)
         self.daemon = True # 因为有心跳, 不调用 unreg() 也是安全的
         self.start()    # 启动工作线程
@@ -54,25 +45,11 @@ class RegHt(threading.Thread):
         '''
         if not self._mgrt_baseurl:
             self._mgrt_baseurl = self._load_mgrt_baseurl()
-
-        while not self._quit:
-            while not self._reg() and not self._quit:
-                print self._loop_num
-                self._quit_notify.wait(5.000)
-            self._loop_num = 0
+        self._mgrt_baseurl = 'http://127.0.0.1:8080/deviceService/'
+        while not self._reg() and not self._quit:
+            self._quit_notify.wait(5.000)
+        while is_hb and not self._quit:
             self._quit_notify.wait(10.0)
-            is_hb = True
-            while is_hb and not self._quit:
-                if self._hb():
-                    self._loop_num = 0
-                    self._quit_notify.wait(10.0)
-                else: 
-                    self._quit_notify.wait(3.000)
-                    self._loop_num += 1
-                    if self._loop_num == 4:
-                        self._quit_notify.wait(2.000)
-                        is_hb = False
-
         self._unreg()
 
 
@@ -126,20 +103,16 @@ class RegHt(threading.Thread):
         # TODO:
         url = self._load_mgrt_baseurl() + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self._myip, self._mymac, self._service_type, self._service_id)
-        if (self.callback == None) or (self.callback(self.callback_paras) == True):
-            f = urllib2.urlopen(url)
-            s = self._get_utf8_body(f)
-            ret = json.loads(s)
-            if u'发送的心跳数据' in ret['info']:
-                self._log("_hb: url=" + url)
-                return True
-            else:
-                self._log('_hb:url=' + url + 'faile')
-                return False
+        f = urllib2.urlopen(url)
+        s = self._get_utf8_body(f)
+        ret = json.loads(s)
+        if u'发送的心跳数据' in ret['info']:
+            self._log("_hb: url=" + url)
+            return True
         else:
-            self._log("_hb: error")
+            self._log('_hb:url=' + url + 'faile')
             return False
-            
+                 
     def _unreg(self):
         # TODO: url = self._load_mgrt_baseurl() + '?????'
         # fuchun zhang can't support unreging a certainly service 

@@ -9,6 +9,7 @@ from PtzWrap import PtzWrap
 
 sys.path.append("../")
 from common.Log import Log
+from common.reght import RegHt
 
 
 # 从 config.json 文件中加载配置信息
@@ -18,11 +19,9 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
-_service = { "complete": False, "ids":[]}
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
 	return _all_config['ptzs']
-
 		
 def load_ptz(config):
 	''' 加载云台配置模块 '''
@@ -72,12 +71,14 @@ def load_all_ptzs():
 
 # 这里保存所有云台
 _all_ptzs = load_all_ptzs()
-		
-# 获取所有云台类型
+
+rhs = []
+stype = 'ptz'
 for e in _all_ptzs:
-	if _all_ptzs[e]['ptz'] != None:
-		_service['ids'].append(e)
-_service['complete'] = True
+	if _all_ptzs[e]['ptz'] is not None:
+		sid = e
+		rh = RegHt(stype, sid, sid)
+		rhs.append(rh)	
 
 class HelpHandler(RequestHandler):
 	''' 返回 help 
@@ -138,6 +139,8 @@ class InternalHandler(RequestHandler):
 		print command
 		if command == 'exit':
 			rc['info'] = 'exit!!!'
+			for e in rhs:
+				e.join()
 			global _ioloop
 			_ioloop.stop()
 			self.write(rc)
@@ -145,10 +148,6 @@ class InternalHandler(RequestHandler):
 			rc['info'] = 'now version unsupported!!'
 			rc['result'] = 'err'
 			self.write(rc)
-		elif command == 'services':
-			global _service
-			self.set_header('Content-Type', 'application/json')
-			self.write(_service)    
 
 def make_app():
 	return Application([
