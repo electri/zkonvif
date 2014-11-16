@@ -77,8 +77,8 @@ stype = 'ptz'
 for e in _all_ptzs:
 	if _all_ptzs[e]['ptz'] is not None:
 		sid = e
-		url = :type + '/' +  sid
-		rh = RegHt(stype, sid, 'url')
+		service_url= '10003' + '/' +  stype + '/' + sid
+		rh = RegHt(stype, sid, service_url)
 		rhs.append(rh)	
 
 class HelpHandler(RequestHandler):

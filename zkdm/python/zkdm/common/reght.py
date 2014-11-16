@@ -26,7 +26,7 @@ class RegHt(threading.Thread):
         self._myip = zkutils().myip_real()
         self._mymac = zkutils().mymac()
         self.baseurl = 'http://%s:'%(self._myip)
-        self._service_url = self.baseurl + service_url
+        self._service_url = self.baseurl + service_url 
         threading.Thread.__init__(self)
         self.daemon = True # 因为有心跳, 不调用 unreg() 也是安全的
         self.start()    # 启动工作线程
@@ -49,7 +49,7 @@ class RegHt(threading.Thread):
         self._mgrt_baseurl = 'http://127.0.0.1:8080/deviceService/'
         while not self._reg() and not self._quit:
             self._quit_notify.wait(5.000)
-        while is_hb and not self._quit:
+        while self._hb and not self._quit:
             self._quit_notify.wait(10.0)
         self._unreg()
 
