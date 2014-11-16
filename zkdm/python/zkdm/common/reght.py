@@ -26,6 +26,7 @@ class RegHt(threading.Thread):
         self._quit_notify = threading.Event()
         self._myip = zkutils().myip_real()
         self._mymac = zkutils().mymac()
+        self.baseurl = 'http://%s:'%(self._myip)
         threading.Thread.__init__(self)
         self.daemon = True # 因为有心跳, 不调用 unreg() 也是安全的
         self.start()    # 启动工作线程
