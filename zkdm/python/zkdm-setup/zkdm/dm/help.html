@@ -55,6 +55,115 @@
 <br>				}
 <br>
 
+			/dm/<service name>/start: 启动指定名字的服务
+			/dm/<service name>/stop: 停止服务
+			/dm/<service name>/enable: 启用服务
+			/dm/<service name>/disable: 禁用服务
+					返回：application/json
+					成功:
+						{
+							"result":"ok",
+							"info":""
+						}
+					失败：
+						{
+							"result":"error",
+							"info":"not found or disabled"
+						}
+
+			/dm/host?command=shutdown: 关机
+			/dm/host?command=restart: 重启计算机
+					返回: application/json
+					成功(唯一值):
+						{
+							"result": "ok",
+							"info": "host is XXXing ..."
+						}
+			
+
+			dm/host?command=type: 获取主机类型
+			
+				返回: application/json
+					成功:
+					{
+						"result": "ok",
+						"info" : "",
+						"value":
+						{
+							"type":"dict",
+							"data": 
+							{
+								"hostType":"JP100"
+							}
+						}
+
+
+					}
+					
+					失败:
+					{
+						"result":"error",
+						"info":"can't get host type"
+					}
+
+					/dm/host?command=reformance:
+					返回: application/json
+						成功:
+					{
+						"result" : "ok",
+						   "info" : "",
+
+						   "value" : {
+							  "type" : "dict",
+							  "data" : {
+								"cpu_rate" : 0.02,
+								 "memory" : {
+									"availabled" : 5344845824,
+									"committed" : 3702054912
+								 },
+
+								 "net" : [
+									{
+									   "name" : "Intel[R] 82579LM Gigabit Network Connection",
+									   "sent_rate" : 0,
+									   "recv_rate" : 5150
+									},
+									{
+									   "name" : "Intel[R] Centrino[R] Advanced-N 6205",
+									   "sent_rate" : 0,
+									   "recv_rate" : 0
+									},
+								 ],
+
+
+								 "disk" : [
+									{
+									   "name" : "_Total"
+									   "totalMB" : 719371,
+									   "freedMB" : 453204,
+									},
+									{
+									   "name" : "C:"
+									   "totalMB" : 718715,
+									   "freedMB" : 452791,
+									},
+									{
+									   "name" : "HarddiskVolume4"
+									   "totalMB" : 448,
+									   "freedMB" : 413,
+									}
+								 ]
+							  }
+						   }
+						}
+			
+					失败:
+					{
+						"result" : "ok",
+						"info" : "error"
+					}
+
+
 		
 </body>
 </html>

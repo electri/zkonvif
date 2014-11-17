@@ -3,7 +3,12 @@
 from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
 import ServicesManager
+import sys, os, io, json
 
+sys.path.append('../')
+from common.reght import RegHt
+sys.path.append('../host')
+import Stat
 
 # DM Service 端口
 DMS_PORT = 10000
@@ -15,7 +20,6 @@ class HelpHandler(RequestHandler):
 	'''
 	def get(self):
 		self.render('./help.html')
-
 
 
 class ServiceHandler(RequestHandler):
@@ -59,7 +63,7 @@ class ListServiceHandler(RequestHandler):
 		rc['result'] = 'ok'
 		rc['info'] = ''
 
-		ss = _sm.list_services()
+		ss = _sm.list_services_new()
 		value = {}
 		value['type'] = 'list'
 		value['data'] = ss
@@ -68,9 +72,11 @@ class ListServiceHandler(RequestHandler):
 
 		self.write(rc)
 
-
-_ioloop = None # 全局，用于主动结束 ...
-
+# 全局，用于主动结束 ...
+_ioloop = IOLoop.instance()
+pm = Stat.PerformanceMonitor()
+pm.start()
+rh = RegHb('dm', 'dm', r'10000/dm')
 
 class InternalHandler(RequestHandler):
 	def get(self):
@@ -82,17 +88,53 @@ class InternalHandler(RequestHandler):
 		if command == 'exit':
 			rc['info'] = 'exit!!!'
 			self.write(rc)
+			rh.join()
 			global _ioloop
 			_ioloop.stop()
 		elif command == 'version':
 			rc['info'] = 'now, not supported!!!'
-			rc['result'] = 'err'
+			rc['result'] = 'error'
 			self.write(rc)
 
+class HostHandler(RequestHandler):
+	''' 返回主机类型 
+	'''
+	def get(self):
+		rc = {}
+		rc['result'] = 'ok'
+		rc['info'] = ''
+		command = self.get_argument('command', 'nothing')
+		if command == 'type':
+			try:
+				f = io.open(r'../host/config.json', 'r', encoding='utf-8')
+				s = json.load(f)
+				rc['value'] = {}
+				rc['value']['type'] = 'dict'
+				rc['value']['data'] = {}
+				rc['value']['data']['hostType'] = s['host']['type']
+				f.close()
+			except:
+				rc['info'] = 'can\'t get host type'
+				rc['result'] = 'err'
+		elif command == 'shutdown':
+			rc['info'] = 'host is shutdowning ...'
+
+			os.system(r'c:/Windows/System32/shutdown.exe /s /t 3')
+		elif command == 'restart':
+			rc['info'] = 'host is restarting ...'
+			os.system(r'c:/Windows/System32/shutdown.exe /r /t 3')
+		elif command == 'performance':
+			stats = pm.get_all()	
+			rc['info'] = stats					
+		else:
+			rc['info'] = 'can\'t support %s'%(command)
+			rc['result'] = 'err'	
+		self.write(rc)
 
 def make_app():
 	return Application([
 			url(r'/dm/help', HelpHandler),
+			url(r'/dm/host', HostHandler),
 			url(r'/dm/list', ListServiceHandler),
 			url(r'/dm/([^/]+)/(.*)', ServiceHandler),
 			url(r'/dm/internal', InternalHandler),
@@ -105,11 +147,8 @@ if __name__ == '__main__':
 
 	# 服务管理器，何时 close ??
 	_sm = ServicesManager.ServicesManager()
-
 	app = make_app()
 	app.listen(DMS_PORT)
-
-	_ioloop = IOLoop.instance()
 	_ioloop.start()
 
 	# 此时，必定执行了 internal?command=exit，可以执行销毁 ...

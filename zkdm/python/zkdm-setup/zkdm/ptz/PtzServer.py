@@ -9,6 +9,7 @@ from PtzWrap import PtzWrap
 
 sys.path.append("../")
 from common.Log import Log
+from common.reght import RegHt
 
 
 # 从 config.json 文件中加载配置信息
@@ -18,11 +19,9 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
-
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
 	return _all_config['ptzs']
-
 		
 def load_ptz(config):
 	''' 加载云台配置模块 '''
@@ -32,7 +31,6 @@ def load_ptz(config):
 		'addr': config['config']['addr'],
 		'ptz': None
 	}
-	print 'ptz'
 	print type(ptz['name'])
 	print type(ptz['serial'])
 	print type(ptz['addr'])
@@ -42,15 +40,18 @@ def load_ptz(config):
 
 	# 此处打开 ...
 	if True:
+		is_ptz = False
 		ptz['ptz'] = PtzWrap()
 	 	# 来自 json 字符串都是 unicode, 需要首先转换为 string 交给 open 
 		if 'cfgfile' in ptz:
 			filename = ptz['cfgfile'].encode('ascii')
 			print 'open with cfg:', filename
-			ptz['ptz'].open_with_config(filename)
+			is_ptz = ptz['ptz'].open_with_config(filename)
 		else:
 			print 'open ptz:', ptz['serial'], 'addr:', ptz['addr']
-			ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
+			is_ptz = ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
+		if not is_ptz:
+			ptz['ptz'] = None	
 	else:
 		ptz['ptz'] = None
 		print 'open failure'
@@ -64,11 +65,21 @@ def load_all_ptzs():
 	ret = {}
 	for x in ptzs:
 		ret[x['name']] = (load_ptz(x))
+
 	return ret
 
 
 # 这里保存所有云台
 _all_ptzs = load_all_ptzs()
+
+rhs = []
+stype = 'ptz'
+for e in _all_ptzs:
+	if _all_ptzs[e]['ptz'] is not None:
+		sid = e
+		service_url= '10003' + '/' +  stype + '/' + sid
+		rh = RegHt(stype, sid, service_url)
+		rhs.append(rh)	
 
 class HelpHandler(RequestHandler):
 	''' 返回 help 
@@ -108,8 +119,6 @@ class ControllingHandler(RequestHandler):
 		# print 'name:', name, ' method:', method, ' params:', params
 		if name in _all_ptzs:
 			if _all_ptzs[name]['ptz']:
-				#log = Log('ptz')
-				#log.log("method:" + method + ", params:" + str(params))
 				return _all_ptzs[name]['ptz'].call(method, params)
 			else:
 				return { 'result':'error', 'info':'ptz config failure' }
@@ -117,20 +126,22 @@ class ControllingHandler(RequestHandler):
 			return { 'result':'error', 'info':name + ' NOT found' }
 
 
-
-_ioloop = None # 为了支持 exit command
+# 为了支持 exit command
+_ioloop = IOLoop.instance()
 
 
 class InternalHandler(RequestHandler):
 	def get(self):
 		rc = {}
 		rc['result'] = 'ok'
-		rc['info'] = ''
+		rc['info'] = 'dispear'
 
 		command = self.get_argument('command', 'nothing')
-
+		print command
 		if command == 'exit':
 			rc['info'] = 'exit!!!'
+			for e in rhs:
+				e.join()
 			global _ioloop
 			_ioloop.stop()
 			self.write(rc)
@@ -138,9 +149,6 @@ class InternalHandler(RequestHandler):
 			rc['info'] = 'now version unsupported!!'
 			rc['result'] = 'err'
 			self.write(rc)
-
-
-
 
 def make_app():
 	return Application([
@@ -154,9 +162,7 @@ def make_app():
 def main():
 	app = make_app()
 	app.listen(10003)
-	_ioloop = IOLoop.instance()
 	_ioloop.start()
-
 	# 此时说明结束 ...
 	print 'ptz service end ...'
 

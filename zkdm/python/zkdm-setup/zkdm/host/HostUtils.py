@@ -3,7 +3,7 @@
 from tornado.web import Application,RequestHandler,url
 from tornado.ioloop import IOLoop
 from Stat import PerformanceMonitor
-
+import os
 
 def _param(req, key):
 	if key in req.request.arguments:
@@ -56,13 +56,13 @@ class HostUtilsHandler(RequestHandler):
 		rc['info'] = 'will poweroff atonce'
 		self.write(rc)
 		# TODO: 关机 ....
-
+		os.system('stop')
 
 	def __reboot(self, rc):
 		rc['info'] = 'will reboot atonce'
 		self.write(rc)
 		# TODO: 重启 ....
-
+		os.system('restart')
 
 
 _ioloop = None
