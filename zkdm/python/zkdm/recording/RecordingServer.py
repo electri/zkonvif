@@ -13,6 +13,7 @@ from tornado.options import define, options
 from CardServer import start_card_server
 sys.path.append('../')
 from common.utils import zkutils
+from common.reght import RegHt
 
 
 # 必须设置工作目录 ...
@@ -26,6 +27,7 @@ def _param(req, key):
         return None
 
 _rcmd = None
+rh = None
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -64,6 +66,8 @@ class CmdHandler(tornado.web.RequestHandler):
                 urllib2.Request('http://127.0.0.1:10007/card/LivingS?url='+url)
                 time.sleep(1)
                 rc=_rcmd.send_command('RecordCmd=StartBroadCast')
+                if rc['result'] == 'ok':
+                    rc['info'] = url
                 self.set_header('Content-Type', 'application/json')
                 self.write(rc)
             except Exception as err:
@@ -93,6 +97,7 @@ class InternalHandler(RequestHandler):
             self.set_header('Content-Type', 'application/json')
             rc['info'] = 'exit!!!!'
             self.write(rc)
+            rh.join()
             _ioloop.stop()
         elif command == 'version':
             self.set_header('Content-Type', 'application/json')
@@ -102,8 +107,6 @@ class InternalHandler(RequestHandler):
         elif command =='services':
             self.set_header('Content-Type', 'application/json')
             self.write(_service)
-
-
 
 def main():
     tornado.options.parse_command_line()
@@ -127,8 +130,10 @@ def main():
     global _ioloop
     _ioloop = IOLoop.instance()
     _ioloop.start()
-
-
+    
+    global rh
+    rh = RegHt('recording','recording','10006/recording')
+    
 
 if __name__ == "__main__":
     main()
