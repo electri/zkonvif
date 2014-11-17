@@ -41,7 +41,23 @@ class ServicesManager:
 			if 'url' in s:
 				new_url = self.__fix_url(s['url'])
 				s['url'] = new_url
+
 		return ss
+
+	def list_services_new(self):
+		''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
+		'''
+		ss = self.list_services()
+		new_ss = []
+		for s in ss:
+			ret = {}
+			ret['name'] = s['name']
+			ret['type'] = s['type']
+			ret['enable'] = s['enable']
+			new_ss.append(ret)
+
+		return new_ss
+
 
 
 	def dump_activated(self):
@@ -156,8 +172,12 @@ class ServicesManager:
 
 	def enable_service(self, name, en = True):
 		''' 使能/禁用服务 '''
+		print '========>enable_service name'
+		print name
 		ssd = LocalConfig.load_config(FNAME)
+		print ssd
 		for s in ssd['services']:
+			print s['name']
 			if s['name'] == name:
 			   s['enable'] = en
 			   break

@@ -5,8 +5,10 @@ from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application, url
 from dbhlp import DBHlp
 import time, json
+import sys
 
-
+sys.path.append('../')
+from common.reght import RegHt
 VERSION = 0.9
 VERSION_INFO = 'Log Service ...'
 
@@ -134,7 +136,8 @@ class QueryHandler(RequestHandler):
 
 
 # 只是为了支持 internal?command=exit, 可以优雅的结束 ...
-_ioloop = None
+_ioloop = IOLoop.instance()
+rh = RegHt('log', 'log', r'10005/log')
 
 
 class InternalHandler(RequestHandler):
@@ -164,6 +167,7 @@ class InternalHandler(RequestHandler):
 		if cmd == 'exit':
 			global _ioloop
 			rc['info'] = 'exit!!!'
+			rh.join()
 			self.write(rc)
 			_ioloop.stop()
 		
@@ -188,7 +192,6 @@ def main():
 	app = make_app()
 	app.listen(10005)
 	global _ioloop
-	_ioloop = IOLoop.instance()
 	_ioloop.start()
 
 	# 结束 ..

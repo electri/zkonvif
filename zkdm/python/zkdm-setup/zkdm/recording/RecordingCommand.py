@@ -19,39 +19,42 @@ class RecordingCommand():
             host='127.0.0.1'
             port=1230
             s.connect((host,port))
+            print command
+            command = command.encode('utf-8')
+            print command
             s.send(command+"\n")
             s.recv(3)  #È¥³ýUTF-8 BOM
 	    message=s.recv(512)
 	    rc['info']=message
-	    print message
 	    s.close()
-
 	    return rc
         except Exception as err:
             rc['result']='error'
             rc['info']=str(err)
-
             return rc
 
-    def start(self):
-        rc=self.send_command('RecordCmd=StartRecord')
+    def preview(self):
+        rc={}
+        rc['result']='ok'
+        ip = self.send_command('BroadCastCmd=GetDeviceIP')
+        if(ip['result'] == 'ok' and len(ip['info'])>0):            
+            ip = ip['info']
+            ip = ip[:-2]
+            url = {}
+            url['resource1'] = 'rtsp://root:root@'+ ip +':554/session0.mpg'
+            url['resource2'] = 'rtsp://root:root@'+ ip +':554/session1.mpg'
+            url['resource3'] = 'rtsp://root:root@'+ ip +':554/session2.mpg'
+            url['resource4'] = 'rtsp://root:root@'+ ip +':554/session3.mpg'
+            url['resource5'] = 'rtsp://root:root@'+ ip +':554/session4.mpg'
+            url['resource6'] = 'rtsp://root:root@'+ ip +':554/session5.mpg'
+            url['movie'] = 'rtsp://root:root@'+ ip +':554/session6.mpg'
+            rc['info'] = url
+        else:
+            rc['result'] = 'error'
+            rc['info'] = ip['info']
+        
         return rc
 
-    def pause(self):
-        rc=self.send_command('RecordCmd=PauseRecord')
-        return  rc
-
-    def stop(self):
-        rc=self.send_command('RecordCmd=StopRecord')
-        return rc
-	
-    def resume(self):
-        rc=self.send_command('RecordCmd=ResumeRecord')
-        return rc
-
-    def other_command(self,args):
-        rc=self.send_command(args)
-        return rc
 
 def main():
     ss=RecordingCommand()

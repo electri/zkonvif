@@ -12,12 +12,12 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 					"type":"list",
 					"data": [ 
 					{
-						"name":"event service",
+						"name":"event.service",
 						"type":"event",
 						"enable": true
 					}
 					{
-						”name":"teacher video 1",
+						”name":"teacher.video.1",
 						"type":"evel",
 						"enable": false
 					}

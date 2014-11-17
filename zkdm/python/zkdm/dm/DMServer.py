@@ -6,6 +6,7 @@ import ServicesManager
 import sys, os, io, json
 
 sys.path.append('../')
+from common.reght import RegHt
 sys.path.append('../host')
 import Stat
 
@@ -62,7 +63,7 @@ class ListServiceHandler(RequestHandler):
 		rc['result'] = 'ok'
 		rc['info'] = ''
 
-		ss = _sm.list_services()
+		ss = _sm.list_services_new()
 		value = {}
 		value['type'] = 'list'
 		value['data'] = ss
@@ -75,7 +76,7 @@ class ListServiceHandler(RequestHandler):
 _ioloop = IOLoop.instance()
 pm = Stat.PerformanceMonitor()
 pm.start()
-
+rh = RegHt('dm', 'dm', r'10000/dm')
 
 class InternalHandler(RequestHandler):
 	def get(self):
@@ -87,6 +88,7 @@ class InternalHandler(RequestHandler):
 		if command == 'exit':
 			rc['info'] = 'exit!!!'
 			self.write(rc)
+			rh.join()
 			global _ioloop
 			_ioloop.stop()
 		elif command == 'version':

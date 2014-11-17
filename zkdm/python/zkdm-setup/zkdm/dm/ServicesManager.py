@@ -4,10 +4,10 @@ import LocalConfig
 import subprocess, shlex
 import threading, time
 import sys, re
+import threading
 
 sys.path.append('../')
 from common.utils import zkutils
-
 
 # 本地配置文件
 FNAME = 'config.json'
@@ -29,9 +29,9 @@ class ServicesManager:
 		self.__ip = u.myip()			# 可能是交换机映射后的 ip
 		self.__ip_real = u.myip_real()
 		self.__activated = [] # (p, sd, url)
+
 		self.__start_all_enabled()
-
-
+		
 	def list_services(self):
 		''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
 		'''
@@ -41,7 +41,23 @@ class ServicesManager:
 			if 'url' in s:
 				new_url = self.__fix_url(s['url'])
 				s['url'] = new_url
+
 		return ss
+
+	def list_services_new(self):
+		''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
+		'''
+		ss = self.list_services()
+		new_ss = []
+		for s in ss:
+			ret = {}
+			ret['name'] = s['name']
+			ret['type'] = s['type']
+			ret['enable'] = s['enable']
+			new_ss.append(ret)
+
+		return new_ss
+
 
 
 	def dump_activated(self):
@@ -61,6 +77,7 @@ class ServicesManager:
 
 	def start_service(self, name):
 		''' 启动服务，如果 name 存在 '''
+		print 'start_service .........'
 		ssd = self.list_services()
 		for x in ssd:
 			if x['name'] == name and x['enable']:
@@ -113,6 +130,7 @@ class ServicesManager:
 			总是使用 subprocess.Popen class ..
 			TODO:  if !fork 直接启动 py 脚本？是否能在 arm 上节省点内存？ ..
 		'''
+
 		for s in self.__activated:
 			if s[1]['name'] == sd['name']:
 				return None # 已经启动 ..
@@ -121,7 +139,10 @@ class ServicesManager:
 		print ' ==> start', args
 		p = subprocess.Popen(args)
 		print '        pid:', p.pid
-		return (p, sd, self.__fix_url(sd['url']))
+
+		psu = (p, sd, self.__fix_url(sd['url']))
+		self.__activated.append(psu)
+		return	psu 
 		
 
 	def __stop_service(self, sd):
@@ -151,8 +172,12 @@ class ServicesManager:
 
 	def enable_service(self, name, en = True):
 		''' 使能/禁用服务 '''
+		print '========>enable_service name'
+		print name
 		ssd = LocalConfig.load_config(FNAME)
+		print ssd
 		for s in ssd['services']:
+			print s['name']
 			if s['name'] == name:
 			   s['enable'] = en
 			   break
@@ -160,14 +185,3 @@ class ServicesManager:
 
 
 
-if __name__ == '__main__':
-	sm = ServicesManager()
-	all = sm.list_services()
-	print all
-	count = 10
-	while count > 0:
-		count -= 1
-		time.sleep(1.0)
-		sm.dump_activated()
-	sm.enable_service('event service', True)
-	sm.close()
