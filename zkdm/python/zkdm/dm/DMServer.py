@@ -76,7 +76,7 @@ class ListServiceHandler(RequestHandler):
 _ioloop = IOLoop.instance()
 pm = Stat.PerformanceMonitor()
 pm.start()
-rh = RegHb('dm', 'dm', r'10000/dm')
+rh = RegHt('dm', 'dm', r'10000/dm')
 
 class InternalHandler(RequestHandler):
 	def get(self):

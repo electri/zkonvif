@@ -42,7 +42,7 @@
 @echo 请修改板书配置
 @notepad bd.config
 @cd c:\zkdm\host
-@echo 请修改主机类型,注册服务器参数
+@echo please alter host type and reghb service parameters
 @notepad config.json
 @echo off
 @cd c:\zkdm\dm
