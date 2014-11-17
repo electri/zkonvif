@@ -114,7 +114,7 @@ class HostHandler(RequestHandler):
 			except:
 				rc['info'] = 'can\'t get host type'
 				rc['result'] = 'err'
-		elif command == 'exit':
+		elif command == 'shutdown':
 			rc['info'] = 'host is shutdowning ...'
 
 			os.system(r'c:/Windows/System32/shutdown.exe /s /t 3')
