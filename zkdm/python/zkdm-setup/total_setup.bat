@@ -3,12 +3,12 @@
 
 @python-2.7.8.msi
 
-@echo cover c:\Python27
-
-@xcopy .\Python27 c:\Python27 /EY
-
 @echo install pythonwin32
 @pywin32-218.win32-py2.7.exe
+@echo cover c:\Python27\Lib
+@xcopy .\Lib c:\Python27\Lib /EY
+
+
 
 
 @echo copy .\zkdm to c:\zkdm
