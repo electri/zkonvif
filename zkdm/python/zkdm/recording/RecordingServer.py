@@ -121,19 +121,15 @@ def main():
     _rcmd = RecordingCommand()
 
     application.listen(10006)
-
-    _service['ids'].append('recording')
-    _service['complete'] = True
+    global rh
+    rh = RegHt('recording','recording','10006/recording')
+    print "recording  RegHt"
 
     start_card_server()
 
     global _ioloop
     _ioloop = IOLoop.instance()
     _ioloop.start()
-    
-    global rh
-    rh = RegHt('recording','recording','10006/recording')
-    
-
+       
 if __name__ == "__main__":
     main()
