@@ -1,13 +1,17 @@
 @echo on
-@echo 安装python 2.7.8
+@echo install python 2.7.8
 
 @python-2.7.8.msi
 
-@echo 覆盖 c:\Python27
+@echo cover c:\Python27
 
 @xcopy .\Python27 c:\Python27 /EY
 
-@echo 拷贝 .\zkdm 到 c:\zkdm
+@echo install pythonwin32
+@pywin32-218.win32-py2.7.exe
+
+
+@echo copy .\zkdm to c:\zkdm
 
 
 @if not exist c:\zkdm (mkdir c:\zkdm)
@@ -27,16 +31,13 @@
 @xcopy .\zkdm c:\zkdm /EY
 
 @if exist c:\Windows\SysWOW64 (xcopy .\SysWOW64 c:\Windows\SysWOW64 /EY copy .\System64\curl.exe c:\Windows\System32 /Y)
-@echo 安装pythonwin32
-@pywin32-218.win32-py2.7.exe
-
 @c:
 
 @cd c:\zkdm\ptz
-@echo 请修改教师的配置文件
+@echo please alter teacher.config
 @notepad teacher.config
 
-@echo 请修改学生的配置文件
+@echo please alter student.config
 @notepad student.config
 
 @echo please alter bd
