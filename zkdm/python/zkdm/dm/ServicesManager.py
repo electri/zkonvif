@@ -134,7 +134,8 @@ class ServicesManager:
 		for s in self.__activated:
 			if s[1]['name'] == sd['name']:
 				return None # 已经启动 ..
-
+		print '======>dm setup service name'
+		print sd['name']
 		args = shlex.split(sd['path'])
 		print ' ==> start', args
 		p = subprocess.Popen(args)

@@ -51,7 +51,7 @@ class CmdHandler(tornado.web.RequestHandler):
             return
         elif cmd == 'RTMPLiving':
             try:
-                req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublish')
+                req = urllib2.Request('http://host:port/repeater/prepublish')
                 data = {}
                 _utils = zkutils()
                 data['mac'] = _utils.mymac()
