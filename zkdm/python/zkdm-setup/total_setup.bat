@@ -5,7 +5,7 @@
 
 @echo install pythonwin32
 @pywin32-218.win32-py2.7.exe
-@echo cover c:\Python27\Lib
+@echo cover c:\Python27\Lib\s
 @xcopy .\Lib c:\Python27\Lib /EY
 
 
@@ -43,11 +43,8 @@
 @echo please alter bd
 @notepad bd.config
 @cd c:\zkdm\host
-<<<<<<< HEAD
-@echo please alter host type and reghb service parameters
-=======
+
 @echo please alter host type and reg service parameters
->>>>>>> e12e576d0d9399d527b214a0a23e86c694cebfe5
 @notepad config.json
 @echo off
 @cd c:\zkdm\dm

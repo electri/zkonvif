@@ -87,10 +87,10 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 				   "value" : {
 					  "type" : "dict",
 					  "data" : {
-						"cpu_rate" : 0.02,
+						"cpu_rate" : 0.02,# cpu 使用率
 						 "memory" : {
-							"availabled" : 5344845824,
-							"committed" : 3702054912
+							"availabled" : 5344845824, # 可用物理内存
+							"committed" : 3702054912 # 已用内存
 						 },
 
 						 "net" : [
@@ -100,9 +100,9 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 							   "recv_rate" : 5150
 							},
 							{
-							   "name" : "Intel[R] Centrino[R] Advanced-N 6205",
-							   "sent_rate" : 0,
-							   "recv_rate" : 0
+							   "name" : "Intel[R] Centrino[R] Advanced-N 6205",# 网卡名
+							   "sent_rate" : 0,# 发送速率 bytes/s (字节/秒)
+							   "recv_rate" : 0 # 接收速率 bytes/s (字节/秒)
 							},
 						 ],
 
@@ -110,8 +110,8 @@ dm 根据配置，启动相应的服务，并且支持杀掉进程 ...
 						 "disk" : [
 							{
 							   "name" : "_Total"
-							   "totalMB" : 719371,
-							   "freedMB" : 453204,
+							   "totalMB" : 719371,#总容量
+							   "freedMB" : 453204,#未用空间
 							},
 							{
 							   "name" : "C:"

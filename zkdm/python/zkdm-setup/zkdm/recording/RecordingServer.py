@@ -51,7 +51,7 @@ class CmdHandler(tornado.web.RequestHandler):
             return
         elif cmd == 'RTMPLiving':
             try:
-                req = urllib2.Request('http://host:port/repeater/prepublish')
+                req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublish')
                 data = {}
                 _utils = zkutils()
                 data['mac'] = _utils.mymac()
@@ -109,31 +109,27 @@ class InternalHandler(RequestHandler):
             self.write(_service)
 
 def main():
-    tornado.options.parse_command_line()
-    application = tornado.web.Application([
+	tornado.options.parse_command_line()
+	application = tornado.web.Application([
         url(r"/", MainHandler),
         url(r"/recording/cmd",CmdHandler),
         url(r"/recording/help", HelpHandler),
         url(r"/recording/internal",InternalHandler),
     ])
 
-    global _rcmd
-    _rcmd = RecordingCommand()
+	global _rcmd
+	_rcmd = RecordingCommand()
 
-    application.listen(10006)
+	application.listen(10006)
+	global rh
+	rh = RegHt('recording','recording','10006/recording')
 
-    _service['ids'].append('recording')
-    _service['complete'] = True
+	start_card_server()
 
-    start_card_server()
-
-    global _ioloop
-    _ioloop = IOLoop.instance()
-    _ioloop.start()
-    
-    global rh
-    rh = RegHt('recording','recording','10006/recording')
-    
-
+	global _ioloop
+	_ioloop = IOLoop.instance()
+	_ioloop.start()
+       
 if __name__ == "__main__":
-    main()
+	print '====>recoding start'
+	main()
