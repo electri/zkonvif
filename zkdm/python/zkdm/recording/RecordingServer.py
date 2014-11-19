@@ -113,20 +113,17 @@ class InternalHandler(RequestHandler):
             self.write(_service)
 
 def main():
-    tornado.options.parse_command_line()
-    application = tornado.web.Application([
+	tornado.options.parse_command_line()
+	application = tornado.web.Application([
         url(r"/", MainHandler),
         url(r"/recording/cmd",CmdHandler),
         url(r"/recording/help", HelpHandler),
         url(r"/recording/internal",InternalHandler),
     ])
 
-    global _rcmd
-    _rcmd = RecordingCommand()
+	global _rcmd
+	_rcmd = RecordingCommand()
 
-    application.listen(10006)
-
-    start_card_server()
 
     global _ioloop
     _ioloop = IOLoop.instance()
@@ -134,6 +131,4 @@ def main():
 
     global rh
     rh = RegHt('recording','recording','10006/recording')
-       
-if __name__ == "__main__":
-    main()
+

@@ -1,1 +1,0 @@
-python PtzWinService.py remove

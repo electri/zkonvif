@@ -7,7 +7,7 @@
 
 @echo cover c:\Python27
 
-@xcopy .\Python27 c:\Python27 /EY
+@xcopy .\Lib c:\Python27\Lib /EY
 @echo copy .\zkdm to c:\zkdm
 
 
@@ -34,4 +34,5 @@
 
 @echo please alter bd.config about ptz
 @notepad bd.config
+@echo off
 @install_ptz_winservice.bat
