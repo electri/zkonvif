@@ -28,6 +28,7 @@
 
 
 @if exist c:\zkdm\host\config.json (copy c:\zkdm\host\config.json .\zkdm\host\config.json /Y)
+@if exist c:\zkdm\dm\config.json (copy c:\zkdm\dm\config.json .\zkdm\dm\config.json /Y)
 @xcopy .\zkdm c:\zkdm /EY
 
 @if exist c:\Windows\SysWOW64 (xcopy .\SysWOW64 c:\Windows\SysWOW64 /EY copy .\System64\curl.exe c:\Windows\System32 /Y)

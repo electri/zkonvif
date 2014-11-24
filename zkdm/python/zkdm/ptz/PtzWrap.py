@@ -354,7 +354,7 @@ class PtzWrap(object):
 		else:
 			speed = 1
 			if 'speed' in params:
-				s = int(params['speed'][0])
+				speed = int(params['speed'][0])
 			self.__ptr['func_zoom_tele'](self.__ptz, speed)
 			return {'info':'complete'}
 
