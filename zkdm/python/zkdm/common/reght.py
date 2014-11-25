@@ -92,10 +92,10 @@ class RegHt(threading.Thread):
                 return False
                 
         except urllib2.HTTPError:
-            self._log('\tHTTPError: ')
+#self._log('\tHTTPError: ')
             return False
         except urllib2.URLError:
-            self._log('\tURLError: ')
+#            self._log('\tURLError: ')
             return False
 
         return True
