@@ -7,8 +7,9 @@ import sys, re
 import threading
 
 sys.path.append('../')
+sys.path.append('../common')
 from common.utils import zkutils
-
+import utils
 # 本地配置文件
 FNAME = 'config.json'
 
