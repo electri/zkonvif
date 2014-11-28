@@ -2,15 +2,14 @@
 
 from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application, url
+from tornado import gen
 from ctypes import *
 import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
-
 sys.path.append("../")
 from common.Log import Log
 from common.reght import RegHt
-
 
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
@@ -150,6 +149,7 @@ class InternalHandler(RequestHandler):
 			rc['result'] = 'err'
 			self.write(rc)
 
+@gen.coroutine
 def make_app():
 	return Application([
 			url(r'/ptz/help', HelpHandler),
