@@ -76,26 +76,29 @@ class RegHt(threading.Thread):
     def _reg(self):
         url = self._load_mgrt_baseurl() + 'registering?serviceinfo=%s_%s_%s_%s_%s' % \
               (self._myip, self._mymac, self._service_type, self._service_id, self._service_url)
-        self._log("_reg: using url: " + url)
+#self._log("_reg: using url: " + url)
+        req = None
         try:
             req = urllib2.urlopen(url)
-            s = self._get_utf8_body(req)
-            # TODO: 这里解析注册返回的 json ...
-            ret = {}
-            try:
-                ret.update(json.loads(s))
-            except:
-                return False
-            
-            if u'已经注册' not in ret['info']:
-                print ret['info']
-                return False
-                
-        except urllib2.HTTPError:
-#self._log('\tHTTPError: ')
-            return False
-        except urllib2.URLError:
+#except urllib2.HTTPError:
+#            self._log('\tHTTPError: ')
+#            return False
+#        except urllib2.URLError:
 #            self._log('\tURLError: ')
+#            return False
+        except:
+#    self._log('\treg return webpage failure')
+            return False
+        s = self._get_utf8_body(req)
+        # TODO: 这里解析注册返回的 json ...
+        ret = {}
+        try:
+            ret.update(json.loads(s))
+        except:
+            return False
+        
+        if u'已经注册' not in ret['info']:
+            print ret['info']
             return False
 
         return True

@@ -156,28 +156,6 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 VISCA_API uint32_t
 _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
-<<<<<<< HEAD
-	int loop_num = 0;
-	//XXXX:当不存在0x50时,会一直陷入死循环;根据中断有两个socket,
-	//共检测三次,否则退出
-
-	while (iface->ibuf[1] != 0x50)
-	{
-		loop_num++;
-
-		if (loop_num  > 100) {
-			fprintf(stdout, "debugging %s loop_num %d full, so fail\n", __FUNCTION__, loop_num);
-			return VISCA_FAILURE;
-		}
-
-		iface->type = iface->ibuf[1] & 0xF0;
-		if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
-			return VISCA_FAILURE;
-		
-	}
-
-	fprintf(stdout, "DEBUGGING %s loop_num = %d\n", __FUNCTION__, loop_num);
-=======
 	int loop = 0;
 	while (iface->ibuf[1] != 0x50)
 	{
@@ -190,7 +168,6 @@ _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
 			fprintf(stdout, "INFO: %s run get_packet %d times\n", __FUNCTION__, loop);
 	}
 	iface->type = iface->ibuf[1] & 0xF0;
->>>>>>> a1f57c853241f6f97aa83aa405f6d0255e2323b3
 	return VISCA_SUCCESS;
 }
 
@@ -313,8 +290,6 @@ _VISCA_get_reply2(VISCAInterface_t * iface, VISCACamera_t * camera)
 		return VISCA_SUCCESS;
 		break;
 	case VISCA_RESPONSE_ERROR:
-		err = iface->ibuf[1] & 0x0F;
-		fprintf(stdout, "err %d\n", err);
 		return VISCA_SUCCESS;
 		break;
 	}
