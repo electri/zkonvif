@@ -54,114 +54,112 @@
 <br>					"info":"not found or disabled"
 <br>				}
 <br>
+<br>		<B>/dm/<service name>/start</B>: 启动指定名字的服务
+<br>		<B>/dm/<service name>/stop</B>: 停止服务 
+<br>        <B>/dm/<service name>/enable</B>: 启用服务
+<br>		<B>/dm/<service name>/disable</B>: 禁用服务
+<br>					返回：application/json
+<br>					成功:
+<br>					{
+<br>						"result":"ok",
+<br>						"info":""
+<br>					}
+<br>					失败：
+<br>					{
+<br>						"result":"error",
+<br>						"info":"not found or disabled"
+<br>					}
 
-			/dm/<service name>/start: 启动指定名字的服务
-			/dm/<service name>/stop: 停止服务
-			/dm/<service name>/enable: 启用服务
-			/dm/<service name>/disable: 禁用服务
-					返回：application/json
-					成功:
-						{
-							"result":"ok",
-							"info":""
-						}
-					失败：
-						{
-							"result":"error",
-							"info":"not found or disabled"
-						}
+<br>		<B>		/dm/host?command=shutdown</B>: 关机
+<br>		<B>		/dm/host?command=restart</B>: 重启计算机
+<br>						返回: application/json
+<br>					成功(唯一值):
+<br>					{
+<br>						"result": "ok",
+<br>						"info": "host is XXXing ..."
+<br>					}
+<br>		
 
-			/dm/host?command=shutdown: 关机
-			/dm/host?command=restart: 重启计算机
-					返回: application/json
-					成功(唯一值):
-						{
-							"result": "ok",
-							"info": "host is XXXing ..."
-						}
-			
+<br>		<B>		dm/host?command=type</B>: 获取主机类型
+<br>		
+<br>				返回: application/json
+<br>				成功:
+<br>				{
+<br>					"result": "ok",
+<br>					"info" : "",
+<br>					"value":
+<br>					{
+<br>						"type":"dict",
+<br>						"data": 
+<br>						{
+<br>							"hostType":"JP100"
+<br>						}
+<br>					}
+<br>			}
+<br>				
+<br>				失败:
+<br>				{
+<br>					"result":"error",
+<br>					"info":"can't get host type"
+<br>				}
 
-			dm/host?command=type: 获取主机类型
-			
-				返回: application/json
-					成功:
-					{
-						"result": "ok",
-						"info" : "",
-						"value":
-						{
-							"type":"dict",
-							"data": 
-							{
-								"hostType":"JP100"
-							}
-						}
+<br>		<B>	/dm/host?command=performance</B>:
 
+<br>			返回: application/json
+<br>						成功:
+<br>				{
+<br>					"result" : "ok",
+<br>					   "info" : "",
 
-					}
-					
-					失败:
-					{
-						"result":"error",
-						"info":"can't get host type"
-					}
+<br>					   "value" : {
+<br>						  "type" : "dict",
+<br>						  "data" : {
+<br>							"cpu_rate" : 0.02,
+<br>							 "memory" : {
+<br>								"availabled" : 5344845824,
+<br>								"committed" : 3702054912
+<br>							 },
 
-					/dm/host?command=reformance:
-					返回: application/json
-						成功:
-					{
-						"result" : "ok",
-						   "info" : "",
-
-						   "value" : {
-							  "type" : "dict",
-							  "data" : {
-								"cpu_rate" : 0.02,
-								 "memory" : {
-									"availabled" : 5344845824,
-									"committed" : 3702054912
-								 },
-
-								 "net" : [
-									{
-									   "name" : "Intel[R] 82579LM Gigabit Network Connection",
-									   "sent_rate" : 0,
-									   "recv_rate" : 5150
-									},
-									{
-									   "name" : "Intel[R] Centrino[R] Advanced-N 6205",
-									   "sent_rate" : 0,
-									   "recv_rate" : 0
-									},
-								 ],
+<br>							 "net" : [
+<br>								{
+<br>								   "name" : "Intel[R] 82579LM Gigabit Network Connection",
+<br>								   "sent_rate" : 0,
+<br>								   "recv_rate" : 5150
+<br>								},
+<br>								{
+<br>								   "name" : "Intel[R] Centrino[R] Advanced-N 6205",
+<br>								   "sent_rate" : 0,
+<br>								   "recv_rate" : 0
+<br>								},
+<br>							 ],
 
 
-								 "disk" : [
-									{
-									   "name" : "_Total"
-									   "totalMB" : 719371,
-									   "freedMB" : 453204,
-									},
-									{
-									   "name" : "C:"
-									   "totalMB" : 718715,
-									   "freedMB" : 452791,
-									},
-									{
-									   "name" : "HarddiskVolume4"
-									   "totalMB" : 448,
-									   "freedMB" : 413,
-									}
-								 ]
-							  }
-						   }
-						}
-			
-					失败:
-					{
-						"result" : "ok",
-						"info" : "error"
-					}
+<br>							 "disk" : [
+<br>								{
+<br>								   "name" : "_Total"
+<br>								   "totalMB" : 719371,
+<br>								   "freedMB" : 453204,
+<br>								},
+<br>								{
+<br>								   "name" : "C:"
+<br>								   "totalMB" : 718715,
+<br>								   "freedMB" : 452791,
+<br>								},
+<br>								{
+<br>								   "name" : "HarddiskVolume4"
+<br>								   "totalMB" : 448,
+<br>								   "freedMB" : 413,
+<br>								}
+<br>							 ]
+<br>						  }
+<br>					   }
+<br>					}
+<br>		
+<br>				失败:
+<br>				{
+<br>					"result" : "ok",
+<br>					"info" : "error"
+<br>				}
 
 
 		

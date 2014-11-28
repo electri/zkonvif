@@ -51,17 +51,17 @@ class CmdHandler(tornado.web.RequestHandler):
             return
         elif cmd == 'RTMPLiving':
             try:
-                req = urllib2.Request('http://host:port/repeater/prepublish')
+                req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublish')
                 data = {}
                 _utils = zkutils()
                 data['mac'] = _utils.mymac()
-                data['name'] = 'Living1'
-                data['type'] = 'rtmp'
-                data = urllibb.urlencode(data)
-                opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
-                response = opener.open(req,data)
-                response =response.read()
-                url = response['content']['stream_address']
+                data['uid'] = _utils.mymac() + 'Living1'
+                data['STATUS'] = '0'
+                data = json.dumps(data)
+
+                response = urllib2.urlopen(req,data)
+                content = json.load(response)
+                url = content['content']['stream_address']
 
                 urllib2.Request('http://127.0.0.1:10007/card/LivingS?url='+url)
                 time.sleep(1)
@@ -69,6 +69,10 @@ class CmdHandler(tornado.web.RequestHandler):
                 if rc['result'] == 'ok':
                     rc['info'] = url
                 self.set_header('Content-Type', 'application/json')
+                self.write(rc)
+                #print url
+                rc['result'] = 'ok'
+                rc['info'] = url
                 self.write(rc)
             except Exception as err:
                 rc['result'] = 'error'
@@ -122,18 +126,14 @@ def main():
 
     application.listen(10006)
 
-    _service['ids'].append('recording')
-    _service['complete'] = True
-
     start_card_server()
 
     global _ioloop
     _ioloop = IOLoop.instance()
     _ioloop.start()
-    
+
     global rh
     rh = RegHt('recording','recording','10006/recording')
-    
-
+       
 if __name__ == "__main__":
     main()

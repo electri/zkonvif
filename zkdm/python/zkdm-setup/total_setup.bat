@@ -3,12 +3,12 @@
 
 @python-2.7.8.msi
 
-@echo cover c:\Python27
-
-@xcopy .\Python27 c:\Python27 /EY
-
 @echo install pythonwin32
 @pywin32-218.win32-py2.7.exe
+@echo cover c:\Python27\Lib\s
+@xcopy .\Lib c:\Python27\Lib /EY
+
+
 
 
 @echo copy .\zkdm to c:\zkdm
@@ -28,6 +28,7 @@
 
 
 @if exist c:\zkdm\host\config.json (copy c:\zkdm\host\config.json .\zkdm\host\config.json /Y)
+@if exist c:\zkdm\dm\config.json (copy c:\zkdm\dm\config.json .\zkdm\dm\config.json /Y)
 @xcopy .\zkdm c:\zkdm /EY
 
 @if exist c:\Windows\SysWOW64 (xcopy .\SysWOW64 c:\Windows\SysWOW64 /EY copy .\System64\curl.exe c:\Windows\System32 /Y)
@@ -43,11 +44,8 @@
 @echo please alter bd
 @notepad bd.config
 @cd c:\zkdm\host
-<<<<<<< HEAD
-@echo please alter host type and reghb service parameters
-=======
+
 @echo please alter host type and reg service parameters
->>>>>>> e12e576d0d9399d527b214a0a23e86c694cebfe5
 @notepad config.json
 @echo off
 @cd c:\zkdm\dm

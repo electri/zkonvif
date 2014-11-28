@@ -4,7 +4,7 @@ from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
 import ServicesManager
 import sys, os, io, json
-
+import platform
 sys.path.append('../')
 from common.reght import RegHt
 sys.path.append('../host')
@@ -14,6 +14,7 @@ import Stat
 DMS_PORT = 10000
 _sm = None # 在 main 中创建
 
+plat = platform.uname()[0]
 
 class HelpHandler(RequestHandler):
 	''' 提示信息 ....
@@ -76,7 +77,7 @@ class ListServiceHandler(RequestHandler):
 _ioloop = IOLoop.instance()
 pm = Stat.PerformanceMonitor()
 pm.start()
-rh = RegHb('dm', 'dm', r'10000/dm')
+rh = RegHt('dm', 'dm', r'10000/dm')
 
 class InternalHandler(RequestHandler):
 	def get(self):
@@ -118,11 +119,18 @@ class HostHandler(RequestHandler):
 				rc['result'] = 'err'
 		elif command == 'shutdown':
 			rc['info'] = 'host is shutdowning ...'
-
-			os.system(r'c:/Windows/System32/shutdown.exe /s /t 3')
+			if plat=='Windows' or plat.find('CYGWIN'):
+				os.system(r'c:/Windows/System32/shutdown.exe /s /t 3')
+			else:
+				os.system(r'sudo /sbin/halt')
 		elif command == 'restart':
+			print rc
 			rc['info'] = 'host is restarting ...'
-			os.system(r'c:/Windows/System32/shutdown.exe /r /t 3')
+			if plat == 'Windows' or plat.find('CYGWIN'):
+				os.system(r'c:/Windows/System32/shutdown.exe /r /t 3')
+			else:
+				os.system(r'sudo /sbin/reboot')
+
 		elif command == 'performance':
 			stats = pm.get_all()	
 			rc['info'] = stats					
