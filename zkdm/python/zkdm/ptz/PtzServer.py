@@ -10,7 +10,7 @@ from PtzWrap import PtzWrap
 sys.path.append("../")
 from common.Log import Log
 from common.reght import RegHt
-
+import thread
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -108,11 +108,16 @@ class ControllingHandler(RequestHandler):
 		'''
 		#log = Log('ptz')
 		#log.log('name:' + name + ', method:' + method)
-
+		
+		thread.start_new_thread(callback, (self, name, method))
+#ret = self.__exec_ptz_method(name, method, self.request.arguments)
+#		self.set_header('Content-Type', 'application/json')
+#		self.write(ret)
+	def callback(self, name, method):
 		ret = self.__exec_ptz_method(name, method, self.request.arguments)
-		self.set_header('Content-Type', 'application/json')
+		self.set_header('Constent-Type', 'application/json')
 		self.write(ret)
-
+	
 	def __exec_ptz_method(self, name, method, params):
 		global _all_ptzs
 		# print 'name:', name, ' method:', method, ' params:', params
@@ -149,7 +154,6 @@ class InternalHandler(RequestHandler):
 			rc['result'] = 'err'
 			self.write(rc)
 
-@gen.coroutine
 def make_app():
 	return Application([
 			url(r'/ptz/help', HelpHandler),
@@ -158,7 +162,7 @@ def make_app():
 			url(r'/ptz/internal', InternalHandler),
 			])
 
-
+@gen.coroutine
 def main():
 	app = make_app()
 	app.listen(10003)
