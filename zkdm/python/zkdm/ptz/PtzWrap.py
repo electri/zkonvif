@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import time
 from ctypes import *
 import platform, os
 
