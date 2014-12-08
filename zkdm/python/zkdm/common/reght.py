@@ -45,8 +45,15 @@ class RegHt(threading.Thread):
                 3. 随时处理退出 ...
         '''
         if not self._mgrt_baseurl:
-            self._mgrt_baseurl = self._load_mgrt_baseurl()
-        self._mgrt_baseurl = 'http://127.0.0.1:8080/deviceService/'
+            try:
+                self._mgrt_baseurl = self._load_mgrt_baseurl()
+            except Exception as e:
+                print "error"
+                print "\t" + e.message
+                print "\t" + sys._getframe().f_code.co_filename
+                print "\t" + str(sys._getframe().f_lineno - 5) + 'line'
+                print e.message
+                sys.exit(0)
         while not self._reg() and not self._quit:
             self._quit_notify.wait(5.000)
         while self._hb and not self._quit:
@@ -61,6 +68,10 @@ class RegHt(threading.Thread):
         # TODO: 从配置中读取 ..
     	ret = json.load(io.open(r'../host/config.json', 'r', encoding='utf-8'))
         r = ret['regHbService']
+        if ' ' in r['sip'] or ' ' in r['sport']:
+            raise Exception("include ' '")
+        if r['sip'] == '' or r['sport'] == '':
+            raise Exception("include''")
 
         return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
 
