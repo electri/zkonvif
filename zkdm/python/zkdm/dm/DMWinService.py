@@ -7,6 +7,7 @@ import platform
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import ServicesManager
 sys.path.append('../')
+from utils import zkutils
 from common.reght import RegHt
 sys.path.append('../host')
 import Stat
