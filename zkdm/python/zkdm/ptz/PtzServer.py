@@ -30,10 +30,7 @@ def load_ptz(config):
 		'addr': config['config']['addr'],
 		'ptz': None
 	}
-	print type(ptz['name'])
-	print type(ptz['serial'])
-	print type(ptz['addr'])
-	print type(ptz['ptz'])
+
 	if 'extent' in config['config']:
 		ptz['cfgfile'] = config['config']['extent']
 
@@ -139,7 +136,9 @@ class InternalHandler(RequestHandler):
 		print command
 		if command == 'exit':
 			rc['info'] = 'exit!!!'
+			global rhs
 			for e in rhs:
+				print 'ptz join'
 				e.join()
 			global _ioloop
 			_ioloop.stop()

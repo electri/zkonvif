@@ -143,9 +143,9 @@ def make_app():
 
 import urllib2
 import time
-def get_utf8_body(self, req):
+def get_utf8_body(req):
 	# FIXME: 更合理的应该是解析 Content-Type ...
-	body = '';
+	body = ''
 	b = req.read().decode('utf-8')
 	while b:
 		body += b
@@ -156,11 +156,11 @@ def reg(h_ip, h_mac, h_type, sip, sport):
 	url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
 		  (sip, sport, h_mac, h_ip, h_type)
 	try:
-		s = urllib2.openurl(url)
+		s = urllib2.urlopen(url)
 	except:
 		return False
 	ret = get_utf8_body(s)
-	if u'成功' in ret:
+	if u'ok' in ret:
 		return True
 	else:
 		return False
