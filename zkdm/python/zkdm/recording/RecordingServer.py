@@ -9,6 +9,7 @@ import socket
 import json
 
 from RecordingCommand import RecordingCommand
+from ClassSchedule import Schedule
 from tornado.options import define, options
 from CardServer import start_card_server
 sys.path.append('../')
@@ -27,6 +28,7 @@ def _param(req, key):
         return None
 
 _rcmd = None
+_class_schedule = None
 rh = None
 
 class MainHandler(tornado.web.RequestHandler):
@@ -49,6 +51,11 @@ class CmdHandler(tornado.web.RequestHandler):
             rc = _rcmd.preview()
             self.write(rc)
             return
+        elif cmd == 'UpdateClassSchedule':
+            print cmd
+            rc = _class_schedule._analyse_json()
+            self.write(rc)
+            return 
         elif cmd == 'RTMPLiving':
             try:
                 req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublish')
@@ -123,6 +130,12 @@ def main():
 
     global _rcmd
     _rcmd = RecordingCommand()
+    global _class_schedule
+    _class_schedule = Schedule()
+    _class_schedule._analyse_json()
+
+    global rh
+    rh = RegHt('recording','recording','10006/recording')
 
     application.listen(10006)
 
@@ -131,9 +144,6 @@ def main():
     global _ioloop
     _ioloop = IOLoop.instance()
     _ioloop.start()
-
-    global rh
-    rh = RegHt('recording','recording','10006/recording')
        
 if __name__ == "__main__":
     main()
