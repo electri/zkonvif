@@ -58,7 +58,7 @@ class Schedule():
                     MAC += mac[2*i:2*i+2]+'-'
             data = ''
             try:
-                response = urllib2.urlopen('http://localhost:8080/deviceService/curriculum?mac=' + MAC)
+                response = urllib2.urlopen('http://192.168.12.46:8080/deviceService/curriculum?mac=' + MAC)
                 data = json.load(response)
                 with open('CourseInfo.json','w') as savefile:
                     json.dump(data,savefile)
