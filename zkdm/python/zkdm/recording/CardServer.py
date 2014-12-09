@@ -425,9 +425,11 @@ class InternalHandler(RequestHandler):
 
 def start_card_server():
     global client
-    wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL'  
-    client = Client(wsdl_url) 
-
+    wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
+    try:
+        client = Client(wsdl_url) 
+    except:
+        print 'wsdl_url is disable!'
     tornado.options.parse_command_line()
     application = tornado.web.Application([
         url(r"/", MainHandler),
