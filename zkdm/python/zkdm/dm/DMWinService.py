@@ -158,6 +158,7 @@ def reg(h_ip, h_mac, h_type, sip, sport):
 	try:
 		s = urllib2.urlopen(url)
 	except Exception as e:
+		print url
 		print e.message
 		return False
 	ret = get_utf8_body(s)
@@ -187,7 +188,9 @@ def reg_host():
 	
 
 def main():
+	print '=====>enter reg_host'
 	reg_host()
+	print '====>out reg_host'
 	# 服务管理器，何时 close ??
 	global _sm
 	_sm = ServicesManager.ServicesManager()
