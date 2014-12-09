@@ -108,7 +108,6 @@ class InternalHandler(RequestHandler):
             self.set_header('Content-Type', 'application/json')
             rc['info'] = 'exit!!!!'
             self.write(rc)
-            rh.join()
             _ioloop.stop()
         elif command == 'version':
             self.set_header('Content-Type', 'application/json')
@@ -134,9 +133,6 @@ def main():
     _class_schedule = Schedule()
     _class_schedule._analyse_json()
 
-    global rh
-    rh = RegHt('recording','recording','10006/recording')
-
     application.listen(10006)
 
     start_card_server()
@@ -144,6 +140,9 @@ def main():
     global _ioloop
     _ioloop = IOLoop.instance()
     _ioloop.start()
+
+    global rh
+    rh = RegHt('recording','recording','10006/recording')
        
 if __name__ == "__main__":
     main()

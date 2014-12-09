@@ -415,7 +415,8 @@ class InternalHandler(RequestHandler):
             self.set_header('Content-Type', 'application/json')
             rc['info'] = 'exit!!!!'
             self.write(rc)
-            _ioloop.stop()
+            print '_____-------'
+            _ioloop_card.stop()
         elif command == 'version':
             self.set_header('Content-Type', 'application/json')
             rc['info'] = 'now version not supported!'
@@ -440,9 +441,9 @@ def start_card_server():
 
 
     application.listen(10007)
-    global _ioloop
-    _ioloop = tornado.ioloop.IOLoop.instance()
-    _ioloop.start()
+    global _ioloop_card
+    _ioloop_card = tornado.ioloop.IOLoop.instance()
+    #_ioloop_card.start()
 
 if __name__ == "__main__":
     start_card_server()

@@ -52,8 +52,7 @@ class RegHt(threading.Thread):
                 print "\t" + e.message
                 print "\t" + sys._getframe().f_code.co_filename
                 print "\t" + str(sys._getframe().f_lineno - 5) + 'line'
-                print e.message
-                sys.exit(0)
+                self._mgrt_baseurl = r'http://127.0.0.1:8080/deviceService/' 
         while not self._reg() and not self._quit:
             self._quit_notify.wait(5.000)
         while self._hb and not self._quit:
