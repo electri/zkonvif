@@ -11,10 +11,11 @@ sys.path.append("../")
 from common.Log import Log
 from common.reght import RegHt
 import thread
+import time
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
+time.sleep(10000)
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
@@ -79,7 +80,7 @@ for e in _all_ptzs:
 		service_url= '10003' + '/' +  stype + '/' + sid
 		rh = RegHt(stype, sid, service_url)
 		rhs.append(rh)	
-
+		
 class HelpHandler(RequestHandler):
 	''' 返回 help 
 		 晕啊，必须考虑当前目录的问题 ...
@@ -139,7 +140,10 @@ class InternalHandler(RequestHandler):
 		print command
 		if command == 'exit':
 			rc['info'] = 'exit!!!'
+			global rhs
+			len(rhs)
 			for e in rhs:
+				print 'stop join'
 				e.join()
 			global _ioloop
 			_ioloop.stop()

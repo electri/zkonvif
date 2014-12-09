@@ -195,7 +195,7 @@ def reg_host():
 
 if __name__ == '__main__':
 
-	reg_host()
+#	reg_host()
 	# 服务管理器，何时 close ??
 	_sm = ServicesManager.ServicesManager()
 	app = make_app()
