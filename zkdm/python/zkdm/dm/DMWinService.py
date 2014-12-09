@@ -157,7 +157,8 @@ def reg(h_ip, h_mac, h_type, sip, sport):
 		  (sip, sport, h_mac, h_ip, h_type)
 	try:
 		s = urllib2.urlopen(url)
-	except:
+	except Exception as e:
+		print e.message
 		return False
 	ret = get_utf8_body(s)
 	if u'ok' in ret:
