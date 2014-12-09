@@ -371,7 +371,6 @@ class PtzWrap(object):
 	def __load_ptz_module(self):
 		''' 加载 ptz 模块 '''
 		ptz = {}
-		print 'en ........ to load:', _ptz_so
 		ptz['so'] = CDLL(_ptz_so)
 
 		ptz['is_prepared'] = ptz['so'].is_prepared
