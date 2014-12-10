@@ -466,7 +466,7 @@ def livingS(url):
 
 def start_card_server():
     global client
-    wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
+    wsdl_url = 'http://172.16.1.14:8086/UIServices?WSDL' 
     try:
         client = Client(wsdl_url) 
     except:
