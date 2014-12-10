@@ -423,6 +423,33 @@ class InternalHandler(RequestHandler):
             rc['result'] = 'err'
             self.write(rc)
 
+def livingS(url):
+    rc = {}
+    try:
+        living_info = client.factory.create('ns0:LivingInfo')
+        living_list = client.service.Living()['message']['LivingList'][0]
+        print living_list
+
+        for i in range(0,len(living_list)):
+            if i==0: #默认只开启一路直播
+                if hasattr(living_list[i], 'Rtmp_fms'):
+                    living_list[i]['Rtmp']['ServerName'] = url
+                if hasattr(living_list[i], 'LivingType'):
+                    living_list[i]['LivingType'] = 'RTMP'
+                living = client.factory.create('ns0:Living')
+                living = living_list[i]
+                living_info.LivingList[0].append(living)
+
+        client.service.LivingS(living_info)
+
+        rc['result'] = 'ok'
+        rc['info'] = ''
+    except Exception as error:
+        rc['result'] = 'error'
+        rc['info'] = str(error)
+
+	return rc
+
 def start_card_server():
     global client
     wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
