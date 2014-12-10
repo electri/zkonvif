@@ -423,6 +423,7 @@ class InternalHandler(RequestHandler):
             rc['result'] = 'err'
             self.write(rc)
 
+
 def livingS(url):
     rc = {}
     try:
@@ -430,12 +431,24 @@ def livingS(url):
         living_list = client.service.Living()['message']['LivingList'][0]
         print living_list
 
+        url = url[7:]
+        ip = url.split(':')[0]
+        url = url[len(ip)+1:]
+        port = url.split('/')[0]
+        url =url[len(port)+1:]
+        app = url.split('/')[0]
+        url = url[len(app)+1:]
+        stream_id = url[:-1]
+
         for i in range(0,len(living_list)):
             if i==0: #默认只开启一路直播
                 if hasattr(living_list[i], 'Rtmp_fms'):
-                    living_list[i]['Rtmp']['ServerName'] = url
+                    living_list[i]['Rtmp_fms']['NetPort'] = port
+                    living_list[i]['Rtmp_fms']['ServicIp'] = ip
+                    living_list[i]['Rtmp_fms']['App'] = app
+                    living_list[i]['Rtmp_fms']['StreamId'] = stream_id
                 if hasattr(living_list[i], 'LivingType'):
-                    living_list[i]['LivingType'] = 'RTMP'
+                    living_list[i]['LivingType'] = 'RTMPtoFMS'
                 living = client.factory.create('ns0:Living')
                 living = living_list[i]
                 living_info.LivingList[0].append(living)
@@ -450,6 +463,7 @@ def livingS(url):
 
 	return rc
 
+
 def start_card_server():
     global client
     wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
@@ -457,22 +471,6 @@ def start_card_server():
         client = Client(wsdl_url) 
     except:
         print 'wsdl_url is disable!'
-    tornado.options.parse_command_line()
-    application = tornado.web.Application([
-        url(r"/", MainHandler),
-        url(r"/card/help", HelpHandler),
-        url(r"/card/ResourceList", ResourceListHandler),
-        url(r"/card/ResourceListD", ResourceListDHandler),
-        url(r"/card/ResourceListS", ResourceListSHandler),
-        url(r"/card/LivingS",LivingSHandler),
-        url(r"/card/internal", InternalHandler),
-        ])
-
-
-    application.listen(10007)
-    global _ioloop_card
-    _ioloop_card = tornado.ioloop.IOLoop.instance()
-    #_ioloop_card.start()
 
 if __name__ == "__main__":
     start_card_server()
