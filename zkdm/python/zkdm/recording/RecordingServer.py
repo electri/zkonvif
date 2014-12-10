@@ -68,7 +68,7 @@ class CmdHandler(tornado.web.RequestHandler):
 
                 response = urllib2.urlopen(req,data)
                 content = json.load(response)
-                url = content['content']['stream_address']
+                url = content['content']['rtmp_repeater']
 
                 urllib2.Request('http://127.0.0.1:10007/card/LivingS?url='+url)
                 time.sleep(1)

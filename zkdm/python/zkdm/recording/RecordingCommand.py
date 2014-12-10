@@ -19,15 +19,14 @@ class RecordingCommand():
             host='127.0.0.1'
             port=1230
             s.connect((host,port))
-            print command
-            command = command.encode('utf-8')
-            print command
+            #command = command.encode('utf-8')
             s.send(command+"\n")
-            s.recv(3)  #È¥³ýUTF-8 BOM
-	    message=s.recv(512)
-	    rc['info']=message
-	    s.close()
-	    return rc
+            #È¥³ýUTF-8 BOM
+            s.recv(3)
+            message=s.recv(512)
+            rc['info']=message
+            s.close()
+            return rc
         except Exception as err:
             rc['result']='error'
             rc['info']=str(err)
