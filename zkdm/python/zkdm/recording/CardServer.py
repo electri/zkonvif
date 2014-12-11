@@ -427,9 +427,14 @@ class InternalHandler(RequestHandler):
 def livingS(url):
     rc = {}
     try:
+        print url
         living_info = client.factory.create('ns0:LivingInfo')
         living_list = client.service.Living()['message']['LivingList'][0]
+        living_list = client.service.Living()['message']['IsStartFilmLiving'] = 'True'
+        living_list = client.service.Living()['message']['IsSynRecord'] = 'False'
+
         print living_list
+        #print client.service.Living()['message']
 
         url = url[7:]
         ip = url.split(':')[0]
@@ -442,6 +447,8 @@ def livingS(url):
 
         for i in range(0,len(living_list)):
             if i==0: #默认只开启一路直播
+                if hasattr(living_list[i],'IsUse'):
+                    living_list[i]['IsUse'] = 'True'
                 if hasattr(living_list[i], 'Rtmp_fms'):
                     living_list[i]['Rtmp_fms']['NetPort'] = port
                     living_list[i]['Rtmp_fms']['ServicIp'] = ip
@@ -449,6 +456,19 @@ def livingS(url):
                     living_list[i]['Rtmp_fms']['StreamId'] = stream_id
                 if hasattr(living_list[i], 'LivingType'):
                     living_list[i]['LivingType'] = 'RTMPtoFMS'
+                if hasattr(living_list[i],'Rtmp'):
+                    living_list[i]['Rtmp']['ServerName'] = 'None'
+                living = client.factory.create('ns0:Living')
+                living = living_list[i]
+                living_info.LivingList[0].append(living)
+            else:
+                if hasattr(living_list[i],'IsUse'):
+                    living_list[i]['IsUse'] = 'True'
+                if hasattr(living_list[i], 'Rtmp_fms'):
+                    living_list[i]['Rtmp_fms']['ServicIp'] = '  '
+                    living_list[i]['Rtmp_fms']['StreamId'] = '  '
+                if hasattr(living_list[i],'Rtmp'):
+                    living_list[i]['Rtmp']['ServerName'] = 'None'
                 living = client.factory.create('ns0:Living')
                 living = living_list[i]
                 living_info.LivingList[0].append(living)
@@ -468,7 +488,8 @@ def start_card_server():
     global client
     wsdl_url = 'http://172.16.1.14:8086/UIServices?WSDL' 
     try:
-        client = Client(wsdl_url) 
+        client = Client(wsdl_url)
+        print client
     except:
         print 'wsdl_url is disable!'
 
