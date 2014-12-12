@@ -11,11 +11,10 @@ sys.path.append("../")
 from common.Log import Log
 from common.reght import RegHt
 import thread
-import time
+
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-time.sleep(10000)
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
@@ -161,7 +160,6 @@ def main():
 	app.listen(10003)
 	_ioloop.start()
 	# 此时说明结束 ...
-	print 'ptz service end ...'
 
 
 
