@@ -8,7 +8,7 @@ import json, io, os
 from PtzWrap import PtzWrap
 import logging
 import inspect
-import logging
+
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -42,12 +42,15 @@ def load_ptz(config):
 			ptz['ptz'].open_with_config(filename)
 		else:
 			print 'open ptz:' , ptz['serial'], 'addr:', ptz['addr']
-			logging.debug('open ptz: %s, addr: %s', ptz['serial'], ptz['addr'])
-			ptz['ptz'].info(ptz['serial'].encode('ascii'), int(ptz['addr']))
+			ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
+
+		logging.debug('====>open ptz: %s', ptz)
+		logging.debug('succeed')
+
 	else:
 		ptz['ptz'] = None
 		print 'open failure'
-		logging.warn('open failure')
+		logging.warn('===>open ptz failure')
 	return ptz
 
 
