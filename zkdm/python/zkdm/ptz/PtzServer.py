@@ -98,10 +98,10 @@ class GetConfigHandler(RequestHandler):
 		return { 'result':'ok', 'info':'', 'value': { 'type': 'list', 'data':all_ptzs_config() } }
 
 
+from tornado.web import *
 
 class ControllingHandler(RequestHandler):
 	''' 处理云台操作 '''
-	from tornado.web import *
 	@asynchronous
 	def get(self, name, method):
 		thread.start_new_thread(self.callback, (name, method))
@@ -156,7 +156,6 @@ def make_app():
 			url(r'/ptz/internal', InternalHandler),
 			])
 
-@gen.coroutine
 def main():
 	app = make_app()
 	app.listen(10003)

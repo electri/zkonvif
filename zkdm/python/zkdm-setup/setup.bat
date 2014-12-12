@@ -1,10 +1,7 @@
-@echo on
-@echo install python 2.7.8
-
-@python-2.7.8.msi
-@echo instll pythonwin32:
-@pywin32-218.win32-py2.7.exe
-
+@if not exist C:\Python27\python.exe (
+	@echo install 
+	@python-2.7.8.msi  
+)
 @echo cover c:\Python27
 
 @xcopy .\Lib c:\Python27\Lib /EY

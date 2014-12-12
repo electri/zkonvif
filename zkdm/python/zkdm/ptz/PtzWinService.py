@@ -8,12 +8,10 @@ import json, io, os
 from PtzWrap import PtzWrap
 import logging
 import inspect
+import logging
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-#global _all_config
-#global _all_ptzs
-#_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
@@ -40,13 +38,16 @@ def load_ptz(config):
 		if 'cfgfile' in ptz:
 			filename = ptz['cfgfile'].encode('ascii')
 			print 'open with cfg:' , filename
+			logging.info('open with cfg: %s', filename)
 			ptz['ptz'].open_with_config(filename)
 		else:
 			print 'open ptz:' , ptz['serial'], 'addr:', ptz['addr']
-			ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
+			logging.debug('open ptz: %s, addr: %s', ptz['serial'], ptz['addr'])
+			ptz['ptz'].info(ptz['serial'].encode('ascii'), int(ptz['addr']))
 	else:
 		ptz['ptz'] = None
 		print 'open failure'
+		logging.warn('open failure')
 	return ptz
 
 
@@ -57,10 +58,6 @@ def load_all_ptzs():
 	for x in ptzs:
 		ret[x['name']] = (load_ptz(x))
 	return ret
-
-
-# 这里保存所有云台
-#_all_ptzs = load_all_ptzs()
 
 class HelpHandler(RequestHandler):
 	''' 返回 help 
@@ -92,7 +89,6 @@ class ControllingHandler(RequestHandler):
 
 	def __exec_ptz_method(self, name, method, params):
 		global _all_ptzs
-		# print 'name:', name, ' method:', method, ' params:', params
 		if name in _all_ptzs:
 			if _all_ptzs[name]['ptz']:
 				return _all_ptzs[name]['ptz'].call(method, params)
@@ -137,11 +133,11 @@ class PtzService(win32serviceutil.ServiceFramework):
 		win32serviceutil.ServiceFramework.__init__(self,args)
 		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None) 
 		self.ptz_thread_ = PtzThread()
+		logging.basicConfig(filename='ptz.log', filemode='w', level=logging.DEBUG)	
 		global _all_config
 		global _all_ptzs
 		_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 		_all_ptzs = load_all_ptzs()
-
 		
 	def SvcStop(self):
 		win32event.SetEvent(self.hWaitStop)
