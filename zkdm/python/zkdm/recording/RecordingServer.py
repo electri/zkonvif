@@ -11,7 +11,7 @@ import json
 from RecordingCommand import RecordingCommand
 from ClassSchedule import Schedule
 from tornado.options import define, options
-from CardServer import start_card_server
+from CardServer import start_card_server, livingS
 sys.path.append('../')
 from common.utils import zkutils
 from common.reght import RegHt
@@ -68,19 +68,18 @@ class CmdHandler(tornado.web.RequestHandler):
 
                 response = urllib2.urlopen(req,data)
                 content = json.load(response)
-                url = content['content']['stream_address']
+                url = content['content']['rtmp_repeater']
+                print url
 
-                urllib2.Request('http://127.0.0.1:10007/card/LivingS?url='+url)
+                livingS(url)
+                #urllib2.Request('http://127.0.0.1:10007/card/LivingS?url='+url)
                 time.sleep(1)
                 rc=_rcmd.send_command('RecordCmd=StartBroadCast')
                 if rc['result'] == 'ok':
                     rc['info'] = url
                 self.set_header('Content-Type', 'application/json')
                 self.write(rc)
-                #print url
-                rc['result'] = 'ok'
-                rc['info'] = url
-                self.write(rc)
+
             except Exception as err:
                 rc['result'] = 'error'
                 rc['info'] = str(err)
@@ -131,7 +130,7 @@ def main():
     _rcmd = RecordingCommand()
     global _class_schedule
     _class_schedule = Schedule()
-    _class_schedule._analyse_json()
+    #_class_schedule._analyse_json()
 
     application.listen(10006)
 
