@@ -11,7 +11,8 @@ import json
 from RecordingCommand import RecordingCommand
 from ClassSchedule import Schedule
 from tornado.options import define, options
-from CardServer import start_card_server, livingS
+from CardServer import start_card_server
+from LivingServer import StartLiving
 sys.path.append('../')
 from common.utils import zkutils
 from common.reght import RegHt
@@ -52,38 +53,12 @@ class CmdHandler(tornado.web.RequestHandler):
             self.write(rc)
             return
         elif cmd == 'UpdateClassSchedule':
-            print cmd
             rc = _class_schedule._analyse_json()
             self.write(rc)
             return 
         elif cmd == 'RTMPLiving':
-            try:
-                req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublish')
-                data = {}
-                _utils = zkutils()
-                data['mac'] = _utils.mymac()
-                data['uid'] = _utils.mymac() + 'Living1'
-                data['STATUS'] = '0'
-                data = json.dumps(data)
-
-                response = urllib2.urlopen(req,data)
-                content = json.load(response)
-                url = content['content']['rtmp_repeater']
-                print url
-
-                livingS(url)
-                #urllib2.Request('http://127.0.0.1:10007/card/LivingS?url='+url)
-                time.sleep(1)
-                rc=_rcmd.send_command('RecordCmd=StartBroadCast')
-                if rc['result'] == 'ok':
-                    rc['info'] = url
-                self.set_header('Content-Type', 'application/json')
-                self.write(rc)
-
-            except Exception as err:
-                rc['result'] = 'error'
-                rc['info'] = str(err)
-                self.write(rc)
+            rc = StartLiving()
+            self.write(rc)
             return
         else:
             args = (self.request.uri.split('?'))[1]
@@ -130,7 +105,7 @@ def main():
     _rcmd = RecordingCommand()
     global _class_schedule
     _class_schedule = Schedule()
-    #_class_schedule._analyse_json()
+    _class_schedule._analyse_json()
 
     application.listen(10006)
 

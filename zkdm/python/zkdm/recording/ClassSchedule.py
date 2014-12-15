@@ -8,7 +8,7 @@ import urllib2
 sys.path.append('../')
 from common.utils import zkutils
 from RecordingCommand import RecordingCommand
-
+from LivingServer import StartLiving, StopLiving
 _record_thread = []
 
 class Schedule():
@@ -65,7 +65,6 @@ class Schedule():
             except Exception as err:
                 f = file('CourseInfo.json')
                 data = json.load(f)
-            #response = urllib2.urlopen('http://192.168.12.46:8080/deviceService/curriculum?mac=00-E0-4C-C2-08-11')
             print data
 
             self._stop_execute_task()
@@ -124,8 +123,16 @@ class Schedule():
                         _record_thread.append(thread)    
 
                     if _recording == True and _stop_delay_time>0:
-                        stop_thread =  threading.Timer(_delay_time,_stop_record)
-                        _record_thread.append(stop_thread) 
+                        stop_thread =  threading.Timer(_stop_delay_time,_stop_record)
+                        _record_thread.append(stop_thread)
+
+                    if _living == True and _delay_time>0:
+                        thread = threading.Timer(_delay_time,StartLiving)
+                        _record_thread.append(thread)
+
+                    if _living == True and _stop_delay_time>0:
+                        stop_thread = threading.Timer(_stop_delay_time,StopLiving)
+                        _record_thread.append(stop_thread)
 
         except Exception as err:
             rc['result'] = 'error'
