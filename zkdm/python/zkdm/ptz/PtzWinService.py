@@ -8,7 +8,7 @@ import json, io, os
 from PtzWrap import PtzWrap
 import logging
 import inspect
-
+import ArmPtz
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -84,10 +84,17 @@ class GetConfigHandler(RequestHandler):
 
 class ControllingHandler(RequestHandler):
 	''' 处理云台操作 '''
-	def get(self, name, method):
+	def get(self,token, name, method):
 		''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
 		'''
-		ret = self.__exec_ptz_method(name, method, self.request.arguments)
+		ret = ''
+		global _tokens
+		num = int(token)
+		if _tokens[num]['type'] == 'local':
+			ret = self.__exec_ptz_method(name, method, self.request.arguments)
+		if _tokens[num]['type'] == 'arm':
+			armcmd = ArmPtz.toArmStr(name, method, self.request.aruments)
+			ret = ArmPtz.SendThenRecv((_tokens[num]['ip'], _tokens[num]['port']  
 		self.write(ret)
 
 	def __exec_ptz_method(self, name, method, params):
@@ -106,7 +113,7 @@ def make_app():
 	return Application([
 			url(r'/ptz/help', HelpHandler),
 			url(r"/ptz/config(/?)", GetConfigHandler),
-			url(r'/ptz/([^\/]+)/([^\?]+)', ControllingHandler),
+			url(r'/ptz/([^\/]+)/([^\/]+)/([^\?]+)', ControllingHandler),
 			])
 
 
@@ -127,6 +134,7 @@ class PtzThread(threading.Thread):
 import win32serviceutil
 import win32service
 import win32event
+import json
 class PtzService(win32serviceutil.ServiceFramework):
 	_svc_name_ = "zonekey.service.Ptz"
 	_svc_display_name_ = "zonekey.service.Ptz"
@@ -141,6 +149,8 @@ class PtzService(win32serviceutil.ServiceFramework):
 		global _all_ptzs
 		_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 		_all_ptzs = load_all_ptzs()
+		global _tokens
+		_tokens = json.load(io.open('./tokens.json', 'r', encode='utf-8'))
 		
 	def SvcStop(self):
 		win32event.SetEvent(self.hWaitStop)
