@@ -15,6 +15,8 @@ class GroupOfServices:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
         如果服务太多，每隔10秒，连续注册/心跳，会导致网络剧烈抖动，
         因此这里简单的划分为 10 个组，然后每个 1秒执行一组 ....
+
+        当注册成功，则放到心跳组里，当心跳失败，则放到注册组里
     '''
     def __init__(self, services_desc):
         self.__10b = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要注册的
@@ -42,7 +44,6 @@ class GroupOfServices:
             i += 1
             yield
 
-
     def __reg(self, op, breg, bht):
         ''' 对 breg 中的进行注册，成功，就从 breg 中删除，并且保持到 bht 中 '''
         for sd in breg:
@@ -50,16 +51,21 @@ class GroupOfServices:
                 breg.remove(sd)
                 bht.append(sd)
 
-
     def ht(self, htop):
         ''' 对下一组执行心跳 '''
         i = 0
         while True:
             i %= len(self.__10bht)
-            for sd in self.__10bht[i]:
-                htop(sd)
+            self.__ht(htop, self.__10b[i], self.__10bht[i])
             i += 1
             yield
+
+    def __ht(self, op, breg, bht):
+        ''' 对 bht 中的进行心跳，如果失败，就从 bht 中删除，加到 breg 中 '''
+        for sd in bht:
+            if not op(sd):
+                bht.remove(sd)
+                breg.append(sd)
 
 
 class RegHtOper:
