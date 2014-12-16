@@ -63,6 +63,7 @@ class GroupOfServices:
 
 
 class RegHtOper:
+    ''' 封装到名字服务的操作 '''
     def __init__(self, mgrt_base_url, ip, mac):
         if mgrt_base_url is None:
             mgrt_base_url = self.__load_base_url()
