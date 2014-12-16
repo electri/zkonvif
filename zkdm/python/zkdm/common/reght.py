@@ -11,6 +11,8 @@
 import urllib2, sys, json, io, time, threading, logging
 from utils import zkutils
 
+verbose = False
+
 class GroupOfServices:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
         如果服务太多，每隔10秒，连续注册/心跳，会导致网络剧烈抖动，
@@ -23,7 +25,6 @@ class GroupOfServices:
         self.__10bht = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要心跳的
         self.__distribution(services_desc)
 
-
     def __distribution(self, sds):
         ''' 将服务列表，平均分配到 __10b 中 '''
         i = 0
@@ -31,7 +32,6 @@ class GroupOfServices:
             self.__10b[i].append(sd)
             i += 1;
             i %= len(self.__10b)
-
 
     def reg(self, regop):
         ''' 对下一组，执行注册 
@@ -67,12 +67,31 @@ class GroupOfServices:
                 bht.remove(sd)
                 breg.append(sd)
 
+    def unreg(self, unregop, sd_to_unreg):
+        ''' 注销 bunreg 中的对象
+            简单的从 breg, bht 中查找，找到后，删除，并且执行 unregop
+            因为都是单线程操作，安全 ...
+        '''
+        for b in self.__10b:
+            self.__unreg(b, sd_to_unreg, unregop)
+
+        for b in self.__10bht:
+            self.__unreg(b, sd_to_unreg, unregop)
+
+    def __unreg(self, b, sd_to_unreg, unregop):
+        for sd in b:
+            if sd['type'] == sd_to_unreg['type'] and sd['id'] == sd_to_unreg['id']:
+                if unregop(sd):
+                    b.remove(sd)
+
 
 class RegHtOper:
     ''' 封装到名字服务的操作 '''
     def __init__(self, mgrt_base_url, ip, mac):
         if mgrt_base_url is None:
             mgrt_base_url = self.__load_base_url()
+        if verbose:
+            print 'using name service url:', mgrt_base_url
         self.__mgrt_base_url = mgrt_base_url
         self.__ip = ip
         self.__mac = mac
@@ -84,12 +103,16 @@ class RegHtOper:
         while b:
             body += b
             b = req.read().decode('utf-8')
+        if verbose:
+            print body
         return body
 
     def regop(self, sd):
         url = self.__mgrt_base_url + 'registering?serviceinfo=%s_%s_%s_%s_%s' % \
               (self.__ip, self.__mac, sd['type'], sd['id'], sd['url'])
         try:
+            if verbose:
+                print url
             req = urllib2.urlopen(url)
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
@@ -105,6 +128,8 @@ class RegHtOper:
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self.__ip, self.__mac, sd['type'], sd['id'])
         try:
+            if verbose:
+                print url
             req = urllib2.urlopen(url)
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
@@ -116,6 +141,14 @@ class RegHtOper:
             return True
         else:
             return False
+
+    def unregop(self, sd):
+        ''' FIXME：因为名字服务端，似乎没有实现这个 ...，总是返回成功吧 '''
+        url = self.__mgrt_base_url + 'unRegistering?...'
+        if verbose:
+            print url
+        return True
+
 
     def __load_base_url(self):
         # TODO: 从配置中读取 ..
@@ -138,6 +171,8 @@ class RegHt(threading.Thread):
         self.__quit_notify = threading.Event()
         self.__mgrt_base_url = mgrt_baseurl
         self.__sds = sds
+        self.__lock = threading.RLock()
+        self.__unregs = [] # 保存需要主动注销的 ...
         threading.Thread.__init__(self)
         self.daemon = True # 因为有心跳，不调用 unreg()，也是安全的
         self.start()
@@ -162,6 +197,27 @@ class RegHt(threading.Thread):
                 continue
             next(regfunc)
             next(htfunc)
+            self.__to_unreg(gos, oper.unregop)
+    
+    def __to_unreg(self, gos, func):
+        self.__lock.acquire()
+        for sd in self.__unregs:
+            gos.unreg(func, sd)
+        self.__lock.release()
+
+    def unreg(self, sd):
+        ''' 主动注销 sd 对应的 ... '''
+        self.__lock.acquire()
+        self.__unregs.append(sd)
+        self.__lock.release()
+
+
+    def unregs(self, sds):
+        ''' 主动注销一组 '''
+        self.__lock.acquire()
+        for sd in sds:
+            self.__unregs.append(sd)
+        self.__lock.release()
 
 
 
@@ -207,9 +263,23 @@ sds = [ { 'type':'test', 'id':'1', 'url':'test://172.16.1.103:11111' },
         { 'type':'test', 'id':'40', 'url':'test://172.16.1.103:11111' },
       ]
 
+sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://172.16.1.103:11111' },
+        { 'type':'test', 'id':'2', 'url':'test://172.16.1.103:11111' },
+        { 'type':'test', 'id':'3', 'url':'test://172.16.1.103:11111' },
+        { 'type':'test', 'id':'4', 'url':'test://172.16.1.103:11111' },
+        { 'type':'test', 'id':'5', 'url':'test://172.16.1.103:11111' },
+        { 'type':'test', 'id':'6', 'url':'test://172.16.1.103:11111' },
+        { 'type':'test', 'id':'7', 'url':'test://172.16.1.103:11111' },
+        { 'type':'test', 'id':'8', 'url':'test://172.16.1.103:11111' },
+        { 'type':'test', 'id':'9', 'url':'test://172.16.1.103:11111' },
+      ]
+
 
 if __name__ == '__main__':
+    verbose = True
     rh = RegHt(sds)
+    time.sleep(60.0);
+    rh.unregs(sds_minus)
     time.sleep(60.0);
     rh.join()
 
