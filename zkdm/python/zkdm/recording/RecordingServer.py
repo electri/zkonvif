@@ -93,30 +93,47 @@ class InternalHandler(RequestHandler):
             self.write(_service)
 
 def main():
-    tornado.options.parse_command_line()
-    application = tornado.web.Application([
-        url(r"/", MainHandler),
-        url(r"/recording/cmd",CmdHandler),
-        url(r"/recording/help", HelpHandler),
-        url(r"/recording/internal",InternalHandler),
-    ])
+    try:
+        tornado.options.parse_command_line()
+        application = tornado.web.Application([
+            url(r"/", MainHandler),
+            url(r"/recording/cmd",CmdHandler),
+            url(r"/recording/help", HelpHandler),
+            url(r"/recording/internal",InternalHandler),
+        ])
 
-    global _rcmd
-    _rcmd = RecordingCommand()
-    global _class_schedule
-    _class_schedule = Schedule()
-    _class_schedule._analyse_json()
+        global _rcmd
+        _rcmd = RecordingCommand()
+        global _class_schedule
+        _class_schedule = Schedule()
+        _class_schedule._analyse_json()
 
-    application.listen(10006)
+        application.listen(10006)
 
-    start_card_server()
+        start_card_server()
 
-    global _ioloop
-    _ioloop = IOLoop.instance()
-    _ioloop.start()
+        global _ioloop
+        _ioloop = IOLoop.instance()
+        _ioloop.start()
 
-    global rh
-    rh = RegHt('recording','recording','10006/recording')
+        global rh
+        rh = RegHt('recording','recording','10006/recording')
+    except Exception as error:
+        print error
+       
+def is_running(ip,port):
+    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)  
+    try:  
+        s.connect((ip,int(port)))  
+        s.shutdown(2)
+        #利用shutdown()函数使socket双向数据传输变为单向数据传输。shutdown()需要一个单独的参数，  
+        #该参数表示了如何关闭socket。具体为：0表示禁止将来读；1表示禁止将来写；2表示禁止将来读和写。  
+        s.close() 
+        return True  
+    except Exception as error:
+        return False 
        
 if __name__ == "__main__":
-    main()
+    result = is_running('127.0.0.1',10006)
+    if result == False:
+        main()
