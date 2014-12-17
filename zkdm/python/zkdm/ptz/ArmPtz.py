@@ -1,0 +1,86 @@
+import socket
+
+def TurnStr(name, direction, speed):
+	return 'PtzCmd=Turn&Who=%s&Direction=%s&Speed=%s'%(name,derection,speed)
+
+def PresetStr(name, cmd, ids):
+	return 'PtzCmd=%s&Who=%s%ID=%s'%(cmd, name, ids) 
+
+def ZoomStr(cmd, name):
+	return 'ptzCmd=%s&Who=%s'%(cmd, name)
+
+def toArmStr(name, cmd, params=None):
+	if cmd == 'left':
+		speed = '1'
+		if 'speed' in params:
+			speed = params['speed'][0]
+		
+		return TurnStr(name, 'left', speed)
+		
+	elif cmd == 'right':
+		speed = '1'
+		if 'speed' in params:
+			speed = params['speed'][0]
+
+		return TurnStr(name, 'right', speed)
+
+	elif cmd == 'up':
+		speed = '1'
+		if 'speed' in params:
+			speed = params['speed'][0]
+
+		return TurnStr(name, 'up', speed)
+
+	elif cmd == 'down':
+		if 'speed' in params:
+			speed = params['speed'][0]
+
+		return TurnStr(name, 'down', speed)
+	
+	elif cmd == 'stop':
+		return 'PtzCmd=StopTurn&Who=%s'%(name)
+
+	elif cmd == 'set_pos':
+		sx = '1'
+		sy = '1'
+		x = str(hex(int(params['x'][0])))
+		y = str(hex(int(params['y'][0])))
+
+		if 'sx' in params:
+			sx = params['sx'][0]
+		if 'sy' in params:
+			sy = params['sy'][0]
+		return 'PtzCmd=TurnToPos&Who=%s&X=0x%s&Y=0x%s&SX=%s&SY=%s'%(name, x, y, sx, sy)
+		
+	elif cmd == 'preset_save':
+		return PresetStr('PresetSave', name, params['id'][0])	
+
+	elif cmd == 'preset_call':
+		return PresetStr('PresetCall', name, params['id'][0])
+
+	elif cmd == 'preset_clear':
+		return PresetStr('PresetDel', name, params['id'][0])
+
+	elif cmd == 'zoom_tele':
+		return ZoomStr('Zoom_tele', name)
+
+	elif cmd == 'zoom_wide':
+		return ZoomStr('Zoom_wide', name)
+
+	elif cmd == 'zoom_stop':
+		return ZoomStr('ZoomStop', name)
+	
+	else:
+		return None
+
+def SendThenRecv(HOST, PORT, arm_command):
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	
+	s.connect((HOST, PORT))
+	s.sendall(arm_command)
+	print 'befor recv'
+	data = s.recv(1024)
+	print 'after recv'
+	s.close()
+	print repr(data)
+	return data
+	return '' 
