@@ -81,14 +81,21 @@ class GetConfigHandler(RequestHandler):
 		return { 'result':'ok', 'info':'', 'value': { 'type': 'list', 'data':all_ptzs_config() } }
 
 
+from tornado.web import *
 
 class ControllingHandler(RequestHandler):
 	''' 处理云台操作 '''
+	@asynchronous
 	def get(self, name, method):
 		''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
 		'''
+		thread.start_new_thread(self.callback, (name, method))
+
+	def callback(self, name, method):
 		ret = self.__exec_ptz_method(name, method, self.request.arguments)
+		self.set_header('Constent-Type', 'application/json')
 		self.write(ret)
+		self.finish()
 
 	def __exec_ptz_method(self, name, method, params):
 		global _all_ptzs
