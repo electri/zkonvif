@@ -9,8 +9,10 @@ import socket
 import json
 
 from RecordingCommand import RecordingCommand
+from ClassSchedule import Schedule
 from tornado.options import define, options
 from CardServer import start_card_server
+from LivingServer import StartLiving
 sys.path.append('../')
 from common.utils import zkutils
 from common.reght import RegHt
@@ -27,6 +29,7 @@ def _param(req, key):
         return None
 
 _rcmd = None
+_class_schedule = None
 rh = None
 
 class MainHandler(tornado.web.RequestHandler):
@@ -49,35 +52,13 @@ class CmdHandler(tornado.web.RequestHandler):
             rc = _rcmd.preview()
             self.write(rc)
             return
+        elif cmd == 'UpdateClassSchedule':
+            rc = _class_schedule._analyse_json()
+            self.write(rc)
+            return 
         elif cmd == 'RTMPLiving':
-            try:
-                req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublish')
-                data = {}
-                _utils = zkutils()
-                data['mac'] = _utils.mymac()
-                data['uid'] = _utils.mymac() + 'Living1'
-                data['STATUS'] = '0'
-                data = json.dumps(data)
-
-                response = urllib2.urlopen(req,data)
-                content = json.load(response)
-                url = content['content']['stream_address']
-
-                urllib2.Request('http://127.0.0.1:10007/card/LivingS?url='+url)
-                time.sleep(1)
-                rc=_rcmd.send_command('RecordCmd=StartBroadCast')
-                if rc['result'] == 'ok':
-                    rc['info'] = url
-                self.set_header('Content-Type', 'application/json')
-                self.write(rc)
-                #print url
-                rc['result'] = 'ok'
-                rc['info'] = url
-                self.write(rc)
-            except Exception as err:
-                rc['result'] = 'error'
-                rc['info'] = str(err)
-                self.write(rc)
+            rc = StartLiving()
+            self.write(rc)
             return
         else:
             args = (self.request.uri.split('?'))[1]
@@ -101,7 +82,6 @@ class InternalHandler(RequestHandler):
             self.set_header('Content-Type', 'application/json')
             rc['info'] = 'exit!!!!'
             self.write(rc)
-            rh.join()
             _ioloop.stop()
         elif command == 'version':
             self.set_header('Content-Type', 'application/json')
@@ -113,27 +93,47 @@ class InternalHandler(RequestHandler):
             self.write(_service)
 
 def main():
-    tornado.options.parse_command_line()
-    application = tornado.web.Application([
-        url(r"/", MainHandler),
-        url(r"/recording/cmd",CmdHandler),
-        url(r"/recording/help", HelpHandler),
-        url(r"/recording/internal",InternalHandler),
-    ])
+    try:
+        tornado.options.parse_command_line()
+        application = tornado.web.Application([
+            url(r"/", MainHandler),
+            url(r"/recording/cmd",CmdHandler),
+            url(r"/recording/help", HelpHandler),
+            url(r"/recording/internal",InternalHandler),
+        ])
 
-    global _rcmd
-    _rcmd = RecordingCommand()
+        global _rcmd
+        _rcmd = RecordingCommand()
+        global _class_schedule
+        _class_schedule = Schedule()
+        _class_schedule._analyse_json()
 
-    application.listen(10006)
+        application.listen(10006)
 
-    start_card_server()
+        start_card_server()
 
-    global _ioloop
-    _ioloop = IOLoop.instance()
-    _ioloop.start()
+        global _ioloop
+        _ioloop = IOLoop.instance()
+        _ioloop.start()
 
-    global rh
-    rh = RegHt('recording','recording','10006/recording')
+        global rh
+        rh = RegHt('recording','recording','10006/recording')
+    except Exception as error:
+        print error
+       
+def is_running(ip,port):
+    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)  
+    try:  
+        s.connect((ip,int(port)))  
+        s.shutdown(2)
+        #利用shutdown()函数使socket双向数据传输变为单向数据传输。shutdown()需要一个单独的参数，  
+        #该参数表示了如何关闭socket。具体为：0表示禁止将来读；1表示禁止将来写；2表示禁止将来读和写。  
+        s.close() 
+        return True  
+    except Exception as error:
+        return False 
        
 if __name__ == "__main__":
-    main()
+    result = is_running('127.0.0.1',10006)
+    if result == False:
+        main()
