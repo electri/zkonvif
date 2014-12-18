@@ -68,15 +68,17 @@ def load_all_ptzs():
 # 这里保存所有云台
 _all_ptzs = load_all_ptzs()
 
-rhs = []
+reglist = []
 stype = 'ptz'
 for e in _all_ptzs:
 	if _all_ptzs[e]['ptz'] is not None:
 		sid = e
-		service_url= '10003' + '/' +  stype + '/' + sid
-		rh = RegHt(stype, sid, service_url)
-		rhs.append(rh)	
+		service_url= r'http://<ip>:10003/%s/%s'%(stype, sid)
+		regunit = {'type': stype, 'id': sid, 'url': service_url}
+		reglist.append(regunit)
 		
+rh = RegHt(reglist)
+
 class HelpHandler(RequestHandler):
 	''' 返回 help 
 		 晕啊，必须考虑当前目录的问题 ...
@@ -136,9 +138,8 @@ class InternalHandler(RequestHandler):
 		print command
 		if command == 'exit':
 			rc['info'] = 'exit!!!'
-			global rhs
-			for e in rhs:
-				e.join()
+			global rh	 
+			rh.join()
 			global _ioloop
 			_ioloop.stop()
 			self.write(rc)

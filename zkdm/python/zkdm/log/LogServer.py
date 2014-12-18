@@ -166,6 +166,7 @@ class InternalHandler(RequestHandler):
         if cmd == 'exit':
             global _ioloop
             rc['info'] = 'exit!!!'
+			global rh
             rh.join()
             self.write(rc)
             _ioloop.stop()
