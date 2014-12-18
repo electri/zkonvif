@@ -11,7 +11,7 @@
 import urllib2, sys, json, io, time, threading, logging, re
 from utils import zkutils
 
-verbose = True
+verbose = False
 
 class GroupOfServices:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
@@ -37,12 +37,13 @@ class GroupOfServices:
 
     def __fixip(self, sd):
         ''' 如果 sd['url'] 中的 ip/host 部分是 <ip> 的话，则修改为本机的 ip '''
-        regex = re.compile('^(([^:/?#]+):)?(//(([^:/?#]+)(:[0-9]+)?))?'
-                           '([^?#]*)(\?([^# ]*))?(#(.*))?')
-        rc = regex.match(sd['url'])
-        if rc and rc.group(5) == '<ip>':
-            url = sd['url']
-            sd['url'] = url.replace('<ip>', self.__myip, 1)
+        #regex = re.compile('^(([^:/?#]+):)?(//(([^:/?#]+)(:[0-9]+)?))?([^?#]*)(\?([^# ]*))?(#(.*))?')
+        #rc = regex.match(sd['url'])
+        #if rc and rc.group(5) == '<ip>':
+        #    url = sd['url']
+        #    sd['url'] = url.replace('<ip>', self.__myip, 1)
+        url = sd['url']
+        sd['url'] = url.replace('<ip>', self.__myip, 1)
 
     def reg(self, regop):
         ''' 对下一组，执行注册 
@@ -58,9 +59,8 @@ class GroupOfServices:
     def __reg(self, op, breg, bht):
         ''' 对 breg 中的进行注册，成功，就从 breg 中删除，并且保持到 bht 中 '''
         for sd in breg:
-            if verbose:
-                print 'to reg: url:', sd['url']
             if op(sd):
+                print '注册成功: service=', sd
                 breg.remove(sd)
                 bht.append(sd)
 
@@ -77,6 +77,7 @@ class GroupOfServices:
         ''' 对 bht 中的进行心跳，如果失败，就从 bht 中删除，加到 breg 中 '''
         for sd in bht:
             if not op(sd):
+                print '心跳失败：service=', sd
                 bht.remove(sd)
                 breg.append(sd)
 
@@ -116,16 +117,12 @@ class RegHtOper:
         while b:
             body += b
             b = req.read().decode('utf-8')
-        if verbose:
-            print body
         return body
 
     def regop(self, sd):
         url = self.__mgrt_base_url + 'registering?serviceinfo=%s_%s_%s_%s_%s' % \
               (self.__ip, self.__mac, sd['type'], sd['id'], sd['url'])
         try:
-            if verbose:
-                print url
             req = urllib2.urlopen(url)
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
@@ -141,8 +138,6 @@ class RegHtOper:
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self.__ip, self.__mac, sd['type'], sd['id'])
         try:
-            if verbose:
-                print url
             req = urllib2.urlopen(url)
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
@@ -150,16 +145,14 @@ class RegHtOper:
             print 'htop: exception, url=', url
             return False
 
-        if u'发送的心跳数据' in ret['info']:
-            return True
-        else:
+        if u'失败' in ret['info']:
             return False
+        else:
+            return True
 
     def unregop(self, sd):
         ''' FIXME：因为名字服务端，似乎没有实现这个 ...，总是返回成功吧 '''
         url = self.__mgrt_base_url + 'unRegistering?...'
-        if verbose:
-            print url
         return True
 
 
@@ -235,65 +228,65 @@ class RegHt(threading.Thread):
 
 
 
-sds = [ { 'type':'test', 'id':'1', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'2', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'3', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'4', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'5', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'6', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'7', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'8', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'9', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'10', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'11', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'12', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'13', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'14', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'15', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'16', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'17', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'18', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'19', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'20', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'21', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'22', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'23', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'24', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'25', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'26', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'27', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'28', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'29', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'30', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'31', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'32', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'33', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'34', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'35', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'36', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'37', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'38', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'39', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'40', 'url':'test://172.16.1.111:11111' },
+sds = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'2', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'3', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'4', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'5', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'6', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'7', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'8', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'9', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'10', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'11', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'12', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'13', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'14', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'15', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'16', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'17', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'18', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'19', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'20', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'21', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'22', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'23', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'24', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'25', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'26', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'27', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'28', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'29', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'30', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'31', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'32', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'33', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'34', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'35', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'36', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'37', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'38', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'39', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'40', 'url':'test://<ip>:11111' },
       ]
 
-sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'2', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'3', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'4', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'5', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'6', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'7', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'8', 'url':'test://172.16.1.111:11111' },
-        { 'type':'test', 'id':'9', 'url':'test://172.16.1.111:11111' },
+sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'2', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'3', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'4', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'5', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'6', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'7', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'8', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'9', 'url':'test://<ip>:11111' },
       ]
 
 
 if __name__ == '__main__':
     verbose = True
     rh = RegHt(sds)
-    time.sleep(60.0);
+    time.sleep(600.0);
     rh.unregs(sds_minus)
-    time.sleep(60.0);
+    time.sleep(60000.0);
     rh.join()
 
