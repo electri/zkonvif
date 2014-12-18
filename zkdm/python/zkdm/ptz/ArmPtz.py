@@ -77,10 +77,6 @@ def SendThenRecv(HOST, PORT, arm_command):
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	
 	s.connect((HOST, PORT))
 	s.sendall(arm_command)
-	print 'befor recv'
 	data = s.recv(1024)
-	print 'after recv'
 	s.close()
-	print repr(data)
 	return data
-	return '' 
