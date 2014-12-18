@@ -59,7 +59,7 @@ class SaveHandler(RequestHandler):
 
 
     def put(self):
-        print 'PUT ...'
+        rc = {'result': 'ok', 'info':'' }
         if 'Content-Type' not in self.request.headers:
             rc['result'] = 'err'
             rc['info'] = 'Content-Type: MUST be application/json'
