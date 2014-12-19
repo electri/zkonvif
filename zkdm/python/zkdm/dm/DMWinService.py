@@ -11,6 +11,7 @@ from common.utils import zkutils
 from common.reght import RegHt
 sys.path.append('../host')
 import Stat
+from common.utils import zkutils
 from reg_host import RegHost
 
 class HelpHandler(RequestHandler):
@@ -142,59 +143,18 @@ def make_app():
 			url(r'/dm/internal', InternalHandler),
 			])
 
-import urllib2
-import time
-def get_utf8_body(req):
-	# FIXME: 更合理的应该是解析 Content-Type ...
-	body = ''
-	b = req.read().decode('utf-8')
-	while b:
-		body += b
-		b = req.read().decode('utf-8')
-	return body
-
-def reg(h_ip, h_mac, h_type, sip, sport):
-	url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
-		  (sip, sport, h_mac, h_ip, h_type)
-	try:
-		s = urllib2.urlopen(url)
-	except Exception as e:
-		print url
-		print e.message
-		return False
-	ret = get_utf8_body(s)
-	if u'ok' in ret:
-		return True
-	else:
-		return False
-		
-def reg_host():
-	myip = zkutils().myip_real()
-	mymac = zkutils().mymac()
-	host_type = None
-	sip = None
-	sport = None
-	try:
-		f = io.open(r'../host/config.json', 'r', encoding='utf-8')
-		s = json.load(f)
-		host_type = s['host']['type']
-		sip = s['regHbService']['sip']
-		sport = s['regHbService']['sport']
-		f.close()
-	except:
-		rc['info'] = 'can\'t get host info'
-		rc['result'] = 'err'
-	while reg(myip, mymac, host_type, sip, sport) == False:
-		time.sleep(5)
-	
-
 def main():
-	print '=====>enter reg_host'
-	reg_host()
-	print '====>out reg_host'
+	_zkutils = zkutils()
+	_myip = _zkutils.myip_real()
+	_mac = _zkutils.mymac()
+	regHt =  RegHost(_myip, _mac)
+	regHt.start()
+	global rh
+	rh = RegHt([ {'type':'dm', 'id':'dm', 'url':r'http://<ip>:10000/dm'}])
+
 	# 服务管理器，何时 close ??
 	global _sm
-	_sm = ServicesManager.ServicesManager()
+	_sm = ServicesManager.ServicesManager(_myip, _myip)
 	app = make_app()
 	global DMS_PORT
 	app.listen(DMS_PORT)
@@ -238,13 +198,7 @@ class DMService(win32serviceutil.ServiceFramework):
 		global pm
 		pm = Stat.PerformanceMonitor()
 		pm.start()
-	    regHt =  RegHost()
-		regHt.start()
-		global rh
-		rh = RegHt('dm', 'dm', r'10000/dm')
-
-
-		
+			
 	def SvcStop(self):
 		win32event.SetEvent(self.hWaitStop)
 

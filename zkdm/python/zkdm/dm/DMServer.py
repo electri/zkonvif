@@ -10,6 +10,7 @@ from common.reght import RegHt
 sys.path.append('../host')
 from common.utils import zkutils
 import Stat
+from reg_host import RegHost
 
 _zkutils = zkutils()
 
@@ -155,93 +156,9 @@ def make_app():
             url(r'/dm/internal', InternalHandler),
             ])
 
-import urllib2
-import time
-def get_utf8_body(req):
-    # FIXME: 更合理的应该是解析 Content-Type ...
-    body = '';
-    b = req.read().decode('utf-8')
-    while b:
-        body += b
-        b = req.read().decode('utf-8')
-    return body
-
-def reg(h_ip, h_mac, h_type, sip, sport):
-    url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
-          (sip, sport, h_mac, h_ip, h_type)
-
-    print '------------reg: url', url
-    try:
-        s = urllib2.urlopen(url)
-    except:
-        return False
-    ret = get_utf8_body(s)
-    if u'ok' in ret:
-        return True
-    else:
-        return False
-        
-def isMacList(url):
-    print '-------------- isMacList: calling ...'
-    try:
-        s = urllib2.urlopen(url)
-    except:
-        return False
-
-    ret = get_utf8_body(s)
-
-    if ret is '':
-        return False
-    else:
-        return True
-
-    
-import threading
-
-class RegHost(threading.Thread):
-    def __init__(self):
-        #FIXME:暂时不采用非友好退出,以后改正 ...
-        self.isQuit = False
-        #TODO:应该采用 event, wait,下一步再添加吧 ...
-        threading.Thread.__init__(self)
-
-    def join(self):
-        self.isQuit = True
-
-    def run(self):
-        myip = _myip
-        mymac = _mac
-        host_type = None
-        sip = None
-        sport = None
-        listByMacUrl = None
-        try:
-            f = io.open(r'../host/config.json', 'r', encoding='utf-8')
-            s = json.load(f)
-            host_type = s['host']['type']
-            sip = s['regHbService']['sip']
-            sport = s['regHbService']['sport']
-            f.close()
-        except:
-            rc['info'] = 'can\'t get host info'
-            rc['result'] = 'err'
-        listByMacUrl = r'http://%s:%s/deviceService/listByMac?Mac=%s'%(sip, sport, mymac)
-
-        while True:
-            while reg(myip, mymac, host_type, sip, sport) == False:
-                time.sleep(5)
-
-            time.sleep(10)
-
-            while isMacList(listByMacUrl) == True:
-                time.sleep(10)
-                
-    
-
-
 if __name__ == '__main__':
 
-    rgHost =  RegHost()
+    rgHost =  RegHost(_myip, _mac)
     rgHost.start()
 
     # 服务管理器，何时 close ??
