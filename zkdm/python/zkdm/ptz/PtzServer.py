@@ -1,4 +1,4 @@
-# coding: utf-8
+# coding: utf-9
 
 from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application, url
@@ -11,12 +11,11 @@ sys.path.append("../")
 from common.Log import Log
 from common.reght import RegHt
 import thread
+import ArmPtz
 
-# 从 config.json 文件中加载配置信息
-# WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
+_tokens = json.load(io.open('./tokens.json', 'r', encode='utf-8'))
 
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
@@ -73,10 +72,17 @@ stype = 'ptz'
 for e in _all_ptzs:
 	if _all_ptzs[e]['ptz'] is not None:
 		sid = e
-		service_url= r'http://<ip>:10003/%s/%s'%(stype, sid)
+		service_url= r'http://<ip>:10003/%s/0/%s'%(stype, sid)
 		regunit = {'type': stype, 'id': sid, 'url': service_url}
 		reglist.append(regunit)
-		
+for	t in _tokens:
+	if t['token'] is not '0':
+		for i in t['id']:
+			sid = i
+			service_url = r'http://<ip>:10003/%s/%s/%s'%(stype, t['token'], sid)
+			regunit = {'type':stype, 'id':sid, 'url':service_url}
+			reglist.append(regunit)
+
 rh = RegHt(reglist)
 
 class HelpHandler(RequestHandler):
@@ -105,13 +111,22 @@ class ControllingHandler(RequestHandler):
 	''' 处理云台操作 '''
 	@asynchronous
 	def get(self, name, method):
-		thread.start_new_thread(self.callback, (name, method))
+		''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
+		'''
+		thread.start_new_thread(self.callback, (token, name, method))
 
-	def callback(self, name, method):
-		ret = self.__exec_ptz_method(name, method, self.request.arguments)
+	def callback(self, token, name, method):
+		ret = ''
+		global _tokens
+		num = int(token)
+		if _tokens[num]['type'] == 'local':
+			ret = self.__exec_ptz_method(name, method, self.request.arguments)	
+		if _tokens[num]['type'] == 'arm':
+			armcmd = ArmPtz.toArmStr(name, method, self.request.aruments)
 		self.set_header('Constent-Type', 'application/json')
 		self.write(ret)
-		self.finish()	
+		self.finish()
+
 	def __exec_ptz_method(self, name, method, params):
 		global _all_ptzs
 		# print 'name:', name, ' method:', method, ' params:', params
@@ -152,7 +167,7 @@ def make_app():
 	return Application([
 			url(r'/ptz/help', HelpHandler),
 			url(r"/ptz/config(/?)", GetConfigHandler),
-			url(r'/ptz/([^\/]+)/([^\?]+)', ControllingHandler),
+			url(r'/ptz/([^\/]+)/([^\/]+)/([^\?]+)', ControllingHandler),
 			url(r'/ptz/internal', InternalHandler),
 			])
 
