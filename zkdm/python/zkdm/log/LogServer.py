@@ -90,7 +90,6 @@ class SaveHandler(RequestHandler):
 
     
     def __save(self, item):
-        print item, type(item)
         if 'project' in item and 'level' in item and 'content' in item:
             if 'stamp' in item:
                 stamp = item['stamp']
@@ -118,7 +117,6 @@ class QueryHandler(RequestHandler):
         rc['info'] = ''
 
         p = self.request.arguments
-        print p
         project = self.__param('project', p)
         level = self.__param('level', p)
         stamp_begin = self.__param('stamp_begin', p)
