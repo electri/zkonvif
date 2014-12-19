@@ -79,6 +79,8 @@ class InternalHandler(RequestHandler):
 
         command = self.get_argument('command', 'nothing')
         if command == 'exit':
+            global rh
+            rh.join()
             self.set_header('Content-Type', 'application/json')
             rc['info'] = 'exit!!!!'
             self.write(rc)
@@ -112,12 +114,15 @@ def main():
 
         start_card_server()
 
+        global rh
+        sds = [{'type':'recording','id':'recording','url':'http://<ip>:10006/recording'}]
+        rh = RegHt(sds)
+
         global _ioloop
         _ioloop = IOLoop.instance()
         _ioloop.start()
 
-        global rh
-        rh = RegHt('recording','recording','10006/recording')
+
     except Exception as error:
         print error
        
