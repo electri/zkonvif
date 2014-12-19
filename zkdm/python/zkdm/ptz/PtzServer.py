@@ -1,4 +1,4 @@
-# coding: utf-8
+# coding: utf-9
 
 from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application, url
@@ -15,7 +15,6 @@ import ArmPtz
 
 # 从 config.json 文件中加载配置信息
 # WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 _tokens = json.load(io.open('./tokens.json', 'r', encode='utf-8'))
