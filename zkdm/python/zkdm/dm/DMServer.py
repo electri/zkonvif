@@ -200,10 +200,12 @@ import threading
 
 class RegHost(threading.Thread):
     def __init__(self):
+        threading.Thread.__init__(self)
         #FIXME:暂时不采用非友好退出,以后改正 ...
         self.isQuit = False
         #TODO:应该采用 event, wait,下一步再添加吧 ...
-        threading.Thread.__init__(self)
+        self.setDaemon(True)
+        self.start()
 
     def join(self):
         self.isQuit = True
@@ -242,7 +244,6 @@ class RegHost(threading.Thread):
 if __name__ == '__main__':
 
     rgHost =  RegHost()
-    rgHost.start()
 
     # 服务管理器，何时 close ??
     _sm = ServicesManager.ServicesManager(_myip, _myip)

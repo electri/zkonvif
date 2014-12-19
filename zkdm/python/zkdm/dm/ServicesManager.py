@@ -9,7 +9,8 @@ import threading
 #sys.path.append('../')
 #sys.path.append('../common')
 # 本地配置文件
-FNAME = 'config.json'
+
+FNAME = os.path.dirname(os.path.abspath(__name__)) + '/config.json'
 
 class ServicesManager:
     ''' 本地服务管理
