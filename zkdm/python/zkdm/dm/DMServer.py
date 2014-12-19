@@ -77,7 +77,7 @@ class ListServiceHandler(RequestHandler):
 _ioloop = IOLoop.instance()
 pm = Stat.PerformanceMonitor()
 pm.start()
-rh = RegHt('dm', 'dm', r'10000/dm')
+rh = RegHt([ {'type':'dm', 'id':'dm', r'http://<ip>:10000/dm'}])
 
 class InternalHandler(RequestHandler):
 	def get(self):
@@ -191,11 +191,68 @@ def reg_host():
 	while reg(myip, mymac, host_type, sip, sport) == False:
 		time.sleep(5)
 
+def isMacList(url):
+	try:
+		s = urllib2.urlopen(url)
+	except:
+		return False
+
+	ret = get_utf8_body(s)
+
+	if ret is None:
+		return True
+	else:
+		return False
+
+	
+import threading
+
+class RegHost(threading.Thread):
+	def __init__(self):
+		#FIXME:暂时不采用非友好退出,以后改正 ...
+		self.isQuit = False
+		#TODO:应该采用 event, wait,下一步再添加吧 ...
+
+	def join(self):
+		self.isQuit = True
+
+	def run(self):
+		myip = zkutils().myip_real()
+		mymac = zkutils().mymac()
+		host_type = None
+		sip = None
+		sport = None
+		listByMacUrl = None
+		try:
+			f = io.open(r'../host/config.json', 'r', encoding='utf-8')
+			s = json.load(f)
+			host_type = s['host']['type']
+			sip = s['regHbService']['sip']
+			sport = s['regHbService']['sport']
+			f.close()
+		except:
+			rc['info'] = 'can\'t get host info'
+			rc['result'] = 'err'
+		listByMacUrl = r'http://%s:%s/deviceService/listByMac?Mac=%s'%(self.sip, self.sport, self.mymac)
+
+
+		while True:
+			while reg(myip, mymac, host_type, sip, sport) == False:
+				time.sleep(5)
+
+			time.sleep(10)
+
+		while isMacList(listByMacUrl) == True:
+			time.sleep(10)
+				
+	
 
 
 if __name__ == '__main__':
 
-#	reg_host()
+rgHost =  RegHost()
+regHost.start()
+
 	# 服务管理器，何时 close ??
 	_sm = ServicesManager.ServicesManager()
 	app = make_app()
