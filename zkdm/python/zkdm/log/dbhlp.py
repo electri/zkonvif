@@ -30,7 +30,6 @@ class DBHlp:
 	def save(self, project, level, stamp, content):
 		c = self.__db_open()
 		s0 = r'insert into log (project, level, stamp, content) values ("{}",{},{},"{}")'.format(project, level, stamp, content)
-		print s0
 		c.execute(s0)
 		self.__db_close()
 
@@ -54,7 +53,6 @@ class DBHlp:
 		if level is not None:
 			s0 += r' and level>={}'.format(level)
 
-		print 'query str is:', s0
 
 		for item in c.execute(s0):
 			it = {}
@@ -76,7 +74,6 @@ def __check_init():
 	# 检查 log 表是否存在 ...
 	s1 = 'select COUNT(*) from sqlite_master where name="' + TABLENAME + '"'
 	v = c.execute(s1)
-	print type(v)
 
 	exist = (c.execute(s1).next()[0] != 0)
 	if not exist:
