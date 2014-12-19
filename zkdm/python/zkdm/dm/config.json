@@ -10,22 +10,12 @@
          "title" : "云台服务"
       },
       {
-         "enable" : false,
-         "fork" : true,
-         "url" : "http://<ip>:10001/event",
-         "name" : "event service",
-         "type" : "event",
-         "path" : "python ../event/EventServer.py",
-         "title" : "事件服务"
-      },
-      {
-         "enable" : false,
-         "fork" : true,
-         "url" : "tcp://<ip>:3000",
-         "name" : "teacher video 1",
-         "type" : "eval",
-         "path" : "cardlive.exe 1",
-         "title" : "教师特写摄像头"
+          "enable":true,
+          "fork" : true,
+          "url" : "http://<ip>:10004/host",
+          "name" : "host",
+          "path" : "python ../host/HostUtils.py",
+          "title" : "主机服务"
       },
       {
          "enable" : true,

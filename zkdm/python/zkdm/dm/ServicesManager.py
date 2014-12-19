@@ -3,7 +3,7 @@
 import LocalConfig
 import subprocess, shlex
 import threading, time
-import sys, re
+import sys, re, os
 import threading
 
 sys.path.append('../')
@@ -29,20 +29,17 @@ class ServicesManager:
         self.__ip = ip # 可能是交换机映射后的 ip
         self.__ip_real = real_ip
         self.__activated = [] # (p, sd, url)
-
         self.__start_all_enabled()
         
     def list_services(self):
         ''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
         '''
         ssd = LocalConfig.load_config(FNAME)
-        if 'services' in ssd:
-            ss = ssd['services']
-            for s in ss:
-                if 'url' in s:
-                    new_url = self.__fix_url(s['url'])
-                    s['url'] = new_url
-
+        ss = ssd['services']
+        for s in ss:
+            if 'url' in s:
+                new_url = self.__fix_url(s['url'])
+                s['url'] = new_url
         return ss
 
     def list_services_new(self):
@@ -125,6 +122,15 @@ class ServicesManager:
         return n
 
 
+    def __get_startpath(self, args):
+        ''' args 为 ../log/LogServer.py，返回 ../log '''
+        pos = args.rfind('/')
+        if pos == -1:
+            pos == args.rfind('\\')
+        if pos != -1:
+            return args[0:pos]
+
+
     def __start_service(self, sd):
         ''' 启动服务, 首先检查是否已经启动 ??. 
 
@@ -135,12 +141,15 @@ class ServicesManager:
         for s in self.__activated:
             if s[1]['name'] == sd['name']:
                 return None # 已经启动 ..
-        print '======>dm setup service name'
         print sd['name']
         args = shlex.split(sd['path'])
-        print ' ==> start', args
+        path = self.__get_startpath(args[1]) # FIXME: 要求第二个参数，必须是目标 python 文件
+        print '========== chdir ===========', path
+        currpath = os.getcwd()
+        os.chdir(path)
         p = subprocess.Popen(args)
         print '        pid:', p.pid
+        os.chdir(currpath)
 
         psu = (p, sd, self.__fix_url(sd['url']))
         self.__activated.append(psu)
@@ -186,6 +195,9 @@ class ServicesManager:
         LocalConfig.save_config(FNAME, ssd)
 
 
+if __name__ == '__main__':
+    sm = ServicesManager('127.0.0.1', '127.0.0.1')
+    print sm.list_services()
 
 
 class ServiceMgrt(ServicesManager):
