@@ -28,7 +28,7 @@
          "title" : "教师特写摄像头"
       },
       {
-         "enable" : false,
+         "enable" : true,
          "fork" : true,
          "url" : "http://<ip>:10005/log",
          "name" : "Log.service",
