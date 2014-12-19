@@ -89,7 +89,7 @@ class ControllingHandler(RequestHandler):
 	def get(self, name, method):
 		''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
 		'''
-		thread.start_new_thread(self.callback, (name, method))
+		thread.start_new_thread(self.callback, (token, name, method))
 
 	def callback(self, token, name, method):
 		ret = ''
