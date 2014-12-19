@@ -11,6 +11,7 @@ from common.utils import zkutils
 from common.reght import RegHt
 sys.path.append('../host')
 import Stat
+from reg_host import RegHost
 
 class HelpHandler(RequestHandler):
 	''' 提示信息 ....
@@ -237,9 +238,10 @@ class DMService(win32serviceutil.ServiceFramework):
 		global pm
 		pm = Stat.PerformanceMonitor()
 		pm.start()
+	    regHt =  RegHost()
+		regHt.start()
 		global rh
 		rh = RegHt('dm', 'dm', r'10000/dm')
-
 
 
 		
