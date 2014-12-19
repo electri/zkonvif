@@ -75,15 +75,18 @@ class SaveHandler(RequestHandler):
                 self.write(rc)
                 return
             else:
-                item = json.loads(self.request.body)
-                if not self.__save(item):
-                    rc['result'] = 'err'
-                    rc['info'] = 'format err'
-                    self.write(rc)
-                    return
-                else:
-                    rc['info'] = 'log saved'
-                    self.write(rc)
+                try:
+                    item = json.loads(self.request.body)
+                    if not self.__save(item):
+                        rc['result'] = 'err'
+                        rc['info'] = 'format err'
+                        self.write(rc)
+                        return
+                    else:
+                        rc['info'] = 'log saved'
+                        self.write(rc)
+                except:
+                    print 'deocde json error ???, body=', self.request.body
 
     
     def __save(self, item):

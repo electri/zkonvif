@@ -6,13 +6,10 @@ import threading, time
 import sys, re, os
 import threading
 
-sys.path.append('../')
-sys.path.append('../common')
-from common.utils import zkutils
-import utils
+#sys.path.append('../')
+#sys.path.append('../common')
 # 本地配置文件
 FNAME = 'config.json'
-
 
 class ServicesManager:
     ''' 本地服务管理
@@ -41,21 +38,6 @@ class ServicesManager:
                 new_url = self.__fix_url(s['url'])
                 s['url'] = new_url
         return ss
-
-    def list_services_new(self):
-        ''' 返回所有服务列表, 并且将服务的 url 中的 ip 部分，换成自己的 ..
-        '''
-        ss = self.list_services()
-        new_ss = []
-        for s in ss:
-            ret = {}
-            ret['name'] = s['name']
-            ret['type'] = s['type']
-            ret['enable'] = s['enable']
-            new_ss.append(ret)
-
-        return new_ss
-
 
 
     def dump_activated(self):
@@ -113,7 +95,8 @@ class ServicesManager:
             返回启动的服务的数目 ..
         '''
         n = 0
-        for sd in self.list_services():
+        sds = self.list_services()
+        for sd in sds:
             if sd['enable']:
                 n += 1
                 sr = self.__start_service(sd)
@@ -141,14 +124,13 @@ class ServicesManager:
         for s in self.__activated:
             if s[1]['name'] == sd['name']:
                 return None # 已经启动 ..
-        print sd['name']
+
         args = shlex.split(sd['path'])
+
         path = self.__get_startpath(args[1]) # FIXME: 要求第二个参数，必须是目标 python 文件
-        print '========== chdir ===========', path
         currpath = os.getcwd()
         os.chdir(path)
         p = subprocess.Popen(args)
-        print '        pid:', p.pid
         os.chdir(currpath)
 
         psu = (p, sd, self.__fix_url(sd['url']))
@@ -183,10 +165,7 @@ class ServicesManager:
 
     def enable_service(self, name, en = True):
         ''' 使能/禁用服务 '''
-        print '========>enable_service name'
-        print name
         ssd = LocalConfig.load_config(FNAME)
-        print ssd
         for s in ssd['services']:
             print s['name']
             if s['name'] == name:

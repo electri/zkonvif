@@ -2,11 +2,13 @@
 # 本地配置 ...
 
 
-import json, io 
+import json, io, os, sys
 
 
 def load_config(fname):
     ''' 加载配置，使用 json 格式 '''
+    #print '=================== to load :', fname
+    print '********** current path:', os.getcwd()
     f = io.open(fname, 'r', encoding='utf-8')
     data = json.load(f)
     f.close()
@@ -19,7 +21,6 @@ def save_config(fname, data):
     f.write(unicode(json.dumps(data, ensure_ascii = False)))
     f.close()
 
-        
 
 if __name__ == '__main__':
     from pprint import pprint
