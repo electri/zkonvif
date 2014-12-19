@@ -12,9 +12,6 @@ from common.Log import Log
 from common.reght import RegHt
 import thread
 
-# 从 config.json 文件中加载配置信息
-# WARNING: 每次都配置文件时，都得注意工作目录的相对关系 ....
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 
