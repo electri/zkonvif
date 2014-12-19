@@ -242,8 +242,8 @@ class RegHost(threading.Thread):
 
 			time.sleep(10)
 
-		while isMacList(listByMacUrl) == True:
-			time.sleep(10)
+			while isMacList(listByMacUrl) == True:
+				time.sleep(10)
 				
 	
 
