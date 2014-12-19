@@ -3,11 +3,11 @@ import socket
 def TurnStr(name, direction, speed):
 	return 'PtzCmd=Turn&Who=%s&Direction=%s&Speed=%s'%(name,derection,speed)
 
-def PresetStr(name, cmd, ids):
+def PresetStr(cmd, name, ids):
 	return 'PtzCmd=%s&Who=%s%ID=%s'%(cmd, name, ids) 
 
-def ZoomStr(cmd, name):
-	return 'ptzCmd=%s&Who=%s'%(cmd, name)
+def ZoomStr(cmd, name, speed):
+	return 'ptzCmd=%s&Who=%s&speed=%s'%(cmd, name, speed)
 
 def toArmStr(name, cmd, params=None):
 	if cmd == 'left':
@@ -32,6 +32,7 @@ def toArmStr(name, cmd, params=None):
 		return TurnStr(name, 'up', speed)
 
 	elif cmd == 'down':
+		speed = '1'
 		if 'speed' in params:
 			speed = params['speed'][0]
 
@@ -62,10 +63,17 @@ def toArmStr(name, cmd, params=None):
 		return PresetStr('PresetDel', name, params['id'][0])
 
 	elif cmd == 'zoom_tele':
-		return ZoomStr('Zoom_tele', name)
+		speed = '1'
+		if 'speed' in params:
+			speed = params['speed'][0]
+		
+		return ZoomStr('Zoom_tele', name, speed)
 
 	elif cmd == 'zoom_wide':
-		return ZoomStr('Zoom_wide', name)
+		speed = '1'
+		if 'speed' in params:
+			speed = params['speed'][0]
+		return ZoomStr('Zoom_wide', name, speed)
 
 	elif cmd == 'zoom_stop':
 		return ZoomStr('ZoomStop', name)
