@@ -10,7 +10,7 @@
          "title" : "云台服务"
       },
       {
-          "enable":true,
+          "enable": true,
           "fork" : true,
           "url" : "http://<ip>:10004/host",
           "name" : "host",

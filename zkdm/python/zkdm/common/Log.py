@@ -17,11 +17,11 @@ class _WorkingThread(threading.Thread):
             req = urllib2.Request(self.__base_url + '/save', log)
             req.add_header('Content-Type', 'application/json')
             req.get_method = lambda: 'PUT'
-            print opener, 'url:', self.__base_url + '/save' 
             try:
                 url = opener.open(req)
             except:
-                print 'ERR: cannot put to:', self.__base_url
+                #print 'ERR: cannot put to:', self.__base_url
+                pass
 
     def append(self, log):
         ''' 追加新的日志，非阻塞 '''

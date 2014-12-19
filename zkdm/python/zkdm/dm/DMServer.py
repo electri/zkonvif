@@ -8,11 +8,13 @@ import platform
 sys.path.append('../')
 from common.reght import RegHt
 sys.path.append('../host')
-from utils import zkutils
+from common.utils import zkutils
 import Stat
 
-_myip = zkutils().myip_real()
-_mac = zkutils().mymac()
+_zkutils = zkutils()
+
+_myip = _zkutils.myip_real()
+_mac = _zkutils.mymac()
 
 
 # DM Service 端口
@@ -168,7 +170,7 @@ def reg(h_ip, h_mac, h_type, sip, sport):
     url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
           (sip, sport, h_mac, h_ip, h_type)
 
-    print 'reg: url', url
+    print '------------reg: url', url
     try:
         s = urllib2.urlopen(url)
     except:
@@ -179,27 +181,8 @@ def reg(h_ip, h_mac, h_type, sip, sport):
     else:
         return False
         
-def reg_host():
-    myip = _myip
-    mymac = _mac
-    host_type = None
-    sip = None
-    sport = None
-    try:
-        f = io.open(r'../host/config.json', 'r', encoding='utf-8')
-        s = json.load(f)
-        host_type = s['host']['type']
-        sip = s['regHbService']['sip']
-        sport = s['regHbService']['sport']
-        f.close()
-    except:
-        rc['info'] = 'can\'t get host info'
-        rc['result'] = 'err'
-    while reg(myip, mymac, host_type, sip, sport) == False:
-        time.sleep(5)
-
 def isMacList(url):
-    print 'isMacList: calling ...'
+    print '-------------- isMacList: calling ...'
     try:
         s = urllib2.urlopen(url)
     except:
@@ -243,7 +226,6 @@ class RegHost(threading.Thread):
             rc['info'] = 'can\'t get host info'
             rc['result'] = 'err'
         listByMacUrl = r'http://%s:%s/deviceService/listByMac?Mac=%s'%(sip, sport, mymac)
-
 
         while True:
             while reg(myip, mymac, host_type, sip, sport) == False:

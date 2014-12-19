@@ -8,10 +8,14 @@
 #
 #################################################################
 
-import urllib2, sys, json, io, time, threading, logging, re
+import urllib2, sys, json, io, time, threading, re
 from utils import zkutils
+from Log import Log
 
-verbose = True
+
+verbose = False
+_log = Log('reg/ht')
+TIMEOUT = 3 # urllib2.urlopen 的超时 ...
 
 class GroupOfServices:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
@@ -62,7 +66,6 @@ class GroupOfServices:
         ''' 对 breg 中的进行注册，成功，就从 breg 中删除，并且保持到 bht 中 '''
         for sd in breg:
             if op(sd):
-                print 'INFO reg success: service=', sd
                 breg.remove(sd)
                 bht.append(sd)
 
@@ -79,7 +82,7 @@ class GroupOfServices:
         ''' 对 bht 中的进行心跳，如果失败，就从 bht 中删除，加到 breg 中 '''
         for sd in bht:
             if not op(sd):
-                print 'WARNING HT fault：service=', sd
+                _log.log('WARNING: HT fault for url=' + sd['url'])
                 bht.remove(sd)
                 breg.append(sd)
 
@@ -108,6 +111,7 @@ class RegHtOper:
             mgrt_base_url = self.__load_base_url()
         if verbose:
             print 'INFO: using name service url:', mgrt_base_url
+        _log.log('INFO: using nameservice url:' + mgrt_base_url)
         self.__mgrt_base_url = mgrt_base_url
         self.__ip = ip
         self.__mac = mac
@@ -125,11 +129,11 @@ class RegHtOper:
         url = self.__mgrt_base_url + 'registering?serviceinfo=%s_%s_%s_%s_%s' % \
               (self.__ip, self.__mac, sd['type'], sd['id'], sd['url'])
         try:
-            req = urllib2.urlopen(url)
+            req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
-        except:
-            print 'ERROR: regop: exception, url=', url
+        except Exception as e:
+            _log.log('ERROR: regop exception, url=' + url + ':(' + str(e) + ')')
             return False
 
         if u'已经注册' not in ret['info']:
@@ -140,12 +144,13 @@ class RegHtOper:
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self.__ip, self.__mac, sd['type'], sd['id'])
         try:
-            req = urllib2.urlopen(url)
+            req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
-        except:
-            print 'ERROR: htop: exception, url=', url
+        except Exception as e:
+            _log.log('ERROR: htop exception, url=' + url + ':(' + str(e) + ')')
             return False
+
 
         if u'失败' in ret['info']:
             return False
@@ -200,6 +205,8 @@ class RegHt(threading.Thread):
 
         regfunc = gos.reg(oper.regop)
         htfunc = gos.ht(oper.htop)
+
+        _log.log('working thread started: there are %d services, ip=%s, mac=%s' % (len(self.__sds), ip, mac));
 
         while not self.__quit:
             if self.__quit_notify.wait(1.0):
