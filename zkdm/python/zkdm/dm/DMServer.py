@@ -199,10 +199,10 @@ def isMacList(url):
 
 	ret = get_utf8_body(s)
 
-	if ret is None:
-		return True
-	else:
+	if ret is '':
 		return False
+	else:
+		return True
 
 	
 import threading
