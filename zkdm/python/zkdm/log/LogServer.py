@@ -6,6 +6,8 @@ from tornado.web import RequestHandler, Application, url
 from dbhlp import DBHlp
 import time, json
 import sys
+import portalocker
+
 
 sys.path.append('../')
 import common.reght
@@ -166,7 +168,6 @@ class InternalHandler(RequestHandler):
         if cmd == 'exit':
             global _ioloop
             rc['info'] = 'exit!!!'
-			global rh
             rh.join()
             self.write(rc)
             _ioloop.stop()
@@ -189,6 +190,14 @@ def make_app():
 
 
 def main():
+    pid_fname = "log.pid"
+    p = open(pid_fname, 'w')
+    try:
+        portalocker.lock(p, portalocker.LOCK_EX | portalocker.LOCK_NB)
+    except:
+        print 'ERR: only one instance can be started!!!'
+        return
+
     app = make_app()
     app.listen(10005)
   

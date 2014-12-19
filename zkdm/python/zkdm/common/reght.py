@@ -11,7 +11,7 @@
 import urllib2, sys, json, io, time, threading, logging, re
 from utils import zkutils
 
-verbose = False
+verbose = True
 
 class GroupOfServices:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
@@ -32,6 +32,8 @@ class GroupOfServices:
         for sd in sds:
             self.__fixip(sd)
             self.__10b[i].append(sd)
+            if verbose:
+                print 'INFO: prepare:', sd
             i += 1;
             i %= len(self.__10b)
 
@@ -60,7 +62,7 @@ class GroupOfServices:
         ''' 对 breg 中的进行注册，成功，就从 breg 中删除，并且保持到 bht 中 '''
         for sd in breg:
             if op(sd):
-                print '注册成功: service=', sd
+                print 'INFO reg success: service=', sd
                 breg.remove(sd)
                 bht.append(sd)
 
@@ -77,7 +79,7 @@ class GroupOfServices:
         ''' 对 bht 中的进行心跳，如果失败，就从 bht 中删除，加到 breg 中 '''
         for sd in bht:
             if not op(sd):
-                print '心跳失败：service=', sd
+                print 'WARNING HT fault：service=', sd
                 bht.remove(sd)
                 breg.append(sd)
 
@@ -105,7 +107,7 @@ class RegHtOper:
         if mgrt_base_url is None:
             mgrt_base_url = self.__load_base_url()
         if verbose:
-            print 'using name service url:', mgrt_base_url
+            print 'INFO: using name service url:', mgrt_base_url
         self.__mgrt_base_url = mgrt_base_url
         self.__ip = ip
         self.__mac = mac
@@ -127,7 +129,7 @@ class RegHtOper:
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
         except:
-            print 'regop: exception, url=', url
+            print 'ERROR: regop: exception, url=', url
             return False
 
         if u'已经注册' not in ret['info']:
@@ -142,7 +144,7 @@ class RegHtOper:
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
         except:
-            print 'htop: exception, url=', url
+            print 'ERROR: htop: exception, url=', url
             return False
 
         if u'失败' in ret['info']:
