@@ -7,12 +7,9 @@ import json, io
 
 def load_config(fname):
     ''' 加载配置，使用 json 格式 '''
-    try:
-        f = io.open(fname, 'r', encoding='utf-8')
-        data = json.load(f)
-        f.close()
-    except:
-        return {}
+    f = io.open(fname, 'r', encoding='utf-8')
+    data = json.load(f)
+    f.close()
     return data
 
 
