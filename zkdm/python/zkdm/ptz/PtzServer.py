@@ -1,4 +1,4 @@
-# coding: utf-9
+# coding: utf-8
 
 from tornado.ioloop import IOLoop
 from tornado.web import RequestHandler, Application, url

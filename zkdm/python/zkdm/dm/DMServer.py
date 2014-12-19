@@ -157,10 +157,8 @@ def make_app():
             ])
 
 if __name__ == '__main__':
-
     rgHost =  RegHost(_myip, _mac)
     rgHost.start()
-
     # 服务管理器，何时 close ??
     _sm = ServicesManager.ServicesManager(_myip, _myip)
     app = make_app()

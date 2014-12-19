@@ -133,7 +133,6 @@ class RegHtOper:
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
         except Exception as e:
-            _log.log('ERROR: regop exception, url=' + url + ':(' + str(e) + ')')
             return False
 
         if u'已经注册' not in ret['info']:
@@ -148,7 +147,6 @@ class RegHtOper:
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
         except Exception as e:
-            _log.log('ERROR: htop exception, url=' + url + ':(' + str(e) + ')')
             return False
 
 
