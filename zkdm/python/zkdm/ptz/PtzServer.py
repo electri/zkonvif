@@ -15,7 +15,7 @@ import ArmPtz
 
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-_tokens = json.load(io.open('./tokens.json', 'r', encode='utf-8'))
+_tokens = json.load(io.open('./tokens.json', 'r', encoding='utf-8'))
 
 def all_ptzs_config():
 	''' 返回配置的云台 ... '''
