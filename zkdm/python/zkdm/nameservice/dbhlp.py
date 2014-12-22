@@ -4,9 +4,16 @@ import sqlite3
 import time
 
 
-DBNAME = 'logs.db'
+DBNAME = 'ns.db'
 TABLENAME = 'log'
+TAB_HOSTS = 'hosts'
+TAB_SERVICES = 'services'
+TAB_STATES = 'states'
+
 S0 = r'create table log (id integer primary key, project varchar(64), level integer, stamp integer, content text)' 
+S1 = r'create table hosts (name varchar(128), type varchar(128))'
+S2 = r'create table services (host varchar(128), name varchar(128), type varchar(128), url varchar(255))'
+S3 = r'create table state (host varchar(128), name varchar(128), type varchar(128), stamp integer)'
 
 
 class DBHlp:
@@ -26,15 +33,23 @@ class DBHlp:
 		self.__conn.close()
 		self.__conn = None
 
+    def execute(self, sent):
+        ''' 直接执行 sql 语句，没有返回 '''
+        pass
 
-	def save(self, project, level, stamp, content):
+    def query(self, sent):
+        ''' 执行查询，返回 [] '''
+        pass
+
+
+	def __save(self, project, level, stamp, content):
 		c = self.__db_open()
 		s0 = r'insert into log (project, level, stamp, content) values ("{}",{},{},"{}")'.format(project, level, stamp, content)
 		c.execute(s0)
 		self.__db_close()
 
 
-	def query(self, project = None, level = None, stamp_begin = None, stamp_end = None):
+	def __query(self, project = None, level = None, stamp_begin = None, stamp_end = None):
 		''' 查询：总是返回数组
 			[
 			 	{ item ...}, { item ... } ...

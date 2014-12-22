@@ -16,6 +16,10 @@ def reghost(params):
             type: 主机类型
     '''
     print 'reghost: ', params
+    if 'name' not in params or 'type' not in params:
+        return 'result': 'err', 'info': 'reghost MUST supply name & type' }
+
+
     return { 'result': 'ok', 'info': 'success' }
 
 
