@@ -126,8 +126,12 @@ class RegHtOper:
         return body
 
     def regop(self, sd):
+        mac = self.__mac
+        if 'mac' in sd:
+            mac = sd['mac']
+
         url = self.__mgrt_base_url + 'registering?serviceinfo=%s_%s_%s_%s_%s' % \
-              (self.__ip, self.__mac, sd['type'], sd['id'], sd['url'])
+              (self.__ip, mac, sd['type'], sd['id'], sd['url'])
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
@@ -140,6 +144,10 @@ class RegHtOper:
         return True
 
     def htop(self, sd):
+        mac = self.__mac
+        if 'mac' in sd:
+            mac = sd['mac']
+
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self.__ip, self.__mac, sd['type'], sd['id'])
         try:
@@ -175,8 +183,9 @@ class RegHtOper:
 
 class RegHt(threading.Thread):
     ''' 注册一组服务，sds 为列表，每个 sd 为：
-            { 'type': service_type, 'id': service_id, 'url': service_url }
+            { 'type': service_type, 'id': service_id, 'url': service_url, 'mac': 'xxxxx' }
             注意，其中 url 的 ip 部分，如果使用 <ip> 则将会转换为本机 ip，否则不做任何转换！！
+            其中 mac 为可选项，如果不提供，就使用本机的 mac
     '''
     def __init__(self, sds, mgrt_baseurl = None):
         self.__quit = False
@@ -235,7 +244,7 @@ class RegHt(threading.Thread):
 
 
 
-sds = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
+sds = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111', 'mac':'112233445566' },
         { 'type':'test', 'id':'2', 'url':'test://<ip>:11111' },
         { 'type':'test', 'id':'3', 'url':'test://<ip>:11111' },
         { 'type':'test', 'id':'4', 'url':'test://<ip>:11111' },
@@ -272,7 +281,7 @@ sds = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
         { 'type':'test', 'id':'35', 'url':'test://<ip>:11111' },
         { 'type':'test', 'id':'36', 'url':'test://<ip>:11111' },
         { 'type':'test', 'id':'37', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'38', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'38', 'url':'test://<ip>:11111', 'mac':'112233445566'  },
         { 'type':'test', 'id':'39', 'url':'test://<ip>:11111' },
         { 'type':'test', 'id':'40', 'url':'test://<ip>:11111' },
       ]
