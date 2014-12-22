@@ -17,24 +17,26 @@ verbose = False
 _log = Log('reg/ht')
 TIMEOUT = 3 # urllib2.urlopen 的超时 ...
 
-class GroupOfServices:
+class GroupOfRegChk:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
         如果服务太多，每隔10秒，连续注册/心跳，会导致网络剧烈抖动，
         因此这里简单的划分为 10 个组，然后每个 1秒执行一组 ....
 
         当注册成功，则放到心跳组里，当心跳失败，则放到注册组里
     '''
-    def __init__(self, myip, services_desc):
+    def __init__(self, myip, obj_desc):
         self.__myip = myip
         self.__10b = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要注册的
         self.__10bht = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要心跳的
-        self.__distribution(services_desc)
+        self.__distribution(obj_desc)
 
     def __distribution(self, sds):
         ''' 将服务列表，平均分配到 __10b 中 '''
         i = 0
         for sd in sds:
-            self.__fixip(sd)
+            if 'url' in sd:
+                self.__fixip(sd)
+
             self.__10b[i].append(sd)
             if verbose:
                 print 'INFO: prepare:', sd
@@ -82,7 +84,6 @@ class GroupOfServices:
         ''' 对 bht 中的进行心跳，如果失败，就从 bht 中删除，加到 breg 中 '''
         for sd in bht:
             if not op(sd):
-                _log.log('WARNING: HT fault for url=' + sd['url'])
                 bht.remove(sd)
                 breg.append(sd)
 
@@ -99,9 +100,10 @@ class GroupOfServices:
 
     def __unreg(self, b, sd_to_unreg, unregop):
         for sd in b:
-            if sd['type'] == sd_to_unreg['type'] and sd['id'] == sd_to_unreg['id']:
-                if unregop(sd):
-                    b.remove(sd)
+            if 'type' in sd and 'id' in sd:
+                if sd['type'] == sd_to_unreg['type'] and sd['id'] == sd_to_unreg['id']:
+                    if unregop(sd):
+                        b.remove(sd)
 
 
 class RegHtOper:
@@ -125,7 +127,21 @@ class RegHtOper:
             b = req.read().decode('utf-8')
         return body
 
+    def reghostop(self, hd):
+        ''' hd 为主机描述 '''
+        ''' TODO: 下面添加到名字服务的注册 '''
+        print 'reghost: ', hd
+        return True
+
+    def reghost_chkop(self, hd):
+        ''' FIXME: 其他的需求 ...
+            TODO: 实现 listByMac ...
+        '''
+        print 'reghost_chkop:', hd
+        return True
+
     def regop(self, sd):
+        ''' 服务注册，sd 为服务描述，返回 True 成功 '''
         mac = self.__mac
         if 'mac' in sd:
             mac = sd['mac']
@@ -144,6 +160,7 @@ class RegHtOper:
         return True
 
     def htop(self, sd):
+        ''' 服务心跳，sd 为服务描述，返回 True 成功 '''
         mac = self.__mac
         if 'mac' in sd:
             mac = sd['mac']
@@ -170,7 +187,6 @@ class RegHtOper:
 
 
     def __load_base_url(self):
-        # TODO: 从配置中读取 ..
     	ret = json.load(io.open(r'../host/config.json', 'r', encoding='utf-8'))
         r = ret['regHbService']
         if ' ' in r['sip'] or ' ' in r['sport']:
@@ -180,6 +196,42 @@ class RegHtOper:
 
         return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
 
+class RegHost(threading.Thread):
+    ''' 主机注册 ...
+        每个 hd 为：
+            { 'mac': host_mac, 'type': host_type, 'ip': host_ip }
+        其中 ip 为可选
+    '''
+    def __init__(self, hds, mgrt_baseurl = None):
+        self.__quit = False
+        self.__quit_notify = threading.Event()
+        self.__mgrt_base_url = mgrt_baseurl
+        self.__hds = hds
+        threading.Thread.__init__(self)
+        self.daemon = True
+        self.start()
+
+    def join(self):
+        self.__quit = True
+        self.__quit_notify.set()
+        threading.Thread.join(self)
+
+    def run(self):
+        ip = zkutils().myip_real()
+        mac = zkutils().mymac()
+
+        oper = RegHtOper(self.__mgrt_base_url, ip, mac)
+        gos = GroupOfRegChk(ip, self.__hds)
+
+        regfunc = gos.reg(oper.reghostop)
+        htfunc = gos.ht(oper.reghost_chkop)
+
+        while not self.__quit:
+            if self.__quit_notify.wait(1.0):
+                continue
+            next(regfunc)
+            next(htfunc)
+ 
 
 class RegHt(threading.Thread):
     ''' 注册一组服务，sds 为列表，每个 sd 为：
@@ -208,7 +260,7 @@ class RegHt(threading.Thread):
         mac = zkutils().mymac()
 
         oper = RegHtOper(self.__mgrt_base_url, ip, mac)
-        gos = GroupOfServices(ip, self.__sds)
+        gos = GroupOfRegChk(ip, self.__sds)
 
         regfunc = gos.reg(oper.regop)
         htfunc = gos.ht(oper.htop)
@@ -242,6 +294,18 @@ class RegHt(threading.Thread):
             self.__unregs.append(sd)
         self.__lock.release()
 
+
+hds = [ {'mac': '112233445566', 'type': 'arm', },
+        {'mac': 'aabbccddeeff', 'type': 'x86', },
+      ]
+
+if __name__ == '__main__':
+    if True:
+        # test reghost
+        rh = RegHost(hds)
+        time.sleep(60.0)
+        rh.join
+        sys.exit()
 
 
 sds = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111', 'mac':'112233445566' },
