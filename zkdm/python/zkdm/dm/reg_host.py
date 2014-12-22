@@ -32,7 +32,8 @@ def isMacList(url):
     print 'isMacList: calling ...'
     try:
         s = urllib2.urlopen(url)
-    except:
+    except Exception as e:
+		print
         return False
 
     ret = get_utf8_body(s)
@@ -65,7 +66,8 @@ class RegHost(threading.Thread):
             sip = s['regHbService']['sip']
             sport = s['regHbService']['sport']
             f.close()
-        except:
+        except Exception as e:
+			print e
             rc['info'] = 'can\'t get host info'
             rc['result'] = 'err'
         listByMacUrl = r'http://%s:%s/deviceService/listByMac?Mac=%s'%(sip, sport, self.mymac)
