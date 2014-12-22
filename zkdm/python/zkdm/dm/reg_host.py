@@ -33,7 +33,6 @@ def isMacList(url):
     try:
         s = urllib2.urlopen(url)
     except Exception as e:
-		print
         return False
 
     ret = get_utf8_body(s)
