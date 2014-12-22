@@ -1,3 +1,6 @@
+# coding: utf-8
+
+
 import sys, io, json, threading
 import urllib2
 import time
@@ -33,6 +36,7 @@ def isMacList(url):
     try:
         s = urllib2.urlopen(url)
     except Exception as e:
+		print e
         return False
 
     ret = get_utf8_body(s)
