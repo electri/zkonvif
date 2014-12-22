@@ -103,8 +103,8 @@ def heartbeat(params):
         return {'result': 'err', 'info': 'regservice MUST supply host, name & type, opt url' }
 
     db = DBHlp()
-    c = db,db_open()
-    update_states(dn, c, params['host'], params['name'], params['type'], time.time())
+    c = db.db_open()
+    update_states(db, c, params['host'], params['name'], params['type'], time.time())
     db.db_close()
 
     return { 'result': 'ok', 'info': 'updated' }
