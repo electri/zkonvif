@@ -15,16 +15,17 @@ class _WorkingThread(threading.Thread):
             log = self.__queue.get()
             opener = urllib2.build_opener(urllib2.HTTPHandler)
             req = urllib2.Request(self.__base_url + '/save', log)
-            req.add_header('Content-Type', 'application/json')
+            req.add_header('Content-Type', 'application/json; charset=utf-8')
             req.get_method = lambda: 'PUT'
             try:
                 url = opener.open(req)
             except:
-                #print 'ERR: cannot put to:', self.__base_url
+                ''' 如果写入 LogServer 失败，可以考虑写入本地文件 ??? '''
                 pass
 
     def append(self, log):
-        ''' 追加新的日志，非阻塞 '''
+        ''' 追加新的日志，非阻塞
+        '''
         self.__queue.put_nowait(log)
 
 
@@ -49,6 +50,7 @@ class Log:
     def log(self, content, level = 99):
         ''' 对于日志来说，不能阻塞本地调用，所有简单的放到一个
             fifo 中，由后台工作线程负责提交到 LogServer
+            content 必须为 utf-8 类型
         '''
         body = self.__build_body(level, content)
         self.__working.append(body)
