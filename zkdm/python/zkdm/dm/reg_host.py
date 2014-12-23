@@ -17,7 +17,6 @@ def reg(h_ip, h_mac, h_type, sip, sport):
     url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
           (sip, sport, h_mac, h_ip, h_type)
 
-    print 'reg: url', url
     s = None
     try:
         s = urllib2.urlopen(url)
@@ -25,25 +24,29 @@ def reg(h_ip, h_mac, h_type, sip, sport):
         print e
         return False
     ret = get_utf8_body(s)
-    if '' in ret:
+    if 'ok' in ret:
         return True
     else:
         return False
         
 
 def isMacList(url):
-    print 'isMacList: calling ...'
     try:
-        print 'MacList url'
-        print url
         s = urllib2.urlopen(url)
     except Exception as e:
         print e
         return False
 
     ret = get_utf8_body(s)
-    print '=====> value'
-    print ret
+    l = len(ret)
+    if l > 10:
+        l = 10
+    to_show = ret[0:l]
+    if to_show == '':
+        print '"*************************' + to_show + '"'
+    else:
+        print '"' + to_show + '"'
+
     if ret is '':
         return False
     else:
