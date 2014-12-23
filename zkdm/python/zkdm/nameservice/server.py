@@ -17,7 +17,6 @@ import register
 import query
 import types
 
-sys.path.append('../')
 
 VERSION = 0.9
 VERSION_INFO = 'NS Service ...'
@@ -63,6 +62,7 @@ class InternalHandler(RequestHandler):
             return self.request.arguments[key][0]
         else:
             return None
+    
 
 def simple_params(args):
     ''' 将 RequestHandler.request.arguments 简化为字典类型 '''
@@ -110,6 +110,7 @@ class QueryHandler(RegisterHandler):
                 getAllService?[offline=1]
                 getServicesByType?type=<service type>[&host=<host name>]
         '''
+        # 这个表格，可以通过 query 得到，自动生成更合理
         optabs = [ { 'cmd': 'getAllServices', 'func': query.getAllServices },
                    { 'cmd': 'getServicesByType', 'func': query.getServicesByType },
                    { 'cmd': 'help', 'func': self.help },

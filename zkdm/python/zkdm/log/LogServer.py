@@ -20,7 +20,7 @@ class SaveHandler(RequestHandler):
     ''' 保存 
 
             支持 GET/PUT 两种方式, GET 支持短小的 content ...
-            PUT 使用 Content-Type: application/json
+            PUT 使用 Content-Type: application/json; charset=utf-8
     '''
     def get(self):
         p = self.request.arguments
@@ -85,8 +85,14 @@ class SaveHandler(RequestHandler):
                     else:
                         rc['info'] = 'log saved'
                         self.write(rc)
-                except:
+                except Exception as e:
+                    print '------------------------------------------------------------'
                     print 'deocde json error ???, body=', self.request.body
+                    print e
+                    print '------------------------------------------------------------'
+                    rc['result'] = 'err'
+                    rc['info'] = 'decode content fault????'
+                    self.write(rc)
 
     
     def __save(self, item):
