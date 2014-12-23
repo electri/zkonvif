@@ -329,7 +329,7 @@ class RegHt(threading.Thread):
 
 
 hds = [ {'mac': '112233445566', 'type': 'arm', 'ip': '172.16.1.101'},
-        {'mac': 'AABBCCDDEEFF', 'type': 'x86', },
+        {'mac': 'AABBCCDDEEFF', 'type': 'x86', 'ip': '172.16.1.111'},
       ]
 
 sds = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111', 'mac':'112233445566' },

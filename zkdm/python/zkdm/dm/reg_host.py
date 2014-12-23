@@ -13,48 +13,48 @@ def get_utf8_body(req):
         b = req.read().decode('utf-8')
     return body
 
-def reg(h_ip, h_mac, h_type, sip, sport):
-    url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
-          (sip, sport, h_mac, h_ip, h_type)
+    def reg(h_ip, h_mac, h_type, sip, sport):
+        url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
+              (sip, sport, h_mac, h_ip, h_type)
 
-    s = None
-    try:
-        s = urllib2.urlopen(url)
-    except Exception as e:
-        print e
-        return False
-    ret = get_utf8_body(s)
-    if 'ok' in ret:
-        return True
-    else:
-        return False
+        s = None
+        try:
+            s = urllib2.urlopen(url)
+        except Exception as e:
+            print e
+            return False
+        ret = get_utf8_body(s)
+        if 'ok' in ret:
+            return True
+        else:
+            return False
+            
+
+    def isGetMacList(url):
+        try:
+            s = urllib2.urlopen(url)
+        except Exception as e:
+            print e
+            return False
+
+        ret = get_utf8_body(s)
+        l = len(ret)
+        if l > 10:
+            l = 10
+        to_show = ret[0:l]
+        if to_show == '':
+            print '"*************************' + to_show + '"'
+        else:
+            print '"' + to_show + '"'
+
+        if ret is '':
+            return False
+        else:
+            return True
+
         
-
-def isMacList(url):
-    try:
-        s = urllib2.urlopen(url)
-    except Exception as e:
-        print e
-        return False
-
-    ret = get_utf8_body(s)
-    l = len(ret)
-    if l > 10:
-        l = 10
-    to_show = ret[0:l]
-    if to_show == '':
-        print '"*************************' + to_show + '"'
-    else:
-        print '"' + to_show + '"'
-
-    if ret is '':
-        return False
-    else:
-        return True
-
-    
-class RegHost(threading.Thread):
-    def __init__(self, _myip, _mac):
+    class RegHost(threading.Thread):
+        def __init__(self, _myip, _mac):
         self.isQuit = False
         self.myip = _myip
         self.mymac = _mac
@@ -88,6 +88,6 @@ class RegHost(threading.Thread):
 
             time.sleep(10)
 
-            while isMacList(listByMacUrl) == True:
+            while isGetMacList(listByMacUrl) == True:
                 time.sleep(10)
  
