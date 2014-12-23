@@ -130,9 +130,28 @@ class RegHtOper:
     def reghostop(self, hd):
         ''' hd 为主机描述 '''
         ''' TODO: 下面添加到名字服务的注册 '''
+        for e in hd:
+            url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
         print 'reghost: ', hd
         return True
 
+    def reg(h_ip, h_mac, h_type, sip, sport):
+        url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
+          (sip, sport, h_mac, h_ip, h_type)
+
+        print 'reg: url', url
+        s = None
+        try:
+            s = urllib2.urlopen(url)
+        except Exception as e:
+            print e
+            return False
+        ret = get_utf8_body(s)
+        if u'ok' in ret:
+            return True
+        else:
+            return False
+ 
     def reghost_chkop(self, hd):
         ''' FIXME: 其他的需求 ...
             TODO: 实现 listByMac ...
@@ -167,9 +186,13 @@ class RegHtOper:
 
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self.__ip, self.__mac, sd['type'], sd['id'])
+        print '=====>heartbeat url'
+        print url
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
+            print '======>heartbeat return value'
             body = self.__get_utf8_body(req)
+            print body
             ret = json.loads(body)
         except Exception as e:
             return False

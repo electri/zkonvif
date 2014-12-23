@@ -34,13 +34,16 @@ def reg(h_ip, h_mac, h_type, sip, sport):
 def isMacList(url):
     print 'isMacList: calling ...'
     try:
+        print 'MacList url'
+        print url
         s = urllib2.urlopen(url)
     except Exception as e:
         print e
         return False
 
     ret = get_utf8_body(s)
-
+    print '=====> value'
+    print ret
     if ret is '':
         return False
     else:
