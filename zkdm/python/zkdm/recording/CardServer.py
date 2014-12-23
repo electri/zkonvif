@@ -425,16 +425,15 @@ class InternalHandler(RequestHandler):
 
 
 def livingS(url):
-    client
+    global client
     wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
     rc = {}
     try:
-        client = Client(wsdl_url)
         print url
         living_info = client.factory.create('ns0:LivingInfo')
         living_list = client.service.Living()['message']['LivingList'][0]
-        living_list = client.service.Living()['message']['IsStartFilmLiving'] = 'True'
-        living_list = client.service.Living()['message']['IsSynRecord'] = 'False'
+        living_info['IsStartFilmLiving'] = 'True'
+        living_info['IsSynRecord'] = 'False'
 
         print living_list
         #print client.service.Living()['message']

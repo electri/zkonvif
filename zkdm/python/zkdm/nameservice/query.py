@@ -10,7 +10,8 @@
 from dbhlp import DBHlp
 
 def getHosts(params):
-    ''' 返回匹配的注册的主机,  host, type 为可选 '''
+    ''' 返回匹配的注册的主机,  host, type 为可选 
+    '''
     s = 'select * from hosts'
     if 'host' in params and 'type' in params:
         s = 'select * from hosts where host="%s" and type="%s"' % (params['host'], params['type'])

@@ -112,7 +112,7 @@ def main():
 
         application.listen(10006)
 
-        #start_card_server()
+        start_card_server()
 
         global rh
         sds = [{'type':'recording','id':'recording','url':'http://<ip>:10006/recording'}]
