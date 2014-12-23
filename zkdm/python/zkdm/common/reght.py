@@ -138,14 +138,14 @@ class RegHtOper:
 
         url = self.__mgrt_base_url + 'regHost?mac=%s&ip=%s&hosttype=%s' % \
               (hd['mac'], ip, hd['type'])
-
         print url
+
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
+            print body
             if body == '':
                 return False
-            print 'reghostop: return:', body
             if 'ok' in body:
                 return True
             else:
@@ -165,11 +165,11 @@ class RegHtOper:
             if body == '':
                 print '====================== listByMac return null'
                 return False
-            print 'reghost_chkop: return:', body
+            else:
+                return True
         except Exception as e:
             print e
             return False
-        return True
 
     def regop(self, sd):
         ''' 服务注册，sd 为服务描述，返回 True 成功 '''
@@ -226,6 +226,7 @@ class RegHtOper:
             raise Exception("include''")
 
         return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
+
 
 class RegHost(threading.Thread):
     ''' 主机注册 ...
@@ -332,64 +333,64 @@ hds = [ {'mac': '112233445566', 'type': 'arm', 'ip': '172.16.1.101'},
         {'mac': 'AABBCCDDEEFF', 'type': 'x86', },
       ]
 
-sds = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111', 'mac':'112233445566' },
-        { 'type':'test', 'id':'2', 'url':'test://<ip>:11111', 'mac':'AABBCCDDEEFF' },
-        { 'type':'test', 'id':'3', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'4', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'5', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'6', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'7', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'8', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'9', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'10', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'11', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'12', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'13', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'14', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'15', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'16', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'17', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'18', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'19', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'20', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'21', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'22', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'23', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'24', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'25', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'26', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'27', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'28', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'29', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'30', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'31', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'32', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'33', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'34', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'35', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'36', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'37', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'38', 'url':'test://<ip>:11111', 'mac':'112233445566'  },
-        { 'type':'test', 'id':'39', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'40', 'url':'test://<ip>:11111' },
+sds = [ { 'type':'ptz', 'id':'1', 'url':'ptz://<ip>:11111', 'mac':'112233445566' },
+        { 'type':'ptz', 'id':'2', 'url':'ptz://<ip>:11111', 'mac':'AABBCCDDEEFF' },
+        { 'type':'ptz', 'id':'3', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'4', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'5', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'6', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'7', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'8', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'9', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'10', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'11', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'12', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'13', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'14', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'15', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'16', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'17', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'18', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'19', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'20', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'21', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'22', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'23', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'24', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'25', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'26', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'27', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'28', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'29', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'30', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'31', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'32', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'33', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'34', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'35', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'36', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'37', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'38', 'url':'ptz://<ip>:11111', 'mac':'112233445566'  },
+        { 'type':'ptz', 'id':'39', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'40', 'url':'ptz://<ip>:11111' },
       ]
 
-sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'2', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'3', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'4', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'5', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'6', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'7', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'8', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'9', 'url':'test://<ip>:11111' },
+sds_minus = [ { 'type':'ptz', 'id':'1', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'2', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'3', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'4', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'5', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'6', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'7', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'8', 'url':'ptz://<ip>:11111' },
+        { 'type':'ptz', 'id':'9', 'url':'ptz://<ip>:11111' },
       ]
 
 
 if __name__ == '__main__':
     verbose = False
     if True:
-        # test reghost
+        # ptz reghost
         rh = RegHost(hds)
 
     rh = RegHt(sds)
