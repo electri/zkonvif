@@ -445,7 +445,7 @@ def livingS(url):
         url =url[len(port)+1:]
         app = url.split('/')[0]
         url = url[len(app)+1:]
-        stream_id = url[:-1]
+        stream_id = url[:]
 
         for i in range(0,len(living_list)):
             if i==0: #默认只开启一路直播
