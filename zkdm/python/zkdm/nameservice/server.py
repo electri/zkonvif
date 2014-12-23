@@ -113,6 +113,8 @@ class QueryHandler(RegisterHandler):
         optabs = [ { 'cmd': 'getAllServices', 'func': query.getAllServices },
                    { 'cmd': 'getServicesByType', 'func': query.getServicesByType },
                    { 'cmd': 'help', 'func': self.help },
+                   { 'cmd': 'getHosts', 'func': query.getHosts },
+                   { 'cmd': 'getServicesByHost', 'func': query.getServicesByHost },
                  ]
         params = simple_params(self.request.arguments)
         result = { 'result': 'err', 'info': 'NOT supported cmd:' + cmd }
