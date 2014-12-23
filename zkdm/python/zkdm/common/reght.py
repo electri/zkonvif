@@ -100,7 +100,6 @@ class GroupOfRegChk:
 
     def __unreg(self, b, sd_to_unreg, unregop):
         for sd in b:
-            print '__unreg: to chk ', sd
             if 'type' in sd and 'id' in sd:
                 if sd['type'] == sd_to_unreg['type'] and sd['id'] == sd_to_unreg['id']:
                     if unregop(sd):
@@ -131,28 +130,9 @@ class RegHtOper:
     def reghostop(self, hd):
         ''' hd 为主机描述 '''
         ''' TODO: 下面添加到名字服务的注册 '''
-        for e in hd:
-            url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
         print 'reghost: ', hd
         return True
 
-    def reg(h_ip, h_mac, h_type, sip, sport):
-        url = 'http://%s:%s/deviceService/regHost?mac=%s&ip=%s&hosttype=%s'%\
-          (sip, sport, h_mac, h_ip, h_type)
-
-        print 'reg: url', url
-        s = None
-        try:
-            s = urllib2.urlopen(url)
-        except Exception as e:
-            print e
-            return False
-        ret = get_utf8_body(s)
-        if u'ok' in ret:
-            return True
-        else:
-            return False
- 
     def reghost_chkop(self, hd):
         ''' FIXME: 其他的需求 ...
             TODO: 实现 listByMac ...
@@ -187,13 +167,9 @@ class RegHtOper:
 
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self.__ip, self.__mac, sd['type'], sd['id'])
-        print '=====>heartbeat url'
-        print url
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
-            print '======>heartbeat return value'
             body = self.__get_utf8_body(req)
-            print body
             ret = json.loads(body)
         except Exception as e:
             return False
@@ -302,7 +278,6 @@ class RegHt(threading.Thread):
         self.__lock.acquire()
         for sd in self.__unregs:
             gos.unreg(func, sd)
-        self.__unregs = [] 
         self.__lock.release()
 
     def unreg(self, sd):
@@ -325,7 +300,7 @@ hds = [ {'mac': '112233445566', 'type': 'arm', },
       ]
 
 if __name__ == '__main__':
-    if False:
+    if True:
         # test reghost
         rh = RegHost(hds)
         time.sleep(60.0)
@@ -390,7 +365,7 @@ sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
 if __name__ == '__main__':
     verbose = True
     rh = RegHt(sds)
-    time.sleep(60.0);
+    time.sleep(600.0);
     rh.unregs(sds_minus)
     time.sleep(60000.0);
     rh.join()
