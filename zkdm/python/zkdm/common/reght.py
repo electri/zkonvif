@@ -164,7 +164,6 @@ class RegHtOper:
             body = self.__get_utf8_body(req)
             if body == '':
                 print '====================== listByMac return null'
-                sys.exit()
                 return False
             print 'reghost_chkop: return:', body
         except Exception as e:
