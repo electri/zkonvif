@@ -25,7 +25,7 @@ def reg(h_ip, h_mac, h_type, sip, sport):
         print e
         return False
     ret = get_utf8_body(s)
-    if u'ok' in ret:
+    if '' in ret:
         return True
     else:
         return False
