@@ -82,12 +82,13 @@ for e in _all_ptzs:
         service_url= r'http://<ip>:10003/%s/0/%s'%(stype, sid)
         regunit = {'type': stype, 'id': sid, 'url': service_url}
         reglist.append(regunit)
-for    t in _tokens:
+
+for t in _tokens:
     if t['token'] is not '0':
         for i in t['id']:
             sid = i
             service_url = r'http://<ip>:10003/%s/%s/%s'%(stype, t['token'], sid)
-            regunit = {'type':stype, 'id':sid, 'url':service_url}
+            regunit = {'type':stype, 'id':sid, 'url':service_url, 'mac' : t['mac']}
             reglist.append(regunit)
 
 rh = RegHt(reglist)
