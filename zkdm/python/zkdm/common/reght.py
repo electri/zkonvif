@@ -17,6 +17,9 @@ verbose = False
 _log = Log('reg/ht')
 TIMEOUT = 3 # urllib2.urlopen 的超时 ...
 
+myip = zkutils().myip_real()
+mymac = zkutils().mymac()
+
 class GroupOfRegChk:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
         如果服务太多，每隔10秒，连续注册/心跳，会导致网络剧烈抖动，
@@ -160,6 +163,8 @@ class RegHtOper:
             req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
             if body == '':
+                print '====================== listByMac return null'
+                sys.exit()
                 return False
             print 'reghost_chkop: return:', body
         except Exception as e:
@@ -244,8 +249,9 @@ class RegHost(threading.Thread):
         threading.Thread.join(self)
 
     def run(self):
-        ip = zkutils().myip_real()
-        mac = zkutils().mymac()
+        ip = myip
+        mac = mymac
+        print 'ip:%s, mac:%s' % (ip, mac)
 
         oper = RegHtOper(self.__mgrt_base_url, ip, mac)
         gos = GroupOfRegChk(ip, self.__hds)
@@ -283,8 +289,9 @@ class RegHt(threading.Thread):
         threading.Thread.join(self)
 
     def run(self):
-        ip = zkutils().myip_real()
-        mac = zkutils().mymac()
+        ip = myip
+        mac = mymac
+        print 'ip:%s, mac:%s' % (ip, mac)
 
         oper = RegHtOper(self.__mgrt_base_url, ip, mac)
         gos = GroupOfRegChk(ip, self.__sds)
@@ -381,6 +388,7 @@ sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
 
 
 if __name__ == '__main__':
+    verbose = False
     if True:
         # test reghost
         rh = RegHost(hds)
