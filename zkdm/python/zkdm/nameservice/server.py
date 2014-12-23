@@ -15,6 +15,7 @@ import sys
 import portalocker
 import register
 import query
+import types
 
 sys.path.append('../')
 
@@ -78,7 +79,8 @@ class RegisterHandler(RequestHandler):
                 regservice?host=<host name>&name=<service name>&type=<service type>&url=<service url>
                 heartbeat?host=<host name>&name=<service name>&type=<service type>
         '''
-        optabs = [ {'cmd': 'reghost', 'func': register.reghost },
+        optabs = [ {'cmd': 'help', 'func': self.help },
+                   {'cmd': 'reghost', 'func': register.reghost },
                    {'cmd': 'regservice', 'func': register.regservice },
                    {'cmd': 'heartbeat', 'func': register.heartbeat },
                  ]
@@ -90,14 +92,27 @@ class RegisterHandler(RequestHandler):
 
         self.write(result)
 
+    def help(self, params):
+        info = ''
+        apis = dir(register)
+        for named in apis:
+            if named == 'reghost' or named == 'regservice' or named == 'heartbeat':
+                info += '==== %s ====\n' % (named)
+                x = getattr(register, named)
+                info += x.__doc__
+                info += '\n\n'
+        return info
 
 
 class QueryHandler(RegisterHandler):
     def get(self, cmd):
         ''' 支持的格式：
-                getAllServices ...
+                getAllService?[offline=1]
+                getServicesByType?type=<service type>[&host=<host name>]
         '''
         optabs = [ { 'cmd': 'getAllServices', 'func': query.getAllServices },
+                   { 'cmd': 'getServicesByType', 'func': query.getServicesByType },
+                   { 'cmd': 'help', 'func': self.help },
                  ]
         params = simple_params(self.request.arguments)
         result = { 'result': 'err', 'info': 'NOT supported cmd:' + cmd }
@@ -106,6 +121,19 @@ class QueryHandler(RegisterHandler):
                 result = x['func'](params)
 
         self.write(result)
+
+    def help(self, params):
+        ''' 打开 query.py，然后显示每个函数的 help ??
+        '''
+        info = ''
+        apis = dir(query)
+        for named in apis:
+            if named[0:3] == 'get':
+                info += '==== %s ====\n' % (named)
+                x = getattr(query, named)
+                info += x.__doc__
+                info += '\n\n'
+        return info
 
 
 def make_app():
