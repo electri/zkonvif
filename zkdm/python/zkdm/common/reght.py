@@ -129,15 +129,42 @@ class RegHtOper:
 
     def reghostop(self, hd):
         ''' hd 为主机描述 '''
-        ''' TODO: 下面添加到名字服务的注册 '''
-        print 'reghost: ', hd
-        return True
+        ip = self.__ip
+        if 'ip' in hd:
+            ip = hd['ip']
+
+        url = self.__mgrt_base_url + 'regHost?mac=%s&ip=%s&hosttype=%s' % \
+              (hd['mac'], ip, hd['type'])
+
+        print url
+        try:
+            req = urllib2.urlopen(url, None, TIMEOUT)
+            body = self.__get_utf8_body(req)
+            if body == '':
+                return False
+            print 'reghostop: return:', body
+            if 'ok' in body:
+                return True
+            else:
+                return False
+        except Exception as e:
+            print e
+            return False
 
     def reghost_chkop(self, hd):
         ''' FIXME: 其他的需求 ...
-            TODO: 实现 listByMac ...
         '''
-        print 'reghost_chkop:', hd
+        url = self.__mgrt_base_url + 'listByMac?mac=%s' % (hd['mac'])
+        print url
+        try:
+            req = urllib2.urlopen(url, None, TIMEOUT)
+            body = self.__get_utf8_body(req)
+            if body == '':
+                return False
+            print 'reghost_chkop: return:', body
+        except Exception as e:
+            print e
+            return False
         return True
 
     def regop(self, sd):
@@ -295,21 +322,12 @@ class RegHt(threading.Thread):
         self.__lock.release()
 
 
-hds = [ {'mac': '112233445566', 'type': 'arm', },
-        {'mac': 'aabbccddeeff', 'type': 'x86', },
+hds = [ {'mac': '112233445566', 'type': 'arm', 'ip': '172.16.1.101'},
+        {'mac': 'AABBCCDDEEFF', 'type': 'x86', },
       ]
 
-if __name__ == '__main__':
-    if True:
-        # test reghost
-        rh = RegHost(hds)
-        time.sleep(60.0)
-        rh.join
-        sys.exit()
-
-
 sds = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111', 'mac':'112233445566' },
-        { 'type':'test', 'id':'2', 'url':'test://<ip>:11111' },
+        { 'type':'test', 'id':'2', 'url':'test://<ip>:11111', 'mac':'AABBCCDDEEFF' },
         { 'type':'test', 'id':'3', 'url':'test://<ip>:11111' },
         { 'type':'test', 'id':'4', 'url':'test://<ip>:11111' },
         { 'type':'test', 'id':'5', 'url':'test://<ip>:11111' },
@@ -363,7 +381,10 @@ sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
 
 
 if __name__ == '__main__':
-    verbose = True
+    if True:
+        # test reghost
+        rh = RegHost(hds)
+
     rh = RegHt(sds)
     time.sleep(600.0);
     rh.unregs(sds_minus)

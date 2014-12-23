@@ -95,6 +95,20 @@ def regservice(params):
     return { 'result': 'ok', 'info': info }
 
 
+def unregservice(params):
+    ''' 注销服务：
+    '''
+    if 'host' not in params or 'name' not in params or 'type' not in params:
+        return { 'result': 'err', 'info': 'unregservice MUST be supplied with host, name and type' }
+
+    db = DBHlp()
+    c = db.db_open()
+    s = 'delete from states where host="%s" and name="%s" and type="%s"' % (params['host'], params['name'], params['type'])
+    db.execute(c, s)
+    db.close()
+    return { 'result': 'ok', 'info':'' }
+
+
 def heartbeat(params):
     ''' 心跳，更新服务状态列表
         host_name, service_name, service_type

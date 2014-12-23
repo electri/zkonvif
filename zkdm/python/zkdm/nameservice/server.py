@@ -68,7 +68,11 @@ def simple_params(args):
     ''' 将 RequestHandler.request.arguments 简化为字典类型 '''
     params = {}
     for item in args:
-        params[item] = args[item][0]
+        # FIXME: 据说 name 字段应该修改为小写 ...
+        if item == 'name':
+            params['name'] = args['name'][0].lower()
+        else:
+            params[item] = args[item][0]
     return params
 
 
@@ -78,11 +82,13 @@ class RegisterHandler(RequestHandler):
                 reghost?name=<host name>&type=<host type>
                 regservice?host=<host name>&name=<service name>&type=<service type>&url=<service url>
                 heartbeat?host=<host name>&name=<service name>&type=<service type>
+                unregservice?host=<host name>&name=<service name>&type=<service type>
         '''
         optabs = [ {'cmd': 'help', 'func': self.help },
                    {'cmd': 'reghost', 'func': register.reghost },
                    {'cmd': 'regservice', 'func': register.regservice },
                    {'cmd': 'heartbeat', 'func': register.heartbeat },
+                   {'cmd': 'unregservice', 'func': register.unregservice },
                  ]
         params = simple_params(self.request.arguments)
         result = { 'result': 'err', 'info': 'NOT supported cmd:' + cmd }
@@ -96,7 +102,7 @@ class RegisterHandler(RequestHandler):
         info = ''
         apis = dir(register)
         for named in apis:
-            if named == 'reghost' or named == 'regservice' or named == 'heartbeat':
+            if named == 'reghost' or named == 'regservice' or named == 'heartbeat' or named == 'unregservice':
                 info += '==== %s ====\n' % (named)
                 x = getattr(register, named)
                 info += x.__doc__
@@ -139,11 +145,57 @@ class QueryHandler(RegisterHandler):
         return info
 
 
+class OldRegisterHandler(RequestHandler):
+    ''' registering?serviceinfo=<ip>_<mac>_<type>_<id>_<url>
+        heartbeat?serviceinfo=<ip>_<mac>_<type>_<id>
+        regHost?mac=<mac>&ip=<ip>&hosttype=<type>
+
+        前面两个的定义不好，强制要求 type, id 中不能有 _ 么？
+    '''
+    def get(self, cmd):
+        optabs = [ { 'cmd': 'regHost', 'func': register.reghost },
+                   { 'cmd': 'registering', 'func': register.regservice, },
+                   { 'cmd': 'heartbeat', 'func': register.heartbeat, },
+                 ]
+        params = self.conv_params(self.request.arguments)
+        result = { 'result': 'err', 'info': 'NOT supported cmd:' + cmd }
+        for x in optabs:
+            if x['cmd'] == cmd:
+                result = x['func'](params)
+        self.write(result)
+
+    def conv_params(self, args):
+        params = {}
+        for x in args:
+            if x == 'serviceinfo':
+                ss = args[x][0].split('_')
+                if len(ss) == 5:
+                    params['ip'] = ss[0]
+                    params['host'] = ss[1].lower()
+                    params['type'] = ss[2]
+                    params['name'] = ss[3].lower()
+                    params['url'] = ss[4]
+                elif len(ss) == 4:
+                    params['ip'] = ss[0]
+                    params['host'] = ss[1]
+                    params['type'] = ss[2]
+                    params['name'] = ss[3]
+            elif x == 'mac':
+                params['name'] = args[x][0].lower()
+            elif x == 'ip':
+                params['ip'] = args[x][0]
+            elif x == 'hosttype':
+                params['type'] = args[x][0]
+
+        return params
+
+
 def make_app():
     return Application([
             url(r'/ns/internal', InternalHandler),
             url(r'/ns/register/(.*)', RegisterHandler),
             url(r'/ns/query/(.*)', QueryHandler),
+            url(r'/deviceService/(.*)', OldRegisterHandler), # 仅仅为了兼容张福春设计的接口
             ])
 
 
