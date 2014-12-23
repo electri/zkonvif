@@ -197,7 +197,7 @@ class RegHtOper:
             mac = sd['mac']
 
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
-              (self.__ip, self.__mac, sd['type'], sd['id'])
+              (self.__ip, mac, sd['type'], sd['id'])
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
@@ -329,73 +329,63 @@ class RegHt(threading.Thread):
         self.__lock.release()
 
 
-hds = [ {'mac': '112233445566', 'type': 'arm', 'ip': '172.16.1.101'},
-        {'mac': 'AABBCCDDEEFF', 'type': 'x86', },
-      ]
 
-sds = [ { 'type':'ptz', 'id':'1', 'url':'ptz://<ip>:11111', 'mac':'112233445566' },
-        { 'type':'ptz', 'id':'2', 'url':'ptz://<ip>:11111', 'mac':'AABBCCDDEEFF' },
-        { 'type':'ptz', 'id':'3', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'4', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'5', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'6', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'7', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'8', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'9', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'10', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'11', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'12', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'13', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'14', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'15', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'16', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'17', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'18', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'19', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'20', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'21', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'22', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'23', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'24', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'25', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'26', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'27', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'28', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'29', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'30', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'31', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'32', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'33', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'34', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'35', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'36', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'37', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'38', 'url':'ptz://<ip>:11111', 'mac':'112233445566'  },
-        { 'type':'ptz', 'id':'39', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'40', 'url':'ptz://<ip>:11111' },
-      ]
+def build_test_hosts():
+    ''' 模拟 100台主机 '''
+    hosts = []
+    n = 1
+    while n <= 100:
+        host = {}
+        host['mac'] = '%012X' % (n)
+        host['ip'] = '127.0.0.1'
+        host['type'] = 'arm'
+        hosts.append(host)
+        n += 1
+    return hosts
 
-sds_minus = [ { 'type':'ptz', 'id':'1', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'2', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'3', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'4', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'5', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'6', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'7', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'8', 'url':'ptz://<ip>:11111' },
-        { 'type':'ptz', 'id':'9', 'url':'ptz://<ip>:11111' },
-      ]
+def build_test_services(hds):
+    ''' 模拟生成服务列表，
+        每个主机生成一个 recording, 三个 ptz 服务
+    '''
+    ss = []
+    for hd in hds:
+        s = {}
+        s['mac'] = hd['mac']
+        s['ip'] = hd['ip']
+        s['type'] = 'recording'
+        s['url'] = 'http://...'
+        s['id'] = '001'
+        ss.append(s)
+
+        s['mac'] = hd['mac']
+        s['type'] = 'ptz'
+        s['url'] = 'http://...'
+        s['id'] = 'card01'
+        ss.append(s)
+
+        s['mac'] = hd['mac']
+        s['type'] = 'ptz'
+        s['url'] = 'http://...'
+        s['id'] = 'card02'
+        ss.append(s)
+
+        s['mac'] = hd['mac']
+        s['type'] = 'ptz'
+        s['url'] = 'http://...'
+        s['id'] = 'card03'
+        ss.append(s)
+    return ss
 
 
 if __name__ == '__main__':
     verbose = False
-    if True:
-        # ptz reghost
-        rh = RegHost(hds)
 
-    rh = RegHt(sds)
-    time.sleep(600.0);
-    rh.unregs(sds_minus)
-    time.sleep(60000.0);
-    rh.join()
+    hds = build_test_hosts()
+    sds = build_test_services(hds)
+
+    rh = RegHost(hds)
+    rs = RegHt(sds)
+
+    time.sleep(1000000.0)
+
 
