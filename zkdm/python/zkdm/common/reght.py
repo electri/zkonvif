@@ -100,6 +100,7 @@ class GroupOfRegChk:
 
     def __unreg(self, b, sd_to_unreg, unregop):
         for sd in b:
+            print '__unreg: to chk ', sd
             if 'type' in sd and 'id' in sd:
                 if sd['type'] == sd_to_unreg['type'] and sd['id'] == sd_to_unreg['id']:
                     if unregop(sd):
@@ -278,6 +279,7 @@ class RegHt(threading.Thread):
         self.__lock.acquire()
         for sd in self.__unregs:
             gos.unreg(func, sd)
+        self.__unregs = [] 
         self.__lock.release()
 
     def unreg(self, sd):
@@ -300,7 +302,7 @@ hds = [ {'mac': '112233445566', 'type': 'arm', },
       ]
 
 if __name__ == '__main__':
-    if True:
+    if False:
         # test reghost
         rh = RegHost(hds)
         time.sleep(60.0)
@@ -365,7 +367,7 @@ sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
 if __name__ == '__main__':
     verbose = True
     rh = RegHt(sds)
-    time.sleep(600.0);
+    time.sleep(60.0);
     rh.unregs(sds_minus)
     time.sleep(60000.0);
     rh.join()
