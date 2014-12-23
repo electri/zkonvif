@@ -47,6 +47,8 @@ def load_ptz(config):
             logging.info('open with cfg: %s', filename)
             if is_ptz == False:
                 logging.info('failure')    
+            else:
+                logging.info('succeed')
         else:
             print 'open ptz:', ptz['serial'], 'addr:', ptz['addr']
             is_ptz = ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))

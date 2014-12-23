@@ -79,7 +79,7 @@ class RegHost(threading.Thread):
             print e
             rc['info'] = 'can\'t get host info'
             rc['result'] = 'err'
-        listByMacUrl = r'http://%s:%s/deviceService/listByMac?Mac=%s'%(sip, sport, self.mymac)
+        listByMacUrl = r'http://%s:%s/deviceService/listByMac?mac=%s'%(sip, sport, self.mymac)
 
 
         while True:
