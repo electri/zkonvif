@@ -138,14 +138,14 @@ class RegHtOper:
 
         url = self.__mgrt_base_url + 'regHost?mac=%s&ip=%s&hosttype=%s' % \
               (hd['mac'], ip, hd['type'])
-
         print url
+
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
+            print body
             if body == '':
                 return False
-            print 'reghostop: return:', body
             if 'ok' in body:
                 return True
             else:
@@ -165,11 +165,11 @@ class RegHtOper:
             if body == '':
                 print '====================== listByMac return null'
                 return False
-            print 'reghost_chkop: return:', body
+            else:
+                return True
         except Exception as e:
             print e
             return False
-        return True
 
     def regop(self, sd):
         ''' 服务注册，sd 为服务描述，返回 True 成功 '''
@@ -197,7 +197,7 @@ class RegHtOper:
             mac = sd['mac']
 
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
-              (self.__ip, self.__mac, sd['type'], sd['id'])
+              (self.__ip, mac, sd['type'], sd['id'])
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
@@ -226,6 +226,7 @@ class RegHtOper:
             raise Exception("include''")
 
         return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
+
 
 class RegHost(threading.Thread):
     ''' 主机注册 ...
@@ -385,16 +386,62 @@ sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
         { 'type':'test', 'id':'9', 'url':'test://<ip>:11111' },
       ]
 
+def build_test_hosts():
+    ''' 模拟 100台主机 '''
+    hosts = []
+    n = 1
+    while n <= 100:
+        host = {}
+        host['mac'] = '%012X' % (n)
+        host['ip'] = '127.0.0.1'
+        host['type'] = 'arm'
+        hosts.append(host)
+        n += 1
+    return hosts
+
+def build_test_services(hds):
+    ''' 模拟生成服务列表，
+        每个主机生成一个 recording, 三个 ptz 服务
+    '''
+    ss = []
+    for hd in hds:
+        s = {}
+        s['mac'] = hd['mac']
+        s['ip'] = hd['ip']
+        s['type'] = 'recording'
+        s['url'] = 'http://...'
+        s['id'] = '001'
+        ss.append(s)
+
+        s['mac'] = hd['mac']
+        s['type'] = 'ptz'
+        s['url'] = 'http://...'
+        s['id'] = 'card01'
+        ss.append(s)
+
+        s['mac'] = hd['mac']
+        s['type'] = 'ptz'
+        s['url'] = 'http://...'
+        s['id'] = 'card02'
+        ss.append(s)
+
+        s['mac'] = hd['mac']
+        s['type'] = 'ptz'
+        s['url'] = 'http://...'
+        s['id'] = 'card03'
+        ss.append(s)
+    return ss
+
 
 if __name__ == '__main__':
     verbose = False
-    if True:
-        # test reghost
-        rh = RegHost(hds)
 
-    rh = RegHt(sds)
-    time.sleep(600.0);
-    rh.unregs(sds_minus)
-    time.sleep(60000.0);
-    rh.join()
+    hds = build_test_hosts()
+    sds = build_test_services(hds)
+
+    rh = RegHost(hds)
+    rs = RegHt(sds)
+
+    time.sleep(1000000.0)
+
 

@@ -7,7 +7,6 @@ from ctypes import *
 import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
-sys.path.append("../")
 from common.Log import Log
 from common.reght import RegHt
 import thread
