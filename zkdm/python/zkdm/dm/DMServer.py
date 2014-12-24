@@ -6,11 +6,10 @@ import ServicesManager
 import sys, os, io, json
 import platform
 sys.path.append('../')
-from common.reght import RegHt
+from common.reght import RegHt, RegHost
 sys.path.append('../host')
 from common.utils import zkutils
 import Stat
-from reg_host import RegHost
 
 _zkutils = zkutils()
 
@@ -157,8 +156,7 @@ def make_app():
             ])
 
 if __name__ == '__main__':
-    rgHost =  RegHost(_myip, _mac)
-    rgHost.start()
+    rgHost =  RegHost([{'mac':_mac,'type':'x86', 'ip':_myip}])
     # 服务管理器，何时 close ??
     _sm = ServicesManager.ServicesManager(_myip, _myip)
     app = make_app()

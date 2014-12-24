@@ -7,7 +7,6 @@ from ctypes import *
 import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
-sys.path.append("../")
 from common.Log import Log
 from common.reght import RegHt
 import thread
@@ -118,7 +117,7 @@ from tornado.web import *
 class ControllingHandler(RequestHandler):
     ''' 处理云台操作 '''
     @asynchronous
-    def get(self, name, method):
+    def get(self, token, name, method):
         ''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
         '''
         thread.start_new_thread(self.callback, (token, name, method))

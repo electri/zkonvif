@@ -16,6 +16,7 @@ from LivingServer import StartLiving
 sys.path.append('../')
 from common.utils import zkutils
 from common.reght import RegHt
+from LogWriter import log_info, log_debug
 
 
 # 必须设置工作目录 ...
@@ -67,6 +68,10 @@ class CmdHandler(tornado.web.RequestHandler):
             self.set_header('Content-Type', 'application/json')
             self.write(rc)
 
+        
+        log_info('receive:'+(self.request.uri.split('?'))[1])
+        log_info('result:'+rc['result']+"\0\0\0info:"+rc['info'])
+
         return
 
 _ioloop = None # 用于支持外面的结束 ...
@@ -84,6 +89,7 @@ class InternalHandler(RequestHandler):
             self.set_header('Content-Type', 'application/json')
             rc['info'] = 'exit!!!!'
             self.write(rc)
+            log_info('exit service！')
             _ioloop.stop()
         elif command == 'version':
             self.set_header('Content-Type', 'application/json')
@@ -120,20 +126,21 @@ def main():
 
         global _ioloop
         _ioloop = IOLoop.instance()
+        log_info('start service ！')
         _ioloop.start()
 
-
     except Exception as error:
+        log_debug(str(error))
         print error
        
 def is_running(ip,port):
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)  
     try:  
-        s.connect((ip,int(port)))  
+        s.connect((ip,int(port)))
         s.shutdown(2)
         #利用shutdown()函数使socket双向数据传输变为单向数据传输。shutdown()需要一个单独的参数，  
         #该参数表示了如何关闭socket。具体为：0表示禁止将来读；1表示禁止将来写；2表示禁止将来读和写。  
-        s.close() 
+        s.close()
         return True  
     except Exception as error:
         return False 
@@ -142,3 +149,5 @@ if __name__ == "__main__":
     result = is_running('127.0.0.1',10006)
     if result == False:
         main()
+    else:
+        log_info('The program is already running！')

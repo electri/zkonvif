@@ -343,6 +343,7 @@ class RegHt(threading.Thread):
 
 
 
+
 def build_test_hosts():
     ''' 模拟 100台主机 '''
     hosts = []
