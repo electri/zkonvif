@@ -302,7 +302,7 @@ class RegHt(threading.Thread):
         _log.log('working thread started: there are %d services, ip=%s, mac=%s' % (len(self.__sds), ip, mac));
 
         while not self.__quit:
-            if self.__quit_notify.wait(1.0):
+            if self.__quit_notify.wait(0.5):
                 continue
             next(regfunc)
             next(htfunc)

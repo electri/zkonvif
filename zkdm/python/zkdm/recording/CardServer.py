@@ -426,7 +426,6 @@ class InternalHandler(RequestHandler):
 
 def livingS(url):
     global client
-    wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
     rc = {}
     try:
         print url
