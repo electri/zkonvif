@@ -141,7 +141,7 @@ class Schedule():
                         _record_thread.append(stop_thread)
 
                     if _living == True and _delay_time>0:
-                        thread = threading.Timer(_delay_time,StartLiving)
+                        thread = threading.Timer(_delay_time,_apply_living)
                         _record_thread.append(thread)
 
                     if _living == True and _stop_delay_time>0:
