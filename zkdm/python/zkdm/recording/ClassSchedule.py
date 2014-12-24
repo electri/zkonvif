@@ -2,7 +2,7 @@
 
 import threading
 import json
-import time, sys
+import time, sys, io
 import urllib2
 
 sys.path.append('../')
@@ -16,9 +16,10 @@ class Schedule():
     课表解析
     '''
     def __init__(self,mgrt_base_url = None):
-        if mgrt_baseurl is None:
+        if mgrt_base_url is None:
             mgrt_base_url = self._load_base_url()
-        slef.__mgrt_base_url = mgrt_base_url
+        self.__mgrt_base_url = mgrt_base_url
+        print self.__mgrt_base_url
 
     _record_thread = []
 
@@ -60,7 +61,7 @@ class Schedule():
     def _apply_living(self,endime):
         _utils = zkutils()
         mac = utils.mymac()
-        resopnse = urlib2.urlopen(self.__mgrt_base_url+'/livingStart?mac='+mac+'&endTime='+endtime)
+        resopnse = urlib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime)
 
 
     def _analyse_json(self):
@@ -72,7 +73,7 @@ class Schedule():
             mac = _utils.mymac()
             data = ''
             try:
-                response = urllib2.urlopen(self.__mgrt_base_url+'/curriculum?mac=' + mac)
+                response = urllib2.urlopen(self.__mgrt_base_url+'curriculum?mac=' + mac)
                 data = json.load(response)
                 with open('CourseInfo.json','w') as savefile:
                     json.dump(data,savefile)
