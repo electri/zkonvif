@@ -30,7 +30,7 @@ def log_debug(content):
     logging.DEBUG(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "\0\0\0\0" + content)
 
 if __name__ == '__main__':
-    log_info('ddddd')
+    log_info('测试')
 
 
 
