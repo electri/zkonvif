@@ -30,7 +30,8 @@ def get_utf8_body(req):
             return False
             
 
-    def isGetMacList(url):
+    def isGetMacList(sip, sport, mymac):
+        url = r'http://%s:%s/deviceService/listByMac?mac=%s'%(sip, sport, self.mymac)
         try:
             s = urllib2.urlopen(url)
         except Exception as e:
@@ -79,8 +80,6 @@ def get_utf8_body(req):
             print e
             rc['info'] = 'can\'t get host info'
             rc['result'] = 'err'
-        listByMacUrl = r'http://%s:%s/deviceService/listByMac?mac=%s'%(sip, sport, self.mymac)
-
 
         while True:
             while reg(self.myip, self.mymac, host_type, sip, sport) == False:
@@ -88,6 +87,6 @@ def get_utf8_body(req):
 
             time.sleep(10)
 
-            while isGetMacList(listByMacUrl) == True:
+            while isGetMacList(sip, sport, self.mymac) == True:
                 time.sleep(10)
  
