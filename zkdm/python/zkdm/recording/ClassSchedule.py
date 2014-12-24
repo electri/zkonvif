@@ -15,7 +15,21 @@ class Schedule():
     '''
     课表解析
     '''
+    def __init__(self,mgrt_base_url = None):
+        if mgrt_baseurl is None:
+            mgrt_base_url = self._load_base_url()
+        slef.__mgrt_base_url = mgrt_base_url
+
     _record_thread = []
+
+    def _load_base_url(self):
+        ret = json.load(io.open(r'../host/config.json', 'r', encoding='utf-8'))
+        r = ret['regHbService']
+        if ' ' in r['sip'] or ' ' in r['sport']:
+            raise Exception("include ' '")
+        if r['sip'] == '' or r['sport'] == '':
+            raise Exception("include''")
+        return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
     
     def _record_task(self,info):
         _rcmd = RecordingCommand()
@@ -43,6 +57,12 @@ class Schedule():
     def test(self):
         print 'testsertrst'
 
+    def _apply_living(self,endime):
+        _utils = zkutils()
+        mac = utils.mymac()
+        resopnse = urlib2.urlopen(self.__mgrt_base_url+'/livingStart?mac='+mac+'&endTime='+endtime)
+
+
     def _analyse_json(self):
         rc = {}
         rc['result'] = 'ok'
@@ -50,15 +70,9 @@ class Schedule():
         try:      
             _utils = zkutils()
             mac = _utils.mymac()
-            MAC = ''
-            for i in range(0,len(mac)/2):
-                if (i+1) == len(mac)/2:
-                    MAC += mac[2*i:2*i+2]
-                else:
-                    MAC += mac[2*i:2*i+2]+'-'
             data = ''
             try:
-                response = urllib2.urlopen('http://192.168.12.46:8080/deviceService/curriculum?mac=' + MAC)
+                response = urllib2.urlopen(self.__mgrt_base_url+'/curriculum?mac=' + mac)
                 data = json.load(response)
                 with open('CourseInfo.json','w') as savefile:
                     json.dump(data,savefile)
