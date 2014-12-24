@@ -262,8 +262,7 @@ class RegHost(threading.Thread):
         while not self.__quit:
             if self.__quit_notify.wait(1.0):
                 continue
-            next(regfunc)
-            next(htfunc)
+            next(regfunc) # 主机注册成功后，终于不需要执行那个 listByMac 了
  
 
 class RegHt(threading.Thread):
@@ -276,7 +275,14 @@ class RegHt(threading.Thread):
         self.__quit = False
         self.__quit_notify = threading.Event()
         self.__mgrt_base_url = mgrt_baseurl
-        self.__sds = sds
+        self.__sds = []
+        for sd in sds: # XXX: 因为 id 是区分同一 mac 上所有服务的唯一标识，所有使用 type-id 组合
+            if 'type' in sd and 'id' in sd:
+                t = {}
+                for x in sd:
+                    t[x] = sd[x]
+                t['id'] = sd['type'] + '-' + sd['id']
+                self.__sds.append(t)
         self.__lock = threading.RLock()
         self.__unregs = [] # 保存需要主动注销的 ...
         threading.Thread.__init__(self)
@@ -301,8 +307,15 @@ class RegHt(threading.Thread):
 
         _log.log('working thread started: there are %d services, ip=%s, mac=%s' % (len(self.__sds), ip, mac));
 
+        INTERVAL = 1.0
+        interval = INTERVAL
+
         while not self.__quit:
-            if self.__quit_notify.wait(0.5):
+            ''' TODO: 典型的：一个循环，不能超过 3 * INTERVAL 的时间
+                    如果一次循环超时严重，可以考虑动态调整 interval,
+                    不够这个 interval 调整范围也不多 ...
+            '''
+            if self.__quit_notify.wait(interval):
                 continue
             next(regfunc)
             next(htfunc)
@@ -334,7 +347,7 @@ def build_test_hosts():
     ''' 模拟 100台主机 '''
     hosts = []
     n = 1
-    while n <= 100:
+    while n <= 10:
         host = {}
         host['mac'] = '%012X' % (n)
         host['ip'] = '127.0.0.1'
