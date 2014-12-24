@@ -329,62 +329,7 @@ class RegHt(threading.Thread):
         self.__lock.release()
 
 
-hds = [ {'mac': '112233445566', 'type': 'arm', 'ip': '172.16.1.101'},
-        {'mac': 'AABBCCDDEEFF', 'type': 'x86', 'ip': '172.16.1.111'},
-      ]
 
-sds = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111', 'mac':'112233445566' },
-        { 'type':'test', 'id':'2', 'url':'test://<ip>:11111', 'mac':'AABBCCDDEEFF' },
-        { 'type':'test', 'id':'3', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'4', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'5', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'6', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'7', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'8', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'9', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'10', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'11', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'12', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'13', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'14', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'15', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'16', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'17', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'18', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'19', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'20', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'21', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'22', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'23', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'24', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'25', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'26', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'27', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'28', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'29', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'30', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'31', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'32', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'33', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'34', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'35', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'36', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'37', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'38', 'url':'test://<ip>:11111', 'mac':'112233445566'  },
-        { 'type':'test', 'id':'39', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'40', 'url':'test://<ip>:11111' },
-      ]
-
-sds_minus = [ { 'type':'test', 'id':'1', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'2', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'3', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'4', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'5', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'6', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'7', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'8', 'url':'test://<ip>:11111' },
-        { 'type':'test', 'id':'9', 'url':'test://<ip>:11111' },
-      ]
 
 def build_test_hosts():
     ''' 模拟 100台主机 '''

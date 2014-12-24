@@ -1,6 +1,6 @@
 {
 	"host": {
-		"type" : "JP100"	
+		"type" : "x86"	
 	},
 
 	"regHbService": {
