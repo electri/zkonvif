@@ -113,7 +113,7 @@ def main():
         global _rcmd
         _rcmd = RecordingCommand()
         global _class_schedule
-        _class_schedule = Schedule()
+        _class_schedule = Schedule(None)
         _class_schedule._analyse_json()
 
         application.listen(10006)
