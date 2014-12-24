@@ -156,7 +156,10 @@ class RegHtOper:
 
     def reghost_chkop(self, hd):
         ''' FIXME: 其他的需求 ...
+            已经废弃
         '''
+        raise Exception("Never calling listByMac")
+
         url = self.__mgrt_base_url + 'listByMac?mac=%s' % (hd['mac'])
         print url
         try:
@@ -179,14 +182,25 @@ class RegHtOper:
 
         url = self.__mgrt_base_url + 'registering?serviceinfo=%s_%s_%s_%s_%s' % \
               (self.__ip, mac, sd['type'], sd['id'], sd['url'])
+        if verbose:
+            print url
+
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
         except Exception as e:
+            if verbose:
+                print '-------------------- regService- Exception ---------------'
+                print e
+                print '==========================================================='
             return False
 
         if u'已经注册' not in ret['info']:
+            if verbose:
+                print '-------------------- regService Fault ---------------'
+                print 'regop: ', ret
+                print '====================================================='
             return False
         return True
 
@@ -198,15 +212,26 @@ class RegHtOper:
 
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self.__ip, mac, sd['type'], sd['id'])
+        if verbose:
+            print url
+
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
         except Exception as e:
+            if verbose:
+                print '------------------------- heartbeat Exception -----------'
+                print e
+                print '========================================================='
             return False
 
 
         if u'失败' in ret['info']:
+            if verbose:
+                print '------------------------- heartbeat Fault --------------'
+                print ret
+                print '========================================================'
             return False
         else:
             return True
@@ -348,7 +373,7 @@ def build_test_hosts():
     ''' 模拟 100台主机 '''
     hosts = []
     n = 1
-    while n <= 10:
+    while n <= 5:
         host = {}
         host['mac'] = '%012X' % (n)
         host['ip'] = '127.0.0.1'
@@ -392,7 +417,7 @@ def build_test_services(hds):
 
 
 if __name__ == '__main__':
-    verbose = False
+    verbose = True
 
     hds = build_test_hosts()
     sds = build_test_services(hds)
