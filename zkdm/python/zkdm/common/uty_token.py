@@ -58,17 +58,20 @@ def gather_sds(fname = None):
                         sd['mac'] = h['mac']
                         sd['ip'] = h['ip']
                         sd['url'] = s['url']
+                        sd['type'] = sk
                         sds.append(sd)
     return sds
 
 
 if __name__ == '__main__':
     import reght, time
+    reght.verbose = True
 
     hds = gather_hds()
     rh = reght.RegHost(hds)  # 主机注册
 
     sds = gather_sds()
+    print sds
     rs = reght.RegHt(sds)  # 服务注册
 
     time.sleep(600)

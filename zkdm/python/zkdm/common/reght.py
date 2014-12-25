@@ -48,12 +48,6 @@ class _GroupOfRegChk:
             i %= len(self.__10b)
 
     def __fixip(self, sd):
-        ''' 如果 sd['url'] 中的 ip/host 部分是 <ip> 的话，则修改为本机的 ip '''
-        #regex = re.compile('^(([^:/?#]+):)?(//(([^:/?#]+)(:[0-9]+)?))?([^?#]*)(\?([^# ]*))?(#(.*))?')
-        #rc = regex.match(sd['url'])
-        #if rc and rc.group(5) == '<ip>':
-        #    url = sd['url']
-        #    sd['url'] = url.replace('<ip>', self.__myip, 1)
         if 'url' in sd:
             sd['url'] = sd['url'].replace('<ip>', self.__myip, 1)
         if 'ip' in sd:
@@ -62,6 +56,7 @@ class _GroupOfRegChk:
     def __fixmac(self, sd):
         if 'mac' in sd:
             sd['mac'] = sd['mac'].replace('<mac>', self.__mymac, 1)
+            sd['mac'] = sd['mac'].upper()  # FIXME: 满足张工的要求
 
     def reg(self, regop):
         ''' 对下一组，执行注册 
@@ -145,12 +140,15 @@ class _RegHtOper:
 
         url = self.__mgrt_base_url + 'regHost?mac=%s&ip=%s&hosttype=%s' % \
               (hd['mac'], ip, hd['type'])
-        print url
+        if verbose:
+            print url
 
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
             body = self.__get_utf8_body(req)
-            print body
+            if verbose:
+                print body
+
             if body == '':
                 return False
             if 'ok' in body:
@@ -329,7 +327,6 @@ class RegHt(threading.Thread):
     def run(self):
         ip = myip
         mac = mymac
-        print 'ip:%s, mac:%s' % (ip, mac)
 
         oper = _RegHtOper(self.__mgrt_base_url, ip, mac)
         gos = _GroupOfRegChk(ip, mac, self.__sds)
@@ -337,18 +334,17 @@ class RegHt(threading.Thread):
         regfunc = gos.reg(oper.regop)
         htfunc = gos.ht(oper.htop)
 
-        _log.log('working thread started: there are %d services, ip=%s, mac=%s' % (len(self.__sds), ip, mac));
-
         INTERVAL = 1.0
         interval = INTERVAL
 
         while not self.__quit:
             ''' TODO: 典型的：一个循环，不能超过 3 * INTERVAL 的时间
                     如果一次循环超时严重，可以考虑动态调整 interval,
-                    不够这个 interval 调整范围也不多 ...
+                    不过这个 interval 调整范围也不多 ...
             '''
             if self.__quit_notify.wait(interval):
                 continue
+
             next(regfunc)
             next(htfunc)
             self.__to_unreg(gos, oper.unregop)
