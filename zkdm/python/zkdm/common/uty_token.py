@@ -6,7 +6,7 @@
 #
 #################################################################
 
-import os, json, io
+import os, json, io, sys
 
 TOKEN_FNAME = "tokens.json"
 
@@ -27,9 +27,7 @@ def __load(fname = None):
     return j
 
 
-def gather_hds(fname = None):
-    ''' 根据 tokens.json 文件收集并构建 host description list '''
-    j = __load(fname)
+def gather_hds_from_tokens(j):
     hds = []
     for i in j:
         h = j[i]
@@ -41,10 +39,17 @@ def gather_hds(fname = None):
             hds.append(hd)
     return hds
 
-def gather_sds(service_type = None, fname = None):
+
+
+def gather_hds(fname = None):
+    ''' 根据 tokens.json 文件收集并构建 host description list '''
+    j = __load(fname)
+    return gather_hds_from_tokens(j)
+
+
+def gather_sds_from_tokens(j, service_type = None):
     ''' 收集sevice_type 指定的服务信息，并构建 service description list
     '''
-    j = __load(fname)
     sds = []
     for i in j:
         h = j[i]  # host
@@ -65,10 +70,39 @@ def gather_sds(service_type = None, fname = None):
                         sds.append(sd)
     return sds
 
+def gather_sds(service_type = None, fname = None):
+    j = __load(fname)
+    return gather_sds_from_tokens(j, service_type)
+
+
+def get_private_from_tokens(token, service_id, tokens):
+    j = tokens
+    for i in j:
+        h = j[i]
+        if __valid_host(h) and 'services' in h:
+            for sk in h['services']:
+                st = h['services'][sk] # type
+                for sid in st:
+                    s = st[sid]    # id
+                    private = s['private']
+                    return private
+    return {}
+
+def get_private(token, service_id, fname = None):
+    ''' 从 fname 的 token 表中取出 token + serviceid 对应的 private 数据字典'''
+    j = __load(fname)
+    return get_private_from_tokens(token, service_id, j)
+
+
 
 if __name__ == '__main__':
     import reght, time
     reght.verbose = True
+
+    p = get_private('1', 'CARD02')
+    print p
+
+    sys.exit()
 
     hds = gather_hds()
     rh = reght.RegHost(hds)  # 主机注册
