@@ -6,7 +6,7 @@
 #
 #################################################################
 
-import os, json, io
+import os, json, io, sys
 
 TOKEN_FNAME = "tokens.json"
 
@@ -66,9 +66,34 @@ def gather_sds(service_type = None, fname = None):
     return sds
 
 
+def get_private_from_token(token, service_id, tokens):
+    j = tokens
+    for i in j:
+        h = j[i]
+        if __valid_host(h) and 'services' in h:
+            for sk in h['services']:
+                st = h['services'][sk] # type
+                for sid in st:
+                    s = st[sid]    # id
+                    private = s['private']
+                    return private
+    return {}
+
+def get_private(token, service_id, fname = None):
+    ''' 从 fname 的 token 表中取出 token + serviceid 对应的 private 数据字典'''
+    j = __load(fname)
+    return get_private_from_token(token, service_id, j)
+
+
+
 if __name__ == '__main__':
     import reght, time
     reght.verbose = True
+
+    p = get_private('1', 'CARD02')
+    print p
+
+    sys.exit()
 
     hds = gather_hds()
     rh = reght.RegHost(hds)  # 主机注册
