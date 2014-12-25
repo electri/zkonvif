@@ -26,6 +26,13 @@ const int pong_size = 4, ping_size = 4;
 
 static int parse_opt(int argc, char **argv)
 {
+	// TODO: 应该解析，不过使用环境变量更简单 :)
+	char *p = getenv("pong_port");
+	if (p) _port = atoi(p);
+
+	p = getenv("pong_interval");
+	if (p) _interval = atoi(p);
+
 	return 0;
 }
 
@@ -56,7 +63,6 @@ int main(int argc, char **argv)
 	local.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(fd, (struct sockaddr*)&local, sizeof(local)) < 0) {
 		fprintf(stderr, "ERR: bind %d err? (%d) %s\n", _port, errno, strerror(errno));
-		close(fd);
 		return -1;
 	}
 
@@ -66,7 +72,6 @@ int main(int argc, char **argv)
 	while (1) {
 		struct timeval tv = { _interval / 1000, (_interval % 1000) * 1000 };
 		fds = fds_orig;
-
 		rc = select(fd+1, &fds, 0, 0, &tv);
 		if (rc < 0) {
 			fprintf(stderr, "ERR: select err?? (%d) %s\n", errno, strerror(errno));
