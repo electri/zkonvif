@@ -38,4 +38,5 @@ AC_OUTPUT([
 		Makefile
 		ptz/Makefile
 		zkutil/Makefile
+		pong/Makefile
 		])
