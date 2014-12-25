@@ -20,7 +20,7 @@ TIMEOUT = 3 # urllib2.urlopen 的超时 ...
 myip = zkutils().myip_real()
 mymac = zkutils().mymac()
 
-class GroupOfRegChk:
+class _GroupOfRegChk:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
         如果服务太多，每隔10秒，连续注册/心跳，会导致网络剧烈抖动，
         因此这里简单的划分为 10 个组，然后每个 1秒执行一组 ....
@@ -109,7 +109,7 @@ class GroupOfRegChk:
                         b.remove(sd)
 
 
-class RegHtOper:
+class _RegHtOper:
     ''' 封装到名字服务的操作 '''
     def __init__(self, mgrt_base_url, ip, mac):
         if mgrt_base_url is None:
@@ -278,8 +278,8 @@ class RegHost(threading.Thread):
         mac = mymac
         print 'ip:%s, mac:%s' % (ip, mac)
 
-        oper = RegHtOper(self.__mgrt_base_url, ip, mac)
-        gos = GroupOfRegChk(ip, self.__hds)
+        oper = _RegHtOper(self.__mgrt_base_url, ip, mac)
+        gos = _GroupOfRegChk(ip, self.__hds)
 
         regfunc = gos.reg(oper.reghostop)
         htfunc = gos.ht(oper.reghost_chkop)
@@ -324,8 +324,8 @@ class RegHt(threading.Thread):
         mac = mymac
         print 'ip:%s, mac:%s' % (ip, mac)
 
-        oper = RegHtOper(self.__mgrt_base_url, ip, mac)
-        gos = GroupOfRegChk(ip, self.__sds)
+        oper = _RegHtOper(self.__mgrt_base_url, ip, mac)
+        gos = _GroupOfRegChk(ip, self.__sds)
 
         regfunc = gos.reg(oper.regop)
         htfunc = gos.ht(oper.htop)

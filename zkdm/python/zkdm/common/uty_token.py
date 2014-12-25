@@ -31,7 +31,8 @@ def gather_hds(fname = None):
     ''' 根据 tokens.json 文件收集并构建 host description list '''
     j = __load(fname)
     hds = []
-    for h in j:
+    for i in j:
+        h = j[i]
         if __valid_host(h):
             hd = {}
             hd['mac'] = h['mac']
@@ -44,12 +45,33 @@ def gather_sds(fname = None):
     ''' 收集所有服务信息，并构建 service description list '''
     j = __load(fname)
     sds = []
-    for h in j:
-        if __valid_host(h):
-            sds = {}
-
+    for i in j:
+        h = j[i]  # host
+        if __valid_host(h) and 'services' in h:
+            for sk in h['services']:
+                st = h['services'][sk] # type
+                for sid in st:
+                    s = st[sid]    # id
+                    sd = {}
+                    if 'url' in s:
+                        sd['id'] = sid
+                        sd['mac'] = h['mac']
+                        sd['ip'] = h['ip']
+                        sd['url'] = s['url']
+                        sds.append(sd)
     return sds
 
+
+if __name__ == '__main__':
+    import reght, time
+
+    hds = gather_hds()
+    rh = reght.RegHost(hds)  # 主机注册
+
+    sds = gather_sds()
+    rs = reght.RegHt(sds)  # 服务注册
+
+    time.sleep(600)
 
 
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
