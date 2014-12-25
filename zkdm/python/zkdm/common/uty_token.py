@@ -41,8 +41,9 @@ def gather_hds(fname = None):
             hds.append(hd)
     return hds
 
-def gather_sds(fname = None):
-    ''' 收集所有服务信息，并构建 service description list '''
+def gather_sds(service_type = None, fname = None):
+    ''' 收集sevice_type 指定的服务信息，并构建 service description list
+    '''
     j = __load(fname)
     sds = []
     for i in j:
@@ -50,6 +51,8 @@ def gather_sds(fname = None):
         if __valid_host(h) and 'services' in h:
             for sk in h['services']:
                 st = h['services'][sk] # type
+                if service_type is not None and service_type != sk:
+                    continue
                 for sid in st:
                     s = st[sid]    # id
                     sd = {}
@@ -70,11 +73,10 @@ if __name__ == '__main__':
     hds = gather_hds()
     rh = reght.RegHost(hds)  # 主机注册
 
-    sds = gather_sds()
-    print sds
+    sds = gather_sds('ptz')
     rs = reght.RegHt(sds)  # 服务注册
 
-    time.sleep(600)
+    time.sleep(60000)
 
 
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
