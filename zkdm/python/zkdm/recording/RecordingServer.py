@@ -54,7 +54,7 @@ class CmdHandler(tornado.web.RequestHandler):
             self.write(rc)
             return
         elif cmd == 'UpdateClassSchedule':
-            rc = _class_schedule._analyse_json()
+            rc = _class_schedule.analyse_json()
             self.write(rc)
             return 
         elif cmd == 'RTMPLiving':
@@ -67,10 +67,6 @@ class CmdHandler(tornado.web.RequestHandler):
             rc=_rcmd.send_command(args)
             self.set_header('Content-Type', 'application/json')
             self.write(rc)
-
-        
-        log_info('receive:'+(self.request.uri.split('?'))[1])
-        log_info('result:'+rc['result']+"\0\0\0info:"+rc['info'])
 
         return
 
@@ -114,7 +110,7 @@ def main():
         _rcmd = RecordingCommand()
         global _class_schedule
         _class_schedule = Schedule(None)
-        _class_schedule._analyse_json()
+        _class_schedule.analyse_json()
 
         application.listen(10006)
 
@@ -126,11 +122,9 @@ def main():
 
         global _ioloop
         _ioloop = IOLoop.instance()
-        log_info('start service ！')
         _ioloop.start()
 
     except Exception as error:
-        log_debug(str(error))
         print error
        
 def is_running(ip,port):
@@ -149,5 +143,4 @@ if __name__ == "__main__":
     result = is_running('127.0.0.1',10006)
     if result == False:
         main()
-    else:
-        log_info('The program is already running！')
+

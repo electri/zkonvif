@@ -26,11 +26,12 @@ def test_ptz(url):
     ''' 这里发出云台测试命令 ...'''
     print '=======', url, '==========='
     left_url = url + '/left?speed=1'
+    global passed
     try:
         urllib2.urlopen(left_url)
         print '\tleft ok'
         passed += 1
-    except:
+    except Exception as e:
         print '\tleft fault:', left_url
 
     time.sleep(1.0)
