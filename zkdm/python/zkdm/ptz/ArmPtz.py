@@ -1,4 +1,5 @@
 import socket
+import re
 
 def TurnStr(name, direction, speed):
 	return 'PtzCmd=Turn&Who=%s&Direction=%s&Speed=%s'%(name,derection,speed)

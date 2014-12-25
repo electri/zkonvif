@@ -15,7 +15,7 @@ import ArmPtz
 import logging
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-_tokens = json.load(io.open('./tokens.json', 'r', encoding='utf-8'))
+_tokens = json.load(io.open('../common/tokens.json', 'r', encoding='utf-8'))
 logging.basicConfig(filename='ptz.log', filemode='w', level=logging.DEBUG)
 
 def all_ptzs_config():
@@ -125,12 +125,14 @@ class ControllingHandler(RequestHandler):
     def callback(self, token, name, method):
         ret = ''
         global _tokens
-        num = int(token)
-        if _tokens[num]['type'] == 'local':
+        if token == '0':
             ret = self.__exec_ptz_method(name, method, self.request.arguments)    
-        if _tokens[num]['type'] == 'arm':
-            armcmd = ArmPtz.toArmStr(name, method, self.request.aruments)
-            ret = ArmPtz.SendThenRecv(_tokens[num]['ip'], _tokens[num]['port'],armcmd)
+        else:
+            if token not in _tokens:
+                ret = {'result':'error', 'info': 'the %sth host does not exist'%token} 
+            else:
+                armcmd = ArmPtz.toArmStr(name, method, self.request.aruments)
+                ret = ArmPtz.SendThenRecv(_tokens[token]['ptz']['ip'], _tokens[token]['ptz'][name]['port'],armcmd)
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
         self.finish()
