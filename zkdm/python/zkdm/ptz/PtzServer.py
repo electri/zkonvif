@@ -130,6 +130,7 @@ class ControllingHandler(RequestHandler):
             ret = self.__exec_ptz_method(name, method, self.request.arguments)    
         if _tokens[num]['type'] == 'arm':
             armcmd = ArmPtz.toArmStr(name, method, self.request.aruments)
+            ret = ArmPtz.SendThenRecv(_tokens[num]['ip'], _tokens[num]['port'],armcmd)
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
         self.finish()
