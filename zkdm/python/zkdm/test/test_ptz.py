@@ -10,6 +10,8 @@
 import urllib2, json, time
 
 NSURL = 'http://172.16.1.14:8080/deviceService/listAll'
+passed = 0
+tested = 0
 
 def __get_utf8_body(req):
     # FIXME: 更合理的应该是解析 Content-Type ...
@@ -26,6 +28,8 @@ def test_ptz(url):
     left_url = url + '/left?speed=1'
     try:
         urllib2.urlopen(left_url)
+        print '\tleft ok'
+        passed += 1
     except:
         print '\tleft fault:', left_url
 
@@ -34,6 +38,8 @@ def test_ptz(url):
     stop_url = url + '/stop'
     try:
         urllib2.urlopen(stop_url)
+        print '\tstop ok'
+        passed += 1
     except:
         print '\tstop fault:', stop_url
 
@@ -50,9 +56,14 @@ for h in sds:
         sd = sds[h][sid]
         if sd['type'] == 'ptz':
             ptz_urls.append(sd['url'])
-
+passed = 0
+tested = len(ptz_urls) * 2 # 每个云台测试两项
 for url in ptz_urls:
     test_ptz(url)
+
+print '****************************************************'
+print '** TEST: %d, PASSED: %d ' % (tested, passed)
+print '****************************************************'
 
 
 
