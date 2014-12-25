@@ -61,9 +61,34 @@ def build_host(mac, ip, hosttype, token, fname = 'template.json'):
     return host
 
 
+def build_tokens(ifname, ofname):
+    ''' 输入为 mac ip 文件，输出为 tokens.json 格式文件 '''
+    tokid = 1 # token id 从1开始累加
+    tokens = {}
+    hosttype = 'arm'    # FIXME: 这个主机类型到底如何获取更合理呢？
+
+    f = open(ifname, "r")
+    for line in f:
+        line = line.strip()
+        if len(line) < 5:
+            continue
+
+        # 每行使用 空格分隔 mac ip
+        mac,ip = line.split(' ', 1)
+
+        tokens[str(tokid)] = build_host(mac, ip, hosttype, str(tokid), 'template.json')
+        tokid += 1
+    f.close()
+    
+    f = open(ofname, 'w')
+    f.write(json.dumps(tokens))
+    f.close()
+
+
 if __name__ == '__main__':
-    h = build_host("665544332211", "192.168.13.31", "arm", "1")
-    print json.dumps(h)
+    #h = build_host("665544332211", "192.168.13.31", "arm", "1")
+    #print json.dumps(h)
+    build_tokens('mi.txt', 'token-tmp.json')
 
 
 
