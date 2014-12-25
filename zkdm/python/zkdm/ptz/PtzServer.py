@@ -7,7 +7,9 @@ from ctypes import *
 import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
+sys.path.append('../')
 from common.Log import Log
+from common.uty_token import *
 from common.reght import RegHt
 import thread
 import ArmPtz
@@ -81,13 +83,8 @@ for e in _all_ptzs:
         service_url= r'http://<ip>:10003/%s/0/%s'%(stype, sid)
         regunit = {'type': stype, 'id': sid, 'url': service_url}
         reglist.append(regunit)
-
-for token in _tokens:
-    for id0 in token['services']['ptz']
-        url0 = r'http://<ip>:10003/ptz/%s%s'%(token, id0)
-        regunit = {'type': 'ptz', 'id': id0, 'mac':token['mac']
-        reglist.append(regunit)
-   
+  
+reglist = gather_hds('ptz')
 rh = RegHt(reglist)
 
 class HelpHandler(RequestHandler):
