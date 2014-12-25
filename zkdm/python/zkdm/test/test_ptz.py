@@ -22,14 +22,20 @@ def __get_utf8_body(req):
 
 def test_ptz(url):
     ''' 这里发出云台测试命令 ...'''
-    print '=======', url
-    left_url = url + 'left?speed=1'
-    urllib2.urlopen(left_url)
+    print '=======', url, '==========='
+    left_url = url + '/left?speed=1'
+    try:
+        urllib2.urlopen(left_url)
+    except:
+        print '\tleft fault:', left_url
 
     time.sleep(1.0)
 
-    stop_url = url + 'stop'
-    urllib2.urlopen(stop_url)
+    stop_url = url + '/stop'
+    try:
+        urllib2.urlopen(stop_url)
+    except:
+        print '\tstop fault:', stop_url
 
     print '============================================'
 
