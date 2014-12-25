@@ -27,8 +27,9 @@ class _GroupOfRegChk:
 
         当注册成功，则放到心跳组里，当心跳失败，则放到注册组里
     '''
-    def __init__(self, myip, obj_desc):
+    def __init__(self, myip, mymac, obj_desc):
         self.__myip = myip
+        self.__mymac = mymac
         self.__10b = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要注册的
         self.__10bht = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要心跳的
         self.__distribution(obj_desc)
@@ -37,8 +38,8 @@ class _GroupOfRegChk:
         ''' 将服务列表，平均分配到 __10b 中 '''
         i = 0
         for sd in sds:
-            if 'url' in sd:
-                self.__fixip(sd)
+            self.__fixip(sd)
+            self.__fixmac(sd)
 
             self.__10b[i].append(sd)
             if verbose:
@@ -53,8 +54,14 @@ class _GroupOfRegChk:
         #if rc and rc.group(5) == '<ip>':
         #    url = sd['url']
         #    sd['url'] = url.replace('<ip>', self.__myip, 1)
-        url = sd['url']
-        sd['url'] = url.replace('<ip>', self.__myip, 1)
+        if 'url' in sd:
+            sd['url'] = sd['url'].replace('<ip>', self.__myip, 1)
+        if 'ip' in sd:
+            sd['ip'] = sd['ip'].replace('<ip>', self.__myip, 1)
+
+    def __fixmac(self, sd):
+        if 'mac' in sd:
+            sd['mac'] = sd['mac'].replace('<mac>', self.__mymac, 1)
 
     def reg(self, regop):
         ''' 对下一组，执行注册 
@@ -279,7 +286,7 @@ class RegHost(threading.Thread):
         print 'ip:%s, mac:%s' % (ip, mac)
 
         oper = _RegHtOper(self.__mgrt_base_url, ip, mac)
-        gos = _GroupOfRegChk(ip, self.__hds)
+        gos = _GroupOfRegChk(ip, mac, self.__hds)
 
         regfunc = gos.reg(oper.reghostop)
         htfunc = gos.ht(oper.reghost_chkop)
@@ -325,7 +332,7 @@ class RegHt(threading.Thread):
         print 'ip:%s, mac:%s' % (ip, mac)
 
         oper = _RegHtOper(self.__mgrt_base_url, ip, mac)
-        gos = _GroupOfRegChk(ip, self.__sds)
+        gos = _GroupOfRegChk(ip, mac, self.__sds)
 
         regfunc = gos.reg(oper.regop)
         htfunc = gos.ht(oper.htop)
