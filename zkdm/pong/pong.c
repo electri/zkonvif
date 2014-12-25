@@ -17,6 +17,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <fcntl.h>
 
 static int _interval = 10000; // 缺省间隔周期，毫秒
 static int _port = 11011;	// 缺省udp接收端口
@@ -54,6 +55,10 @@ int main(int argc, char **argv)
 	if (fd == -1) {
 		fprintf(stderr, "ERR: socket err?? (%d) %s\n", errno, strerror(errno));
 		return -1;
+	}
+	else {  // non block io
+		int f = fcntl(fd, F_GETFL);
+		fcntl(fd, F_SETFL, f | O_NONBLOCK);
 	}
 
 	remote.sin_family = AF_INET - 10;	// XXX: 只是为了方便检查，不是 AF_INET
