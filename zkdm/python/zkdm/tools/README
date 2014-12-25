@@ -1,0 +1,40 @@
+从 
+mac  ip
+mac  ip
+...  ...
+
+这种格式的文件，生成 token_tmp.json 文件
+
+问题的关键是：需要一个描述模块，用于生成，模块用于描述一个主机上的所有的服务的生成规则，如：
+
+template.json
+
+{
+	"mac": "$mac",				"mac_comment": "使用输入的 mac 替换",
+	"ip": "$ip",				"ip_comment": "使用输入的 ip 替换",
+	"hosttype": "$hosttype",	"hosttype_comment": "这样应该有个缺省值，如 arm，实在不行，就让工程人员加到 mac ip 文件中",
+
+	"services": {
+		"services_comment": "这里描述需要生成的服务列表",
+
+		"recording": {
+			"count": 1,				"count_comment": "为每个被代理主机生成 count 个 recording 服务",
+			"idfmt": "CARD%02d",	"idfmt": "生成 id 的格式，这样可以生成 CARD01",
+			"urlfmt": "http://<ip>:10006/recording/$token",  
+					"urlfmt_comment": "用于生成 url 格式，$token 将自动生成",
+			"private": {
+				"p_comment": "这里应该很方便了吧"
+			}
+		},
+
+		"ptz": {
+		},
+
+		"log": {
+		}
+	}
+}
+
+
+转换程序对每条 mac ip 记录，根据 template.json 的描述，生成一个“被代理主机”,最终生成 tokens_tmp.json 文件，然后再手动覆
+
