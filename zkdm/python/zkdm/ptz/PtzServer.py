@@ -84,7 +84,7 @@ for e in _all_ptzs:
         regunit = {'type': stype, 'id': sid, 'url': service_url}
         reglist.append(regunit)
   
-reglist = gather_hds('ptz')
+reglist = gather_sds('ptz', '../common/tokens.json')
 rh = RegHt(reglist)
 
 class HelpHandler(RequestHandler):
@@ -115,6 +115,7 @@ class ControllingHandler(RequestHandler):
     def get(self, token, name, method):
         ''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
         '''
+        print token, name, method
         thread.start_new_thread(self.callback, (token, name, method))
 
     def callback(self, token, name, method):
@@ -126,8 +127,8 @@ class ControllingHandler(RequestHandler):
             if token not in _tokens:
                 ret = {'result':'error', 'info': 'the %sth host does not exist'%token} 
             else:
-                armcmd = ArmPtz.toArmStr(name, method, self.request.aruments)
-                ret = ArmPtz.SendThenRecv(_tokens[token]['ptz']['ip'], _tokens[token]['ptz'][name]['port'],armcmd)
+                armcmd = ArmPtz.toArmStr(name, method, self.request.arguments)
+                ret = ArmPtz.SendThenRecv(_tokens[token]['ptz']['ip'], _tokens[token]['ptz'][name]['private']['port'],armcmd)
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
         self.finish()
