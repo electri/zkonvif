@@ -75,23 +75,51 @@ def gather_sds(service_type = None, fname = None):
     return gather_sds_from_tokens(j, service_type)
 
 
-def get_private_from_tokens(token, service_id, tokens):
+def get_service_desc_from_tokens(t, service_id, service_type, tokens):
+    ''' 根据 token + id 查找对应的服务 '''
+    j = tokens
+    for i in j:
+        h = j[i]
+        if __valid_host(h) and 'services' in h:
+            for sk in h['services']:
+                if sk != service_type:
+                    continue
+                st = h['services'][sk] # type
+                for sid in st:
+                    if sid != service_id:
+                        continue
+                    s = st[sid]    # id
+                    return s
+    return {}
+
+def get_service_desc(t, service_id, service_type, fname = None):
+    j = __load(fname)
+    return get_service_desc_from_tokens(t, service_id, service_type, j)
+
+
+def get_private_from_tokens(token, service_id, service_type, tokens):
     j = tokens
     for i in j:
         h = j[i]
         if __valid_host(h) and 'services' in h:
             for sk in h['services']:
                 st = h['services'][sk] # type
+                if sk != service_type:
+                    continue
+
                 for sid in st:
+                    if sid == service_id:
+                        continue
+
                     s = st[sid]    # id
                     private = s['private']
                     return private
     return {}
 
-def get_private(token, service_id, fname = None):
+def get_private(token, service_id, service_type, fname = None):
     ''' 从 fname 的 token 表中取出 token + serviceid 对应的 private 数据字典'''
     j = __load(fname)
-    return get_private_from_tokens(token, service_id, j)
+    return get_private_from_tokens(token, service_id, service_type, j)
 
 
 
@@ -99,8 +127,10 @@ if __name__ == '__main__':
     import reght, time
     reght.verbose = True
 
-    p = get_private('1', 'CARD02')
+    p = get_private('1', 'CARD02', 'ptz')
     print p
+
+    s = get_service_desc('1', 'CARD02', 'ptz');
 
     sys.exit()
 
