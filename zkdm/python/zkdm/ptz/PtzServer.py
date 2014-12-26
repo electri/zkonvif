@@ -127,8 +127,10 @@ class ControllingHandler(RequestHandler):
             if token not in _tokens:
                 ret = {'result':'error', 'info': 'the %sth host does not exist'%token} 
             else:
+                id_port = get_private_from_tokens(token, name, 'ptz', _tokens)
                 armcmd = ArmPtz.toArmStr(name, method, self.request.arguments)
-                ret = ArmPtz.SendThenRecv(_tokens[token]['ptz']['ip'], _tokens[token]['ptz'][name]['private']['port'],armcmd)
+                ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
+                print ret
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
         self.finish()
