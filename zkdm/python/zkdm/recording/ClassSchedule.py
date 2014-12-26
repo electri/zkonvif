@@ -147,16 +147,16 @@ class Schedule():
                 _record_thread.append(stop_thread)
 
             if _living == 'true' and _start_delay_time>0:
-                thread = threading.Timer(_start_delay_time,self._apply_living)
+                thread = threading.Timer(_start_delay_time,self._apply_living,[_stop_time])
                 thread.start()
                 _record_thread.append(thread)
 
             if _living == 'true' and _stop_delay_time>0:
                 stop_thread = threading.Timer(_stop_delay_time,StopLiving)
-                stop_thread.stop()
+                stop_thread.start()
                 _record_thread.append(stop_thread)
 
-            reload_thread = threading.Timer(3*3600, self.analyse_json)
+            reload_thread = threading.Timer(3*3600, self.analyse_json)#三小时重新获取一次课表信息
             _record_thread.append(reload_thread)
 
     def analyse_json(self,ip,hosttype):
@@ -171,13 +171,13 @@ class Schedule():
             try:
                 response = urllib2.urlopen(self.__mgrt_base_url+'curriculum?mac=' + mac,timeout = 3)
                 data = json.load(response)                
-                #with open('CourseInfo.json','w') as savefile:
-                    #json.dump(data,savefile)
+                with open('CourseInfo.json','w') as savefile:
+                    json.dump(data,savefile)
             except Exception as err:
                 print err
                 data = {}
-                #f = file('CourseInfo.json')
-                #data = json.load(f)
+                course_info_file = file('CourseInfo.json')
+                data = json.load(course_info_file)
             self._stop_execute_task()
             self._analyse_data(data)
         except Exception as err:
