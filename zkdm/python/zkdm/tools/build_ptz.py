@@ -7,6 +7,11 @@
 #################################################################
 
 def build(desc, var):
+    myfile = open('value.txt', 'r')
+    v = myfile.readline()
+    myfile.close
+    print v
+    port = int(v)
     ssd = {}
     if 'count' in desc and 'idfmt' in desc and 'urlfmt' in desc and 'private' in desc:
         n = desc['count']
@@ -21,11 +26,13 @@ def build(desc, var):
 
             idd['private'] = {}
             idd['private']['arm_ip'] = desc['private']['arm_ip'].replace('$ip', var['ip'], 1)
-            idd['private']['arm_port'] = desc['private']['arm_port']
+            idd['private']['arm_port'] = port
             idd['private']['others'] = desc['private']['others']
             
             ssd[idk] = idd
-
+        myfile = open('value.txt', 'w')
+        myfile.write(str(port+1)) 
+        myfile.close()
     return ssd
 
 

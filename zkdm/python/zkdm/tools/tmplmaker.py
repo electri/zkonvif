@@ -88,7 +88,7 @@ def build_tokens(ifname, ofname):
 if __name__ == '__main__':
     #h = build_host("665544332211", "192.168.13.31", "arm", "1")
     #print json.dumps(h)
-    build_tokens('mi.txt', 'token-tmp.json')
+    build_tokens('mi.txt', 'tokens.json')
 
 
 
