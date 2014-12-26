@@ -129,7 +129,7 @@ class ControllingHandler(RequestHandler):
             else:
                 id_port = get_private_from_tokens(token, name, 'ptz', _tokens)
                 armcmd = ArmPtz.toArmStr(name, method, self.request.arguments)
-                ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
+                ret = ArmPtz.SendThenRecv(id_port['arm_ip'], id_port['arm_port'],armcmd)
                 print ret
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)

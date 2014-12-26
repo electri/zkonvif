@@ -34,8 +34,8 @@
 				"idfmt": "card%02d",	"idfmt_comment": " 'card%02d' % c",
 				"urlfmt": "http://<ip>:10003/ptz/$token/$id",
 				"private": {
-					"ip": "$ip",
-					"port": "",
+					"arm_ip": "$ip",
+					"arm_port": "",
 					"others": "anything"
 				}
 			}
