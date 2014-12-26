@@ -84,7 +84,7 @@ for e in _all_ptzs:
         regunit = {'type': stype, 'id': sid, 'url': service_url}
         reglist.append(regunit)
   
-reglist = gather_sds('ptz', '../common/tokens.json')
+reglist = reglist + gather_sds('ptz', '../common/tokens.json')
 rh = RegHt(reglist)
 
 class HelpHandler(RequestHandler):
