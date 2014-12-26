@@ -1,7 +1,8 @@
 import socket
+import re
 
 def TurnStr(name, direction, speed):
-	return 'PtzCmd=Turn&Who=%s&Direction=%s&Speed=%s'%(name,derection,speed)
+	return 'PtzCmd=Turn&Who=%s&Direction=%s&Speed=%s'%(name,direction,speed)
 
 def PresetStr(cmd, name, ids):
 	return 'PtzCmd=%s&Who=%s%ID=%s'%(cmd, name, ids) 

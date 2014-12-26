@@ -7,7 +7,9 @@ from ctypes import *
 import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
+sys.path.append('../')
 from common.Log import Log
+from common.uty_token import *
 from common.reght import RegHt
 import thread
 import ArmPtz
@@ -15,7 +17,7 @@ import ArmPtz
 import logging
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-_tokens = json.load(io.open('./tokens.json', 'r', encoding='utf-8'))
+_tokens = json.load(io.open('../common/tokens.json', 'r', encoding='utf-8'))
 logging.basicConfig(filename='ptz.log', filemode='w', level=logging.DEBUG)
 
 def all_ptzs_config():
@@ -81,15 +83,8 @@ for e in _all_ptzs:
         service_url= r'http://<ip>:10003/%s/0/%s'%(stype, sid)
         regunit = {'type': stype, 'id': sid, 'url': service_url}
         reglist.append(regunit)
-
-for t in _tokens:
-    if t['token'] is not '0':
-        for i in t['id']:
-            sid = i
-            service_url = r'http://<ip>:10003/%s/%s/%s'%(stype, t['token'], sid)
-            regunit = {'type':stype, 'id':sid, 'url':service_url, 'mac' : t['mac']}
-            reglist.append(regunit)
-
+  
+reglist = gather_sds('ptz', '../common/tokens.json')
 rh = RegHt(reglist)
 
 class HelpHandler(RequestHandler):
@@ -120,17 +115,22 @@ class ControllingHandler(RequestHandler):
     def get(self, token, name, method):
         ''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
         '''
+        print token, name, method
         thread.start_new_thread(self.callback, (token, name, method))
 
     def callback(self, token, name, method):
         ret = ''
         global _tokens
-        num = int(token)
-        if _tokens[num]['type'] == 'local':
+        if token == '0':
             ret = self.__exec_ptz_method(name, method, self.request.arguments)    
-        if _tokens[num]['type'] == 'arm':
-            armcmd = ArmPtz.toArmStr(name, method, self.request.aruments)
-            ret = ArmPtz.SendThenRecv(_tokens[num]['ip'], _tokens[num]['port'],armcmd)
+        else:
+            if token not in _tokens:
+                ret = {'result':'error', 'info': 'the %sth host does not exist'%token} 
+            else:
+                id_port = get_private_from_tokens(token, name, 'ptz', _tokens)
+                armcmd = ArmPtz.toArmStr(name, method, self.request.arguments)
+                ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
+                print ret
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
         self.finish()
