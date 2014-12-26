@@ -17,6 +17,7 @@ def __valid_host(h):
     else:
         return False
 
+
 def __load(fname = None):
     if fname is None:
         fname = TOKEN_FNAME
@@ -25,6 +26,11 @@ def __load(fname = None):
     j = json.loads(f.read())
     f.close()
     return j
+
+
+def load_tokens(fname):
+    ''' 加载整个 token 表 '''
+    return __load(fname)
 
 
 def gather_hds_from_tokens(j):
@@ -38,7 +44,6 @@ def gather_hds_from_tokens(j):
             hd['type'] = h['hosttype']
             hds.append(hd)
     return hds
-
 
 
 def gather_hds(fname = None):
@@ -127,12 +132,11 @@ if __name__ == '__main__':
     import reght, time
     reght.verbose = True
 
-    p = get_private('1', 'CARD02', 'ptz')
-    print p
+#    p = get_private('1', 'CARD02', 'ptz')
+#    print p
 
-    s = get_service_desc('1', 'CARD02', 'ptz');
+#    s = get_service_desc('1', 'CARD02', 'ptz');
 
-    sys.exit()
 
     hds = gather_hds()
     rh = reght.RegHost(hds)  # 主机注册

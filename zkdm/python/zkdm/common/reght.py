@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# coding=utf-8
+# coding: utf-8
 # 
 # @file: reght.py
 # @date: 2014-11-09
@@ -32,6 +32,7 @@ class _GroupOfRegChk:
         self.__mymac = mymac
         self.__10b = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要注册的
         self.__10bht = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要心跳的
+        self.__death = [] # 用于保存不活动的服务/主机列表
         self.__distribution(obj_desc)
 
     def __distribution(self, sds):
