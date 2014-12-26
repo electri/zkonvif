@@ -39,16 +39,17 @@ class Schedule():
         '''
         开始录像任务
         '''
+        print 'start record_task'
         _rcmd = RecordingCommand()
         _rcmd.send_command('RecordCmd=StopRecord')
         time.sleep(0.5)
-        _directory_name = 'RecordCmd=SetFileFolder&SubFileFolder=' + _directory_name
+        _directory_name = 'RecordCmd=SetFileFolder&SubFileFolder=' + info['_directory_name']
         _rcmd.send_command(_directory_name)
         time.sleep(0.5)
         _course_info = 'RecordCmd=SetCourseInfo&Department=%s&Subject=%s&CourseName=%s&\
                 Teacher=%s&Address=%s&DateTime=%s&Description=%s&Grade=%s'\
-                %(info[_department], info[_subject],info[_course_name],
-                        info[_teacher],info[_address],info[_datetime],info[_description],info[_grade])
+                %(info['_department'], info['_subject'],info['_course_name'],
+                        info['_teacher'],info['_address'],info['_datetime'],info['_description'],info['_grade'])
         _rcmd.send_command(_course_info)
         time.sleep(0.5)
         _rcmd.send_command('RecordCmd=StartRecord')
@@ -73,7 +74,7 @@ class Schedule():
         '''
         _utils = zkutils()
         mac = utils.mymac()
-        resopnse = urlib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime,timeout=1)
+        resopnse = urlib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime,timeout=2)
 
     def _analyse_time(self,give_time):
         '''
@@ -134,21 +135,29 @@ class Schedule():
                 info['_living'] = _living
                 info['_living_mode'] = _living_mode
                 info['_datetime'] = _start_time
+                info['_description'] = _description
 
                 thread =  threading.Timer(_start_delay_time,self._record_task,[info])
+                thread.start()
                 _record_thread.append(thread) 
 
             if _recording == 'true' and _stop_delay_time>0:
                 stop_thread =  threading.Timer(_stop_delay_time,self._stop_record)
+                stop_thread.start()
                 _record_thread.append(stop_thread)
 
             if _living == 'true' and _start_delay_time>0:
                 thread = threading.Timer(_start_delay_time,self._apply_living)
+                thread.start()
                 _record_thread.append(thread)
 
             if _living == 'true' and _stop_delay_time>0:
                 stop_thread = threading.Timer(_stop_delay_time,StopLiving)
+                stop_thread.stop()
                 _record_thread.append(stop_thread)
+
+            reload_thread = threading.Timer(3*3600, self.analyse_json)
+            _record_thread.append(reload_thread)
 
     def analyse_json(self):
         rc = {}

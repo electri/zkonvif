@@ -17,6 +17,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <fcntl.h>
 
 static int _interval = 10000; // 缺省间隔周期，毫秒
 static int _port = 11011;	// 缺省udp接收端口
@@ -26,6 +27,13 @@ const int pong_size = 4, ping_size = 4;
 
 static int parse_opt(int argc, char **argv)
 {
+	// TODO: 应该解析，不过使用环境变量更简单 :)
+	char *p = getenv("pong_port");
+	if (p) _port = atoi(p);
+
+	p = getenv("pong_interval");
+	if (p) _interval = atoi(p);
+
 	return 0;
 }
 
@@ -48,6 +56,10 @@ int main(int argc, char **argv)
 		fprintf(stderr, "ERR: socket err?? (%d) %s\n", errno, strerror(errno));
 		return -1;
 	}
+	else {  // non block io
+		int f = fcntl(fd, F_GETFL);
+		fcntl(fd, F_SETFL, f | O_NONBLOCK);
+	}
 
 	remote.sin_family = AF_INET - 10;	// XXX: 只是为了方便检查，不是 AF_INET
 
@@ -56,7 +68,6 @@ int main(int argc, char **argv)
 	local.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(fd, (struct sockaddr*)&local, sizeof(local)) < 0) {
 		fprintf(stderr, "ERR: bind %d err? (%d) %s\n", _port, errno, strerror(errno));
-		close(fd);
 		return -1;
 	}
 
@@ -66,7 +77,6 @@ int main(int argc, char **argv)
 	while (1) {
 		struct timeval tv = { _interval / 1000, (_interval % 1000) * 1000 };
 		fds = fds_orig;
-
 		rc = select(fd+1, &fds, 0, 0, &tv);
 		if (rc < 0) {
 			fprintf(stderr, "ERR: select err?? (%d) %s\n", errno, strerror(errno));
