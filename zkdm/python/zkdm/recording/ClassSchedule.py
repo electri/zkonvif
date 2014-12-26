@@ -159,7 +159,7 @@ class Schedule():
             reload_thread = threading.Timer(3*3600, self.analyse_json)
             _record_thread.append(reload_thread)
 
-    def analyse_json(self):
+    def analyse_json(self,ip,hosttype):
         rc = {}
         rc['result'] = 'ok'
         rc['info'] = ''
