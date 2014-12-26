@@ -8,16 +8,22 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/select.h>
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/time.h>
-#include <fcntl.h>
+#ifdef WIN32
+#	include <winsock2.h>
+	typedef int socklen_t;
+#else
+#	include <sys/types.h>
+#	include <sys/socket.h>
+#	include <arpa/inet.h>
+#	include <netinet/in.h>
+#	include <sys/select.h>
+#	include <errno.h>
+#	include <string.h>
+#	include <unistd.h>
+#	include <sys/time.h>
+#	include <fcntl.h>
+	typedef int SOCKET;
+#endif 
 
 static int _interval = 10000; // 缺省间隔周期，毫秒
 static int _port = 11011;	// 缺省udp接收端口
@@ -39,7 +45,7 @@ static int parse_opt(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-	int fd = -1;
+	SOCKET fd = -1;
 	struct sockaddr_in local, remote;
 	fd_set fds, fds_orig;
 	int rc;
@@ -51,14 +57,26 @@ int main(int argc, char **argv)
 
 	fprintf(stdout, "INFO: recv udp port: %d, pong interval: %dms\n", _port, _interval);
 
+#ifdef WIN32
+	do {
+		WSADATA data;
+		WSAStartup(0x202, &data);
+	} while (0);
+#endif
+
 	fd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (fd == -1) {
 		fprintf(stderr, "ERR: socket err?? (%d) %s\n", errno, strerror(errno));
 		return -1;
 	}
 	else {  // non block io
+#ifdef WIN32
+		ULONG mode = 1;
+		ioctlsocket(fd, FIONBIO, &mode);
+#else
 		int f = fcntl(fd, F_GETFL);
 		fcntl(fd, F_SETFL, f | O_NONBLOCK);
+#endif
 	}
 
 	remote.sin_family = AF_INET - 10;	// XXX: 只是为了方便检查，不是 AF_INET
