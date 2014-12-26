@@ -32,7 +32,7 @@ class _GroupOfRegChk:
         self.__mymac = mymac
         self.__10b = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要注册的
         self.__10bht = [ [], [], [], [], [], [], [], [], [], [] ] # 保存需要心跳的
-        self.__death = [] # 用于保存不活动的服务/主机列表
+        self.__death = [ [], [], [], [], [], [], [], [], [], [] ] # 用于保存不活动的服务/主机列表
         self.__distribution(obj_desc)
 
     def __distribution(self, sds):
@@ -111,6 +111,38 @@ class _GroupOfRegChk:
                     if unregop(sd):
                         b.remove(sd)
 
+    def chk_alive(self, chkop):
+        ''' 检查是否在线，如果在线，则从 death list 拿到 reg list '''
+        i = 0
+        while True:
+            i %= len(self.__10bht)
+            self.__chk_alive(chkop, self.__10bht[i], self.__death[i])
+            i += 1
+            yield
+
+    def __chk_alive(self, op, bht, bdeath):
+        death = []
+        for sd in bht:
+            if not op(sd):
+                death.append(sd)
+                bht.remove(sd)
+
+        for sd in bdeath:
+            if op(sd):
+                bht.append(sd)
+                bdeath.remove(sd)
+
+        for sd in death:
+            bdeath.append(sd)
+            
+
+class _ChkDBAlive:
+    ''' 封装对 ping 数据库的查询 '''
+    def chk_service_alive(self, sd):
+        ''' 返回 sd 对应的服务是否在线 '''
+        ''' XXX: 这里有个技巧，ping 只能反映主机是否在线，为每个服务都查询数据库
+                 有点浪费，可以考虑每次查询保存结果，当下次 sd 的 ip/mac 变化后，在查询数据库 '''
+        return True
 
 class _RegHtOper:
     ''' 封装到名字服务的操作 '''
@@ -331,9 +363,11 @@ class RegHt(threading.Thread):
 
         oper = _RegHtOper(self.__mgrt_base_url, ip, mac)
         gos = _GroupOfRegChk(ip, mac, self.__sds)
+        chkalive = _ChkDBAlive()
 
         regfunc = gos.reg(oper.regop)
         htfunc = gos.ht(oper.htop)
+        chkalivefunc = gos.chk_alive(chkalive.chk_service_alive)
 
         INTERVAL = 1.0
         interval = INTERVAL
@@ -348,6 +382,7 @@ class RegHt(threading.Thread):
 
             next(regfunc)
             next(htfunc)
+            next(chkalivefunc)
             self.__to_unreg(gos, oper.unregop)
     
     def __to_unreg(self, gos, func):
