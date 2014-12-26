@@ -4,7 +4,7 @@ from tornado.web import *
 from tornado.ioloop import IOLoop
 from tornado.gen import  *
 import urllib, urllib2
-import thread, time, sys
+import thread, time, sys, io
 import socket
 import json
 
@@ -16,7 +16,7 @@ from LivingServer import StartLiving
 sys.path.append('../')
 from common.utils import zkutils
 from common.reght import RegHt
-from LogWriter import log_info, log_debug
+from common.uty_token import *
 
 
 # 必须设置工作目录 ...
@@ -32,6 +32,8 @@ def _param(req, key):
 _rcmd = None
 _class_schedule = None
 rh = None
+_tokens = json.load(io.open('../common/tokens.json', 'r', encoding='utf-8'))
+
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -42,29 +44,46 @@ class HelpHandler(tornado.web.RequestHandler):
         self.render('help.html')
 
 class CmdHandler(tornado.web.RequestHandler):
-    def get(self):
+    def get(self,token):
         rc={}
         rc['result']='ok'
         rc['info']=''
+        ip = ''
+        hosttype = token['hosttype']
+
+        global _tokens
+
+        if token == '0':
+            ip = '127.0.0.1'
+        else:
+            if token not in _tokens:
+                rc['result'] = 'error'
+                rc['info'] = 'the %sth host does not exit'%token
+                self.write(rc)
+                return
+            else:
+                id_port = get_private_from_tokens(token,'cmd','recording',_tokens)
+                ip = id_port['ip']
+
 
         cmd = self.get_argument('RecordCmd','nothing')
 
         if cmd == 'RtspPreview':
-            rc = _rcmd.preview()
+            rc = _rcmd.preview(ip,hosttype)
             self.write(rc)
             return
         elif cmd == 'UpdateClassSchedule':
-            rc = _class_schedule.analyse_json()
+            rc = _class_schedule.analyse_json(ip,hosttype)
             self.write(rc)
             return 
         elif cmd == 'RTMPLiving':
-            rc = StartLiving()
+            rc = StartLiving(ip,hosttype)
             self.write(rc)
             return
         else:
             args = (self.request.uri.split('?'))[1]
             print args
-            rc=_rcmd.send_command(args)
+            rc=_rcmd.send_command(args,ip,hosttype)
             self.set_header('Content-Type', 'application/json')
             self.write(rc)
 
@@ -85,7 +104,6 @@ class InternalHandler(RequestHandler):
             self.set_header('Content-Type', 'application/json')
             rc['info'] = 'exit!!!!'
             self.write(rc)
-            log_info('exit service！')
             _ioloop.stop()
         elif command == 'version':
             self.set_header('Content-Type', 'application/json')
@@ -101,24 +119,24 @@ def main():
         tornado.options.parse_command_line()
         application = tornado.web.Application([
             url(r"/", MainHandler),
-            url(r"/recording/cmd",CmdHandler),
+            url(r"/recording/([^\/])/cmd",CmdHandler),
             url(r"/recording/help", HelpHandler),
             url(r"/recording/internal",InternalHandler),
         ])
+        application.listen(10006)
 
         global _rcmd
         _rcmd = RecordingCommand()
         global _class_schedule
         _class_schedule = Schedule(None)
-        _class_schedule.analyse_json()
-
-        application.listen(10006)
+        _class_schedule.analyse_json('127.0.0.1','x86')
 
         start_card_server()
 
+        stype = 'recording'
+        reglist = gather_sds('recording', '../common/tokens.json')
         global rh
-        sds = [{'type':'recording','id':'recording','url':'http://<ip>:10006/recording'}]
-        rh = RegHt(sds)
+        rh = RegHt(reglist)
 
         global _ioloop
         _ioloop = IOLoop.instance()

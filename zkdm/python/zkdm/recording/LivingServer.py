@@ -8,7 +8,7 @@ from RecordingCommand import RecordingCommand
 sys.path.append('../')
 from common.utils import zkutils
 
-def StartLiving():
+def StartLiving(ip,hosttype):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
