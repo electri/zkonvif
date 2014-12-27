@@ -17,6 +17,7 @@ const char *ping = "ping", *pong = "pong";
 int ping_len = 4, pong_len = 4;
 static int _interval = 10;		// 发送 ping 的时间间隔，使用秒作单位足够了
 static int _max_interval = 30; // 如果 last_updated 超过这个时间，则认为 target 已经 offline
+static int _verbose = 0;
 
 typedef struct Target {
 	struct Target *next;		// 指向下一个，最后一个为 0
@@ -29,12 +30,23 @@ static Target _target_hosts = { 0 };	// 用于保存所有被代理主机的信�
 
 static int parse_args(int argc, char **argv)
 {
+	_verbose = 1;
 	return 0;
 }
 
 // 加载被代理主机的信息
 static int load_target_hosts()
 {
+	// a test target
+	Target *t = (Target*)malloc(sizeof(Target));
+	t->next = 0;
+	t->remote.sin_family = AF_INET;
+	t->remote.sin_port = htons(11011);
+	t->remote.sin_addr.s_addr = inet_addr("127.0.0.1");
+	t->online = 0;
+	
+	_target_hosts.next = t;
+
 	return 0;
 }
 
@@ -44,6 +56,10 @@ static int send_pings(int fd)
 	const Target *target = _target_hosts.next;
 	while (target) {
 		if (!target->online) {
+			if (_verbose) {
+				fprintf(stderr, "INFO: sendto %s:%d\n", inet_ntoa(target->remote.sin_addr), 
+						ntohs(target->remote.sin_port));
+			}
 			sendto(fd, ping, ping_len, 0, (struct sockaddr*)&target->remote, sizeof(target->remote));
 		}
 		target = target->next;
@@ -59,6 +75,10 @@ static int check_timeout()
 
 	while (target) {
 		if (target->online && now - target->last_updated > _max_interval) {
+			if (_verbose) {
+				fprintf(stderr, "WARNING: oh %s:%d TIMEOUT, to offline\n", 
+						inet_ntoa(target->remote.sin_addr), ntohs(target->remote.sin_port));
+			}
 			target->online = 0;
 		}
 		target = target->next;
@@ -73,6 +93,11 @@ static int update_pong(int port, struct in_addr addr)
 	while (target) {
 		if (target->remote.sin_port == port && target->remote.sin_addr.s_addr == addr.s_addr) {
 			target->last_updated = time(0);
+			if (_verbose) {
+				fprintf(stderr, "INFO: update %s:%d\n", 
+						inet_ntoa(target->remote.sin_addr), ntohs(target->remote.sin_port));
+			}
+			target->online = 1;
 			break;
 		}
 		target = target->next;
@@ -108,7 +133,7 @@ int main(int argc, char **argv)
 	// 作为发起者，无须主动绑定端口
 	
 	while (1) {
-		struct timeval tv = { _interval / 1000, (_interval % 1000) * 1000 };
+		struct timeval tv = { _interval, 0 }; // 
 		fds = fds_saved;
 		rc = select(fd+1, &fds, 0, 0, &tv);
 		if (rc == -1) {
