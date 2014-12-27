@@ -25,7 +25,7 @@
 	typedef int SOCKET;
 #endif 
 
-static int _interval = 10000; // 缺省间隔周期，毫秒
+static int _interval = 3; // 缺省间隔周期，秒
 static int _port = 11011;	// 缺省udp接收端口
 
 const char *pong = "pong", *ping = "ping";
@@ -55,7 +55,8 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	fprintf(stdout, "INFO: recv udp port: %d, pong interval: %dms\n", _port, _interval);
+	fprintf(stdout, "INFO: recv udp port: %d, pong interval: %d seconds\n", 
+			_port, _interval);
 
 #ifdef WIN32
 	do {
@@ -93,7 +94,7 @@ int main(int argc, char **argv)
 	FD_SET(fd, &fds_orig);
 
 	while (1) {
-		struct timeval tv = { _interval / 1000, (_interval % 1000) * 1000 };
+		struct timeval tv = { _interval, 0 };
 		fds = fds_orig;
 		rc = select(fd+1, &fds, 0, 0, &tv);
 		if (rc < 0) {
