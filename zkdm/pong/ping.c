@@ -16,7 +16,8 @@
 const char *ping = "ping", *pong = "pong";
 int ping_len = 4, pong_len = 4;
 static int _interval = 10;		// 发送 ping 的时间间隔，使用秒作单位足够了
-static int _max_interval = 30; // 如果 last_updated 超过这个时间，则认为 target 已经 offline
+static int _max_interval = 15; // 如果 last_updated 超过这个时间，则认为 target 已经 offline
+							   // pong 缺省 3 秒发送一次 .
 static int _verbose = 0;
 
 typedef struct Target {
