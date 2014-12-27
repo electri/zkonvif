@@ -39,14 +39,21 @@ static int parse_args(int argc, char **argv)
 static int load_target_hosts()
 {
 	// a test target
-	Target *t = (Target*)malloc(sizeof(Target));
+	Target *t = (Target*)malloc(sizeof(Target)), *t2 = (Target*)malloc(sizeof(Target));
 	t->next = 0;
 	t->remote.sin_family = AF_INET;
 	t->remote.sin_port = htons(11011);
 	t->remote.sin_addr.s_addr = inet_addr("127.0.0.1");
 	t->online = 0;
+
+	// a test target
+	t2->next = t;
+	t2->remote.sin_family = AF_INET;
+	t2->remote.sin_port = htons(11010); // XXX: 故意模拟不存在的
+	t2->remote.sin_addr.s_addr = inet_addr("127.0.0.1");
+	t->online = 0;
 	
-	_target_hosts.next = t;
+	_target_hosts.next = t2;
 
 	return 0;
 }
@@ -110,6 +117,7 @@ int main(int argc, char **argv)
 {
 	int fd = -1;
 	fd_set fds, fds_saved;
+	time_t last;
 	int rc;
 
 	if (parse_args(argc, argv) < 0) {
@@ -132,8 +140,11 @@ int main(int argc, char **argv)
 	FD_SET(fd, &fds_saved);
 
 	// 作为发起者，无须主动绑定端口
+
+	last = time(0);
 	
 	while (1) {
+		time_t curr = time(0);
 		struct timeval tv = { _interval, 0 }; // 
 		fds = fds_saved;
 		rc = select(fd+1, &fds, 0, 0, &tv);
@@ -145,6 +156,7 @@ int main(int argc, char **argv)
 		if (rc == 0) { // 超时
 			send_pings(fd);
 			check_timeout();
+			last = curr;
 		}
 		else if (FD_ISSET(fd, &fds)) {
 			struct sockaddr_in remote;
@@ -153,6 +165,15 @@ int main(int argc, char **argv)
 			rc = recvfrom(fd, buf, sizeof(buf), 0, (struct sockaddr*)&remote, &len);
 			if (rc == pong_len && !memcmp(pong, buf, pong_len)) {
 				update_pong(remote.sin_port, remote.sin_addr);
+			}
+
+			/** XXX: 因为同时处理多路target，有可能频繁进入 FD_ISSET 而无超时，导致无法发出
+			  		 ping 和检查超时了，所以这里应进行处理
+			 */
+			if (curr - last >= _interval) {
+				send_pings(fd);
+				check_timeout();
+				last = curr;
 			}
 		}
 	}
