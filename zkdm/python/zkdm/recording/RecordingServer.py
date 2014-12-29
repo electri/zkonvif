@@ -32,7 +32,7 @@ def _param(req, key):
 _rcmd = None
 _class_schedule = None
 rh = None
-_tokens = common.uty_tokens.load_tokens('../common/tokens.json')
+_tokens = load_tokens('../common/tokens.json')
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -49,12 +49,13 @@ class CmdHandler(tornado.web.RequestHandler):
         rc['result']='ok'
         rc['info']=''
         ip = ''
-        hosttype = token['hosttype']
+        hosttype = None
 
         global _tokens
 
         if token == '0':
             ip = '127.0.0.1'
+            hosttype = "x86" # ??
         else:
             if token not in _tokens:
                 rc['result'] = 'error'
@@ -62,6 +63,7 @@ class CmdHandler(tornado.web.RequestHandler):
                 self.write(rc)
                 return
             else:
+                hosttype = _tokens[token]['hosttype']
                 id_port = get_private_from_tokens(token,service_id,'recording',_tokens)
                 ip = id_port['ip']
 
