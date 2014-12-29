@@ -91,10 +91,9 @@ def get_service_desc_from_tokens(t, service_id, service_type, tokens):
                     continue
                 st = h['services'][sk] # type
                 for sid in st:
-                    if sid != service_id:
-                        continue
-                    s = st[sid]    # id
-                    return s
+                    if sid == service_id:
+                        s = st[sid]    # id
+                        return s
     return {}
 
 def get_service_desc(t, service_id, service_type, fname = None):
@@ -114,11 +113,9 @@ def get_private_from_tokens(token, service_id, service_type, tokens):
 
                 for sid in st:
                     if sid == service_id:
-                        continue
-
-                    s = st[sid]    # id
-                    private = s['private']
-                    return private
+                        s = st[sid]    # id
+                        private = s['private']
+                        return private
     return {}
 
 def get_private(token, service_id, service_type, fname = None):
