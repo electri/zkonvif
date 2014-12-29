@@ -27,6 +27,10 @@
 
 static int _interval = 3; // 缺省间隔周期，秒
 static int _port = 11011;	// 缺省udp接收端口
+static int _ping_interval = 60;	// 代理主机给 online 发送 ping 的时间间隔，秒
+static int _ping_wait_cnt = 3;  // 当连续 3 * _ping_interval 收不到 ping，
+								// 则认为代理主机已经关闭，停止 pong
+static time_t _last_ping_stamp = 0; // 最后收到 ping 的时间
 
 const char *pong = "pong", *ping = "ping";
 const int pong_size = 4, ping_size = 4;
@@ -39,6 +43,12 @@ static int parse_opt(int argc, char **argv)
 
 	p = getenv("pong_interval");
 	if (p) _interval = atoi(p);
+
+	p = getenv("ping_interval");
+	if (p) _ping_interval = atoi(p);
+
+	p = getenv("ping_wait_cnt");
+	if (p) _ping_wait_cnt = atoi(p);
 
 	return 0;
 }
@@ -104,7 +114,15 @@ int main(int argc, char **argv)
 
 		if (rc == 0) { // 超时，如果 remote 有效，就回复 pong
 			if (remote.sin_family == AF_INET) {
-				sendto(fd, pong, pong_size, 0, (struct sockaddr*)&remote, sizeof(remote));
+				if (time(0) - _last_ping_stamp > _ping_interval * _ping_wait_cnt) {
+					// 长时间没有收到 ping，此时停止发送 pong
+					remote.sin_family = AF_INET - 10;
+					fprintf(stderr, "WARNING: can't get ping in %d seconds, stop pong\n",
+							_ping_interval * _ping_wait_cnt);
+				}
+				else {
+					sendto(fd, pong, pong_size, 0, (struct sockaddr*)&remote, sizeof(remote));
+				}
 			}
 		}
 		else if (FD_ISSET(fd, &fds)) { // 接收，如果是 ping，更新 remote 地址
@@ -115,6 +133,7 @@ int main(int argc, char **argv)
 			if (recvfrom(fd, buf, sizeof(buf), 0, (struct sockaddr*)&addr, &alen) > 0) {
 				if (!memcmp(buf, ping, ping_size)) { // 更新
 					remote = addr;
+					_last_ping_stamp = time(0);
 					fprintf(stderr, "INFO: get ping from %s:%d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 				}
 			}
