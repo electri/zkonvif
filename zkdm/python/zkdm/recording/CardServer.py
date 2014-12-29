@@ -484,6 +484,12 @@ def livingS(url):
 
 	return rc
 
+def ReslivingS(ip,port,app):
+    rc = {}
+    rc['resulr'] = 'ok'
+    rc['info'] = ''
+    return rc
+
 
 def start_card_server():
     global client
