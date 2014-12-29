@@ -17,7 +17,8 @@ import ArmPtz
 import logging
 
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-_tokens = json.load(io.open('../common/tokens.json', 'r', encoding='utf-8'))
+#_tokens = json.load(io.open('../common/tokens.json', 'r', encoding='utf-8'))
+_tokens = load_tokens('../common/tokens.json')
 logging.basicConfig(filename='ptz.log', filemode='w', level=logging.DEBUG)
 
 def all_ptzs_config():
@@ -84,7 +85,7 @@ for e in _all_ptzs:
         regunit = {'type': stype, 'id': sid, 'url': service_url}
         reglist.append(regunit)
   
-reglist = reglist + gather_sds('ptz', '../common/tokens.json')
+reglist = reglist + gather_sds_from_tokens(_tokens, 'ptz')
 rh = RegHt(reglist)
 
 class HelpHandler(RequestHandler):
@@ -128,12 +129,15 @@ class ControllingHandler(RequestHandler):
                 ret = {'result':'error', 'info': 'the %sth host does not exist'%token} 
             else:
                 id_port = get_private_from_tokens(token, name, 'ptz', _tokens)
-                nm = name
-                if id_port['id'] not is '':
-                    nm = id_port['id']
-                armcmd = ArmPtz.toArmStr(nm, method, self.request.arguments)
-                ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
-                print ret
+                # FIXME: 这里添加了是否找到 service id 的判断
+                if 'ip' not in id_port:
+                    ret = {'result': 'error', 'info': 'the service_id=%s NOT found' % name }
+                else:
+                    nm = name
+                    if id_port['id'] is not '':
+                        nm = id_port['id']
+                    armcmd = ArmPtz.toArmStr(nm, method, self.request.arguments)
+                    ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
         self.finish()
