@@ -8,10 +8,9 @@
 #
 #################################################################
 
-import urllib2, sys, json, io, time, threading, re
+import urllib2, sys, json, io, time, threading, re, sqlite3, os
 from utils import zkutils
 from Log import Log
-
 
 verbose = False
 _log = Log('reg/ht')
@@ -20,12 +19,24 @@ TIMEOUT = 3 # urllib2.urlopen 的超时 ...
 myip = zkutils().myip_real()
 mymac = zkutils().mymac()
 
+abspath = os.path.abspath(__file__)
+
+# 主机状态数据库文件名字
+# 只对 ip 存在的记录处理 isLive 状态
+hosts_state_fname = os.path.dirname(abspath) + "/../dm/proxied_hosts.db"
+hosts_state_tabname = "proxied_host_stat"
+
+hosts_config_fname = os.path.dirname(abspath) + "/../host/config.json"
+
+print hosts_state_fname
+
 class _GroupOfRegChk:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
         如果服务太多，每隔10秒，连续注册/心跳，会导致网络剧烈抖动，
         因此这里简单的划分为 10 个组，然后每个 1秒执行一组 ....
 
         当注册成功，则放到心跳组里，当心跳失败，则放到注册组里
+        周期检查“主机状态库”，如果不在线，则从 ht 中，放到 death 中
     '''
     def __init__(self, myip, mymac, obj_desc):
         self.__myip = myip
@@ -141,8 +152,32 @@ class _ChkDBAlive:
     def chk_service_alive(self, sd):
         ''' 返回 sd 对应的服务是否在线 '''
         ''' XXX: 这里有个技巧，ping 只能反映主机是否在线，为每个服务都查询数据库
-                 有点浪费，可以考虑每次查询保存结果，当下次 sd 的 ip/mac 变化后，在查询数据库 '''
+                 有点浪费，可以考虑每次查询保存结果，当下次 sd 的 ip/mac 变化后，在查询数据库,
+                 但是这样实现会比较麻烦 ...
+
+        '''
+        rc = self.__query(sd['ip'])
+        for item in rc:
+            if int(item[0]) == 0:
+                return False
         return True
+
+    def __query(self, ip):
+        if not os.path.isfile(hosts_state_fname): # 防止主动创建 xxx.db 文件
+            print 'WARNING: db fname:', hosts_state_fname, ' NOT exist!!'
+            return []
+
+        try:
+            s0 = 'select isLive from "%s" where ip="%s"' % (hosts_state_tabname, ip)
+            db = sqlite3.connect(hosts_state_fname)
+            c = db.cursor()
+            rc = c.execute(s0)
+            db.close()
+            return rc
+        except Exception as e:
+            print 'Exception:', e
+            return []
+
 
 class _RegHtOper:
     ''' 封装到名字服务的操作 '''
@@ -281,7 +316,7 @@ class _RegHtOper:
 
 
     def __load_base_url(self):
-    	ret = json.load(io.open(r'../host/config.json', 'r', encoding='utf-8'))
+    	ret = json.load(io.open(hosts_config_fname, 'r', encoding='utf-8'))
         r = ret['regHbService']
         if ' ' in r['sip'] or ' ' in r['sport']:
             raise Exception("include ' '")
