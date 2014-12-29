@@ -30,17 +30,32 @@ def _x86_rtmp_living(ip):
     rc['info'] = ''
 
     try:
-        req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublish')
+        req = urllib2.Request('http://192.168.12.111:50001/repeater/prepublishbatch')
         data = {}
         _utils = zkutils()
-        data['mac'] = _utils.mymac()
-        data['uid'] = _utils.mymac() + 'Living1'
-        data['STATUS'] = '0'
+        mac = _utils.mymac()
+        data['group_id'] = mac
+        move = {}
+        move['uid'] = mac + '_Move'
+        resource1 = {}
+        resource1['uid'] = mac + '_Teacher'
+        resource2 = {}
+        resource2['uid'] = mac + '_Student'
+        resource3 = {}
+        resource3['uid'] = mac + '_Full'
+        resource4 = {}
+        resource4['uid'] = mac + '_Teacher1'
+        resource5 = {}
+        resource5['uid'] = mac + '_Teache2r'
+        resource6 = {}
+        resource6['uid'] = mac + '_Teacher3'
+        data['uids'] = [move,resource1,resource2,resource3,resource4,resource5,resource6]
+
         data = json.dumps(data)
 
         response = urllib2.urlopen(req,data)
         content = json.load(response)
-        url = content['content']['rtmp_repeater']
+        url = content['content']
         print url
 
         livingS(url)

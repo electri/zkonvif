@@ -32,7 +32,7 @@ def _param(req, key):
 _rcmd = None
 _class_schedule = None
 rh = None
-_tokens = common.uty_tokens.load_tokens('../common/tokens.json')
+_tokens = load_tokens('../common/tokens.json')
 
 
 class MainHandler(tornado.web.RequestHandler):
