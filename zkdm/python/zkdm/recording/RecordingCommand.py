@@ -36,6 +36,7 @@ class RecordingCommand():
     def preview(self,ip,hosttype):
         rc={}
         rc['result']='ok'
+        rc['info'] = ''
         if hosttype == 'x86':
             rtsp_ip = self.send_command('BroadCastCmd=GetDeviceIP',ip)
             if(rtsp_ip['result'] == 'ok' and len(rtsp_ip['info'])>0):            
@@ -55,13 +56,16 @@ class RecordingCommand():
                 rc['info'] = rtsp_ip['info']
         else:
             rc = self.send_command('RecordCmd=QueryRtspUrls',ip)
+            if rc['result'] == 'ok':
+                url = {}
+                #rc['info'].split
 
         
         return rc
 
 
 def main():
-    ss=RecordingCommand()
+    ss=RecordingCommand('127.0.0.1')
     ss.start()
 
 if __name__ == "__main__":
