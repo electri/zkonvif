@@ -22,7 +22,7 @@ def __load(fname = None):
     if fname is None:
         fname = TOKEN_FNAME
 
-    f = io.open(fname, encoding='utf-8')
+    f = io.open(fname, 'r', encoding='utf-8')
     j = json.loads(f.read())
     f.close()
     return j
