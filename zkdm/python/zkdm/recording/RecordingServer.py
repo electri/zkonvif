@@ -51,6 +51,7 @@ class CmdHandler(tornado.web.RequestHandler):
         ip = ''
         hosttype = None
 
+
         global _tokens
 
         if token == '0':
