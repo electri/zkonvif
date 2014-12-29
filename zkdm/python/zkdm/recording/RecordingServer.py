@@ -88,7 +88,7 @@ class CmdHandler(tornado.web.RequestHandler):
         else:
             args = (self.request.uri.split('?'))[1]
             print args
-            rc=_rcmd.send_command(args)
+            rc=_rcmd.send_command(args,ip)
             self.set_header('Content-Type', 'application/json')
             self.write(rc)
 

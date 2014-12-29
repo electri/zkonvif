@@ -12,6 +12,23 @@ def StartLiving(ip,hosttype):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
+    if hosttype == 'x86':
+        rc = _x86_rtmp_living(ip)
+    else:
+        rc = _arm_rmtp_living(ip)
+    return rc
+def _arm_rmtp_living(ip):
+    rc = {}
+    rc['result'] = 'ok'
+    rc['info'] = ''
+
+    return rc
+
+def _x86_rtmp_living(ip):
+    rc = {}
+    rc['result'] = 'ok'
+    rc['info'] = ''
+
     try:
         req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublish')
         data = {}
@@ -29,18 +46,17 @@ def StartLiving(ip,hosttype):
         livingS(url)
         time.sleep(1)
         _rcmd = RecordingCommand()
-        rc=_rcmd.send_command('BroadCastCmd=StartBroadCast')
+        rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
         if rc['result'] == 'ok':
             rc['info'] = url
-        return rc
-
     except Exception as err:
         rc['result'] = 'error'
         rc['info'] = str(err)
-        return rc
+
+    return rc
 
 def StopLiving():
     _rcmd = RecordingCommand()
-    rc=_rcmd.send_command('BroadCastCmd=StopBroadCast')
+    rc=_rcmd.send_command('BroadCastCmd=StopBroadCast',ip)
     return rc
 
