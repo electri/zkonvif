@@ -49,7 +49,7 @@ class CmdHandler(tornado.web.RequestHandler):
         rc['result']='ok'
         rc['info']=''
         ip = ''
-        hosttype = token['hosttype']
+        hosttype = _tokens[token]['hosttype']
 
         global _tokens
 
