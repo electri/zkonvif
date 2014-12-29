@@ -57,12 +57,14 @@ def get_utf8_body(req):
     class RegHost(threading.Thread):
         def __init__(self, _myip, _mac):
         self.isQuit = False
+        self.event = threading.Event() 
         self.myip = _myip
         self.mymac = _mac
         threading.Thread.__init__(self)
         
     def join(self):
         self.isQuit = True
+        self.event.set()
 
     def run(self):
         host_type = None
@@ -81,12 +83,12 @@ def get_utf8_body(req):
             rc['info'] = 'can\'t get host info'
             rc['result'] = 'err'
 
-        while True:
-            while reg(self.myip, self.mymac, host_type, sip, sport) == False:
-                time.sleep(5)
+        while not self.isQuit:
+            while not self.isQuit or reg(self.myip, self.mymac, host_type, sip, sport) == False:
+                self.event.wait(5)
 
-            time.sleep(10)
+            self.event.wait(10)
 
             while isGetMacList(sip, sport, self.mymac) == True:
-                time.sleep(10)
+                self.event.wait(10)
  

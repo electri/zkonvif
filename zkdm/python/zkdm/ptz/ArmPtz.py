@@ -84,8 +84,16 @@ def toArmStr(name, cmd, params=None):
 
 def SendThenRecv(HOST, PORT, arm_command):
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	
-	s.connect((HOST, PORT))
+    try:
+	    s.connect((HOST, PORT))
+    except Exception as e:
+        print e
+        return {'result':'error', 'info':'not connect proxied hos'}
 	s.sendall(arm_command)
 	data = s.recv(1024)
+    ret = data.split(',')
+    result = ret[0].split(':')[1]
+    info = ret[1].split(':')[1]
 	s.close()
-	return data
+
+	return {'result':result, 'info':info} 
