@@ -32,10 +32,7 @@ def _param(req, key):
 _rcmd = None
 _class_schedule = None
 rh = None
-
-# FIXME: 已经使用 common.uty_tokens.load_tokens 代替
-# _tokens = json.load(io.open('../common/tokens.json', 'r', encoding='utf-8'))
-_tokens = load_tokens('../common/tokens.json')
+_tokens = common.uty_tokens.load_tokens('../common/tokens.json')
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -47,7 +44,7 @@ class HelpHandler(tornado.web.RequestHandler):
         self.render('help.html')
 
 class CmdHandler(tornado.web.RequestHandler):
-    def get(self,token):
+    def get(self,token,service_id):
         rc={}
         rc['result']='ok'
         rc['info']=''
@@ -65,9 +62,7 @@ class CmdHandler(tornado.web.RequestHandler):
                 self.write(rc)
                 return
             else:
-                # FIXME: get_private_from_tokens 第二个参数是 service_id，这里用 cmd 是什么意思？？
-                # 按照目前 common/tokens.json 的定义，service_id 为 "card"
-                id_port = get_private_from_tokens(token,'cmd','recording',_tokens)
+                id_port = get_private_from_tokens(token,service_id,'recording',_tokens)
                 ip = id_port['ip']
 
 
@@ -124,7 +119,7 @@ def main():
         tornado.options.parse_command_line()
         application = tornado.web.Application([
             url(r"/", MainHandler),
-            url(r"/recording/([^\/])/cmd",CmdHandler), # FIXME: 这里的 url 格式，必须与 tokens.json 中对应起来
+            url(r"/recording/([^\/]+)/([^\/]+)/cmd",CmdHandler), #这里的 url 格式，必须与 tokens.json 中对应起来
             url(r"/recording/help", HelpHandler),
             url(r"/recording/internal",InternalHandler),
         ])
