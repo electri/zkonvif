@@ -3,15 +3,20 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/select.h>
-#include <sys/time.h>
-#include <fcntl.h>
-#include <string.h>
-#include <errno.h>
+#ifdef WIN32
+#	include <winsock2.h>
+	typedef int socklen_t;
+#else
+#	include <sys/types.h>
+#	include <sys/socket.h>
+#	include <arpa/inet.h>
+#	include <netinet/in.h>
+#	include <sys/select.h>
+#	include <sys/time.h>
+#	include <fcntl.h>
+#	include <string.h>
+#	include <errno.h>
+#endif
 
 const char *ping = "ping", *pong = "pong";
 int ping_len = 4, pong_len = 4;
@@ -61,15 +66,28 @@ static int load_target_hosts()
 // 对 _target_hosts 中所有 ! online 的发送 ping 消息
 static int send_pings(int fd)
 {
+	/** 每隔 1 分钟，给所有在线的 target 也发送 ping
+	  	这样即使 ping 结束，target 也能停止发送 pong
+	 */
+	static time_t last_ping_for_online = 0;
 	const Target *target = _target_hosts.next;
+	int to_online = 0;
+	time_t now = time(0);
+
+	if (now - last_ping_for_online > 60) {
+		to_online = 1;
+		last_ping_for_online = now;
+	}
+
 	while (target) {
-		if (!target->online) {
+		if (!target->online || to_online) {
 			if (_verbose) {
 				fprintf(stderr, "INFO: sendto %s:%d\n", inet_ntoa(target->remote.sin_addr), 
 						ntohs(target->remote.sin_port));
 			}
 			sendto(fd, ping, ping_len, 0, (struct sockaddr*)&target->remote, sizeof(target->remote));
 		}
+		
 		target = target->next;
 	}
 	return 0;
@@ -119,6 +137,11 @@ int main(int argc, char **argv)
 	fd_set fds, fds_saved;
 	time_t last;
 	int rc;
+
+#ifdef WIN32
+	WSADATA data;
+	WSAStartup(0x202, &data);
+#endif
 
 	if (parse_args(argc, argv) < 0) {
 		fprintf(stderr, "ERR: args parse err\n");
