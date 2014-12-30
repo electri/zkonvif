@@ -505,7 +505,7 @@ def ReslivingS(ip,port,app):
 
 def start_card_server():
     global client
-    wsdl_url = 'http://192.168.12.47:8086/UIServices?WSDL' 
+    wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
     try:
         client = Client(wsdl_url)
     except:
