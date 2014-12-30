@@ -21,7 +21,7 @@ class DbOp:
         self.baseOp(empty_str)
     
     def selectByOpt(self, table_name, opt):
-        select_str = "SELECT * FROM %s WHERE ip='%s'"%(table_name, opt)
+        select_str = "SELECT * FROM %s WHERE %s"%(table_name, opt)
         #FIXME:注意,返回值是[]或(),需要确认 ...
         return self.baseOp(select_str, True)
 
@@ -45,11 +45,10 @@ class DbOp:
 
 if __name__ == '__main__':
     db = DbOp('proxied_hosts.db')
-    t = db.selectByOpt('hosts_state', '172.16.1.11') 
+    t = db.selectByOpt('hosts_state', "isLive = '0'") 
     print type(t)    
     for e in t:
-        type(
-        print e
+        print e    
     db.close()
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
