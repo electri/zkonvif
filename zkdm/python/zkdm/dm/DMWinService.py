@@ -8,11 +8,11 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import ServicesManager
 sys.path.append('../')
 from common.utils import zkutils
-from common.reght import RegHt, RegHost
+from common.reght import RegHt
+from common.reght import RegHost
 sys.path.append('../host')
 import Stat
 from common.utils import zkutils
-#from reg_host import RegHost
 from common.uty_token import *
 
 _tokens = load_tokens("../common/tokens.json")
@@ -209,11 +209,11 @@ class DMService(win32serviceutil.ServiceFramework):
         win32event.SetEvent(self.hWaitStop)
 
 
-        def SvcDoRun(self):
-            import servicemanager
-            self.dm_thread_.start()
-            # wait for beeing stopped...
-            win32event.WaitForSingleObject(self.hWaitStop, win32event.INFINITE)
+    def SvcDoRun(self):
+        import servicemanager
+        self.dm_thread_.start()
+        # wait for beeing stopped...
+        win32event.WaitForSingleObject(self.hWaitStop, win32event.INFINITE)
 
 
 if __name__ == '__main__':

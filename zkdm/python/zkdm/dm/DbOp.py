@@ -14,6 +14,7 @@ class DbOp:
      
     def insertTable(self, table_name, value):
         insert_str = 'INSERT INTO %s VALUES %s'%(table_name, value)
+        
         self.baseOp(insert_str)
 
     def emptyTable(self, table_name):
@@ -45,7 +46,8 @@ class DbOp:
 
 if __name__ == '__main__':
     db = DbOp('proxied_hosts.db')
-    t = db.selectByOpt('hosts_state', "isLive = '0'") 
+    db.alterValue('hosts_state', ('172.16.1.10', 1))
+    t = db.selectByOpt('hosts_state', "isLive = '1'") 
     print type(t)    
     for e in t:
         print e    
