@@ -12,6 +12,7 @@ import os,sys
 sys.path.append('../common')
 import uty_token
 import datetime
+import select
 
 hds =  uty_token.gather_hds('../common/tokens.json');
 hips = []
@@ -31,7 +32,7 @@ for hip in hips:
     db.insertTable('hosts_state', (str(hip), 0))
 
 db.close()
-"""
+    
 address = ('127.0.0.1', 31500)
 sock = socket.socket(AF_INT, SOCK_DGRAM)
 sock.bind(address)
@@ -39,17 +40,32 @@ sock.bind(address)
 db = DbOp('Proxied_hosts.db')
 
 while True:
-    data, addr = s.recvfrom(10)
-    if not data:
-        print "client has exist"
-        break
-    print "received:", data, "from", addr
-    if data == 'pang':
-      state = db.selectByOpt('proxied_host_state', 'ip = %s'%(addr[0]) 
-      if state[1] == 0:
-          db.alterValue('proxied_host_state', 1)
-          t = gettime()
-          ip_times.update({'ip', ,
-"""
-# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+    result = select.select([sock], [], [], 10)
+    if result == 0:
+        for e in temps:
+            if temps[e].isLive = 1:
+                now = datetime.datetime.now()
+                if now - temps[e].timestamp > 20
+                    temps[e].isLive = 0;
+                    db = dbop.dbop('proxied_hosts')
+                    db.altervalue('hosts_state', (str(e), 0))
+                    db.close()
+            if temps[e].isLive = 0:
+                sock.sendto('ping', (e, 222))
+    else if result == -1:
+        print 'error'
+    else:
+        data, address = sock.recvfrom(10)
+        now = datetime.datetime.now()
+        if data == 'pang':
+            e = address[0]
+            if temps[e].isLive == 0:
+                temps[e].isLive = 1 
+                db = DbOp.DbOp('proxied_hosts')
+                db.alterValue('hosts_state', (str(e), 1))
+                db.close()
+            if temps[e].isLive == 1:
+                temps[e].timeStamp = now
+
+ vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
