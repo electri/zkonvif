@@ -17,31 +17,35 @@ def StartLiving(ip,hosttype):
     else:
         rc = _arm_rmtp_living(ip)
     return rc
+
 def _arm_rmtp_living(ip):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
-
     return rc
+
 def _x86_rtmp_living_data():
     data = {}
     _utils = zkutils()
     mac = _utils.mymac()
+    mac = '00E04CC20811'
+    mac = mac.lower()
     data['group_id'] = mac
     move = {}
-    move['uid'] = mac + '_Move'
+    move['uid'] = mac + '_movie'
+
     resource1 = {}
-    resource1['uid'] = mac + '_Teacher'
+    resource1['uid'] = mac + '_teacher'
     resource2 = {}
-    resource2['uid'] = mac + '_Student'
+    resource2['uid'] = mac + '_student'
     resource3 = {}
-    resource3['uid'] = mac + '_Full'
+    resource3['uid'] = mac + '_vga'
     resource4 = {}
-    resource4['uid'] = mac + '_Teacher1'
+    resource4['uid'] = mac + '_teacher_full'
     resource5 = {}
-    resource5['uid'] = mac + '_Teache2r'
+    resource5['uid'] = mac + '_student_full'
     resource6 = {}
-    resource6['uid'] = mac + '_Teacher3'
+    resource6['uid'] = mac + '_blackboard_writing'
     data['uids'] = [move,resource1,resource2,resource3,resource4,resource5,resource6]
     return data
 
@@ -59,26 +63,26 @@ def _x86_rtmp_living(ip):
         content = json.load(response)
         urls = []
         urls = content['content']
-        move_url = ip = port = app = ''
+        movie_url = rtmp_ip = port = app = ''
 
         for url in urls:
-            if 'Move' in url['rtmp_repeater']:
-                move_url = url['rtmp_repeater']
-                url = move_url
+            if 'movie' in url['rtmp_repeater']:
+                movie_url = url['rtmp_repeater']
+                livingS(movie_url)
+                url = movie_url
                 url = url[7:]
-                ip = url.split(':')[0]
-                url = url[len(ip)+1:]
+                rtmp_ip = url.split(':')[0]
+                url = url[len(rtmp_ip)+1:]
                 port = url.split('/')[0]
                 url =url[len(port)+1:]
                 app = url.split('/')[0]
 
-        livingS(move_url)
-        ReslivingS(ip,port,ap)
+        ReslivingS(rtmp_ip,port,app)
         time.sleep(1)
         _rcmd = RecordingCommand()
         rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
         if rc['result'] == 'ok':
-            rc['info'] = url
+            rc['info'] = urls
     except Exception as err:
         rc['result'] = 'error'
         rc['info'] = str(err)

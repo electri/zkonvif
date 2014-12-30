@@ -428,13 +428,11 @@ def livingS(url):
     global client
     rc = {}
     try:
-        print url
         living_info = client.factory.create('ns0:LivingInfo')
-        living_list = client.service.Living()['message']['LivingList'][0]
+        living_list = client.service.LivingD()['message']['LivingList'][0]
         living_info['IsStartFilmLiving'] = 'True'
         living_info['IsSynRecord'] = 'False'
 
-        print living_list
         #print client.service.Living()['message']
 
         url = url[7:]
@@ -445,6 +443,7 @@ def livingS(url):
         app = url.split('/')[0]
         url = url[len(app)+1:]
         stream_id = url[:]
+
 
         for i in range(0,len(living_list)):
             if i==0: #默认只开启一路直播
@@ -506,7 +505,7 @@ def ReslivingS(ip,port,app):
 
 def start_card_server():
     global client
-    wsdl_url = 'http://192.168.12.47:8086/UIServices?WSDL' 
+    wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
     try:
         client = Client(wsdl_url)
     except:

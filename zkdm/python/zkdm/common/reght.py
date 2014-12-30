@@ -37,6 +37,7 @@ class _GroupOfRegChk:
 
         当注册成功，则放到心跳组里，当心跳失败，则放到注册组里
         周期检查“主机状态库”，如果不在线，则从 ht 中，放到 death 中
+
     '''
     def __init__(self, myip, mymac, obj_desc):
         self.__myip = myip
@@ -156,6 +157,9 @@ class _ChkDBAlive:
                  但是这样实现会比较麻烦 ...
 
         '''
+        if 'ip' not in sd:
+            return True
+
         rc = self.__query(sd['ip'])
         for item in rc:
             if int(item[0]) == 0:
