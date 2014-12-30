@@ -1,7 +1,7 @@
 {
    "services" : [
       {
-         "enable" : false,
+         "enable" : true,
          "fork" : true,
          "url" : "http://<ip>:10003/ptz",
          "name" : "ptz.service",
@@ -10,7 +10,7 @@
          "title" : "云台服务"
       },
       {
-          "enable": true,
+          "enable": false,
           "fork" : true,
           "url" : "http://<ip>:10004/host",
           "name" : "host",
