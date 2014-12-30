@@ -11,7 +11,7 @@ from common.utils import zkutils
 from common.reght import RegHt
 from common.reght import RegHost
 sys.path.append('../host')
-import Stat
+#import Stat
 from common.utils import zkutils
 from common.uty_token import *
 
@@ -200,9 +200,9 @@ class DMService(win32serviceutil.ServiceFramework):
         # 全局，用于主动结束 ...
         global _ioloop
         _ioloop = IOLoop.instance()
-        global pm
-        pm = Stat.PerformanceMonitor()
-        pm.start()
+        #global pm
+        #pm = Stat.PerformanceMonitor()
+        #pm.start()
             
     def SvcStop(self):
         win32event.SetEvent(self.hWaitStop)

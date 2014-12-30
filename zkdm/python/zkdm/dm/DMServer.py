@@ -9,7 +9,7 @@ sys.path.append('../')
 from common.reght import RegHt, RegHost
 sys.path.append('../host')
 from common.utils import zkutils
-import Stat
+#import Stat
 
 _zkutils = zkutils()
 
@@ -82,7 +82,7 @@ class ListServiceHandler(RequestHandler):
 
 # 全局，用于主动结束 ...
 _ioloop = IOLoop.instance()
-pm = Stat.PerformanceMonitor()
+#pm = Stat.PerformanceMonitor()
 #pm.start()
 rh = RegHt([ {'type':'dm', 'id':'dm', 'url':r'http://<ip>:10000/dm'}])
 

@@ -18,7 +18,7 @@
           "title" : "主机服务"
       },
       {
-         "enable" : true,
+         "enable" : false,
          "fork" : true,
          "url" : "http://<ip>:10005/log",
          "name" : "Log.service",
