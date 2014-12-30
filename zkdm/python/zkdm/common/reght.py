@@ -383,7 +383,8 @@ class RegHt(threading.Thread):
                 t = {}
                 for x in sd:
                     t[x] = sd[x]
-                t['id'] = sd['type'] + '-' + sd['id']
+                #t['id'] = sd['type'] + '-' + sd['id']
+                t['id'] = sd['id'] # XXX 临时使用，平台改好后换成 type-id 组合
                 self.__sds.append(t)
         self.__lock = threading.RLock()
         self.__unregs = [] # 保存需要主动注销的 ...
