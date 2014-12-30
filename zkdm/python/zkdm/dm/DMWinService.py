@@ -8,11 +8,10 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 import ServicesManager
 sys.path.append('../')
 from common.utils import zkutils
-from common.reght import RegHt
+from common.reght import RegHt, RegHost
 sys.path.append('../host')
 import Stat
 from common.utils import zkutils
-from reg_host import RegHost
 
 class HelpHandler(RequestHandler):
 	''' 提示信息 ....
@@ -147,8 +146,7 @@ def main():
 	_zkutils = zkutils()
 	_myip = _zkutils.myip_real()
 	_mac = _zkutils.mymac()
-	regHt =  RegHost(_myip, _mac)
-	regHt.start()
+	regHt =  RegHost([{'mac':_mac, 'type':'x86', 'ip':_myip}])
 	global rh
 	rh = RegHt([ {'type':'dm', 'id':'dm', 'url':r'http://<ip>:10000/dm'}])
 

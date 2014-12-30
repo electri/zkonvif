@@ -36,13 +36,13 @@
 
 @cd c:\zkdm\ptz
 @echo please alter teacher.config
-@notepad teacher.config
+@notepad card1.config
 
 @echo please alter student.config
-@notepad student.config
+@notepad card2.config
 
 @echo please alter bd
-@notepad bd.config
+@notepad card0.config
 @cd c:\zkdm\host
 
 @echo please alter host type and reg service parameters
