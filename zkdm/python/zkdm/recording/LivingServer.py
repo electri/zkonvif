@@ -28,7 +28,7 @@ def _x86_rtmp_living_data():
     data = {}
     _utils = zkutils()
     mac = _utils.mymac()
-    mac = '00E04CC20811'
+    #mac = '00E04CC20811'
     mac = mac.lower()
     data['group_id'] = mac
     move = {}
