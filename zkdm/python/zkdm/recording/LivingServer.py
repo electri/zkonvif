@@ -46,7 +46,7 @@ def _x86_rtmp_living_data():
     resource5['uid'] = mac + '_student_full'
     resource6 = {}
     resource6['uid'] = mac + '_blackboard_writing'
-    data['uids'] = [move,resource1,resource2,resource3,resource4,resource5,resource6]
+    data['uids'] = [resource1,resource2,resource3,resource4,resource5,resource6]
     return data
 
 def _x86_rtmp_living(ip):
@@ -66,10 +66,10 @@ def _x86_rtmp_living(ip):
         movie_url = rtmp_ip = port = app = ''
 
         for url in urls:
-            if 'movie' in url['rtmp_repeater']:
-                movie_url = url['rtmp_repeater']
+            if 'teacher' in url['rtmp_repeater']:
+                #movie_url = url['rtmp_repeater']
                 #livingS(movie_url)
-                url = movie_url
+                url = url['rtmp_repeater']
                 url = url[7:]
                 rtmp_ip = url.split(':')[0]
                 url = url[len(rtmp_ip)+1:]
