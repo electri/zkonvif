@@ -488,7 +488,7 @@ def ReslivingS(ip,port,app):
     rc['resulr'] = 'ok'
     rc['info'] = ''
     try:
-        res_living_info_d = client.service.ResLivingInfoD()['message']
+        res_living_info_d = client.service.RTSPLivingD()['message']
         res_living_info_d['App'] = app
         res_living_info_d['ResServerIP'] = ip
         res_living_info_d['ResServerPort'] = port
@@ -496,7 +496,7 @@ def ReslivingS(ip,port,app):
             res_living_info_d['IsStartResLiving'] = 'True'
         if hasattr(res_living_info_d,'IsStartRtmpLiving'):
             res_living_info_d['IsStartRtmpLiving'] = 'True'
-        client.service.ResLivingInfoS(res_living_info_d)
+        client.service.RTSPLivingS(res_living_info_d)
     except Exception as err:
         rc['result'] = 'error'
         rc['info'] = str(err)
