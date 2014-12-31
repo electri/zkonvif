@@ -59,6 +59,7 @@ def gather_sds_from_tokens(j, service_type = None):
     sds = []
     for i in j:
         h = j[i]  # host
+        print h['ip'], '\n'
         if __valid_host(h) and 'services' in h:
             for sk in h['services']:
                 st = h['services'][sk] # type
@@ -128,7 +129,7 @@ def get_private(token, service_id, service_type, fname = None):
 
 if __name__ == '__main__':
     import reght, time
-    reght.verbose = True
+#reght.verbose = True
 
 #    p = get_private('1', 'CARD02', 'ptz')
 #    print p
@@ -140,6 +141,7 @@ if __name__ == '__main__':
     rh = reght.RegHost(hds)  # 主机注册
 
     sds = gather_sds('recording')
+
     rs = reght.RegHt(sds)  # 服务注册
 
     time.sleep(60000)

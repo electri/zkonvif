@@ -136,11 +136,13 @@ class _GroupOfRegChk:
         death = []
         for sd in bht:
             if not op(sd):
+                print '------- for %s offline, to death' % (sd['ip'])
                 death.append(sd)
                 bht.remove(sd)
 
         for sd in bdeath:
             if op(sd):
+                print '-------- for %s online, to reg' % (sd['ip'])
                 bht.append(sd)
                 bdeath.remove(sd)
 
@@ -162,8 +164,11 @@ class _ChkDBAlive:
 
         rc = self.__query(sd['ip'])
         for item in rc:
-            if int(item[0]) == 0:
+            if item == 0:
+                print '============== chkdb: for %s offline' % (sd['ip'])
                 return False
+            else:
+                print '============== chkdb: fior %s online ' % (sd['ip'])
         return True
 
     def __query(self, ip):
@@ -172,13 +177,15 @@ class _ChkDBAlive:
             return []
 
         try:
-            s0 = 'select isLive from "%s" where ip="%s"' % (hosts_state_tabname, ip)
-            print s0
+            s0 = 'select isLive from %s where ip="%s"' % (hosts_state_tabname, ip)
             db = sqlite3.connect(hosts_state_fname)
             c = db.cursor()
             rc = c.execute(s0)
+            result = []
+            for r in rc:
+                result.append(r[0])
             db.close()
-            return rc
+            return result
         except Exception as e:
             print 'Exception:', e
             return []
@@ -292,6 +299,7 @@ class _RegHtOper:
               (self.__ip, mac, sd['type'], sd['id'])
         if verbose:
             print url
+        print url
 
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
@@ -445,8 +453,6 @@ class RegHt(threading.Thread):
         for sd in sds:
             self.__unregs.append(sd)
         self.__lock.release()
-
-
 
 
 def build_test_hosts():
