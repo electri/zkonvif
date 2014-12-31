@@ -119,6 +119,7 @@ def db_init_from_tokens(fname):
 
     db.commit()
     db.close()
+    return ips
 
 
 def db_check_timeout(curr_time, timeout = 10):

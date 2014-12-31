@@ -24,7 +24,7 @@ abspath = os.path.abspath(__file__)
 # 主机状态数据库文件名字
 # 只对 ip 存在的记录处理 isLive 状态
 hosts_state_fname = os.path.dirname(abspath) + "/../dm/proxied_hosts.db"
-hosts_state_tabname = "proxied_host_stat"
+hosts_state_tabname = "hosts_state"
 
 hosts_config_fname = os.path.dirname(abspath) + "/../host/config.json"
 
@@ -173,6 +173,7 @@ class _ChkDBAlive:
 
         try:
             s0 = 'select isLive from "%s" where ip="%s"' % (hosts_state_tabname, ip)
+            print s0
             db = sqlite3.connect(hosts_state_fname)
             c = db.cursor()
             rc = c.execute(s0)
