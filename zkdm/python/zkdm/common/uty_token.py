@@ -139,7 +139,7 @@ if __name__ == '__main__':
     hds = gather_hds()
     rh = reght.RegHost(hds)  # 主机注册
 
-    sds = gather_sds('ptz')
+    sds = gather_sds('recording')
     rs = reght.RegHt(sds)  # 服务注册
 
     time.sleep(60000)
