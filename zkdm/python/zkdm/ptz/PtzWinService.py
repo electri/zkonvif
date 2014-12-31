@@ -88,34 +88,14 @@ class ControllingHandler(RequestHandler):
     def get(self, name, method):
         ''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
         '''
-        thread.start_new_thread(self.callback, (token, name, method))
+        thread.start_new_thread(self.callback, (name, method))
 
-    def callback(self, token, name, method):
-        ret = ''
-        global _tokens
-        num = int(token)
-        if _tokens[num]['type'] == 'local':
-            ret = self.__exec_ptz_method(name, method, self.request.arguments)    
-        if _tokens[num]['type'] == 'arm':
-            armcmd = ArmPtz.toArmStr(name, method, self.request.aruments)
-            ret = ArmPtz.SendThenRecv(_tokens[num]['ip'], _tokens[num]['port'], armcmd)
+    def callback(self, name, method):
+        ret = self.__exec_ptz_method(name, method, self.request.arguments)    
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
         self.finish()
-    """
-    def get(self,token, name, method):
-        ''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
-        '''
-        ret = ''
-        global _tokens
-        num = int(token)
-        if _tokens[num]['type'] == 'local':
-            ret = self.__exec_ptz_method(name, method, self.request.arguments)
-        if _tokens[num]['type'] == 'arm':
-            armcmd = ArmPtz.toArmStr(name, method, self.request.aruments)
-            ret = ArmPtz.SendThenRecv((_tokens[num]['ip'], _tokens[num]['port']  
-        self.write(ret)
-    """
+
     def __exec_ptz_method(self, name, method, params):
         global _all_ptzs
         if name in _all_ptzs:
@@ -168,9 +148,7 @@ class PtzService(win32serviceutil.ServiceFramework):
         global _all_ptzs
         _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
         _all_ptzs = load_all_ptzs()
-        global _tokens
-        _tokens = json.load(io.open('./tokens.json', 'r', encoding='utf-8'))
-        
+       
     def SvcStop(self):
         win32event.SetEvent(self.hWaitStop)
 
