@@ -20,6 +20,7 @@ TARGET_PORT = 11011
 
 
 def _send_pings(fd, ips):
+    ''' TODO: 可以考虑在线的，60秒发一次，不在线的 10秒一次 '''
     for ip in ips:
         print 'send ping to:', ip
         fd.sendto('ping', (ip, TARGET_PORT))
@@ -33,7 +34,6 @@ def ping_all(fname):
     last_send_ping = 0
     while True:
         rc = select.select([sock], [], [], 10)
-        print 'select ret:', rc
 
         if len(rc[0]) == 0: # timeout, just 
             _send_pings(sock, ips)
@@ -42,7 +42,6 @@ def ping_all(fname):
 
         elif len(rc[0]) > 0: # 能收到 pong 了
             pong, remote = sock.recvfrom(16)
-            print pong, remote
             if pong == 'pong':
                 remote_ip = remote[0]
                 db_update(remote_ip)
