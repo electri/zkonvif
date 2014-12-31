@@ -6,13 +6,58 @@
 #
 #################################################################
 import json
-import DbOp
+from DbOp import *
 import socket
 import os,sys
 sys.path.append('../common')
 import uty_token
 import datetime
-import select
+import select, time
+
+
+TARGET_PORT = 11011
+
+
+def _send_pings(fd, ips):
+    for ip in ips:
+        socket.sendto(fd, 'ping', (ip, TARGET_PORT)
+
+
+def ping_all(fname):
+    ''' fname 为 tokens.json '''
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    ips = db_init_from_tokens(fname)
+
+    last_send_ping = 0
+    while True:
+        rc = socket.select([sock], [], [], 10)
+        if len(rc) == 0: # timeout, just 
+            _send_pings(sock, ips)
+            db_check_timeout(time.time())
+            last_send_ping = time.time()
+
+        elif len(rc) > 0: # 能收到 pong 了
+            pong, remote = socket.recvfrom(sock, 4)    
+            if pong == 'pong':
+                remote_ip = remote[0]
+                print db_update(remote_ip)
+
+            t = time.time()
+            if t - last_send_ping > 10:
+                _send_pings(sock, ips)
+                db_check_timeout(t)
+                last_send_ping = t
+
+
+            
+
+
+
+
+
+
+
+
 
 PORT = 2222
 TOTAL_TIME_STAMP = 60

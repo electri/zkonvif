@@ -46,7 +46,7 @@ def _x86_rtmp_living_data():
     resource5['uid'] = mac + '_student_full'
     resource6 = {}
     resource6['uid'] = mac + '_blackboard_writing'
-    data['uids'] = [resource1,resource2,resource3,resource4,resource5,resource6]
+    data['uids'] = [resource1,resource2,resource3]#保留三路资源
     return data
 
 def _x86_rtmp_living(ip):
