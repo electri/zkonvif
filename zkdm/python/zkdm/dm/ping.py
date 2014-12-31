@@ -14,6 +14,10 @@ import uty_token
 import datetime
 import select
 
+PORT = 2222
+TOTAL_TIME_STAMP = 60
+PING_TIME_STAMP = 10
+PONG_TIME_STAMP = 15
 hds =  uty_token.gather_hds('../common/tokens.json');
 hips = []
 for hd in hds:
@@ -43,19 +47,30 @@ sock = socket.socket(AF_INT, SOCK_DGRAM)
 
 db = DbOp('Proxied_hosts.db')
 
+def alterTableValue(value):
+    db = dbop.dbop('proxied_hosts')
+    db.altervalue('hosts_state', (str(value[0]), value[1]))
+    db.close()
+
+total_last_time = datetime.datetime.now()
+
 while True:
-    result = select.select([sock], [], [], 10)
+    now = datetime.datetime.now()
+    if (now - total_last_time > TOTAL_TIME_STAMP:
+        for e in temps:
+            sock.sendto('ping', (e, PORT)) 
+            total_last_time = now
+
+    result = select.select([sock], [], [], PING_TIME_STAMP)
     if result == 0:
         for e in temps:
             if temps[e].isLive = 1:
                 now = datetime.datetime.now()
-                if (now - temps[e].timestamp).seconds > 20
+                if (now - temps[e].timeStamp).seconds > PONG_TIME_STAMP
                     temps[e].isLive = 0;
-                    db = dbop.dbop('proxied_hosts')
-                    db.altervalue('hosts_state', (str(e), 0))
-                    db.close()
+                    alterTableValue((str(e), 0))
             if temps[e].isLive = 0:
-                sock.sendto('ping', (e, 222))
+                sock.sendto('ping', (e, PORT))
     else if result == -1:
         print 'error'
         continue
@@ -66,9 +81,7 @@ while True:
             e = address[0]
             if temps[e].isLive == 0:
                 temps[e].isLive = 1 
-                db = DbOp.DbOp('proxied_hosts')
-                db.alterValue('hosts_state', (str(e), 1))
-                db.close()
+                alterTableValue((str(e), 1))
             if temps[e].isLive == 1:
                 temps[e].timeStamp = now
 
