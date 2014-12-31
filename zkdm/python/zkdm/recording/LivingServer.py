@@ -68,7 +68,7 @@ def _x86_rtmp_living(ip):
         for url in urls:
             if 'movie' in url['rtmp_repeater']:
                 movie_url = url['rtmp_repeater']
-                livingS(movie_url)
+                #livingS(movie_url)
                 url = movie_url
                 url = url[7:]
                 rtmp_ip = url.split(':')[0]
