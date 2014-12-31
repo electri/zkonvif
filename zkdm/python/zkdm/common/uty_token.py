@@ -42,6 +42,7 @@ def gather_hds_from_tokens(j):
             hd['mac'] = h['mac']
             hd['ip'] = h['ip']
             hd['type'] = h['hosttype']
+            hd['tokenid'] = i
             hds.append(hd)
     return hds
 
