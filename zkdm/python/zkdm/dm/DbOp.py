@@ -5,7 +5,7 @@
 # @detail:
 #
 #################################################################
-import sqlite3, sys
+import sqlite3, sys, time
 sys.path.append('../')
 from common.uty_token import *
 
@@ -63,13 +63,13 @@ def _db_init():
     s0 = 'select COUNT(*) from sqlite_master where name="hosts_state"'
     rc = c.execute(s0)
     if int(rc.next()[0]) == 0:
-        s1 = 'create table hosts_state(ip varchar(128), isLive integer)'
+        s1 = 'create table hosts_state(ip varchar(128), isLive integer, last_stamp integer)'
         c.execute(s1)
     db.commit()
     db.close()
 
 
-def _db_init_from_tokens(fname):
+def db_init_from_tokens(fname):
     ''' fname 为 tokens.json，从 tokens.json 中提取被代理主机信息，然后
         更新 hosts_state 表，初始 isLive 都设置为 0
     '''
@@ -87,16 +87,48 @@ def _db_init_from_tokens(fname):
     s0 = 'delete from hosts_state'
     c.execute(s0)
 
+    t = time.time()
     for ip in ips:
-        s1 = 'insert into hosts_state values("%s", 0)' % (ip)
+        s1 = 'insert into hosts_state values("%s", 0, %d)' % (ip, t)
         c.execute(s1)
 
     db.commit()
     db.close()
 
 
+def db_check_timeout(curr_time, timeout = 10):
+    ''' 修改超时的记录，默认 10 秒超时 
+
+        WARNING: 必须保证 _db_init() 有效
+    '''
+    s0 = 'update hosts_state set isLive=0 where last_stamp < %d' % (curr_time - timeout)
+    db = sqlite3.connect(DB_FNAME)
+    c = db.cursor()
+    c.execute(s0)
+    db.commit()
+    db.close()
+
+
+def db_update(remote_ip):
+    ''' 更新 remote_ip 对应的记录，isLive 修改为 1，last_stamp 修改为当前时间 
+
+        WARNING: 必须保证 _db_init() 有效
+                 如果 remote_ip 不在 hosts_state，不必关心，因为非被代理主机不会发送 pong 的
+    '''
+    s0 = 'update hosts_state set isLive=1, last_stamp=%d where ip="%s"' % (time.time(), remote_ip)
+    db = sqlite3.connect(DB_FNAME)
+    c = db.cursor()
+    c.execute(s0)
+    db.commit()
+    db.close()
+
+    
+
 if __name__ == '__main__':
-    _db_init_from_tokens('../common/tokens.json')
+    db_init_from_tokens('../common/tokens.json')
+    db_update("192.168.12.33")
+    time.sleep(15)
+    db_check_timeout(time.time())
     sys.exit()
 
     db = DbOp('proxied_hosts.db')
