@@ -7,7 +7,11 @@
 #################################################################
 import sqlite3
 
-
+# XXX: 下面对 sql 语句的使用，可能有问题,
+#      sql 语句中的 char/vchar 类型，必须使用 ""，如
+#      insert into hosts_state values("123.123.123.123", 1)
+#      所以应该使用 'insert into %s values("%s", %d)' % ('hosts_state', '123.123.123.123', 1)
+#      才行吧
 class DbOp:
     def __init__(self, db_name):
         self.conn = sqlite3.connect(db_name)
