@@ -14,6 +14,10 @@ import uty_token
 import datetime
 import select
 
+PORT = 2222
+TOTAL_TIME_STAMP = 60
+PING_TIME_STAMP = 10
+PONG_TIME_STAMP = 15
 hds =  uty_token.gather_hds('../common/tokens.json');
 hips = []
 for hd in hds:
@@ -37,27 +41,39 @@ db.close()
 #      如果绑定了 localhost,则只能接收到 localhost 发送的数据
 #      当 socket 没有绑定 port 时，会在第一次调用 sendto/send 时
 #      自己绑定一个未被占用的端口
-address = ('127.0.0.1', 31500)
+#address = ('127.0.0.1', 31500)
 sock = socket.socket(AF_INT, SOCK_DGRAM)
-sock.bind(address)
+#sock.bind(address)
 
 db = DbOp('Proxied_hosts.db')
 
+def alterTableValue(value):
+    db = dbop.dbop('proxied_hosts')
+    db.altervalue('hosts_state', (str(value[0]), value[1]))
+    db.close()
+
+total_last_time = datetime.datetime.now()
+
 while True:
-    result = select.select([sock], [], [], 10)
+    now = datetime.datetime.now()
+    if (now - total_last_time > TOTAL_TIME_STAMP:
+        for e in temps:
+            sock.sendto('ping', (e, PORT)) 
+            total_last_time = now
+
+    result = select.select([sock], [], [], PING_TIME_STAMP)
     if result == 0:
         for e in temps:
             if temps[e].isLive = 1:
                 now = datetime.datetime.now()
-                if now - temps[e].timestamp > 20
+                if (now - temps[e].timeStamp).seconds > PONG_TIME_STAMP
                     temps[e].isLive = 0;
-                    db = dbop.dbop('proxied_hosts')
-                    db.altervalue('hosts_state', (str(e), 0))
-                    db.close()
+                    alterTableValue((str(e), 0))
             if temps[e].isLive = 0:
-                sock.sendto('ping', (e, 222))
+                sock.sendto('ping', (e, PORT))
     else if result == -1:
         print 'error'
+        continue
     else:
         data, address = sock.recvfrom(10)
         now = datetime.datetime.now()
@@ -65,11 +81,9 @@ while True:
             e = address[0]
             if temps[e].isLive == 0:
                 temps[e].isLive = 1 
-                db = DbOp.DbOp('proxied_hosts')
-                db.alterValue('hosts_state', (str(e), 1))
-                db.close()
+                alterTableValue((str(e), 1))
             if temps[e].isLive == 1:
                 temps[e].timeStamp = now
 
- vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
