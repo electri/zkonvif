@@ -18,24 +18,8 @@ PORT = 2222
 TOTAL_TIME_STAMP = 60
 PING_TIME_STAMP = 10
 PONG_TIME_STAMP = 15
-hds =  uty_token.gather_hds('../common/tokens.json');
-hips = []
-for hd in hds:
-    hips.append(hd['ip'])
-    
-db = DbOp.DbOp('proxied_hosts.db')
-db.emptyTable('hosts_state')
+temps = DbOp.loadFile('../common/tokens.json');
 #key: ip, value {islive, timestamp}
-temps = {}
-for hip in hips:
-    print hip
-    temps.update({str(hip):{'isLive':0, 'timesstamp':None}})
-print temps    
-for hip in hips:
-#FIXME:崩溃,往表里面不能插入 unicode
-    db.insertTable('hosts_state', (str(hip), 0))
-
-db.close()
     
 # XXX: 这里为什么要绑定？而且还绑定了 localhost?
 #      如果绑定了 localhost,则只能接收到 localhost 发送的数据
@@ -44,13 +28,6 @@ db.close()
 #address = ('127.0.0.1', 31500)
 sock = socket.socket(AF_INT, SOCK_DGRAM)
 #sock.bind(address)
-
-db = DbOp('Proxied_hosts.db')
-
-def alterTableValue(value):
-    db = dbop.dbop('proxied_hosts')
-    db.altervalue('hosts_state', (str(value[0]), value[1]))
-    db.close()
 
 total_last_time = datetime.datetime.now()
 
@@ -68,7 +45,7 @@ while True:
                 now = datetime.datetime.now()
                 if (now - temps[e].timeStamp).seconds > PONG_TIME_STAMP
                     temps[e].isLive = 0;
-                    alterTableValue((str(e), 0))
+                    DbOp.alterTableValue((str(e), 0))
             if temps[e].isLive = 0:
                 sock.sendto('ping', (e, PORT))
     else if result == -1:
@@ -81,7 +58,7 @@ while True:
             e = address[0]
             if temps[e].isLive == 0:
                 temps[e].isLive = 1 
-                alterTableValue((str(e), 1))
+                DbOp.alterTableValue((str(e), 1))
             if temps[e].isLive == 1:
                 temps[e].timeStamp = now
 

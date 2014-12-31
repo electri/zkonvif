@@ -51,7 +51,32 @@ class DbOp:
 
     def close(self):
         self.conn.close()
+        
+    def alterTableValue(value):
+        db = DbOp.DbOp('Proxied_hosts.db')
+        db = dbop.dbop('proxied_hosts')
+        db.altervalue('hosts_state', (str(value[0]), value[1]))
+        db.close()
 
+    def LoadTable(fname):
+        hds =  uty_token.gather_hds(fname);
+        hips = []
+        for hd in hds:
+            hips.append(hd['ip'])
+            
+        db = DbOp.DbOp('proxied_hosts.db')
+        db.emptyTable('hosts_state')
+        temps = {}
+        for hip in hips:
+            print hip
+            temps.update({str(hip):{'isLive':0, 'timesstamp':None}})
+        print temps    
+        for hip in hips:
+        #FIXME:崩溃,往表里面不能插入 unicode
+            db.insertTable('hosts_state', (str(hip), 0))
+
+        db.close()
+        return temps
 
 
 
