@@ -429,7 +429,7 @@ def livingS(url):
     rc = {}
     try:
         living_info = client.factory.create('ns0:LivingInfo')
-        living_list = client.service.LivingD()['message']['LivingList'][0]
+        living_list = client.service.Living()['message']['LivingList'][0]
         living_info['IsStartFilmLiving'] = 'True'
         living_info['IsSynRecord'] = 'False'
 
@@ -488,7 +488,7 @@ def ReslivingS(ip,port,app):
     rc['resulr'] = 'ok'
     rc['info'] = ''
     try:
-        res_living_info_d = client.service.RTSPLivingD()['message']
+        res_living_info_d = client.service.RTSPLiving()['message']
         res_living_info_d['App'] = app
         res_living_info_d['ResServerIP'] = ip
         res_living_info_d['ResServerPort'] = port
