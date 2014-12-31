@@ -23,26 +23,26 @@ class DbOp:
     def insertTable(self, table_name, value):
         insert_str = 'INSERT INTO %s VALUES %s'%(table_name, value)
         
-        self.baseOp(insert_str)
+        self._db_baseOp(insert_str)
 
     def emptyTable(self, table_name):
         empty_str = 'DELETE FROM %s'%(table_name)
-        self.baseOp(empty_str)
+        self._db_baseOp(empty_str)
     
     def selectByOpt(self, table_name, opt):
         select_str = "SELECT * FROM %s WHERE %s"%(table_name, opt)
         #FIXME:注意,返回值是[]或(),需要确认 ...
-        return self.baseOp(select_str, True)
+        return self._db_baseOp(select_str, True)
 
     def selectAll(self, table_name):
         select_str = 'SELECT * FROM %s'%(table_name)
-        return self.baseOp(select_str, True)
+        return self._db_baseOp(select_str, True)
         
     def alterValue(self, table_name, value):
         insert_str = 'REPLACE INTO %s VALUES %s'%(table_name, value)
-        return self.baseOp(insert_str)
+        return self._db_baseOp(insert_str)
 
-    def baseOp(self, cmd, query = False): 
+    def _db_baseOp(self, cmd, query = False): 
         c = self.conn.cursor()
         c.execute(cmd)
         if not query:
@@ -52,31 +52,32 @@ class DbOp:
     def close(self):
         self.conn.close()
         
-    def alterTableValue(value):
-        db = DbOp.DbOp('Proxied_hosts.db')
-        db = dbop.dbop('proxied_hosts')
-        db.altervalue('hosts_state', (str(value[0]), value[1]))
-        db.close()
+def DbAlterTableValue(value):
+    db = DbOp('proxied_hosts.db')
+    db.altervalue('hosts_state', (str(value[0]), value[1]))
+    db.close()
 
-    def LoadTable(fname):
-        hds =  uty_token.gather_hds(fname);
-        hips = []
-        for hd in hds:
-            hips.append(hd['ip'])
-            
-        db = DbOp.DbOp('proxied_hosts.db')
-        db.emptyTable('hosts_state')
-        temps = {}
-        for hip in hips:
-            print hip
-            temps.update({str(hip):{'isLive':0, 'timesstamp':None}})
-        print temps    
-        for hip in hips:
-        #FIXME:崩溃,往表里面不能插入 unicode
-            db.insertTable('hosts_state', (str(hip), 0))
+def DbLoadTable(fname):
+    hds =  uty_token.gather_hds(fname);
+    hips = []
+    for hd in hds:
+        if hd['token'] == '0':
+            continue
+        hips.append(hd['ip'])
+        
+    db = DbOp.DbOp(DB_FNAME)
+    db.emptyTable('hosts_state')
+    temps = {}
+    for hip in hips:
+        print hip
+        temps.update({str(hip):{'isLive':0, 'timesstamp':None}})
+    print temps    
+    for hip in hips:
+    #FIXME:崩溃,往表里面不能插入 unicode
+        db.insertTable('hosts_state', (str(hip), 0))
 
-        db.close()
-        return temps
+    db.close()
+    return temps
 
 
 
@@ -142,7 +143,7 @@ def db_update(remote_ip):
                  如果 remote_ip 不在 hosts_state，不必关心，因为非被代理主机不会发送 pong 的
     '''
     s0 = 'update hosts_state set isLive=1, last_stamp=%d where ip="%s"' % (time.time(), remote_ip)
-    db = sqlite3.connect(DB_FNAME)
+    db = sqlite3.connect(DB_FNAME) 
     c = db.cursor()
     c.execute(s0)
     db.commit()
