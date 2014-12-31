@@ -37,9 +37,9 @@ db.close()
 #      如果绑定了 localhost,则只能接收到 localhost 发送的数据
 #      当 socket 没有绑定 port 时，会在第一次调用 sendto/send 时
 #      自己绑定一个未被占用的端口
-address = ('127.0.0.1', 31500)
+#address = ('127.0.0.1', 31500)
 sock = socket.socket(AF_INT, SOCK_DGRAM)
-sock.bind(address)
+#sock.bind(address)
 
 db = DbOp('Proxied_hosts.db')
 
@@ -49,7 +49,7 @@ while True:
         for e in temps:
             if temps[e].isLive = 1:
                 now = datetime.datetime.now()
-                if now - temps[e].timestamp > 20
+                if (now - temps[e].timestamp).seconds > 20
                     temps[e].isLive = 0;
                     db = dbop.dbop('proxied_hosts')
                     db.altervalue('hosts_state', (str(e), 0))
@@ -58,6 +58,7 @@ while True:
                 sock.sendto('ping', (e, 222))
     else if result == -1:
         print 'error'
+        continue
     else:
         data, address = sock.recvfrom(10)
         now = datetime.datetime.now()
@@ -71,5 +72,5 @@ while True:
             if temps[e].isLive == 1:
                 temps[e].timeStamp = now
 
- vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
