@@ -55,7 +55,7 @@ def _x86_rtmp_living(ip):
     rc['info'] = ''
 
     try:
-        req = urllib2.Request('http://192.168.12.111:50001/repeater/prepublishbatch')
+        req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublishbatch')
         data = _x86_rtmp_living_data()
         data = json.dumps(data)
 
