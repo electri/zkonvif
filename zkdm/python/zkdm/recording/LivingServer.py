@@ -64,8 +64,29 @@ def _x86_rtmp_living(ip):
         urls = []
         urls = content['content']
         movie_url = rtmp_ip = port = app = ''
+        infos = []
 
         for url in urls:
+            info = {}
+            info['uid'] = url['uid']
+            info['rtmp_repeater'] = url['rtmp_repeater']
+            if 'teacher' in url['uid']:
+                info['card_info'] = 'card0'
+            if 'teacher_full' in url['uid']:   
+                info['card_info'] = 'card1'
+            if 'student' in url['uid']:
+                info['card_info'] = 'card2'
+            if 'student_full' in url['uid']:               
+                info['card_info'] = 'card3'
+            if 'vga' in url['uid']: 
+                info['card_info'] = 'card4'
+            if 'blackboard_writing' in url['uid']:
+                info['card_info'] = 'card5'
+            if 'movie' in url['uid']:   
+                info['card_info'] = 'card6'
+
+            infos.append(info)
+
             if 'teacher' in url['rtmp_repeater']:
                 #movie_url = url['rtmp_repeater']
                 #livingS(movie_url)
@@ -82,7 +103,7 @@ def _x86_rtmp_living(ip):
         _rcmd = RecordingCommand()
         rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
         if rc['result'] == 'ok':
-            rc['info'] = urls
+            rc['info'] = infos
     except Exception as err:
         rc['result'] = 'error'
         rc['info'] = str(err)
