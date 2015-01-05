@@ -14,6 +14,8 @@ sys.path.append('../host')
 #import Stat
 from common.utils import zkutils
 from common.uty_token import *
+import thread 
+import pping
 
 _tokens = load_tokens("../common/tokens.json")
 
@@ -145,19 +147,17 @@ def make_app():
             url(r'/dm/([^/]+)/(.*)', ServiceHandler),
             url(r'/dm/internal', InternalHandler),
             ])
-
+    
 def main():
 
     _zkutils = zkutils()
     _myip = _zkutils.myip_real()
     _mac = _zkutils.mymac()
-#    regHt =  RegHost(_myip, _mac)
-#    regHt.start()
     global rh, _tokens
     
     RegHost(gather_hds_from_tokens(_tokens))
     rh = RegHt(gather_sds_from_tokens(_tokens, "dm"))
-
+    thread.start_new_thread(ping,('../common/tokens'))
     # 服务管理器，何时 close ??
     global _sm
     _sm = ServicesManager.ServicesManager(_myip, _myip)
