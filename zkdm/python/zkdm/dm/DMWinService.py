@@ -164,10 +164,12 @@ def main():
     sds = gather_sds_from_tokens(_tokens, "dm")
     sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
     rh = RegHt(sds)
-    thread.start_new_thread(ping,('../common/tokens'))
+    # 启动 ping
+    thread.start_new_thread(ping_all,('../common/tokens'))
     # 服务管理器，何时 close ??
     global _sm
     _sm = ServicesManager.ServicesManager(_myip, _myip)
+
     app = make_app()
     global DMS_PORT
     app.listen(DMS_PORT)
