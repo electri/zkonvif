@@ -14,7 +14,7 @@ import socket
 sys.path.append('../common')
 import uty_token
 import select, time
-
+import os 
 
 TARGET_PORT = 11011
 
@@ -29,6 +29,7 @@ def _send_pings(fd, ips):
 def ping_all(fname):
     ''' fname 为 tokens.json '''
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
     ips = db_init_from_tokens(fname)
 
     last_send_ping = 0

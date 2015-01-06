@@ -138,6 +138,9 @@ def main():
 
         stype = 'recording'
         reglist = gather_sds('recording', '../common/tokens.json')
+        service_url = r'http://<ip>:10006/recording/0/recording'
+        local_service_desc = {'type':stype, 'id':'recording', 'url':service_url}
+        reglist.append(local_service_desc)
         global rh
         rh = RegHt(reglist)
 

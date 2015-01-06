@@ -1,16 +1,26 @@
-/** 建立到代理主机的心跳；
+/** 建立到代理主机的心跳, 通过组播方式，将自己的信息声明给代理服务器
 
   	启动后，创建udp端口，在上面接收数据，如果受到 ping，则认为发送者就是代理主机，
 	随后，每隔 10 秒朝代理主机发送一个 pong 包。
 
 	如果再次收到 ping，更新代理主机的地址，继续 pong
+
+
+	组播的内容，通过管道获取
+		echo -ne "xxxxxx" > ./pong
+
+	  或者指定文件：
+		./pong -f info
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef WIN32
 #	include <winsock2.h>
+#	include <time.h>
 	typedef int socklen_t;
+#	define __func__ __FUNCTION__
+#	define snprintf _snprintf
 #else
 #	include <sys/types.h>
 #	include <sys/socket.h>
@@ -20,23 +30,38 @@
 #	include <errno.h>
 #	include <string.h>
 #	include <unistd.h>
-#	include <sys/time.h>
 #	include <fcntl.h>
+#	include <sys/time.h>
 	typedef int SOCKET;
 #endif 
 
-static int _interval = 3; // 缺省间隔周期，秒
-static int _port = 11011;	// 缺省udp接收端口
-static int _ping_interval = 60;	// 代理主机给 online 发送 ping 的时间间隔，秒
-static int _ping_wait_cnt = 3;  // 当连续 3 * _ping_interval 收不到 ping，
+#include "commdef.h"
+
+static int _interval = 3; // 缺省间隔周期，秒.
+static int _port = PP_PORT;	// 缺省udp接收端口.
+static int _ping_interval = 60;	// 代理主机给 online 发送 ping 的时间间隔，秒.
+static int _ping_wait_cnt = 3;  // 当连续 3 * _ping_interval 收不到 ping.
 								// 则认为代理主机已经关闭，停止 pong
-static time_t _last_ping_stamp = 0; // 最后收到 ping 的时间
+static time_t _last_ping_stamp = 0; // 最后收到 ping 的时间.
 
 const char *pong = "pong", *ping = "ping";
 const int pong_size = 4, ping_size = 4;
 
-static int parse_opt(int argc, char **argv)
+// 从 fd 中读取所有数据，保存到 &info 中，需要分配内存 ...
+static void load_info(FILE *fd, char **info)
 {
+	char line[128];
+	while (fgets(line, sizeof(line), fd)) {
+		int n = strlen(*info);
+		*info = (char*)realloc(*info, n + strlen(line) + 1);
+		strcpy((*info) + n, line);
+	}
+}
+
+static int parse_opt(int argc, char **argv, char **info)
+{
+	int arg = 1;
+
 	// TODO: 应该解析，不过使用环境变量更简单 :)
 	char *p = getenv("pong_port");
 	if (p) _port = atoi(p);
@@ -50,7 +75,47 @@ static int parse_opt(int argc, char **argv)
 	p = getenv("ping_wait_cnt");
 	if (p) _ping_wait_cnt = atoi(p);
 
+	while (arg < argc) {
+		if (argv[arg][0] == '-') {
+			switch (argv[arg][1]) {
+			case 'f':
+				if (arg+1 < argc) {
+					FILE *fp = fopen(argv[arg+1], "r");
+					if (!fp) {
+						fprintf(stderr, "ERR: %s: -f <fname>\n", __FUNCTION__);
+						return -1;
+					}
+					else {
+						load_info(fp, info);
+						fclose(fp);
+					}
+
+					arg++;
+				}
+				break;
+
+			// case ...
+			}
+		}
+
+		arg++;
+	}
+
 	return 0;
+}
+
+/** 将dat内容组播 */
+static int multcast_info(SOCKET fd, const void *dat, size_t len)
+{
+	struct sockaddr_in maddr;
+	
+	maddr.sin_family = AF_INET;
+	maddr.sin_port = htons(PP_MULTCAST_PORT);
+	maddr.sin_addr.s_addr = inet_addr(PP_MULTCAST_ADDR);
+
+	fprintf(stderr, "DEBUG: %s: send %s, len=%d\n", __func__, dat, len);
+
+	return sendto(fd, (const char*)dat, len, 0, (struct sockaddr*)&maddr, sizeof(maddr));
 }
 
 int main(int argc, char **argv)
@@ -59,11 +124,19 @@ int main(int argc, char **argv)
 	struct sockaddr_in local, remote;
 	fd_set fds, fds_orig;
 	int rc;
+	const char *ip, *mac;
+	char *info = strdup("");	// 为了方便
 
-	if (parse_opt(argc, argv) < 0) {
+	if (parse_opt(argc, argv, &info) < 0) {
 		fprintf(stderr, "ERR: args parse fault!\n");
 		return -1;
 	}
+
+	if (strlen(info) == 0) {
+		load_info(stdin, &info);	// echo "xxxxx" | ./pong
+	}
+
+	fprintf(stderr, "INFO: info=%s\n", info);
 
 	fprintf(stdout, "INFO: recv udp port: %d, pong interval: %d seconds\n", 
 			_port, _interval);
@@ -109,7 +182,7 @@ int main(int argc, char **argv)
 		rc = select(fd+1, &fds, 0, 0, &tv);
 		if (rc < 0) {
 			fprintf(stderr, "ERR: select err?? (%d) %s\n", errno, strerror(errno));
-			continue;  // FIXME: 这里该怎么办？？
+			continue;  // FIXME: 这里该怎么办?
 		}
 
 		if (rc == 0) { // 超时，如果 remote 有效，就回复 pong
@@ -124,14 +197,19 @@ int main(int argc, char **argv)
 					sendto(fd, pong, pong_size, 0, (struct sockaddr*)&remote, sizeof(remote));
 				}
 			}
+
+			// 每隔10秒, 发送组播信息.
+			{
+				multcast_info(fd, info, strlen(info)+1); // 包含字符串结束符.
+			}
 		}
-		else if (FD_ISSET(fd, &fds)) { // 接收，如果是 ping，更新 remote 地址
+		else if (FD_ISSET(fd, &fds)) { // 接收，如果是 ping，更新 remote 地址.
 			struct sockaddr_in addr;
 			socklen_t alen = sizeof(addr);
 			char buf[16];
 
 			if (recvfrom(fd, buf, sizeof(buf), 0, (struct sockaddr*)&addr, &alen) > 0) {
-				if (!memcmp(buf, ping, ping_size)) { // 更新
+				if (!memcmp(buf, ping, ping_size)) { // 更新.
 					remote = addr;
 					_last_ping_stamp = time(0);
 					fprintf(stderr, "INFO: get ping from %s:%d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
