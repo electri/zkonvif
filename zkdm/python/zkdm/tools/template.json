@@ -1,0 +1,47 @@
+{
+	"comment": "模板文件对应着一个被代理主机的所有信息的生成规则，目前发现变参为 $mac, $ip, $hosttype, $token",
+
+	"mac": "$mac",				"mac_comment": "使用输入的 mac 替换",
+	"ip": "$ip",				"ip_comment": "使用输入的 ip 替换",
+	"hosttype": "$hosttype",	"hosttype_comment": "这样应该有个缺省值，如 arm，实在不行，就让工程人员加到 mac ip 文件中",
+
+	"services": {
+		"services_comment": "这里描述需要生成的服务列表",
+
+		"recording": {
+			"build_comment": "每种服务的生成，都调用 script 的脚本中的 build(desc) 方法，其中 desc 为 {} 参数传递",
+
+			"desc": {
+				"desc_comment": "这个描述信息，被 build_recording.py 解析，所以有什么内容，由脚本具体决定, recording 很简单",
+
+				"id": "CARD01",
+				"urlfmt": "http://<ip>:10006/recording/$token",
+				"private": {
+					"target_ip": "$ip",
+					"target_port": 3333
+				}
+			},
+
+			"script": "build_recording.py", "script_comment": "当前目录必须存在 build_recording.py 文件 ... "
+		},
+
+		"ptz": {
+			"script": "build_ptz.py", 
+			"desc": {
+				"desc_comment": "对于云台，可能多个，所以下面需要指定 idfmt, urlfmt, count",
+
+				"count": 3,
+				"idfmt": "card%02d",	"idfmt_comment": " 'card%02d' % c",
+				"urlfmt": "http://<ip>:10003/ptz/$token/$id",
+				"private": {
+					"arm_ip": "$ip",
+					"arm_port": "",
+					"others": "anything"
+				}
+			}
+		},
+
+		"log": {
+		}
+	}
+}

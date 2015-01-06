@@ -3,17 +3,17 @@
 	"ptzs":
 	 [
 		{
-			"name": "bd",
+			"name": "card0",
 			"config":
 			{
 				"serial": "COMX",
 				"addr":1,
-				"extent": "bd.config"
+				"extent": "card0.config"
 			}
 		},	
 		{
 			
-			"name": "teacher",
+			"name": "card2",
 			
 			"config": 
 			
@@ -23,7 +23,7 @@
 				
 				"addr":1,
 				
-				"extent": "teacher.config"
+				"extent": "card2.config"
 			
 			}
 		
@@ -31,7 +31,7 @@
 		
 		{
 			
-			"name": "student",
+			"name": "card5",
 			
 			"config": 
 			
@@ -41,7 +41,7 @@
 				
 				"addr":1,
 				
-				"extent": "student.config"
+				"extent": "card5.config"
 			
 			}
 		

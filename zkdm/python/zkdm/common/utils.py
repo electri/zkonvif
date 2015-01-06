@@ -67,7 +67,7 @@ class zkutils:
 
 
 	def mymac(self):
-		return self.__get_mymac()
+		return self.__get_mymac().upper()
 
 
 	def nicname(self):

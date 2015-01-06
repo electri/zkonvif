@@ -1,1 +1,39 @@
-{"services": [{"fork": true, "enable": true, "name": "ptz.service", "title": "云台服务", "url": "http://<ip>:10003/ptz", "path": "python ../ptz/PtzServer.py", "type": "ptz"}, {"fork": true, "enable": false, "name": "event service", "title": "事件服务", "url": "http://<ip>:10001/event", "path": "python ../event/EventServer.py", "type": "event"}, {"fork": true, "enable": false, "name": "teacher video 1", "title": "教师特写摄像头", "url": "tcp://<ip>:3000", "path": "cardlive.exe 1", "type": "eval"}, {"fork": true, "enable": true, "name": "Log.service", "title": "日志服务", "url": "http://<ip>:10005/log", "path": "python ../log/LogServer.py", "type": "log"}, {"fork": true, "enable": true, "name": "recording.service", "title": "录播服务", "url": "http://<ip>:10006/recording", "path": "python ../recording/RecordingServer.py", "type": "recording"}]}
+{
+   "services" : [
+      {
+         "enable" : true,
+         "fork" : true,
+         "url" : "http://<ip>:10003/ptz",
+         "name" : "ptz.service",
+         "type" : "ptz",
+         "path" : "python ../ptz/PtzServer.py",
+         "title" : "云台服务"
+      },
+      {
+          "enable": false,
+          "fork" : true,
+          "url" : "http://<ip>:10004/host",
+          "name" : "host",
+          "path" : "python ../host/HostUtils.py",
+          "title" : "主机服务"
+      },
+      {
+         "enable" : false,
+         "fork" : true,
+         "url" : "http://<ip>:10005/log",
+         "name" : "Log.service",
+         "type" : "log",
+         "path" : "python ../log/LogServer.py",
+         "title" : "日志服务"
+      },
+      {
+         "enable" : true,
+         "fork" : true,
+         "url" : "http://<ip>:10006/recording",
+         "name" : "recording.service",
+         "type" : "recording",
+         "path" : "python ../recording/RecordingServer.py",
+         "title" : "录播服务"
+      }
+   ]
+}

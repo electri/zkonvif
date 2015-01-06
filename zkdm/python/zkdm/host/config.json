@@ -1,22 +1,10 @@
 {
-	
-	"host":
-	
-	{
-		
-		"type" : "JP100"	
-	
+	"host": {
+		"type" : "x86"	
 	},
 
-	
-	"regHbService":
-	
-	{
-		
-		"sip" : "192.168.12.46",
-		
+	"regHbService": {
+		"sip" : "172.16.1.14",
 		"sport" :"8080" 
-	
 	}
-
 }

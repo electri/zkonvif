@@ -380,8 +380,6 @@ int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx, int sy)
 		return -1;
 	fprintf(stdout, "zv = %d\n", zv);
 	double zs = ptz_ext_get_scals(ptz, zv);
-	fprintf(stdout, "zs = %d\n", zs);
-
 	double hva = HVA / zs;
 	double vva = VVA / zs;
 

@@ -122,5 +122,8 @@ class SysInfo:
 
 if __name__ == '__main__':
 	si = SysInfo()
-	data = si.data()
-	print data
+	while True:
+		data = si.data()
+		print data
+		time.sleep(5.0)
+

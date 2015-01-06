@@ -7,6 +7,8 @@ AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([ptz/ptz.h])
 AC_CONFIG_HEADERS([config.h])
 
+AC_CANONICAL_HOST
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
@@ -26,16 +28,25 @@ AC_CHECK_HEADERS([visca/libvisca.h])
 
 # Checks for library functions.
 
-AC_CANONICAL_HOST
 
 VISCA_EXT=../../3rd/libvisca-1.0.0/visca/libvisca_posix.c
 
 PLATFORM=$(uname -r)
 
+case "$host_os" in
+	*mingw32*)
+		LDFLAGS="${LDFLAGS} -lws2_32"
+		;;
+
+	arm*)
+		CFLAGS= "${CFLAGS} -marm -DVK3344=1"
+		;;
+esac
 
 
 AC_OUTPUT([
 		Makefile
 		ptz/Makefile
 		zkutil/Makefile
+		pong/Makefile
 		])

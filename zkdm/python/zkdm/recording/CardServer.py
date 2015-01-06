@@ -425,15 +425,14 @@ class InternalHandler(RequestHandler):
 
 
 def livingS(url):
+    global client
     rc = {}
     try:
-        print url
         living_info = client.factory.create('ns0:LivingInfo')
         living_list = client.service.Living()['message']['LivingList'][0]
-        living_list = client.service.Living()['message']['IsStartFilmLiving'] = 'True'
-        living_list = client.service.Living()['message']['IsSynRecord'] = 'False'
+        living_info['IsStartFilmLiving'] = 'True'
+        living_info['IsSynRecord'] = 'False'
 
-        print living_list
         #print client.service.Living()['message']
 
         url = url[7:]
@@ -443,7 +442,8 @@ def livingS(url):
         url =url[len(port)+1:]
         app = url.split('/')[0]
         url = url[len(app)+1:]
-        stream_id = url[:-1]
+        stream_id = url[:]
+
 
         for i in range(0,len(living_list)):
             if i==0: #默认只开启一路直播
@@ -483,20 +483,33 @@ def livingS(url):
 
 	return rc
 
+def ReslivingS(ip,port,app):
+    rc = {}
+    rc['resulr'] = 'ok'
+    rc['info'] = ''
+    try:
+        res_living_info_d = client.service.RTSPLiving()['message']
+        res_living_info_d['App'] = app
+        res_living_info_d['ResServerIP'] = ip
+        res_living_info_d['ResServerPort'] = port
+        if hasattr(res_living_info_d,'IsStartResLiving'):
+            res_living_info_d['IsStartResLiving'] = 'True'
+        if hasattr(res_living_info_d,'IsStartRtmpLiving'):
+            res_living_info_d['IsStartRtmpLiving'] = 'True'
+        client.service.RTSPLivingS(res_living_info_d)
+    except Exception as err:
+        rc['result'] = 'error'
+        rc['info'] = str(err)
+    return rc
+
 
 def start_card_server():
     global client
-    wsdl_url = 'http://172.16.1.14:8086/UIServices?WSDL' 
+    wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
     try:
         client = Client(wsdl_url)
-        print client
     except:
         print 'wsdl_url is disable!'
 
 if __name__ == "__main__":
     start_card_server()
-
-
-
-
-
