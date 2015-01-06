@@ -308,6 +308,7 @@ int main(int argc, char **argv)
 				char buf[64], ip[32], mac[32];
 				rc = recvfrom(mfd, buf, sizeof(buf), 0, (struct sockaddr*)&remote, &len);
 				if (rc > 0 && sscanf(buf, "%31s %31s", ip, mac) == 2) {
+					fprintf(stderr, "DEBUG: multicast data from %s\n", inet_ntoa(remote.sin_addr));
 					update_proxied(remote.sin_addr, ip, mac);
 				}
 			}
