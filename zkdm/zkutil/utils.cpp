@@ -203,8 +203,6 @@ static bool get_all_netinfs(std::vector < NetInf > &nis)
 			if (strstr(ifa->ifa_name, "bridge"))	// 去除桥接网卡 .
 				continue;
 
-			fprintf(stderr, "name: %s, family=%d\n", ifa->ifa_name,
-				ifa->ifa_addr->sa_family);
 			if (ifa->ifa_addr
 			    && ifa->ifa_addr->sa_family == AF_LINK) {
 				/* Link layer interface */
