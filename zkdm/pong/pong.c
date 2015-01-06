@@ -25,8 +25,11 @@
 	typedef int SOCKET;
 #endif 
 
+#include "commdef.h"
+#include "../zkutil/utils.h"
+
 static int _interval = 3; // 缺省间隔周期，秒
-static int _port = 11011;	// 缺省udp接收端口
+static int _port = PP_PORT;	// 缺省udp接收端口
 static int _ping_interval = 60;	// 代理主机给 online 发送 ping 的时间间隔，秒
 static int _ping_wait_cnt = 3;  // 当连续 3 * _ping_interval 收不到 ping，
 								// 则认为代理主机已经关闭，停止 pong
@@ -53,12 +56,27 @@ static int parse_opt(int argc, char **argv)
 	return 0;
 }
 
+/** 将dat内容组播 */
+static int multcast_info(SOCKET fd, const void *dat, size_t len)
+{
+	struct sockaddr_in maddr;
+	
+	maddr.sin_family = AF_INET;
+	maddr.sin_port = htons(PP_MULTCAST_PORT);
+	maddr.sin_addr.s_addr = inet_addr(PP_MULTCAST_ADDR);
+
+	fprintf(stderr, "DEBUG: %s: send %10s\n", __func__, dat);
+
+	return sendto(fd, dat, len, 0, (struct sockaddr*)&maddr, sizeof(maddr));
+}
+
 int main(int argc, char **argv)
 {
 	SOCKET fd = -1;
 	struct sockaddr_in local, remote;
 	fd_set fds, fds_orig;
 	int rc;
+	const char *ip, *mac;
 
 	if (parse_opt(argc, argv) < 0) {
 		fprintf(stderr, "ERR: args parse fault!\n");
@@ -67,6 +85,11 @@ int main(int argc, char **argv)
 
 	fprintf(stdout, "INFO: recv udp port: %d, pong interval: %d seconds\n", 
 			_port, _interval);
+
+	ip = util_get_myip();
+	mac = util_get_mymac();
+
+	fprintf(stdout, "INFO: using local ip=%s, mac=%s\n", ip, mac);
 
 #ifdef WIN32
 	do {
@@ -123,6 +146,13 @@ int main(int argc, char **argv)
 				else {
 					sendto(fd, pong, pong_size, 0, (struct sockaddr*)&remote, sizeof(remote));
 				}
+			}
+
+			// 每隔10秒, 发送组播信息
+			{
+				char info[64];
+				snprintf(info, sizeof(info), "%s %s", ip, mac);
+				multcast_info(fd, info, strlen(info)+1); // 包含字符串结束符
 			}
 		}
 		else if (FD_ISSET(fd, &fds)) { // 接收，如果是 ping，更新 remote 地址
