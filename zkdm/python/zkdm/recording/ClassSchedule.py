@@ -73,7 +73,7 @@ class Schedule():
         像平台申请直播
         '''
         _utils = zkutils()
-        mac = utils.mymac()
+        mac = _utils.mymac()
         resopnse = urlib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime,timeout=2)
 
     def _analyse_time(self,give_time):

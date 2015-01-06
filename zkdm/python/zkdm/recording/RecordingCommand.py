@@ -10,7 +10,7 @@ class RecordingCommand():
         pass
 	
     #录像程序的命令接收端口号固定为1230
-    def send_command(self,command,ip):
+    def send_command(self,command,ip='127.0.0.1'):
         rc={}
         rc['result']='ok'
         rc['info']=''
@@ -65,8 +65,8 @@ class RecordingCommand():
 
 
 def main():
-    ss=RecordingCommand('127.0.0.1')
-    ss.start()
+    ss=RecordingCommand()
+    ss.send_command('11')
 
 if __name__ == "__main__":
     main()
