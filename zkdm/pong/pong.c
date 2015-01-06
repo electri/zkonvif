@@ -5,6 +5,9 @@
 
 	如果再次收到 ping，更新代理主机的地址，继续 pong
 
+	如果连续长时间（3分钟）没有收到 ping，则停止发送 pong
+
+	收到 ping 之前，每隔 10 秒，组播一次
 
 	组播的内容，通过管道获取
 		echo -ne "xxxxxx" > ./pong
@@ -113,7 +116,7 @@ static int multcast_info(SOCKET fd, const void *dat, size_t len)
 	maddr.sin_port = htons(PP_MULTCAST_PORT);
 	maddr.sin_addr.s_addr = inet_addr(PP_MULTCAST_ADDR);
 
-	fprintf(stderr, "DEBUG: %s: send %s, len=%d\n", __func__, dat, len);
+	fprintf(stderr, "DEBUG: %s: send %s, len=%zu\n", __func__, dat, len);
 
 	return sendto(fd, (const char*)dat, len, 0, (struct sockaddr*)&maddr, sizeof(maddr));
 }
@@ -124,6 +127,7 @@ int main(int argc, char **argv)
 	struct sockaddr_in local, remote;
 	fd_set fds, fds_orig;
 	int rc;
+	time_t last_mc, now;
 	const char *ip, *mac;
 	char *info = strdup("");	// 为了方便
 
@@ -176,6 +180,9 @@ int main(int argc, char **argv)
 	FD_ZERO(&fds_orig);
 	FD_SET(fd, &fds_orig);
 
+	multcast_info(fd, info, strlen(info)+1);	// 首先发送组播信息
+	last_mc = time(0);
+
 	while (1) {
 		struct timeval tv = { _interval, 0 };
 		fds = fds_orig;
@@ -197,11 +204,6 @@ int main(int argc, char **argv)
 					sendto(fd, pong, pong_size, 0, (struct sockaddr*)&remote, sizeof(remote));
 				}
 			}
-
-			// 每隔10秒, 发送组播信息.
-			{
-				multcast_info(fd, info, strlen(info)+1); // 包含字符串结束符.
-			}
 		}
 		else if (FD_ISSET(fd, &fds)) { // 接收，如果是 ping，更新 remote 地址.
 			struct sockaddr_in addr;
@@ -214,6 +216,16 @@ int main(int argc, char **argv)
 					_last_ping_stamp = time(0);
 					fprintf(stderr, "INFO: get ping from %s:%d\n", inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
 				}
+			}
+		}
+
+
+		// 收到 ping 之前，每隔10秒, 发送组播信息.
+		if (remote.sin_family != AF_INET) {
+			now = time(0);
+			if (now - last_mc > 10) {
+				multcast_info(fd, info, strlen(info)+1); // 包含字符串结束符.
+				last_mc = now;
 			}
 		}
 	}
