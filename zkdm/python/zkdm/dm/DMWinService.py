@@ -15,7 +15,7 @@ sys.path.append('../host')
 from common.utils import zkutils
 from common.uty_token import *
 import thread 
-import pping
+from pping import *
 
 _tokens = load_tokens("../common/tokens.json")
 
@@ -165,7 +165,7 @@ def main():
     sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
     rh = RegHt(sds)
     # 启动 ping
-    thread.start_new_thread(ping_all,('../common/tokens'))
+    thread.start_new_thread(ping_all,('../common/tokens.json',))
     # 服务管理器，何时 close ??
     global _sm
     _sm = ServicesManager.ServicesManager(_myip, _myip)
