@@ -231,10 +231,7 @@ int ptz_down(ptz_t *ptz, int speed)
 	return VISCA_SUCCESS;
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 42958ab4d0c5d72981dddf4d442d07a232a00c46
 int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 {
 	Ptz *p = (Ptz*)ptz;
@@ -243,10 +240,7 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 	TimeUsed tu(ss.str().c_str());
 	if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-<<<<<<< HEAD
 
-=======
->>>>>>> 42958ab4d0c5d72981dddf4d442d07a232a00c46
 	return VISCA_SUCCESS;
 }
 
@@ -385,7 +379,7 @@ int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx, int sy)
 	if (ptz_get_zoom(ptz, &zv) != 0)
 		return -1;
 	fprintf(stdout, "zv = %d\n", zv);
-	int zs = ptz_ext_get_scals(ptz, zv);
+	double zs = ptz_ext_get_scals(ptz, zv);
 	fprintf(stdout, "zs = %d\n", zs);
 
 	double hva = HVA / zs;
