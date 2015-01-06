@@ -152,11 +152,18 @@ def main():
 
     _zkutils = zkutils()
     _myip = _zkutils.myip_real()
+
     _mac = _zkutils.mymac()
     global rh, _tokens
     
-    RegHost(gather_hds_from_tokens(_tokens))
-    rh = RegHt(gather_sds_from_tokens(_tokens, "dm"))
+    service_url = r'http://%s:10000/dm/0/dm'%(_myip)
+    hds = gather_hds_from_tokens(_tokens)
+    hds.append({'mac': _myip, 'ip': _myip, 'type': 'dm', 'url' : service_url, 'id': 'dm'}) 
+    RegHost(hds)
+
+    sds = gather_sds_from_tokens(_tokens, "dm")
+    sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
+    rh = RegHt(sds)
     thread.start_new_thread(ping,('../common/tokens'))
     # 服务管理器，何时 close ??
     global _sm
