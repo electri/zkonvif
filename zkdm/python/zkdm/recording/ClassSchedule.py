@@ -76,6 +76,14 @@ class Schedule():
         mac = _utils.mymac()
         resopnse = urlib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime,timeout=2)
 
+    def _apply_stop_living(self):
+        '''
+        像平台申请停止直播
+        '''
+        _utils = zkutils()
+        mac = _utils.mymac()
+        resopnse = urlib2.urlopen(self.__mgrt_base_url+'living?mac='+mac+'&para=stop',timeout=2)
+
     def _analyse_time(self,give_time):
         '''
         分析是否当前任务
@@ -152,7 +160,7 @@ class Schedule():
                 _record_thread.append(thread)
 
             if _living == 'true' and _stop_delay_time>0:
-                stop_thread = threading.Timer(_stop_delay_time,StopLiving)
+                stop_thread = threading.Timer(_stop_delay_time,self._apply_stop_living)
                 stop_thread.start()
                 _record_thread.append(stop_thread)
 
