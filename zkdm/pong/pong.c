@@ -50,6 +50,29 @@ static time_t _last_ping_stamp = 0; // 最后收到 ping 的时间.
 const char *pong = "pong", *ping = "ping";
 const int pong_size = 4, ping_size = 4;
 
+// stdin 有可能阻塞 fgets 的，所以使用 select 首先进行判断
+// FIXME: windows 实现版本有问题!!!!!
+static int can_read(int fd)
+{
+#ifdef WIN32
+	int rc = 0;
+	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
+	if (WaitForSingleObject(h, 500) == WAIT_OBJECT_0) {
+		rc = 1;
+	}
+	CloseHandle(h);
+	return rc;
+#else
+	fd_set rds;
+	struct timeval tv = { 0, 0 };
+
+	FD_ZERO(&rds);
+	FD_SET(fd, &rds);
+
+	return select(fd+1, &rds, 0, 0, &tv) == 1;
+#endif
+}
+
 // 从 fd 中读取所有数据，保存到 &info 中，需要分配内存 ...
 static void load_info(FILE *fd, char **info)
 {
@@ -116,7 +139,7 @@ static int multcast_info(SOCKET fd, const void *dat, size_t len)
 	maddr.sin_port = htons(PP_MULTCAST_PORT);
 	maddr.sin_addr.s_addr = inet_addr(PP_MULTCAST_ADDR);
 
-	fprintf(stderr, "DEBUG: %s: send %s, len=%zu\n", __func__, dat, len);
+	fprintf(stderr, "DEBUG: %s: send %s, len=%u\n", __func__, dat, len);
 
 	return sendto(fd, (const char*)dat, len, 0, (struct sockaddr*)&maddr, sizeof(maddr));
 }
@@ -136,9 +159,13 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	if (strlen(info) == 0) {
+#ifdef WIN32
+#else
+
+	if (strlen(info) == 0 && can_read(0)) { // stdin = 0
 		load_info(stdin, &info);	// echo "xxxxx" | ./pong
 	}
+#endif
 
 	fprintf(stderr, "INFO: info=%s\n", info);
 
