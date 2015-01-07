@@ -1,5 +1,7 @@
 /** 建立到被代理主机们之间的联系：
   	如果没有收到被代理主机的 pong，则持续发送 ping
+
+	加入组播地址，接收来自未指定的被代理主机的信息
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,6 +34,7 @@ typedef struct Target {
 	struct sockaddr_in remote;	// 目标主机 socket addr
 	int online;		// 是否在线
 	time_t last_updated;	// 最后收到 pong 的时间
+	char *private;	// 来自 target 的私有描述，对应的，通过target发送组播包中的信息
 } Target;
 
 static Target _target_hosts = { 0 };	// 用于保存所有被代理主机的信息
@@ -63,6 +66,7 @@ static int load_target_hosts()
 	t->remote.sin_port = htons(PP_PORT);
 	t->remote.sin_addr.s_addr = inet_addr("127.0.0.1");
 	t->online = 0;
+	t->private = strdup(""); // :)
 
 	// a test target
 	t2->next = t;
@@ -70,6 +74,7 @@ static int load_target_hosts()
 	t2->remote.sin_port = htons(11010); // XXX: 故意模拟不存在的
 	t2->remote.sin_addr.s_addr = inet_addr("127.0.0.1");
 	t->online = 0;
+	t->private = strdup(""); // :)
 	
 	_target_hosts.next = t2;
 
@@ -145,10 +150,10 @@ static int update_pong(int port, struct in_addr addr)
 }
 
 // 根据ip检查是否以及在target列表中了?
-static Target *find_target(const char *ip)
+static Target *find_target(struct in_addr addr)
 {
 	Target *t = _target_hosts.next;
-	uint32_t d = inet_addr(ip);
+	uint32_t d = addr.s_addr;
 
 	while (t) {
 		if (d == t->remote.sin_addr.s_addr) {
@@ -162,22 +167,18 @@ static Target *find_target(const char *ip)
 }
 
 // 收到组播信息,更新初始列表
-static int update_proxied(struct in_addr addr, const char *ip, const char *mac)
+static int update_proxied(struct in_addr addr, const char *data)
 {
-	Target *t = find_target(ip);
+	Target *t = find_target(addr);
 	if (!t) {
-		fprintf(stderr, "INFO: %s: ip=%s, mac=%s\n", __FUNCTION__, ip, mac);
-
 		t = (Target*)malloc(sizeof(Target));
 		t->remote.sin_family = AF_INET;
 		t->remote.sin_port = htons(PP_PORT);
-		t->remote.sin_addr.s_addr = inet_addr(ip);
+		t->remote.sin_addr = addr;
 		t->online = 0;
+		t->private = strdup(data);
 		t->next = _target_hosts.next;
 		_target_hosts.next = t;
-	}
-	else {
-		fprintf(stderr, "INFO: %s: ip=%s has been added to target_list\n", __func__, ip);
 	}
 
 	return 0;
@@ -305,11 +306,10 @@ int main(int argc, char **argv)
 				// 收到组播消息, "ip mac" 格式, 更新到被代理主机信息表中 :(
 				struct sockaddr_in remote;
 				socklen_t len = sizeof(remote);
-				char buf[64], ip[32], mac[32];
+				char buf[65536];  // 
 				rc = recvfrom(mfd, buf, sizeof(buf), 0, (struct sockaddr*)&remote, &len);
-				if (rc > 0 && sscanf(buf, "%31s %31s", ip, mac) == 2) {
-					fprintf(stderr, "DEBUG: multicast data from %s\n", inet_ntoa(remote.sin_addr));
-					update_proxied(remote.sin_addr, ip, mac);
+				if (rc > 5 && strncmp(buf, "pong\n", 5) == 0) {
+					update_proxied(remote.sin_addr, buf+5);
 				}
 			}
 

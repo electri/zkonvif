@@ -152,7 +152,7 @@ int main(int argc, char **argv)
 	int rc;
 	time_t last_mc, now;
 	const char *ip, *mac;
-	char *info = strdup("");	// 为了方便
+	char *info = strdup("pong\n"); // 为了方便过滤
 
 	if (parse_opt(argc, argv, &info) < 0) {
 		fprintf(stderr, "ERR: args parse fault!\n");
@@ -161,8 +161,7 @@ int main(int argc, char **argv)
 
 #ifdef WIN32
 #else
-
-	if (strlen(info) == 0 && can_read(0)) { // stdin = 0
+	if (strlen(info) == 5 && can_read(0)) { // info="pong\n", stdin = 0
 		load_info(stdin, &info);	// echo "xxxxx" | ./pong
 	}
 #endif
