@@ -179,6 +179,7 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 	if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
 	{
 		fprintf(stdout, "first get packet fail from ptz\n");
+		VISCA_set_pantilt_reset(iface, camera);
 		return VISCA_FAILURE;
 	}
 	iface->type = iface->ibuf[1] & 0xF0;
