@@ -5,6 +5,8 @@
   		mac: 直接使用 mac 作为 tokenid ？？
 		ip:
 		type: target 类型，已知有 jp100hd, jp100dgl, 3100, 2100 ...
+        info: 来自 target 组播包的完整信息
+        last_stamp: 最后收到 pong 的时间
 
   services: 保存 services 信息，将用于服务注册
   		mac:
@@ -15,3 +17,29 @@
 		online: 是否在线？
 		private: 服务私有属性
 
+
+
+target 组播自己的主机信息和服务信息，每行一条，定义如下：
+
+# 为注释行
+# mac 地址，linux下可以使用 cat /sys/class/net/eth0/address | sed s/://g 生成
+mac=xxxx
+# host type 目前可能 jp100hd, jp100dgl, 3100, 2200 ....
+hosttype=3100
+# 以下为服务描述，每个 stype 将说明启动一个新的服务描述
+stype=ptz
+# 服务id
+id=teacher
+# 本服务实例私有描述，等号后，可以包含随意信息，但不能包含 \n
+private=port:3366;protocol=tcp;...
+# 新的服务实例开始了
+stype=ptz
+id=student
+private=port:3366;protocol=tcp;...
+# 另一种服务类型
+stype=recording
+id=recording
+private=....
+....
+
+以上 mac, hosttype, stype, id, private 字段必须都包含
