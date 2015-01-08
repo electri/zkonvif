@@ -1,0 +1,15 @@
+实现代理主机与target之间的ping/pong，收集 targets 的信息 + pong 的状态，保存到 db 中，供其它模块使用
+
+表：
+  hosts: 保存 target 主机信息，将用于主机注册
+  		mac: 直接使用 mac 作为 tokenid ？？
+		ip:
+		type: target 类型，已知有 jp100hd, jp100dgl, 3100, 2100 ...
+
+  services: 保存 services 信息，将用于服务注册
+  		mac:
+		ip: ?
+		type:
+		id:
+		url:
+		online: 是否在线？
