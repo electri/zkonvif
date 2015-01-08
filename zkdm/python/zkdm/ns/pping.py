@@ -12,6 +12,7 @@
 from socket import *
 import select, struct, time
 import dbhlp as db
+import target
 
 
 MCAST_ADDR = "239.10.10.7"
@@ -53,46 +54,15 @@ def __recv_pong(s):
     return -1
 
 
-def __parse_mcast(info, ip):
-    ''' 收到来自 target 的主机/服务描述,
-
-        target 组播自己的主机信息和服务信息，每行一条，定义如下：
-
-        # 为注释行
-        # mac 地址，linux下可以使用 cat /sys/class/net/eth0/address | sed s/://g 生成
-        mac=xxxx
-        # host type 目前可能 jp100hd, jp100dgl, 3100, 2200 ....
-        hosttype=3100
-        # 以下为服务描述，每个 stype 将说明启动一个新的服务描述
-        stype=ptz
-        # 服务id
-        id=teacher
-        # 本服务实例私有描述，等号后，可以包含随意信息，但不能包含 \n
-        private=port:3366;protocol=tcp;...
-        # 新的服务实例开始了
-        stype=ptz
-        id=student
-        private=port:3366;protocol=tcp;...
-        # 另一种服务类型
-        stype=recording
-        id=recording
-        private=....
-        ....
-        
-        以上 mac, hosttype, stype, id, private 字段必须都包含
-    '''
-    # TODO: 实现上述解析，同时要考虑 target 端配置起来是否复杂？
-    pass
-
-
 def __recv_mcast(s):
     ''' 收到组播信息 '''
     try:
         data, addr = s.recvfrom(4096)
         # 前5个字节，必须是 pong\n
         if data[0:5] == 'pong\n':
-            __parse_mcast(data[6:], addr[0])
             print data[6:]
+            tdescr = target.parse_target_descr(data[6:])
+            # TODO: 将 tdescr 保存到数据库中 ...
     except:
         pass
     return 0
