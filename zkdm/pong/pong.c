@@ -7,7 +7,7 @@
 
 	如果连续长时间（3分钟）没有收到 ping，则停止发送 pong
 
-	收到 ping 之前，每隔 10 秒，组播一次
+	收到 ping 之前，每隔 30 秒，组播一次
 
 	组播的内容，通过管道获取
 		echo -ne "xxxxxx" > ./pong
@@ -139,7 +139,7 @@ static int multcast_info(SOCKET fd, const void *dat, size_t len)
 	maddr.sin_port = htons(PP_MULTCAST_PORT);
 	maddr.sin_addr.s_addr = inet_addr(PP_MULTCAST_ADDR);
 
-	fprintf(stderr, "DEBUG: %s: send %s, len=%u\n", __func__, dat, len);
+	//fprintf(stderr, "DEBUG: %s: send %s, len=%u\n", __func__, dat, len);
 
 	return sendto(fd, (const char*)dat, len, 0, (struct sockaddr*)&maddr, sizeof(maddr));
 }
@@ -246,10 +246,10 @@ int main(int argc, char **argv)
 		}
 
 
-		// 收到 ping 之前，每隔10秒, 发送组播信息.
+		// 收到 ping 之前，每隔30秒, 发送组播信息.
 		if (remote.sin_family != AF_INET) {
 			now = time(0);
-			if (now - last_mc > 10) {
+			if (now - last_mc > 30) {
 				multcast_info(fd, info, strlen(info)+1); // 包含字符串结束符.
 				last_mc = now;
 			}

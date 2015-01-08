@@ -29,12 +29,12 @@ def __db_init():
 
     if not __tab_is_exist(c, "hosts"):
         s1 = 'create table hosts(mac varchar(64), ip varchar(64), type varchar(16),\
-                info varchar(4096), last_stamp integer)'
+                last_stamp integer)'
         c.execute(s1)
 
     if not __tab_is_exist(c, "services"):
         s1 = 'create table services(mac varchar(64), ip varchar(64), type varchar(16),\
-                id varchar(16), url varchar(256), online integer, private varchar(1024))'
+                id varchar(16), online integer, private varchar(1024))'
         c.execute(s1)
 
     db.commit()
@@ -47,6 +47,14 @@ def update_target_pong(stamp, ip):
     c = db.cursor()
     s1 = 'update hosts set last_stamp=%d where ip="%s"' % (stamp, ip)
     c.execute(s1)
+
+    s0 = 'select mac from hosts where ip="%s"' % (ip)
+    result = c.execute(s0)
+    for r in result:
+        mac = r[0]
+        s1 = 'update services set online=1 where online=0 and mac="%s"' % (mac)
+        c.execute(s1)
+
     db.commit()
     db.close()
 
@@ -74,9 +82,55 @@ def get_targets_ip(online = False):
     else:
         s0 = 'select ip from hosts where %d-last_stamp > 10' % (time.time())
     result = c.execute(s0)
-    ips = [r[0] for r in result]
+    ips = []
+    for r in result:
+        ips.append(r[0])
+
     db.close()
     return ips
+
+
+def update_target_descr(t):
+    ''' t 为解析后的组播信息
+        
+            {
+                "mac": xxx,
+                "ip": xxx,
+                "hosttype": xxx,
+
+                "services": [
+                    { 'type': 'ptz', 'id': 'teacher', 'private': 'xx' },
+                    { 'type': 'ptz', 'id': 'student', 'private': 'xx' },
+                    { 'type': 'recording', 'id': 'recording', 'private': 'xx' },
+                    ....
+                ]
+            }
+    '''
+    db = sqlite3.connect(DB_FNAME)
+    c = db.cursor()
+
+    try:
+
+        s0 = 'delete from hosts where mac="%s"' % (t['mac'])
+        c.execute(s0)
+    
+        s1 = 'insert into hosts values ("%s", "%s", "%s", %d)' % (t['mac'], t['ip'], t['hosttype'], time.time())
+        c.execute(s1)
+    
+        s2 = 'delete from services where mac="%s"' % (t['mac']) # 删除所有对应的服务
+        c.execute(s2)
+    
+        for s in t['services']:
+            s3 = 'insert into services values ("%s", "%s", "%s", "%s", %d, "%s")' %\
+                    (t['mac'], t['ip'], s['type'], s['id'], 0, s['private'])
+            
+            c.execute(s3)
+                 
+        db.commit()
+        db.close()
+
+    except Exception as e:
+        print e
 
 
 __db_init()

@@ -1,0 +1,18 @@
+mac=AABB112233CC
+hosttype=tester
+
+stype=ptz
+id=teacher
+private=port=3344,mode=http,url=/ptz
+
+stype=ptz
+id=student
+private=mode=tcp,sock_listen_port=9999
+
+stype=recording
+id=recording
+private=port=1122
+
+stype=log
+id=0
+private=url: /log/query

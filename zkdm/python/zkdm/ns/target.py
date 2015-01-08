@@ -9,6 +9,13 @@
 #################################################################
 
 
+def __is_valid_target(h):
+    return 'mac' in h and 'hosttype' in h
+
+def __is_valid_service(s):
+    return 'type' in s and 'id' in s and 'private' in s
+
+
 def parse_target_descr(info):
     '''
         target 组播自己的主机信息和服务信息，每行一条，定义如下：
@@ -61,14 +68,14 @@ def parse_target_descr(info):
         if line[0] == '#':
             continue
 
-        kvs = line.split('=', 2)
+        kvs = line.split('=', 1)
         if len(kvs) != 2:
             continue
 
         if st == 'h': # 解析 host
             if kvs[0] == 'stype':
                 st = 's'
-                if 'type' in s and 'id' in s and 'private' in s: # service 有效
+                if __is_valid_service(s):
                     hdescr['services'].append(s)
 
                 s = {}
@@ -78,15 +85,22 @@ def parse_target_descr(info):
         elif st == 's': # 解析 service
             if kvs[0] == 'stype':
                 st = 's'
-                if 'type' in s and 'id' in s and 'private' in s: # service 有效
+                if __is_valid_service(s):
                     hdescr['services'].append(s)
 
                 s = {}
                 s['type'] = kvs[1]
             else:
                 s[kvs[0]] = kvs[1]
-    # 别忘了检查最好一个
 
+    # 别忘了检查最后一个
+    if __is_valid_service(s):
+        hdescr['services'].append(s)
+
+    if __is_valid_target(hdescr):
+        return hdescr
+    else:
+        return {}
             
 
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4

@@ -41,17 +41,18 @@ def __open_socks():
     return s0, s1
 
 
-def __recv_pong(s):
+def __recv_pong(s, now):
     ''' 从 s 接收 pong 消息 '''
+    print "got PONG"
     try:
         data, addr = s.recvfrom(16)
         if data[0:4] == 'pong':
             target_ip = addr[0]
-            db.update_target_pong(time.time(), target_ip)
-    except:
-        pass
+            db.update_target_pong(now, target_ip)
+    except Exception as e:
+        print 'EXCEPT: __recv_pong:', e
 
-    return -1
+    return 0
 
 
 def __recv_mcast(s):
@@ -60,17 +61,20 @@ def __recv_mcast(s):
         data, addr = s.recvfrom(4096)
         # 前5个字节，必须是 pong\n
         if data[0:5] == 'pong\n':
-            print data[6:]
-            tdescr = target.parse_target_descr(data[6:])
-            # TODO: 将 tdescr 保存到数据库中 ...
-    except:
-        pass
+            info = data[5:]
+            tdescr = target.parse_target_descr(info)
+            if 'mac' in tdescr:
+                tdescr['ip'] = addr[0]
+                db.update_target_descr(tdescr)
+                print 'INFO: update mcast info from:', addr[0]
+    except Exception as e:
+        print 'EXCEPT: __recv_mcast: ', e
     return 0
 
 
-def __chk_timeout():
+def __chk_timeout(now):
     ''' 检查超时主机，如果超时，则所有对应的服务都设置为 offline '''
-    db.chk_timeout(time.time())
+    db.chk_timeout(now)
     return 0
 
 
@@ -78,6 +82,7 @@ def __send_pings(s, force):
     ''' 发送 pings '''
     ips= db.get_targets_ip(online=force)
     for ip in ips:
+        print "send PING"
         s.sendto('ping', (ip, 11011))
     return 0
 
@@ -91,21 +96,21 @@ def __main():
 
     while True:
         r,w,e = select.select([s0, s1], [], [], 10.0)
-        print r
+        t = time.time()
         if s0 in r:
-            __recv_pong(s0)
+            __recv_pong(s0, t)
 
         if s1 in r:
             __recv_mcast(s1)
         
-        t = time.time()
         if t - last_stamp_pf > 60:
             __send_pings(s0, True)
-
+            last_stamp_pf = t
         elif t - last_stamp_poff > 10:
             __send_pings(s0, False)
+            last_stamp_poff = t
 
-        __chk_timeout()
+        __chk_timeout(t)
 
 
 if __name__ == '__main__':
