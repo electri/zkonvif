@@ -117,6 +117,7 @@ class InternalHandler(RequestHandler):
             self.set_header('Content-Type', 'application/json')
             self.write(_service)
 
+_ioloop = IOLoop.instance()
 def main():
     try:
         tornado.options.parse_command_line()
@@ -150,7 +151,6 @@ def main():
         rh = RegHt(reglist)
 
         global _ioloop
-        _ioloop = IOLoop.instance()
         _ioloop.start()
 
     except Exception as error:
