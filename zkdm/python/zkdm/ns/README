@@ -13,3 +13,5 @@
 		id:
 		url:
 		online: 是否在线？
+		private: 服务私有属性
+
