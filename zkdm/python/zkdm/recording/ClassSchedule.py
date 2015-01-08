@@ -74,7 +74,15 @@ class Schedule():
         '''
         _utils = zkutils()
         mac = _utils.mymac()
-        resopnse = urlib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime,timeout=2)
+        resopnse = urllib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime,timeout=2)
+
+    def _apply_stop_living(self):
+        '''
+        像平台申请停止直播
+        '''
+        _utils = zkutils()
+        mac = _utils.mymac()
+        resopnse = urllib2.urlopen(self.__mgrt_base_url+'living?mac='+mac+'&para=stop',timeout=2)
 
     def _analyse_time(self,give_time):
         '''
@@ -152,11 +160,11 @@ class Schedule():
                 _record_thread.append(thread)
 
             if _living == 'true' and _stop_delay_time>0:
-                stop_thread = threading.Timer(_stop_delay_time,StopLiving)
+                stop_thread = threading.Timer(_stop_delay_time,self._apply_stop_living)
                 stop_thread.start()
                 _record_thread.append(stop_thread)
 
-            reload_thread = threading.Timer(3*3600, self.analyse_json)#三小时重新获取一次课表信息
+            reload_thread = threading.Timer(1*3600, self.analyse_json)#1小时重新获取一次课表信息
             _record_thread.append(reload_thread)
 
     def analyse_json(self,ip,hosttype):

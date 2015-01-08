@@ -25,6 +25,7 @@ class RecordingCommand():
             #È¥³ýUTF-8 BOM
             s.recv(3)
             message=s.recv(512)
+            message = message.strip()
             rc['info']=message
             s.close()
             return rc

@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #ifdef WIN32
 #	include <winsock2.h>
+#	include <ws2tcpip.h>
+#	include <stdint.h>
 	typedef int socklen_t;
 #else
 #	include <sys/types.h>
@@ -59,6 +61,7 @@ static void non_block(int fd)
 // 加载被代理主机的信息
 static int load_target_hosts()
 {
+#if 0
 	// a test target
 	Target *t = (Target*)malloc(sizeof(Target)), *t2 = (Target*)malloc(sizeof(Target));
 	t->next = 0;
@@ -77,6 +80,7 @@ static int load_target_hosts()
 	t->private = strdup(""); // :)
 	
 	_target_hosts.next = t2;
+#endif //
 
 	return 0;
 }
@@ -119,10 +123,8 @@ static int check_timeout()
 
 	while (target) {
 		if (target->online && now - target->last_updated > _max_interval) {
-			if (_verbose) {
-				fprintf(stderr, "WARNING: oh %s:%d TIMEOUT, to offline\n", 
-						inet_ntoa(target->remote.sin_addr), ntohs(target->remote.sin_port));
-			}
+			fprintf(stderr, "WARNING: oh %s:%d TIMEOUT, to offline\n", 
+					inet_ntoa(target->remote.sin_addr), ntohs(target->remote.sin_port));
 			target->online = 0;
 		}
 		target = target->next;
@@ -167,18 +169,32 @@ static Target *find_target(struct in_addr addr)
 }
 
 // 收到组播信息,更新初始列表
-static int update_proxied(struct in_addr addr, const char *data)
+static int update_target_private(struct in_addr addr, const char *data)
 {
 	Target *t = find_target(addr);
 	if (!t) {
+		if (_verbose) {
+			fprintf(stderr, "INFO: new target %s, private=%s\n", inet_ntoa(addr), data);
+		}
+
 		t = (Target*)malloc(sizeof(Target));
 		t->remote.sin_family = AF_INET;
 		t->remote.sin_port = htons(PP_PORT);
 		t->remote.sin_addr = addr;
-		t->online = 0;
+		t->online = 0; // XXX: 照理说收到组播包，应该按照 online 处理，但这也不是大问题 :)
 		t->private = strdup(data);
 		t->next = _target_hosts.next;
 		_target_hosts.next = t;
+	}
+	else {
+		// 更新 data
+		if (_verbose) {
+			fprintf(stderr, "INFO: update target %s, private=%s\n", inet_ntoa(addr), data);
+		}
+
+		free(t->private);
+		t->private = strdup(data);
+		t->online = 0;  // XXX:
 	}
 
 	return 0;
@@ -283,7 +299,7 @@ int main(int argc, char **argv)
 		rc = select(maxfd+1, &fds, 0, 0, &tv);
 		if (rc == -1) {
 			fprintf(stderr, "ERR: select err?? (%d) %s\n", errno, strerror(errno));
-			continue;	// FIXME: 应该如何处理呢
+			exit(1);	// FIXME: 应该如何处理呢
 		}
 		
 		if (rc == 0) { // 超时
@@ -309,7 +325,7 @@ int main(int argc, char **argv)
 				char buf[65536];  // 
 				rc = recvfrom(mfd, buf, sizeof(buf), 0, (struct sockaddr*)&remote, &len);
 				if (rc > 5 && strncmp(buf, "pong\n", 5) == 0) {
-					update_proxied(remote.sin_addr, buf+5);
+					update_target_private(remote.sin_addr, buf+5); // 跳过前面的 pong\n
 				}
 			}
 
