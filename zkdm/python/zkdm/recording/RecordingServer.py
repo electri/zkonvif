@@ -117,6 +117,7 @@ class InternalHandler(RequestHandler):
             self.set_header('Content-Type', 'application/json')
             self.write(_service)
 
+_ioloop = IOLoop.instance()
 def main():
     try:
         tornado.options.parse_command_line()
@@ -130,19 +131,26 @@ def main():
 
         global _rcmd
         _rcmd = RecordingCommand()
-        global _class_schedule
-        _class_schedule = Schedule(None)
-        _class_schedule.analyse_json('127.0.0.1','x86')
 
         start_card_server()
 
         stype = 'recording'
         reglist = gather_sds('recording', '../common/tokens.json')
+
+        #处理本机
+        service_url = r'http://<ip>:10006/recording/0/recording'
+        local_service_desc = {'type':stype, 'id':'recording', 'url':service_url}
+        reglist.append(local_service_desc)
+        _rcmd.send_command('RecordCmd=SetFileProperty&FileFormat=mp4&TotalFilePath=C:/RecordFile')
+        global _class_schedule
+        _class_schedule = Schedule(None)
+        _class_schedule.analyse_json('127.0.0.1','x86')
+
+
         global rh
         rh = RegHt(reglist)
 
         global _ioloop
-        _ioloop = IOLoop.instance()
         _ioloop.start()
 
     except Exception as error:

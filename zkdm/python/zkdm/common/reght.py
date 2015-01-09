@@ -180,6 +180,8 @@ class _ChkDBAlive:
             c = db.cursor()
             rc = c.execute(s0)
             result = []
+
+            #result = [r[0] for r in rc]
             for r in rc:
                 result.append(r[0])
             db.close()

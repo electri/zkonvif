@@ -15,7 +15,7 @@ sys.path.append('../host')
 from common.utils import zkutils
 from common.uty_token import *
 import thread 
-import pping
+from pping import *
 
 _tokens = load_tokens("../common/tokens.json")
 
@@ -152,15 +152,24 @@ def main():
 
     _zkutils = zkutils()
     _myip = _zkutils.myip_real()
+
     _mac = _zkutils.mymac()
     global rh, _tokens
     
-    RegHost(gather_hds_from_tokens(_tokens))
-    rh = RegHt(gather_sds_from_tokens(_tokens, "dm"))
-    thread.start_new_thread(ping,('../common/tokens'))
+    service_url = r'http://%s:10000/dm/0/dm'%(_myip)
+    hds = gather_hds_from_tokens(_tokens)
+    hds.append({'mac': _myip, 'ip': _myip, 'type': 'dm', 'url' : service_url, 'id': 'dm'}) 
+    RegHost(hds)
+
+    sds = gather_sds_from_tokens(_tokens, "dm")
+    sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
+    rh = RegHt(sds)
+    # 启动 ping
+    thread.start_new_thread(ping_all,('../common/tokens.json',))
     # 服务管理器，何时 close ??
     global _sm
     _sm = ServicesManager.ServicesManager(_myip, _myip)
+
     app = make_app()
     global DMS_PORT
     app.listen(DMS_PORT)

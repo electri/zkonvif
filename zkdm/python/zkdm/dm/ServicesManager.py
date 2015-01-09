@@ -186,7 +186,10 @@ class ServiceMgrt(ServicesManager):
             2. 停止时：从来不做任何事情，具体服务还需要提供自己的功能；
             3. 获取服务列表时，通过 os 的功能得到，就是说，启动时，从来不保存任何进程相关信息
     '''
-    def __init__(self):
+    def __init__(self, ip, real_ip):
         pass
 
+	def list_services(self):
+		''' 列出正在执行的服务'''
+		pass
 

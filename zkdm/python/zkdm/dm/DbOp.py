@@ -152,18 +152,6 @@ def db_update(remote_ip):
     
 
 if __name__ == '__main__':
-    db_init_from_tokens('../common/tokens.json')
-    db_update("192.168.12.33")
-    time.sleep(15)
-    db_check_timeout(time.time())
-    sys.exit()
-
-    db = DbOp('proxied_hosts.db')
-    db.alterValue('hosts_state', ('172.16.1.10', 1))
-    t = db.selectByOpt('hosts_state', "isLive = '1'") 
-    print type(t)    
-    for e in t:
-        print e    
-    db.close()
+    db_init_from_tokens('../common/tokens.json')      
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 

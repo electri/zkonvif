@@ -2,6 +2,7 @@
 	@echo install 
 	@python-2.7.8.msi  
 )
+@pywin32-218.win32-py2.7.exe
 @echo cover c:\Python27
 
 @xcopy .\Lib c:\Python27\Lib /EY

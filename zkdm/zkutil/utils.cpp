@@ -17,6 +17,7 @@
 #	include <arpa/inet.h>
 #	include <net/if.h>
 #	include <netdb.h>
+#	include <pthread.h>
 #endif
 
 #include <assert.h>
@@ -50,8 +51,67 @@ struct Tmp {
 };
 #endif
 
+class Lock
+{
+#ifdef WIN32
+	CRITICAL_SECTION cs_;
+#else
+	pthread_mutex_t cs_;
+#endif // 
+public:
+	Lock()
+	{
+#ifdef WIN32
+		InitializeCriticalSection(&cs_);
+#else
+#endif
+
+	}
+
+	~Lock()
+	{
+#ifdef WIN32
+		DeleteCriticalSection(&cs_);
+#else
+#endif
+	}
+
+	void enter()
+	{
+#ifdef WIN32
+		EnterCriticalSection(&cs_);
+#else
+#endif // 
+	}
+
+	void leave()
+	{
+#ifdef WIN32
+		LeaveCriticalSection(&cs_);
+#else
+#endif //
+	}
+};
+
+class AutoLock
+{
+	Lock *l_;
+public:
+	AutoLock(Lock &l)
+	{
+		l_ = &l;
+		l_->enter();
+	}
+	~AutoLock()
+	{
+		l_->leave();
+	}
+};
+
+static Lock _lock;
+
 // 判断 mac 是否为虚拟机 mac
-bool is_vm_mac(const char *mac)
+static bool is_vm_mac(const char *mac)
 {
 	/**
        	"00:05:69"; //vmware1
@@ -203,8 +263,6 @@ static bool get_all_netinfs(std::vector < NetInf > &nis)
 			if (strstr(ifa->ifa_name, "bridge"))	// 去除桥接网卡 .
 				continue;
 
-			fprintf(stderr, "name: %s, family=%d\n", ifa->ifa_name,
-				ifa->ifa_addr->sa_family);
 			if (ifa->ifa_addr
 			    && ifa->ifa_addr->sa_family == AF_LINK) {
 				/* Link layer interface */
@@ -315,6 +373,8 @@ static bool get_all_netinfs(std::vector < NetInf > &nis)
 
 const char *util_get_myip()
 {
+	AutoLock al(_lock);
+
 	char *p = getenv("zonekey_my_ip");
 	if (p)
 		return p;
@@ -337,6 +397,8 @@ const char *util_get_myip()
 
 const char *util_get_myip_real()
 {
+	AutoLock al(_lock);
+
 	char *p = getenv("zonekey_my_ip_real");
 	if (p)
 		return p;
@@ -359,6 +421,8 @@ const char *util_get_myip_real()
 
 const char *util_get_mymac()
 {
+	AutoLock al(_lock);
+
 	char *p = getenv("zonekey_my_mac");
 	if (p)
 		return p;
@@ -379,6 +443,8 @@ const char *util_get_mymac()
 
 const char *util_get_nic_name()
 {
+	AutoLock al(_lock);
+
 	char *p = getenv("zonekey_my_nic");
 	if (p)
 		return p;

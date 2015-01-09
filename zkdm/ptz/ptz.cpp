@@ -19,8 +19,6 @@
 #include "ZoomValueConvert.h"
 
 #ifdef WIN32
-#include <Windows.h>
-
 static double now()
 {
 	return GetTickCount() / 1000.0;
@@ -231,6 +229,7 @@ int ptz_down(ptz_t *ptz, int speed)
 	return VISCA_SUCCESS;
 }
 
+
 int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 {
 	Ptz *p = (Ptz*)ptz;
@@ -379,8 +378,6 @@ int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx, int sy)
 		return -1;
 	fprintf(stdout, "zv = %d\n", zv);
 	double zs = ptz_ext_get_scals(ptz, zv);
-	fprintf(stdout, "zs = %f\n", zs);
-	
 	double hva = HVA / zs;
 	double vva = VVA / zs;
 

@@ -37,8 +37,8 @@ using "http://ip:port/config" to get all configured ptz.
 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp }<br/>
 &nbsp &nbsp &nbsp &nbsp }<br/>
 </p>
-using "http://ip:port/ptz/<b>which</b>/<b>method</b>?<b>params...</b>" to control.
-<br> 如: /ptz/teacher/left?speed=1
+using "http://ip:port/ptz/host_no/<b>which</b>/<b>method</b>?<b>params...</b>" to control.
+<br> 如: /ptz/0/teacher/left?speed=1
 <br>
 <br>
 method: <B> left, right, up, down, stop, set_pos, get_pos, set_zoom, get_zoom, preset_save, preset_call, preset_clear, zoom_tele, zoom_wide, zoom_stop, mouse_trace</B>
@@ -47,7 +47,7 @@ method: <B> left, right, up, down, stop, set_pos, get_pos, set_zoom, get_zoom, p
 <p>method 具体描述:</p>
 
 <ul> <B>无返回值:</B>
-	<li>/ptz/WHO/left?speed=N : 向左转动云台, 速度范围从 1 到 30 加快.</li>
+	<li>/ptz/host_no/WHO/left?speed=N : 向左转动云台, 速度范围从 1 到 30 加快.</li>
 	<li>/ptz/WHO/right?speed=N: 右转 </li>
 	<li>/ptz/WHO/up?speed=N : 向上 </li>
 	<li>/ptz/WHO/down?speed=N : 向下 </li>
@@ -55,7 +55,7 @@ method: <B> left, right, up, down, stop, set_pos, get_pos, set_zoom, get_zoom, p
 	<li>/ptz/WHO/set_pos?x=X&ampy=Y&ampsx=SX&ampsy=SY : 转动到指定位置, X,Y 为绝对位置, SX, SY 为转动速度</li>
 	<li>/ptz/WHO/mouse_trace?x=X&y=Y&sx=SX&sy=Sy : 转动到鼠标指定图像位置,X是鼠标点到左边的距离跟宽的比例,Y是鼠标点到上端的距离跟高的比例, SX, SY 为转动速度</li>
 	<li>/ptz/WHO/set_zoom?z=Z : 设置倍率 </li>
-	<li>/ptz/WHO/preset_save?id=ID : 保存预置位, ID为预置位序号</li>
+	<li>/ptz/WHO/preset_save?id=ID : 保存预置位, ID为预置位序号,ID取值范围 0 ~ 5</li>
 	<li>/ptz/WHO/preset_call?id=ID : 调用预置位, ID同上</li>
 	<li>/ptz/WHO/preset_clear?id=ID : 删除预置位, ID同上</li>
 	<li>/ptz/WHO/zoom_tele?speed=SPEED : 镜头拉远, SPEED为速度 </li>
