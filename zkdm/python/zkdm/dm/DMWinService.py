@@ -156,7 +156,7 @@ def main():
     _mac = _zkutils.mymac()
     global rh, _tokens
     
-    service_url = r'http://%s:10000/dm/0/dm'%(_myip)
+    service_url = r'http://%s:10000/dm'%(_myip)
     hds = gather_hds_from_tokens(_tokens)
     hds.append({'mac': _myip, 'ip': _myip, 'type': 'dm', 'url' : service_url, 'id': 'dm'}) 
     RegHost(hds)
