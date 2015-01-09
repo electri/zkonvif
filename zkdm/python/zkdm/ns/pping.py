@@ -13,10 +13,14 @@ from socket import *
 import select, struct, time
 import dbhlp as db
 import target
+from reg import Reg
 
 
 MCAST_ADDR = "239.10.10.7"
 MCAST_PORT = 11012
+
+# 到平台的注册 ...
+_reg = Reg()
 
 
 def __open_socks():
@@ -55,6 +59,12 @@ def __recv_pong(s, now):
     return 0
 
 
+def __reg_host_services(td):
+    ''' 注册主机和服务 '''
+    _reg.add_host({'mac': td['mac'], 'ip': td['ip'], 'hosttype': td['hosttype']})
+    for s in td['services']:
+        _reg.add_service({'mac': td['mac'], 'type': s['type'], 'id': s['id'], 'ip': td['ip']})
+
 def __recv_mcast(s):
     ''' 收到组播信息 '''
     try:
@@ -65,7 +75,10 @@ def __recv_mcast(s):
             tdescr = target.parse_target_descr(info)
             if 'mac' in tdescr:
                 tdescr['ip'] = addr[0]
+
+                __reg_host_services(tdescr)
                 db.update_target_descr(tdescr)
+
                 print 'INFO: update mcast info from:', addr[0]
                 return True, addr
 
