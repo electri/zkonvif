@@ -42,16 +42,23 @@ class Schedule():
         print 'start record_task'
         _rcmd = RecordingCommand()
         _rcmd.send_command('RecordCmd=StopRecord')
-        time.sleep(0.5)
+        time.sleep(0.2)
+        if info[_record_mode].lower() == 'all':
+            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=All')
+        elif info[_record_mode].lower() == 'resource':
+            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Resource')
+        elif info[_record_mode].lower() == 'movie':
+            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Movie')
+        time.sleep(0.2)
         _directory_name = 'RecordCmd=SetFileFolder&SubFileFolder=' + info['_directory_name']
         _rcmd.send_command(_directory_name)
-        time.sleep(0.5)
+        time.sleep(0.2)
         _course_info = 'RecordCmd=SetCourseInfo&Department=%s&Subject=%s&CourseName=%s&\
                 Teacher=%s&Address=%s&DateTime=%s&Description=%s&Grade=%s'\
                 %(info['_department'], info['_subject'],info['_course_name'],
                         info['_teacher'],info['_address'],info['_datetime'],info['_description'],info['_grade'])
         _rcmd.send_command(_course_info)
-        time.sleep(0.5)
+        time.sleep(0.2)
         _rcmd.send_command('RecordCmd=StartRecord')
 
     def _stop_record(self):
