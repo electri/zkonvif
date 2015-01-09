@@ -52,7 +52,6 @@ def __recv_pong(s, now):
         if data[0:4] == 'pong':
             target_ip = addr[0]
             db.update_target_pong(now, target_ip)
-            print 'got PONG from:', addr[0]
     except Exception as e:
         print 'EXCEPT: __recv_pong:', e
 
@@ -64,6 +63,7 @@ def __reg_host_services(td):
     _reg.add_host({'mac': td['mac'], 'ip': td['ip'], 'hosttype': td['hosttype']})
     for s in td['services']:
         _reg.add_service({'mac': td['mac'], 'type': s['type'], 'id': s['id'], 'ip': td['ip']})
+
 
 def __recv_mcast(s):
     ''' 收到组播信息 '''
@@ -89,12 +89,15 @@ def __recv_mcast(s):
 
 def __chk_timeout(now):
     ''' 检查超时主机，如果超时，则所有对应的服务都设置为 offline '''
-    db.chk_timeout(now)
+    l = db.chk_timeout(now)
+    for mi in l:
+        mac = mi[0]
+        _reg.offline_host(mac)
     return 0
+
 
 def __send_ping(s, ip):
     ''' 发送 ping 到 ip '''
-    print 'send PING to:', ip
     return s.sendto('ping', (ip, 11011))
 
 

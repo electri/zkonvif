@@ -76,19 +76,23 @@ def update_target_pong(stamp, ip):
 
 
 def chk_timeout(curr):
-    ''' 更新所有 curr - hosts.last_stamp > 10 的主机的所有服务的 online 为 0 '''
+    ''' 更新所有 curr - hosts.last_stamp > 10 的主机的所有服务的 online 为 0,
+        返回超时主机的 mac, ip 列表
+    '''
     db = sqlite3.connect(DB_FNAME)
     c = db.cursor()
-    s0 = 'select mac from hosts where last_stamp + 10 < %d' % (curr)
+    s0 = 'select mac,ip from hosts where last_stamp + 10 < %d' % (curr)
     result = c.execute(s0)
 
-    rs = [r[0] for r in result]
+    rs = [r for r in result]
         
-    for mac in rs:
+    for r in rs:
+        mac = r[0]
         s1 = 'update services set online=0 where online=1 and mac="%s"' % (mac)
         c.execute(s1)
     db.commit()
     db.close()
+    return rs
 
 
 def get_targets_ip(online = False):

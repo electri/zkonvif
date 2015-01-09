@@ -19,6 +19,9 @@ TIMEOUT = 3.0
 
 class Reg(threading.Thread):
     ''' 维护主机注册，服务注册，服务心跳的状态机
+
+        TODO: 优化到平台的request，将调用平均分配在 10 秒的间隔内
+        TODO: 根据平台返回进行结果，判断注册是否成功？
     '''
 
     def __init__(self):
@@ -26,6 +29,7 @@ class Reg(threading.Thread):
         self.__pinding_hosts = Queue.Queue() # 等待注册的主机
         self.__pinding_services = Queue.Queue() # 等待注册的服务
         self.__pinding_services_death = Queue.Queue() # 用于停止某个服务的心跳
+        self.__pinding_hosts_death = Queue.Queue() # 保存需要停止心跳的主机的 mac
         self.daemon = True
         self.__ip = zkutils().myip()
         self.__mac = zkutils().mymac()
@@ -49,7 +53,12 @@ class Reg(threading.Thread):
         self.__pinding_services.put(service_descr)
 
 
-    def del_service(self, service_descr):
+    def offline_host(self, mac):
+        ''' 停止该 mac 对应的所有服务的心跳 '''
+        self.__pinding_hosts_death.put(mac)
+
+
+    def offline_service(self, service_descr):
         ''' 停止一个服务的心跳
         '''
         self.__pinding_services_death.put(service_descr)
@@ -100,6 +109,7 @@ class Reg(threading.Thread):
 
     def __once1(self):
         ''' 检查是否需要删除服务 '''
+        self.__chk_offline_host()
         self.__chk_unreg_service()
 
 
@@ -142,6 +152,16 @@ class Reg(threading.Thread):
                 self.__reg_service(sd)
                 self.__services.append(sd)
             sd = self.__next_pinding(self.__pinding_services)
+
+
+    def __chk_offline_host(self):
+        mac = self.__next_pinding(self.__pinding_hosts_death)
+        while mac:
+            for s in self.__services:
+                if s['mac'] == mac:
+                    self.__services.remove(s)
+            mac = self.__next_pinding(self.__pinding_hosts_death)
+
 
     def __del_from_service(self, sd):
         for s in self.__services:
