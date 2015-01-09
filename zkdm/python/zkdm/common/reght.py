@@ -28,8 +28,6 @@ hosts_state_tabname = "hosts_state"
 
 hosts_config_fname = os.path.dirname(abspath) + "/../host/config.json"
 
-print hosts_state_fname
-
 class _GroupOfRegChk:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
         如果服务太多，每隔10秒，连续注册/心跳，会导致网络剧烈抖动，
