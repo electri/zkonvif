@@ -3,7 +3,7 @@
 # 生成 target_info 文件
 
 mac=`cat /sys/class/net/eth0/address | sed s/://g`
-hosttype='ubuntu test'
+hosttype='ubuntu-test'
 
 # 写入 mac + hosttype 
 echo "mac=${mac}" > info
