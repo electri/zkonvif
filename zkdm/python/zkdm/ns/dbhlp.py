@@ -3,12 +3,12 @@
 #
 # @file: dbhlp.py
 # @date: 2015-01-08
-# @brief:
+# @brief: 实现对 ns.db 的操作
 # @detail:
 #
 #################################################################
 
-import sqlite3, time
+import sqlite3, time, sys
 
 
 DB_FNAME = "ns.db"
@@ -42,7 +42,10 @@ def __db_init():
 
 
 def update_target_pong(stamp, ip):
-    ''' 更新 hosts 中，ip 对应的主机的 last_stamp '''
+    ''' 更新 hosts 中，ip 对应的主机的 last_stamp 
+        FIXME: 这里有隐患，应该使用 mac 而不是 ip 来索引
+        XXX: 哦，select 返回的 result，不能直接在里面执行 cursor 操作 ...
+    '''
     db = sqlite3.connect(DB_FNAME)
     c = db.cursor()
     s1 = 'update hosts set last_stamp=%d where ip="%s"' % (stamp, ip)
@@ -50,8 +53,10 @@ def update_target_pong(stamp, ip):
 
     s0 = 'select mac from hosts where ip="%s"' % (ip)
     result = c.execute(s0)
-    for r in result:
-        mac = r[0]
+
+    rs = [r[0] for r in result]
+
+    for mac in rs:
         s1 = 'update services set online=1 where online=0 and mac="%s"' % (mac)
         c.execute(s1)
 
@@ -63,10 +68,12 @@ def chk_timeout(curr):
     ''' 更新所有 curr - hosts.last_stamp > 10 的主机的所有服务的 online 为 0 '''
     db = sqlite3.connect(DB_FNAME)
     c = db.cursor()
-    s0 = 'select mac from hosts where %d-last_stamp > 10' % (curr)
+    s0 = 'select mac from hosts where last_stamp + 10 < %d' % (curr)
     result = c.execute(s0)
-    for r in result:
-        mac = r[0]
+
+    rs = [r[0] for r in result]
+        
+    for mac in rs:
         s1 = 'update services set online=0 where online=1 and mac="%s"' % (mac)
         c.execute(s1)
     db.commit()
@@ -82,9 +89,8 @@ def get_targets_ip(online = False):
     else:
         s0 = 'select ip from hosts where %d-last_stamp > 10' % (time.time())
     result = c.execute(s0)
-    ips = []
-    for r in result:
-        ips.append(r[0])
+
+    ips = [r[0] for r in result]
 
     db.close()
     return ips

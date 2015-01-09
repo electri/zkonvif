@@ -43,12 +43,12 @@ def __open_socks():
 
 def __recv_pong(s, now):
     ''' 从 s 接收 pong 消息 '''
-    print "got PONG"
     try:
         data, addr = s.recvfrom(16)
         if data[0:4] == 'pong':
             target_ip = addr[0]
             db.update_target_pong(now, target_ip)
+            print 'got PONG from:', addr[0]
     except Exception as e:
         print 'EXCEPT: __recv_pong:', e
 
@@ -67,9 +67,11 @@ def __recv_mcast(s):
                 tdescr['ip'] = addr[0]
                 db.update_target_descr(tdescr)
                 print 'INFO: update mcast info from:', addr[0]
+                return True, addr
+
     except Exception as e:
         print 'EXCEPT: __recv_mcast: ', e
-    return 0
+    return False, addr
 
 
 def __chk_timeout(now):
@@ -77,13 +79,17 @@ def __chk_timeout(now):
     db.chk_timeout(now)
     return 0
 
+def __send_ping(s, ip):
+    ''' 发送 ping 到 ip '''
+    print 'send PING to:', ip
+    return s.sendto('ping', (ip, 11011))
+
 
 def __send_pings(s, force):
     ''' 发送 pings '''
     ips= db.get_targets_ip(online=force)
     for ip in ips:
-        print "send PING"
-        s.sendto('ping', (ip, 11011))
+        __send_ping(s, ip)
     return 0
 
 
@@ -101,7 +107,10 @@ def __main():
             __recv_pong(s0, t)
 
         if s1 in r:
-            __recv_mcast(s1)
+            success, remote = __recv_mcast(s1)
+            if success:
+                # 收到合理组播后，立即对其发送 ping
+                __send_ping(s0, remote[0])
         
         if t - last_stamp_pf > 60:
             __send_pings(s0, True)

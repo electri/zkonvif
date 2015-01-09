@@ -139,7 +139,7 @@ static int multcast_info(SOCKET fd, const void *dat, size_t len)
 	maddr.sin_port = htons(PP_MULTCAST_PORT);
 	maddr.sin_addr.s_addr = inet_addr(PP_MULTCAST_ADDR);
 
-	//fprintf(stderr, "DEBUG: %s: send %s, len=%u\n", __func__, dat, len);
+	fprintf(stderr, "DEBUG: %s: my info\n", __func__);
 
 	return sendto(fd, (const char*)dat, len, 0, (struct sockaddr*)&maddr, sizeof(maddr));
 }

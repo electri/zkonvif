@@ -19,8 +19,6 @@
 #include "ZoomValueConvert.h"
 
 #ifdef WIN32
-#include <Windows.h>
-
 static double now()
 {
 	return GetTickCount() / 1000.0;
