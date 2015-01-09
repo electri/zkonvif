@@ -37,6 +37,14 @@ def __db_init():
                 id varchar(16), online integer, private varchar(1024))'
         c.execute(s1)
 
+    # 删除没有 hosts 信息的 services
+    s2 = 'delete from services where NOT exists (select mac from hosts where mac=services.mac)'
+    c.execute(s2)
+
+    # 所有 service online = 0
+    s3 = 'update services set online=0'
+    c.execute(s3)
+
     db.commit()
     db.close()
 
