@@ -230,7 +230,7 @@ class Reg(threading.Thread):
         for s in b:
             if not self.__ht_service(s):
                 b.remove(s)
-                self.__get_less_b(self.__service_b_reg).append(b)
+                self.__get_less_b(self.__service_b_reg).append(s)
 
 
     def __get_service_port(self, t):
