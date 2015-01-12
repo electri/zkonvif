@@ -21,6 +21,7 @@ MCAST_PORT = 11012
 
 # 到平台的注册 ...
 _reg = Reg()
+_reg.verbose = True
 
 
 def __open_socks():
