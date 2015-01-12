@@ -64,6 +64,7 @@ public:
 #ifdef WIN32
 		InitializeCriticalSection(&cs_);
 #else
+		pthread_mutex_init(&cs_, 0);
 #endif
 
 	}
@@ -73,6 +74,7 @@ public:
 #ifdef WIN32
 		DeleteCriticalSection(&cs_);
 #else
+		pthread_mutex_destroy(&cs_);
 #endif
 	}
 
@@ -81,6 +83,7 @@ public:
 #ifdef WIN32
 		EnterCriticalSection(&cs_);
 #else
+		pthread_mutex_lock(&cs_);
 #endif // 
 	}
 
@@ -89,6 +92,7 @@ public:
 #ifdef WIN32
 		LeaveCriticalSection(&cs_);
 #else
+		pthread_mutex_unlock(&cs_);
 #endif //
 	}
 };
