@@ -22,8 +22,7 @@ verbose = False
 class Reg(threading.Thread):
     ''' 维护主机注册，服务注册，服务心跳的状态机
 
-        TODO: 优化到平台的request，将调用平均分配在 10 秒的间隔内
-        TODO: 根据平台返回进行结果，判断注册是否成功？
+        XXX: 根据平台返回进行结果，判断注册是否成功？
     '''
 
     def __init__(self):

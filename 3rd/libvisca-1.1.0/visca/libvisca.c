@@ -176,12 +176,12 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
 	int err;
 	// first message: -------------------
-	if (_VISCA_get_packet(iface) != VISCA_SUCCESS)
-	{
+	if (_VISCA_get_packet(iface) != VISCA_SUCCESS) {
 		fprintf(stdout, "first get packet fail from ptz\n");
-		VISCA_set_pantilt_reset(iface, camera);
+		//VISCA_set_pantilt_reset(iface, camera);
 		return VISCA_FAILURE;
 	}
+
 	iface->type = iface->ibuf[1] & 0xF0;
 
 	// skip ack messages
@@ -206,6 +206,7 @@ _VISCA_get_reply(VISCAInterface_t * iface, VISCACamera_t * camera)
 		return VISCA_SUCCESS;
 		break;
 	}
+
 	fprintf(stdout, "third get_packet fail \n");
 	return VISCA_FAILURE;
 }

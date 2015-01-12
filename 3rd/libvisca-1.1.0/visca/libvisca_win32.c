@@ -26,6 +26,36 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include <stdio.h>
+
+#if 0
+static void save_read(unsigned char b)
+{
+	FILE *fp = fopen("read.log", "at");
+	if (fp) {
+		fprintf(fp, "%02X ", b);
+		fclose(fp);
+	}
+}
+
+static void save_log(const char *fmt, ...)
+{
+	FILE *fp = fopen("read.log", "at");
+	va_list arg;
+
+	va_start(arg, fmt);
+	vfprintf(fp, fmt, arg);
+	va_end(arg);
+
+	fclose(fp);
+}
+#else
+
+#define save_read
+#define save_log
+
+#endif
+
 /* implemented in libvisca.c
  */
 void _VISCA_append_byte(VISCAPacket_t *packet, unsigned char byte);
@@ -73,6 +103,9 @@ _VISCA_send_packet(VISCAInterface_t *iface, VISCACamera_t *camera, VISCAPacket_t
 	  return VISCA_FAILURE;
     }
 
+  if (packet->bytes[1] == 9)
+	save_log("===== write :");
+
   // build header:
   packet->bytes[0]=0x80;
   packet->bytes[0]|=(iface->address << 4);
@@ -91,6 +124,14 @@ _VISCA_send_packet(VISCAInterface_t *iface, VISCACamera_t *camera, VISCAPacket_t
     if (nTrials > 0)
       ClearCommError(iface->port_fd, &errors, &stat);
 	rVal = WriteFile(iface->port_fd, &packet->bytes, packet->length, &iBytesWritten, NULL);
+	if (rVal && packet->bytes[1] == 9) {
+		int i;
+		for (i = 0; i < packet->length; i++) {
+			save_read(packet->bytes[i]);
+		}
+		
+		save_log("\n");
+	}
   }
 
   if ( iBytesWritten < packet->length )
@@ -104,13 +145,14 @@ _VISCA_send_packet(VISCAInterface_t *iface, VISCACamera_t *camera, VISCAPacket_t
   }
 }
 
-
 uint32_t
 _VISCA_get_packet(VISCAInterface_t *iface)
 {
   int pos=0;
   BOOL  rc;
   DWORD iBytesRead;
+
+  save_log("----- next packet:");
 
   // wait for message
   rc=ReadFile(iface->port_fd, iface->ibuf, 1, &iBytesRead, NULL);
@@ -119,25 +161,35 @@ _VISCA_get_packet(VISCAInterface_t *iface)
       // Obtain the error code
       //m_lLastError = ::GetLastError();
 	  _RPTF0(_CRT_WARN,"ReadFile failed.\n");
+	  save_log(" ... fault!!!\n");
       return VISCA_FAILURE;
   }
-  while (iface->ibuf[pos]!=VISCA_TERMINATOR) {
-    if ( ++pos >= VISCA_INPUT_BUFFER_SIZE )
-	{
-        // Obtain the error code
-        //m_lLastError = ::GetLastError();
-  	    _RPTF0(_CRT_WARN,"illegal reply packet.\n");
-        return VISCA_FAILURE;
-    }
-    rc=ReadFile(iface->port_fd, iface->ibuf + pos, 1, &iBytesRead, NULL);
-	if ( !rc || iBytesRead==0 )
-	{
-        // Obtain the error code
-        //m_lLastError = ::GetLastError();
-	  _RPTF0(_CRT_WARN,"ReadFile failed.\n");
-        return VISCA_FAILURE;
-    }
+
+  save_read(iface->ibuf[0]);
+
+  while (iface->ibuf[pos] != VISCA_TERMINATOR) {
+	  if ( ++pos >= VISCA_INPUT_BUFFER_SIZE ) {
+		  // Obtain the error code
+		  //m_lLastError = ::GetLastError();
+		  _RPTF0(_CRT_WARN,"illegal reply packet.\n");
+		  save_log(" tooooo many bytes ???\n");
+		  return VISCA_FAILURE;
+	  }
+
+	  rc=ReadFile(iface->port_fd, iface->ibuf + pos, 1, &iBytesRead, NULL);
+	  if ( !rc || iBytesRead==0 ) {
+		  // Obtain the error code
+		  //m_lLastError = ::GetLastError();
+		  _RPTF0(_CRT_WARN,"ReadFile failed.\n");
+		  save_log(" fault\n");
+		  return VISCA_FAILURE;
+	  }
+
+	  save_read(iface->ibuf[pos]);
   }
+
+  save_log("\n");
+
   iface->bytes=pos+1;
 
   return VISCA_SUCCESS;
@@ -213,7 +265,7 @@ VISCA_open_serial(VISCAInterface_t *iface, const char *device_name)
 
   // FIXME: 这里需要修改 ...
   cto.ReadIntervalTimeout = 100;	
-  cto.ReadTotalTimeoutConstant = 2000;
+  cto.ReadTotalTimeoutConstant = 10000; // FIXME: 10 秒没有动作
   cto.ReadTotalTimeoutMultiplier = 50;
   cto.WriteTotalTimeoutMultiplier = 500;
   cto.WriteTotalTimeoutConstant = 1000;
