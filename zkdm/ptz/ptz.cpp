@@ -183,8 +183,9 @@ int ptz_stop(ptz_t *ptz)
 	std::stringstream ss;
 	ss << __FUNCTION__ << ':' << p->serial->iface.name;
 	TimeUsed tu(ss.str().c_str());
-	if (VISCA_set_pantilt_stop(&p->serial->iface, &p->cam, 0, 0) != VISCA_SUCCESS)
+	if (VISCA_set_pantilt_stop_without_reply(&p->serial->iface, &p->cam, 0, 0) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
+	Sleep(20);
 	p->pos_changing = false;
 	return VISCA_SUCCESS;
 }
@@ -192,9 +193,9 @@ int ptz_stop(ptz_t *ptz)
 int ptz_left(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
-	if (VISCA_set_pantilt_left(&p->serial->iface, &p->cam, speed, speed) != VISCA_SUCCESS)
+	if (VISCA_set_pantilt_left_without_reply(&p->serial->iface, &p->cam, speed, speed) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	p->pos_changing = true;
 	return VISCA_SUCCESS;
 }
@@ -202,9 +203,9 @@ int ptz_left(ptz_t *ptz, int speed)
 int ptz_right(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
-	if (VISCA_set_pantilt_right(&p->serial->iface, &p->cam, speed, speed) != VISCA_SUCCESS)
+	if (VISCA_set_pantilt_right_without_reply(&p->serial->iface, &p->cam, speed, speed) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	p->pos_changing = true;
 	return VISCA_SUCCESS;
 }
@@ -212,9 +213,9 @@ int ptz_right(ptz_t *ptz, int speed)
 int ptz_up(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
-	if (VISCA_set_pantilt_up(&p->serial->iface, &p->cam, speed, speed) != VISCA_SUCCESS)
+	if (VISCA_set_pantilt_up_without_reply(&p->serial->iface, &p->cam, speed, speed) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	p->pos_changing = true;
 	return VISCA_FAILURE;
 }
@@ -222,9 +223,9 @@ int ptz_up(ptz_t *ptz, int speed)
 int ptz_down(ptz_t *ptz, int speed)
 {
 	Ptz *p = (Ptz*)ptz;
-	if (VISCA_set_pantilt_down(&p->serial->iface, &p->cam, speed, speed) != VISCA_SUCCESS)
+	if (VISCA_set_pantilt_down_without_reply(&p->serial->iface, &p->cam, speed, speed) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	p->pos_changing = true;
 	return VISCA_SUCCESS;
 }
@@ -236,6 +237,10 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 	std::stringstream ss;
 	ss << __FUNCTION__ << ':' << p->serial->iface.name;
 	TimeUsed tu(ss.str().c_str());
+	if (PurgeComm(p->serial->iface.port_fd, PURGE_RXCLEAR) == 0) {
+		fprintf(stderr, "%s can't free input buffer\n", __FUNCTION__);
+		return VISCA_FAILURE;
+	}
 	if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 
@@ -250,7 +255,7 @@ int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
 	TimeUsed tu(ss.str().c_str());
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	return VISCA_SUCCESS;
 }
 
@@ -276,7 +281,7 @@ int ptz_set_zoom(ptz_t *ptz, int z)
 	TimeUsed tu(ss.str().c_str());
 	if (VISCA_set_zoom_value_without_reply(&p->serial->iface, &p->cam, z) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	return VISCA_SUCCESS;
 }
 
@@ -286,9 +291,9 @@ int ptz_set_zoom_with_reply(ptz_t *ptz, int z)
 	std::stringstream ss;
 	ss << __FUNCTION__ << ':' << p->serial->iface.name;
 	TimeUsed tu(ss.str().c_str());
-	if (VISCA_set_zoom_value(&p->serial->iface, &p->cam, z) != VISCA_SUCCESS)
+	if (VISCA_set_zoom_value_without_reply(&p->serial->iface, &p->cam, z) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	return VISCA_SUCCESS;
 }
 
@@ -299,7 +304,10 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 	ss << __FUNCTION__ << ':' << p->serial->iface.name;
 	TimeUsed tu(ss.str().c_str());	int v1;
 	uint16_t v;
-	
+	if (PurgeComm(p->serial->iface.port_fd, PURGE_RXCLEAR) == 0) {
+		fprintf(stderr, "%s can't free input buffer\n", __FUNCTION__);
+		return VISCA_FAILURE;
+	}
 	if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS) {
 		return -1;
 	}
@@ -310,19 +318,28 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 int ptz_preset_save(ptz_t *ptz, int id)
 {
 	Ptz *p = (Ptz*)ptz;
-	return VISCA_memory_set_without_reply(&p->serial->iface, &p->cam, id);
+	if (VISCA_memory_set_without_reply(&p->serial->iface, &p->cam, id) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	Sleep(20);
+	return VISCA_SUCCESS;
 }
 
 int ptz_preset_call(ptz_t *ptz, int id)
 {
 	Ptz *p = (Ptz*)ptz;
-	return VISCA_memory_recall_without_reply(&p->serial->iface, &p->cam, id);
+	if (VISCA_memory_recall_without_reply(&p->serial->iface, &p->cam, id) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	Sleep(20);
+	return VISCA_SUCCESS;
 }
 
 int ptz_preset_clear(ptz_t *ptz, int id)
 {
 	Ptz *p = (Ptz*)ptz;
-	return VISCA_memory_reset_without_reply(&p->serial->iface, &p->cam, id);
+	if (VISCA_memory_reset_without_reply(&p->serial->iface, &p->cam, id) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	Sleep(20);
+	return VISCA_SUCCESS;
 }
 
 int ptz_zoom_tele(ptz_t *ptz, int s)
@@ -330,9 +347,9 @@ int ptz_zoom_tele(ptz_t *ptz, int s)
 	TimeUsed tu(__FUNCTION__);
 	Ptz *p = (Ptz*)ptz;
 
-	if (VISCA_set_zoom_tele_speed(&p->serial->iface, &p->cam, s) != VISCA_SUCCESS)
+	if (VISCA_set_zoom_tele_speed_without_reply(&p->serial->iface, &p->cam, s) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	return VISCA_FAILURE;
 
 }
@@ -341,9 +358,9 @@ int ptz_zoom_wide(ptz_t *ptz, int s)
 { 
 	Ptz *p = (Ptz *)ptz;
 
-	if (VISCA_set_zoom_wide_speed(&p->serial->iface, &p->cam, s) != VISCA_SUCCESS)
+	if (VISCA_set_zoom_wide_speed_without_reply(&p->serial->iface, &p->cam, s) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	return VISCA_SUCCESS;
 
 }
@@ -352,9 +369,9 @@ int ptz_zoom_stop(ptz_t *ptz)
 {
 	Ptz *p = (Ptz*)ptz;
 
-	if (VISCA_set_zoom_stop(&p->serial->iface, &p->cam) != VISCA_SUCCESS)
+	if (VISCA_set_zoom_stop_without_reply(&p->serial->iface, &p->cam) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
-
+	Sleep(20);
 	return VISCA_SUCCESS;
 }
 
@@ -384,7 +401,11 @@ int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx, int sy)
 	int h_rpm = (int)(hva*(hvs-0.5) / 0.075);
 	int v_rpm = (int)(vva*(0.5-vvs) /0.075);
 	fprintf(stdout, "h_rpm = %d, v_rpm = %d\n", h_rpm, v_rpm);
-	return VISCA_set_pantilt_relative_position(&p->serial->iface, &p->cam , sx, sy, h_rpm, v_rpm);
+	if (VISCA_set_pantilt_relative_position_without_reply(&p->serial->iface, &p->cam , sx, sy, h_rpm, v_rpm) != VISCA_SUCCESS) 
+		return VISCA_FAILURE;
+
+	Sleep(20);
+	return VISCA_SUCCESS;
 }
 
 double ptz_ext_get_scals(ptz_t *ptz, int z)
@@ -406,7 +427,15 @@ int is_prepared(ptz_t *ptz)
 {
 	uint8_t power;
 	Ptz *p = (Ptz*)ptz;
-	return VISCA_get_power(&p->serial->iface, &p->cam, &power);
+	if (PurgeComm(p->serial->iface.port_fd, PURGE_RXCLEAR) == 0) {
+		fprintf(stderr, "%s can't free input buffer\n", __FUNCTION__);
+		return VISCA_FAILURE;
+	}
+	if (VISCA_get_power(&p->serial->iface, &p->cam, &power) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	
+	return VISCA_SUCCESS;
+		
 }
 
 

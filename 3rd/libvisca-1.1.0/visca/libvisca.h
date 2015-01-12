@@ -605,11 +605,23 @@ extern "C" {
 				VISCACamera_t * camera);
 
 	VISCA_API uint32_t
+	    VISCA_set_zoom_stop_without_reply(VISCAInterface_t * iface,
+				VISCACamera_t * camera);
+
+	VISCA_API uint32_t
 	    VISCA_set_zoom_tele_speed(VISCAInterface_t * iface,
 				      VISCACamera_t * camera, uint32_t speed);
 
 	VISCA_API uint32_t
+	    VISCA_set_zoom_tele_speed_without_reply(VISCAInterface_t * iface,
+				      VISCACamera_t * camera, uint32_t speed);
+
+	VISCA_API uint32_t
 	    VISCA_set_zoom_wide_speed(VISCAInterface_t * iface,
+				      VISCACamera_t * camera, uint32_t speed);
+
+	VISCA_API uint32_t
+	    VISCA_set_zoom_wide_speed_without_reply(VISCAInterface_t * iface,
 				      VISCACamera_t * camera, uint32_t speed);
 
 	VISCA_API uint32_t
@@ -1075,6 +1087,14 @@ extern "C" {
 
 	VISCA_API uint32_t
 	    VISCA_set_pantilt_relative_position(VISCAInterface_t * iface,
+						VISCACamera_t * camera,
+						uint32_t pan_speed,
+						uint32_t tilt_speed,
+						int pan_position,
+						int tilt_position);
+
+	VISCA_API uint32_t
+	    VISCA_set_pantilt_relative_position_without_reply(VISCAInterface_t * iface,
 						VISCACamera_t * camera,
 						uint32_t pan_speed,
 						uint32_t tilt_speed,
