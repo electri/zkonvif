@@ -152,7 +152,9 @@ VISCA_API uint32_t _VISCA_get_reply(VISCAInterface_t *iface, VISCACamera_t *came
 }
 
 #else
-
+/** get Information(z0 50 ... FF) return
+  * no Command completion(z0 5y FF) return
+*/
 VISCA_API uint32_t
 _VISCA_get_reply_accurate(VISCAInterface_t * iface, VISCACamera_t * camera)
 {
