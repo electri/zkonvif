@@ -158,6 +158,8 @@ _VISCA_get_packet(VISCAInterface_t *iface)
   rc=ReadFile(iface->port_fd, iface->ibuf, 1, &iBytesRead, NULL);
   if ( !rc || iBytesRead==0 )
   {
+	  if (rc == 0)
+		fprintf(stdout, "time of reading input buff is more than ReadTotalTimeoutConstant\n");
       // Obtain the error code
       //m_lLastError = ::GetLastError();
 	  _RPTF0(_CRT_WARN,"ReadFile failed.\n");

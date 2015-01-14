@@ -18,8 +18,9 @@ int ptz_down(ptz_t *ptz, int speed);
 
 int ptz_stop(ptz_t *ptz);
 
-int ptz_set_pos(ptz_t *ptz, int x, int y, int xspeed, int yspeed);
+int ptz_set_pos(ptz_t *ptz, int x, int y, int xspeed = 5, int yspeed = 5);
 int ptz_get_pos(ptz_t *ptz, int *x, int *y);
+int ptz_set_relative_pos(ptz_t *ptz, int x, int y, int sx= 0, int sy = 0);
 
 int ptz_set_zoom(ptz_t *ptz, int z);
 int ptz_get_zoom(ptz_t *ptz, int *z);

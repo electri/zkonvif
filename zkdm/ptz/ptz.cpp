@@ -247,13 +247,25 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 	return VISCA_SUCCESS;
 }
 
-int ptz_set_pos(ptz_t *ptz, int x, int y, int sx = 5, int sy = 5)
+int ptz_set_pos(ptz_t *ptz, int x, int y, int sx, int sy)
 {
 	Ptz *p = (Ptz*)ptz;
 	std::stringstream ss;
 	ss << __FUNCTION__ << ':' << p->serial->iface.name;
 	TimeUsed tu(ss.str().c_str());
 	if (VISCA_set_pantilt_absolute_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) != VISCA_SUCCESS)
+		return VISCA_FAILURE;
+	Sleep(20);
+	return VISCA_SUCCESS;
+}
+
+int ptz_set_relative_pos(ptz_t *ptz, int x, int y, int sx, int sy)
+{
+	Ptz *p = (Ptz*)ptz;
+	std::stringstream ss;
+	ss << __FUNCTION__ << ':' << p->serial->iface.name;
+	TimeUsed tu(ss.str().c_str());
+	if (VISCA_set_pantilt_relative_position_without_reply(&p->serial->iface, &p->cam, sx, sy, x, y) != VISCA_SUCCESS)
 		return VISCA_FAILURE;
 	Sleep(20);
 	return VISCA_SUCCESS;

@@ -12,6 +12,7 @@ EXPORTS
 
 	ptz_set_pos
 	ptz_get_pos
+	ptz_set_relative_pos
 
 	ptz_set_zoom
 	ptz_get_zoom

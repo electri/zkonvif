@@ -91,6 +91,8 @@ class PtzWrap(object):
             ret.update(self.get_pos())
         elif method == 'set_pos':
             ret.update(self.set_pos(params))
+        elif method == 'set_rpos':
+            ret.update(self.rset_pos(params))
         elif method == 'set_pos_blocked':
             ret.update(self.set_pos_blocked(params))
         elif method == 'get_zoom':
@@ -269,6 +271,26 @@ class PtzWrap(object):
             self.__ptr['func_set_pos'](self.__ptz, x, y, sx, sy)
             return { 'info':'completed' }
 
+    def set_rpos(self, params):
+        if not self.__ptz:
+            return {'result':'error', 'info':'NO ptz'}
+        else:
+            x = 0
+            y = 0
+            sx = 30
+            sy = 30
+            if 'x' in params:
+                x = int(params['x'][0])
+            if 'y' in params:
+                y = int(params['y'][0])
+            if 'sx' in params:
+                sx = int(params['sx'][0])
+            if 'sy' in params:
+                sy = int(params['sy'][0])
+                
+            self.__ptr['func_set_relative_pos'](self.__ptz, x, y, sx, sy)
+            return { 'info':'completed' }
+
     def set_pos_blocked(self, params):
         if not self.__ptz:
             return {'result':'error', 'info':'NO ptz'}
@@ -396,6 +418,9 @@ class PtzWrap(object):
         ptz['func_set_pos'] = ptz['so'].ptz_set_pos
         ptz['func_set_pos'].argtypes = [c_void_p, c_int, c_int, c_int, c_int]
 
+        ptz['func_set_relative_pos'] = ptz['so'].ptz_set_relative_pos
+        ptz['func_set_relative_pos'].argtypes = [c_void_p, c_int, c_int, c_int, c_int]
+        
         ptz['func_preset_save'] = ptz['so'].ptz_preset_save
         ptz['func_preset_save'].argtypes = [c_void_p, c_int]
 
