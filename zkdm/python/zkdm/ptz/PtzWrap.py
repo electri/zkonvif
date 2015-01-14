@@ -92,7 +92,7 @@ class PtzWrap(object):
         elif method == 'set_pos':
             ret.update(self.set_pos(params))
         elif method == 'set_rpos':
-            ret.update(self.rset_pos(params))
+            ret.update(self.set_rpos(params))
         elif method == 'set_pos_blocked':
             ret.update(self.set_pos_blocked(params))
         elif method == 'get_zoom':

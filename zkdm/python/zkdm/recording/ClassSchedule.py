@@ -43,11 +43,11 @@ class Schedule():
         _rcmd = RecordingCommand()
         _rcmd.send_command('RecordCmd=StopRecord')
         time.sleep(0.2)
-        if info[_record_mode].lower() == 'all':
+        if info['_record_mode'].lower() == 'all':
             _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=All')
-        elif info[_record_mode].lower() == 'resource':
+        elif info['_record_mode'].lower() == 'resource':
             _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Resource')
-        elif info[_record_mode].lower() == 'movie':
+        elif info['_record_mode'].lower() == 'movie':
             _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Movie')
         time.sleep(0.2)
         _directory_name = 'RecordCmd=SetFileFolder&SubFileFolder=' + info['_directory_name']

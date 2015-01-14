@@ -37,6 +37,7 @@ def __db_init():
                 id varchar(16), online integer, private varchar(1024))'
         c.execute(s1)
 
+    # FIXME: 是否删除老的数据呢？
     # 删除 hosts 
     s2 = 'delete from services'
     c.execute(s2)
