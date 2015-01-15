@@ -10,6 +10,7 @@ import json
 
 from RecordingCommand import RecordingCommand
 from ClassSchedule import Schedule
+from DiskManagement import del_dir_schedule
 from tornado.options import define, options
 from CardServer import start_card_server
 from LivingServer import StartLiving
@@ -144,8 +145,8 @@ def main():
         _rcmd.send_command('RecordCmd=SetFileProperty&FileFormat=mp4&TotalFilePath=C:/RecordFile')
         global _class_schedule
         _class_schedule = Schedule(None)
-        _class_schedule.analyse_json('127.0.0.1','x86')
-
+        _class_schedule.analyse_json('127.0.0.1','x86')        
+        del_dir_schedule()
 
         global rh
         rh = RegHt(reglist)
