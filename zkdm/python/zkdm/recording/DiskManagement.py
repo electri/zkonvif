@@ -3,25 +3,26 @@
 import os,sys
 import time
 from operator import itemgetter, attrgetter
-import wmi
+import threading
+import win32file
+import shutil
 
 def get_fs_info(caption = "C:"):
     '''
-    获取文件信息
+    获取磁盘信息
     '''
-    temp_list = []
-    my_wmi = wmi.WMI()
-    for physical_disk in my_wmi.Win32_DiskDrive():
-        for partition in physical_disk.associators('Win32_DiskDriveToDiskPartition'):
-            for logical_disk in partition.associators('Win32_LogicalDiskToPartition'):
-                if logical_disk.Caption == caption:
-                    free_space = int(logical_disk.FreeSpace)/1024/1024/1024
-                    percent = int(100.0*(int(logical_disk.Size)-int(logical_disk.FreeSpace))/int(logical_disk.Size))
-                    if free_space < 10 or percent>90:
-                        return True
-                    else:
-                        return False
+    sectorsPerCluster, bytesPerSector, numFreeClusters, totalNumClusters = \
+		win32file.GetDiskFreeSpace(caption)
+    freespace = (numFreeClusters * sectorsPerCluster * bytesPerSector) /(1024 * 1024 * 1024)
+    if freespace<10:#小于10G的时候开始清理空间
+        return True
+    else:
+        return False
+
 def sort_cmp(a,b):
+    '''
+    比较函数
+    '''
     return int(a['time'] - b['time'])
 
 def dir_list_file(path = 'C:\RecordFile'):
@@ -38,9 +39,19 @@ def dir_list_file(path = 'C:\RecordFile'):
                 dir_info['time'] = os.path.getmtime(dir_path)
                 dir_list.append(dir_info)
 
-    print dir_list
-    #sorted(dir_list, key=itemgetter(1))
     dir_list.sort(cmp = sort_cmp)
-    print dir_list
+    return dir_list
 
-dir_list_file()
+def del_dir_schedule():
+    thread = threading.Timer(2*3600,del_dir) #2小时执行一次
+    thread.start()
+    if get_fs_info():
+        dir_list = dir_list_file()
+        while get_fs_info():
+            if len(dir_list)==0:
+                return
+            try:
+                shutil.rmtree(dir_list[0]['path'],True)
+            except Exception as error:
+                print error
+            dir_list.remove(dir_list[0])
