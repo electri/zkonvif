@@ -43,7 +43,7 @@ def dir_list_file(path = 'C:\RecordFile'):
     return dir_list
 
 def del_dir_schedule():
-    thread = threading.Timer(2*3600,del_dir_schedule) #2小时执行一次
+    thread = threading.Timer(3600,del_dir_schedule) #1小时执行一次
     thread.start()
     if get_fs_info():
         dir_list = dir_list_file()
