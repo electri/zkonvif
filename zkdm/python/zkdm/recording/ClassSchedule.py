@@ -171,10 +171,9 @@ class Schedule():
                 stop_thread.start()
                 _record_thread.append(stop_thread)
 
-            reload_thread = threading.Timer(1*3600, self.analyse_json)#1小时重新获取一次课表信息
-            reload_thread.start()
-
-    def analyse_json(self,ip,hosttype):
+    def analyse_json(self,ip='127.0.0.1',hosttype='x86'):
+        reload_thread = threading.Timer(3600, self.analyse_json)#1小时重新获取一次课表信息
+        reload_thread.start()
         rc = {}
         rc['result'] = 'ok'
         rc['info'] = ''
