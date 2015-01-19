@@ -1,7 +1,7 @@
 # coding: utf-8
 import json
 import thread, time
-import urllib,urllib2,sys
+import urllib,urllib2,sys,io
 from CardServer import livingS, ReslivingS
 from RecordingCommand import RecordingCommand
 
@@ -79,7 +79,8 @@ def _x86_rtmp_living(ip):
 
     try:
         middle_req = urllib2.urlopen( _load_base_url()+'getServerUrl?type=middle',timeout=2)
-        middle_url =middle_url.read()
+        middle_url =middle_req.read()
+        print middle_url
         req = urllib2.Request(middle_url+'/repeater/prepublishbatch')
         data = _x86_rtmp_living_data()
         data = json.dumps(data)
