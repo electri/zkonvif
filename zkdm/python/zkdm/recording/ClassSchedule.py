@@ -184,7 +184,7 @@ class Schedule():
             data = ''
             try:
                 response = urllib2.urlopen(self.__mgrt_base_url+'curriculum?mac=' + mac,timeout = 3)
-                data = json.load(response)                
+                data = json.load(response)
                 with open('CourseInfo.json','w') as savefile:
                     json.dump(data,savefile)
             except Exception as err:
