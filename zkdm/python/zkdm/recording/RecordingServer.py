@@ -145,7 +145,8 @@ def main():
         _rcmd.send_command('RecordCmd=SetFileProperty&FileFormat=mp4&TotalFilePath=C:/RecordFile')
         global _class_schedule
         _class_schedule = Schedule(None)
-        _class_schedule.analyse_json('127.0.0.1','x86')        
+        _class_schedule.analyse_json('127.0.0.1','x86')
+        _class_Schedule.restart_rtmp_living()
         del_dir_schedule()
 
         global rh
