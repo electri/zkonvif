@@ -1,7 +1,7 @@
 # coding: utf-8
 import json
 import thread, time
-import urllib,urllib2,sys
+import urllib,urllib2,sys,io
 from CardServer import livingS, ReslivingS
 from RecordingCommand import RecordingCommand
 
@@ -60,13 +60,28 @@ def _x86_rtmp_living_data():
     data['uids'] = [resource1,resource2,resource3]#保留三路资源
     return data
 
+def _load_base_url():
+    '''
+    平台地址
+    '''
+    ret = json.load(io.open(r'../host/config.json', 'r', encoding='utf-8'))
+    r = ret['regHbService']
+    if ' ' in r['sip'] or ' ' in r['sport']:
+        raise Exception("include ' '")
+    if r['sip'] == '' or r['sport'] == '':
+        raise Exception("include''")
+    return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
+
 def _x86_rtmp_living(ip):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
 
     try:
-        req = urllib2.Request('http://192.168.12.117:50001/repeater/prepublishbatch')
+        middle_req = urllib2.urlopen( _load_base_url()+'getServerUrl?type=middle',timeout=2)
+        middle_url =middle_req.read()
+        print middle_url
+        req = urllib2.Request(middle_url+'/repeater/prepublishbatch')
         data = _x86_rtmp_living_data()
         data = json.dumps(data)
 

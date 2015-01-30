@@ -7,7 +7,7 @@ import threading
 import win32file
 import shutil
 
-def get_fs_info(caption = "C:"):
+def get_fs_info(caption = "D:"):
     '''
     获取磁盘信息
     '''
@@ -25,7 +25,7 @@ def sort_cmp(a,b):
     '''
     return int(a['time'] - b['time'])
 
-def dir_list_file(path = 'C:\RecordFile'):
+def dir_list_file(path = 'D:\RecordFile'):
     '''
     获取指定目录下的文件夹
     '''

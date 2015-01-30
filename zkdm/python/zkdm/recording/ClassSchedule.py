@@ -171,6 +171,31 @@ class Schedule():
                 stop_thread.start()
                 _record_thread.append(stop_thread)
 
+    def restart_rtmp_living(self,ip='127.0.0.1',hosttype = 'x86'):
+        reload_thread = threading.Timer(3*3600, self.restart_rtmp_living)#3小时重新发起直播
+        reload_thread.start()
+        try:
+            _rcmd = RecordingCommand()
+            info = _rcmd.send_command('RecordCmd=QueryRAllInfo')
+            if 'LivingStart' in info['info']:
+                _rcmd.send_command('BroadCastCmd=StopBroadCast')
+                time.sleep(1)
+                _rcmd.send_command('BroadCastCmd=StartBroadCast')
+        except Exception as error:
+            print str(error)
+
+    
+
+    def set_recording_dir(self,ip='127.0.0.1',hosttype='x86'):
+        set_thread = threading.Timer(600, self.set_recording_dir)
+        set_thread.start()
+        try:
+            _rcmd = RecordingCommand()
+            _rcmd.send_command('RecordCmd=SetFileProperty&FileFormat=mp4&TotalFilePath=D:/RecordFile')
+
+        except Exception as error:
+            print str(error)
+
     def analyse_json(self,ip='127.0.0.1',hosttype='x86'):
         reload_thread = threading.Timer(3600, self.analyse_json)#1小时重新获取一次课表信息
         reload_thread.start()
@@ -184,7 +209,7 @@ class Schedule():
             data = ''
             try:
                 response = urllib2.urlopen(self.__mgrt_base_url+'curriculum?mac=' + mac,timeout = 3)
-                data = json.load(response)                
+                data = json.load(response)
                 with open('CourseInfo.json','w') as savefile:
                     json.dump(data,savefile)
             except Exception as err:

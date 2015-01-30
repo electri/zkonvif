@@ -142,10 +142,12 @@ def main():
         service_url = r'http://<ip>:10006/recording/0/recording'
         local_service_desc = {'type':stype, 'id':'recording', 'url':service_url}
         reglist.append(local_service_desc)
-        _rcmd.send_command('RecordCmd=SetFileProperty&FileFormat=mp4&TotalFilePath=C:/RecordFile')
+
         global _class_schedule
         _class_schedule = Schedule(None)
-        _class_schedule.analyse_json('127.0.0.1','x86')        
+        _class_schedule.analyse_json('127.0.0.1','x86')
+        _class_schedule.restart_rtmp_living()
+        _class_schedule.set_recording_dir()
         del_dir_schedule()
 
         global rh
