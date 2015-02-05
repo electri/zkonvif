@@ -101,7 +101,7 @@ ptz_t *ptz_open(const char *name, int addr)
 			return 0;
 		}
 
-#if 0
+#if 1
 		int m;
 		VISCA_set_address(&serial->iface, &m);
 		fprintf(stdout, "DEBUG: %s: %s: m=%d\n", __FUNCTION__, name);
