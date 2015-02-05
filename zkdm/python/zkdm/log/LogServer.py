@@ -197,7 +197,7 @@ def make_app():
 
 
 def main():
-    pid_fname = "log.pid"
+    pid_fname = "log.id"
     p = open(pid_fname, 'w')
     try:
         portalocker.lock(p, portalocker.LOCK_EX | portalocker.LOCK_NB)
