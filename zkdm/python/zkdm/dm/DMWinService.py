@@ -10,6 +10,7 @@ sys.path.append('../')
 from common.utils import zkutils
 from common.reght import RegHt
 from common.reght import RegHost
+import common.reght
 sys.path.append('../host')
 #import Stat
 from common.utils import zkutils
@@ -163,6 +164,7 @@ def main():
 
     sds = gather_sds_from_tokens(_tokens, "dm")
     sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
+    common.reght.verbose = True
     rh = RegHt(sds)
     # 启动 ping
     thread.start_new_thread(ping_all,('../common/tokens.json',))
