@@ -12,30 +12,30 @@ import wmi, pythoncom, time
 
 PNAME = 'cardlive.exe' # 
 
-def wait_cardlive():
-	pythoncom.CoInitialize()
-	w = wmi.WMI()
+def wait():
+    pythoncom.CoInitialize()
+    w = wmi.WMI()
 
-	while True:
-	    cs = [(ps.Name, ps.ThreadCount) for ps in w.Win32_Process()]
-	
-	    f = None
-	
-	    for c in cs:
-	        if c[0].lower() == PNAME.lower():
-	            f = c
-	            break
-	
-	    if f is None:
-	        print 'Warning: %s NOT running ...' % PNAME
-	    else:
-	        print 'INFO: %s is running, thread count: %d' % (PNAME, f[1])
-	
-	    time.sleep(10.0)
-
-        if f and f[1] > 35:
+    while True:
+        cs = [(ps.Name, ps.ThreadCount) for ps in w.Win32_Process()]
+    
+        f = None
+    
+        for c in cs:
+            if c[0].lower() == PNAME.lower():
+                f = c
+                break
+    
+        if f is None:
+            print 'Warning: %s NOT running ...' % PNAME
+        else:
+            print 'INFO: %s is running, thread count: %d' % (PNAME, f[1])
+    
+        if f and f[1] > 30:
             print 'OK: cardlive.exe has %d threads' % f[1]
             break
+
+        time.sleep(10.0)
 
 
 
