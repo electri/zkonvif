@@ -151,6 +151,9 @@ def make_app():
     
 def main():
 
+    import chk_info
+    chk_info.wait()
+
     _zkutils = zkutils()
     _myip = _zkutils.myip_real()
 
@@ -162,10 +165,12 @@ def main():
     hds.append({'mac': _myip, 'ip': _myip, 'type': 'dm', 'url' : service_url, 'id': 'dm'}) 
     RegHost(hds)
 
-    sds = gather_sds_from_tokens(_tokens, "dm")
-    sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
-    common.reght.verbose = True
-    rh = RegHt(sds)
+    #sds = gather_sds_from_tokens(_tokens, "dm")
+    #sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
+    #common.reght.verbose = True
+    #rh = RegHt(sds)
+    os.system('start c:/Python27/python reg_dm.py')
+
     # 启动 ping
     thread.start_new_thread(ping_all,('../common/tokens.json',))
     # 服务管理器，何时 close ??
