@@ -73,6 +73,39 @@ def _load_base_url():
         raise Exception("include''")
     return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
 
+def _error_code(code):
+    rc = {}
+    rc['result'] = 'ok'
+    rc['info'] = ''
+    if code == 101:
+        rc['result'] = 'error'
+        rc['info'] = 'NOT_SUPPORTED_METHOD'
+        return rc
+    elif code == 102:
+        rc['result'] = 'error'
+        rc['info'] = 'NO_PARAMETER'
+        return rc
+    elif code == 103:
+        rc['result'] = 'error'
+        rc['info'] = 'INVALID_PARMAMETER'
+        return rc
+    elif code  == 110:
+        rc['result'] = 'error'
+        rc['info'] = 'DB_ERROR'
+        return rc
+    elif code == 120:
+        rc['result'] = 'error'
+        rc['info'] = 'NO_VALID_SERVERS'
+        return rc
+    elif code == 150:
+        rc['result'] = 'error'
+        rc['info'] = 'SOCKET_ERROR'
+        return rc
+    elif code == 200:
+        rc['result'] = 'error'
+        rc['info'] = 'UNKNOWN_ERROR'
+        return rc
+
 def _x86_rtmp_living(ip):
     rc = {}
     rc['result'] = 'ok'
@@ -86,13 +119,18 @@ def _x86_rtmp_living(ip):
     try:
         middle_req = urllib2.urlopen( _load_base_url()+'getServerUrl?type=middle',timeout=2)
         middle_url =middle_req.read()
-        print middle_url
+
         req = urllib2.Request(middle_url+'/repeater/prepublishbatch')
         data = _x86_rtmp_living_data()
         data = json.dumps(data)
 
         response = urllib2.urlopen(req,data)
         content = json.load(response)
+
+        if content['response_code'] != 0:
+            rc = _error_code(content['response_code'])
+            return rc
+
         urls = []
         urls = content['content']
         movie_url = rtmp_ip = port = app = ''
