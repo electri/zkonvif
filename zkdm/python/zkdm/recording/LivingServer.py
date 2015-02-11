@@ -4,6 +4,7 @@ import thread, time
 import urllib,urllib2,sys,io
 from CardServer import livingS, ReslivingS
 from RecordingCommand import RecordingCommand
+from Check_CardLive import CardLive_Runing
 
 sys.path.append('../')
 from common.utils import zkutils
@@ -76,6 +77,11 @@ def _x86_rtmp_living(ip):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
+
+    if CardLive_Runing()==False:
+        rc['result'] = 'ok'
+        rc['info'] = 'cardlive.exe is not exit!'
+        return rc
 
     try:
         middle_req = urllib2.urlopen( _load_base_url()+'getServerUrl?type=middle',timeout=2)
