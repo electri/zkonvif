@@ -5,6 +5,7 @@ import urllib,urllib2,sys,io
 from CardServer import livingS, ReslivingS
 from RecordingCommand import RecordingCommand
 from Check_CardLive import CardLive_Runing
+from LogWriter import log_info
 
 sys.path.append('../')
 from common.utils import zkutils
@@ -120,12 +121,16 @@ def _x86_rtmp_living(ip):
         middle_req = urllib2.urlopen( _load_base_url()+'getServerUrl?type=middle',timeout=2)
         middle_url =middle_req.read()
 
+        log_info('middle_url:' + middle_url)
+
         req = urllib2.Request(middle_url+'/repeater/prepublishbatch')
         data = _x86_rtmp_living_data()
         data = json.dumps(data)
 
         response = urllib2.urlopen(req,data)
         content = json.load(response)
+
+        log_info('prepublishbatch:' + content)
 
         if content['response_code'] != 0:
             rc = _error_code(content['response_code'])
@@ -172,6 +177,7 @@ def _x86_rtmp_living(ip):
         time.sleep(1)
         _rcmd = RecordingCommand()
         rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
+        log_info('StartBroadCast')
         if rc['result'] == 'ok':
             rc['info'] = infos
     except Exception as err:
