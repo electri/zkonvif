@@ -12,6 +12,7 @@ import sys, time, os
 import threading, Queue
 import json
 import CommonHelper
+import cardlive_log
 
 from socket import *
 from functools import wraps
@@ -103,6 +104,9 @@ class CmdHandler(tornado.web.RequestHandler):
 
         if cmd == 'RtspPreview':
             rc = _rcmd.preview(ip,hosttype)
+        elif cmd == 'CardLiveLog':
+            if ip == '127.0.0.1':
+                rc = cardlive_log.cardlive_log()
         elif cmd == 'UpdateClassSchedule':
             rc = _class_schedule.analyse_json(ip,hosttype)
         elif cmd == 'RTMPLiving':
