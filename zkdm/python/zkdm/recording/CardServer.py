@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*- 
 
 import tornado.httpserver
-import tornado.ioloop
 import tornado.options
 import tornado.web
 import socket
@@ -11,12 +10,6 @@ from tornado.web import RequestHandler, Application, url
 
 from suds.client import Client
 
-
-def _param(req, key):
-    if key in req.request.arguments:
-        return req.request.arguments
-    else:
-        return None
 
 def set_resource_info(data):
     try:
@@ -401,27 +394,6 @@ class LivingSHandler(tornado.web.RequestHandler):
             rc['info'] = str(error)
 
         self.write(rc)
-
-_ioloop = None # 用于支持外面的结束 ...
-
-class InternalHandler(RequestHandler):
-    def get(self):
-        rc = {}
-        rc['result'] = 'ok'
-        rc['info'] = ''
-
-        command = self.get_argument('command', 'nothing')
-        if command == 'exit':
-            self.set_header('Content-Type', 'application/json')
-            rc['info'] = 'exit!!!!'
-            self.write(rc)
-            print '_____-------'
-            _ioloop_card.stop()
-        elif command == 'version':
-            self.set_header('Content-Type', 'application/json')
-            rc['info'] = 'now version not supported!'
-            rc['result'] = 'err'
-            self.write(rc)
 
 
 def livingS(url):
