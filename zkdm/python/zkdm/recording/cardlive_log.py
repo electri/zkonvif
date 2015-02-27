@@ -11,6 +11,7 @@ import os
 
 def cardlive_log():
     filename = r'C:\Program Files\Zonekey\WindowsRecordServiceSetup\RecordService\CardLive\rtmp_url.log'
+    #filename = r'rtmp_url.log'
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
@@ -27,7 +28,7 @@ def cardlive_log():
         str_list = content.split(';')
         for s in str_list:
             if 'start' in s.lower():
-                s_list = s.split(':')
+                s_list = s.split(':',1)
                 info['start'] = s_list[1]
             elif 'stop' in s.lower():
                 s_list = s.split(':')
