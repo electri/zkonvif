@@ -84,11 +84,14 @@ class CmdHandler(tornado.web.RequestHandler):
         rc['info'] = ''
         ip = ''
         hosttype = None
+        mac = ''
         global _tokens
 
         if token == '0':
             ip= '127.0.0.1'
             hosttype = 'x86'
+            _utils = zkutils()
+            mac = _utils.mymac()
         else:
             if token not in _tokens:
                 rc['result'] = 'error'
@@ -108,7 +111,7 @@ class CmdHandler(tornado.web.RequestHandler):
             if ip == '127.0.0.1':
                 rc = cardlive_log.cardlive_log()
         elif cmd == 'UpdateClassSchedule':
-            rc = _class_schedule.analyse_json(ip,hosttype)
+            rc = _class_schedule.analyse_json(ip,mac)
         elif cmd == 'RTMPLiving':
             rc = StartLiving(ip,hosttype)
         else:
@@ -163,12 +166,21 @@ def start():
 
     #处理本机
     service_url = r'http://<ip>:10006/recording/0/recording'
-    local_service_desc = {'type':stype, 'id':'recording', 'url':service_url}
+    local_service_desc = {}
+    local_service_desc['type'] = stype
+    local_service_desc['id'] = 'recording'
+    local_service_desc['url'] = service_url
+    _utils = zkutils()
+    mac = _utils.mymac()
+    local_service_desc['mac'] = mac
+    local_service_desc['ip'] = '127.0.0.1'
+    
     reglist.append(local_service_desc)
 
     global _class_schedule
     _class_schedule = Schedule(None)
-    _class_schedule.analyse_json('127.0.0.1','x86')
+    for reg in reglist:
+        _class_schedule.analyse_json(reg['ip'],reg['mac'])
     _class_schedule.restart_rtmp_living()
     _class_schedule.set_recording_dir()
     del_dir_schedule()
