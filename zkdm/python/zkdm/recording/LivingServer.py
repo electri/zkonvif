@@ -7,20 +7,21 @@ from RecordingCommand import RecordingCommand
 from Check_CardLive import CardLive_Runing
 from LogWriter import log_info
 
+
 sys.path.append('../')
 from common.utils import zkutils
 
-def StartLiving(ip,hosttype):
+def StartLiving(ip,mac,hosttype):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
     if hosttype == 'x86':
-        rc = _x86_rtmp_living(ip)
+        rc = _x86_rtmp_living(ip,mac)
     else:
-        rc = _arm_rmtp_living(ip)
+        rc = _arm_rmtp_living(ip,hosttype)
     return rc
 
-def _arm_rmtp_living(ip):
+def _arm_rmtp_living(ip,hosttype):
     arg = "RecordCmd = RtmpUrlS&rtmp://192.168.12.117:51935/zonekey/sereamid0^rtmp://192.168.12.117:51935/zonekey/sereamid1^rtmp://192.168.12.117:51935/zonekey/sereamid2"
     print arg
     print ip
@@ -37,10 +38,10 @@ def _arm_rmtp_living(ip):
     rc['info'] = ''
     return rc
 
-def _x86_rtmp_living_data():
+def _x86_rtmp_living_data(mac):
     data = {}
     _utils = zkutils()
-    mac = _utils.mymac()
+    #mac = _utils.mymac()
     #mac = '00E04CC20811'
     mac = mac.lower()
     data['group_id'] = mac
@@ -107,10 +108,11 @@ def _error_code(code):
         rc['info'] = 'UNKNOWN_ERROR'
         return rc
 
-def _x86_rtmp_living(ip):
+def _x86_rtmp_living(ip,mac):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
+    log_info('fffff')
 
     if CardLive_Runing()==False:
         rc['result'] = 'ok'
@@ -121,20 +123,20 @@ def _x86_rtmp_living(ip):
         middle_req = urllib2.urlopen( _load_base_url()+'getServerUrl?type=middle',timeout=2)
         middle_url =middle_req.read()
 
-        log_info('middle_url:' + middle_url)
+        log_info('middle_url:' + str(middle_url))
 
         req = urllib2.Request(middle_url+'/repeater/prepublishbatch')
-        data = _x86_rtmp_living_data()
+        data = _x86_rtmp_living_data(mac)
         data = json.dumps(data)
 
         response = urllib2.urlopen(req,data)
         content = json.load(response)
 
-        log_info('prepublishbatch:' + content)
+        log_info('prepublishbatch:' + str(content))
 
-        if content['response_code'] != 0:
-            rc = _error_code(content['response_code'])
-            return rc
+        #if content['response_code'] != 0:
+            #rc = _error_code(content['response_code'])
+            #return rc
 
         urls = []
         urls = content['content']

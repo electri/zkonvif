@@ -113,7 +113,7 @@ class CmdHandler(tornado.web.RequestHandler):
         elif cmd == 'UpdateClassSchedule':
             rc = _class_schedule.analyse_json(ip,mac)
         elif cmd == 'RTMPLiving':
-            rc = StartLiving(ip,hosttype)
+            rc = StartLiving(ip, mac, hosttype)
         else:
             args = (self.request.uri.split('?'))[1]
             rc=_rcmd.send_command(args,ip)
