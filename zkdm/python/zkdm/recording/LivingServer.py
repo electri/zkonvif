@@ -117,19 +117,19 @@ def _error_code(code,content):
             info = {}
             info['uid'] = url['stream_uid']
             info['rtmp_repeater'] = url['publish_url']
-            if 'teacher' in url['uid']:
+            if 'teacher' in url['stream_uid']:
                 info['card_info'] = 'card0'
-            if 'teacher_full' in url['uid']:   
+            if 'teacher_full' in url['stream_uid']:   
                 info['card_info'] = 'card1'
-            if 'student' in url['uid']:
+            if 'student' in url['stream_uid']:
                 info['card_info'] = 'card2'
-            if 'student_full' in url['uid']:               
+            if 'student_full' in url['stream_uid']:               
                 info['card_info'] = 'card3'
-            if 'vga' in url['uid']: 
+            if 'vga' in url['stream_uid']: 
                 info['card_info'] = 'card4'
-            if 'blackboard_writing' in url['uid']:
+            if 'blackboard_writing' in url['stream_uid']:
                 info['card_info'] = 'card5'
-            if 'movie' in url['uid']:   
+            if 'movie' in url['stream_uid']:   
                 info['card_info'] = 'card6'
 
             infos.append(info)
@@ -167,8 +167,7 @@ def _x86_rtmp_living(ip,mac):
         response = urllib2.urlopen(req,data)
         content = json.load(response)
 
-        log_info('prepublishbatch:' + str(content))
-
+        log_info('reponse_code' + content['response_code'])
         if content['response_code'] != 0:
             rc = _error_code(content['response_code'],content)
             return rc
@@ -218,6 +217,7 @@ def _x86_rtmp_living(ip,mac):
         if rc['result'] == 'ok':
             rc['info'] = infos
     except Exception as err:
+        print str(err)
         rc['result'] = 'error'
         rc['info'] = str(err)
 
