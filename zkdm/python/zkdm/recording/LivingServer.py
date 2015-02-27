@@ -167,7 +167,7 @@ def _x86_rtmp_living(ip,mac):
         response = urllib2.urlopen(req,data)
         content = json.load(response)
 
-        log_info('reponse_code' + content['response_code'])
+        log_info('reponse_code' + str(content['response_code']))
         if content['response_code'] != 0:
             rc = _error_code(content['response_code'],content)
             return rc

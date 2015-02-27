@@ -461,9 +461,9 @@ def ReslivingS(ip,port,app):
     rc['info'] = ''
     try:
         res_living_info_d = client.service.RTSPLiving()['message']
-        res_living_info_d['App'] = str(app)
-        res_living_info_d['ResServerIP'] = str(ip)
-        res_living_info_d['ResServerPort'] = str(port)
+        res_living_info_d['App'] = app
+        res_living_info_d['ResServerIP'] = ip
+        res_living_info_d['ResServerPort'] = port
         if hasattr(res_living_info_d,'IsStartResLiving'):
             res_living_info_d['IsStartResLiving'] = 'True'
         if hasattr(res_living_info_d,'IsStartRtmpLiving'):
