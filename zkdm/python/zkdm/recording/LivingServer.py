@@ -75,7 +75,7 @@ def _load_base_url():
         raise Exception("include''")
     return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
 
-def _error_code(code):
+def _error_code(code,content):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
@@ -107,12 +107,47 @@ def _error_code(code):
         rc['result'] = 'error'
         rc['info'] = 'UNKNOWN_ERROR'
         return rc
+    elif code == 122:
+        rc['result'] = 'ok'
+        urls = []
+        urls = content['content']
+        infos = []
+
+        for url in urls:
+            info = {}
+            info['uid'] = url['stream_uid']
+            info['rtmp_repeater'] = url['publish_url']
+            if 'teacher' in url['uid']:
+                info['card_info'] = 'card0'
+            if 'teacher_full' in url['uid']:   
+                info['card_info'] = 'card1'
+            if 'student' in url['uid']:
+                info['card_info'] = 'card2'
+            if 'student_full' in url['uid']:               
+                info['card_info'] = 'card3'
+            if 'vga' in url['uid']: 
+                info['card_info'] = 'card4'
+            if 'blackboard_writing' in url['uid']:
+                info['card_info'] = 'card5'
+            if 'movie' in url['uid']:   
+                info['card_info'] = 'card6'
+
+            infos.append(info)
+        rc['info'] = infos
+        return rc
+    elif code == 120:
+        rc['result'] = 'error'
+        rc['info'] = 'all servers are shutdown or full,please check'
+        return rc
+    else:
+        rc['result'] = 'error'        
+        rc['info'] = 'UNKNOWN_ERROR'
+        return rc        
 
 def _x86_rtmp_living(ip,mac):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
-    log_info('fffff')
 
     if CardLive_Runing()==False:
         rc['result'] = 'ok'
@@ -134,9 +169,9 @@ def _x86_rtmp_living(ip,mac):
 
         log_info('prepublishbatch:' + str(content))
 
-        #if content['response_code'] != 0:
-            #rc = _error_code(content['response_code'])
-            #return rc
+        if content['response_code'] != 0:
+            rc = _error_code(content['response_code'],content)
+            return rc
 
         urls = []
         urls = content['content']
