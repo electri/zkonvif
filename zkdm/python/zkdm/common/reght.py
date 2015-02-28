@@ -12,9 +12,19 @@ import urllib2, sys, json, io, time, threading, re, sqlite3, os
 from utils import zkutils
 from Log import Log
 
+
 verbose = False
 _log = Log('reg/ht')
 TIMEOUT = 3 # urllib2.urlopen 的超时 ...
+
+def logme(info):
+    try:
+        f = open('reght.log', 'a')
+        f.write('%s: %s' % (time.asctime(), info))
+        f.write('\n')
+        f.close()
+    except:
+        pass
 
 myip = zkutils().myip_real()
 mymac = zkutils().mymac()
@@ -198,7 +208,7 @@ class _RegHtOper:
             mgrt_base_url = self.__load_base_url()
         if verbose:
             print 'INFO: using name service url:', mgrt_base_url
-        _log.log('INFO: using nameservice url:' + mgrt_base_url)
+            logme('INFO: using name service url: %s' % mgrt_base_url)
         self.__mgrt_base_url = mgrt_base_url
         self.__ip = ip
         self.__mac = mac
@@ -236,7 +246,10 @@ class _RegHtOper:
             else:
                 return False
         except Exception as e:
+            print '----- reghost except ----'
+            print '-- url:', url
             print e
+            logme('ERR: reghost exception, url=%s' % url)
             return False
 
     def reghost_chkop(self, hd):
@@ -279,6 +292,7 @@ class _RegHtOper:
                 print '-------------------- regService- Exception ---------------'
                 print e
                 print '==========================================================='
+                logme('ERR: regService exception: url=%s' % url)
             return False
 
         if u'已经注册' not in ret['info']:
@@ -299,7 +313,7 @@ class _RegHtOper:
               (self.__ip, mac, sd['type'], sd['id'])
         if verbose:
             print url
-        print url
+            logme('DEBUG: htop: url=%s' % url)
 
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
@@ -382,7 +396,7 @@ class RegHt(threading.Thread):
             注意，其中 url 的 ip 部分，如果使用 <ip> 则将会转换为本机 ip，否则不做任何转换！！
             其中 mac 为可选项，如果不提供，就使用本机的 mac
     '''
-    def __init__(self, sds, mgrt_baseurl = None):
+    def __init__(self, sds, mgrt_baseurl = None, log=False):
         self.__quit = False
         self.__quit_notify = threading.Event()
         self.__mgrt_base_url = mgrt_baseurl
@@ -429,10 +443,19 @@ class RegHt(threading.Thread):
             if self.__quit_notify.wait(interval):
                 continue
 
-            next(regfunc)
-            next(htfunc)
-            next(chkalivefunc)
-            self.__to_unreg(gos, oper.unregop)
+            try:
+                next(regfunc)
+                next(htfunc)
+            except:
+                logme('Exception: in RegHt: run ...')
+            try:
+                next(chkalivefunc)
+            except:
+                logme('Exception: in RegHt: chkalive ...')
+            try:
+                self.__to_unreg(gos, oper.unregop)
+            except:
+                logme('Exception: in RegHt: to unreg ...')
     
     def __to_unreg(self, gos, func):
         self.__lock.acquire()

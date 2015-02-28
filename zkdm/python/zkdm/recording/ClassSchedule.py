@@ -57,38 +57,38 @@ class Schedule():
                 Teacher=%s&Address=%s&DateTime=%s&Description=%s&Grade=%s'\
                 %(info['_department'], info['_subject'],info['_course_name'],
                         info['_teacher'],info['_address'],info['_datetime'],info['_description'],info['_grade'])
-        _rcmd.send_command(_course_info)
+        _rcmd.send_command(_course_info, info['_ip'])
         time.sleep(0.2)
-        _rcmd.send_command('RecordCmd=StartRecord')
+        _rcmd.send_command('RecordCmd=StartRecord', info['_ip'])
 
-    def _stop_record(self):
+    def _stop_record(self, info):
         '''
         停止录像任务
         '''
         _rcmd = RecordingCommand()
-        _rcmd.send_command('RecordCmd=StopRecord')
+        _rcmd.send_command('RecordCmd=StopRecord', info['_ip'])
 
-    def _stop_execute_task(self):
+    def _stop_execute_task(self,mac):
         '''
         取消所有任务
         '''
         for thread in _record_thread:
-            thread.cancel()
+            if thread.name == mac:
+                thread.cancel()
 
-    def _apply_living(self,end_time):
+    def _apply_living(self, info):
         '''
         像平台申请直播
         '''
-        _utils = zkutils()
-        mac = _utils.mymac()
+        mac = info['_mac']
+        end_time = info['_stop_time']
         resopnse = urllib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime,timeout=2)
 
-    def _apply_stop_living(self):
+    def _apply_stop_living(self,info):
         '''
         像平台申请停止直播
         '''
-        _utils = zkutils()
-        mac = _utils.mymac()
+        mac = info['_mac']
         resopnse = urllib2.urlopen(self.__mgrt_base_url+'living?mac='+mac+'&para=stop',timeout=2)
 
     def _analyse_time(self,give_time):
@@ -109,7 +109,7 @@ class Schedule():
             _delay_time = -1
         return _delay_time
 
-    def _analyse_data(self, data):
+    def _analyse_data(self, data, ip, mac):
         global _record_thread
         _record_thread = []
 
@@ -151,23 +151,35 @@ class Schedule():
                 info['_living_mode'] = _living_mode
                 info['_datetime'] = _start_time
                 info['_description'] = _description
+                info['_ip'] = ip
 
                 thread =  threading.Timer(_start_delay_time,self._record_task,[info])
+                thread.setName(mac)
                 thread.start()
                 _record_thread.append(thread) 
 
             if _recording == 'true' and _stop_delay_time>0:
-                stop_thread =  threading.Timer(_stop_delay_time,self._stop_record)
+                info = {}
+                info['_ip'] = ip
+                stop_thread =  threading.Timer(_stop_delay_time,self._stop_record,[info])
+                stop_thread.setName(mac)
                 stop_thread.start()
                 _record_thread.append(stop_thread)
 
             if _living == 'true' and _start_delay_time>0:
-                thread = threading.Timer(_start_delay_time,self._apply_living,[_stop_time])
+                info = {}
+                info['_mac'] = mac
+                info['_stop_time'] = _stop_time
+                thread = threading.Timer(_start_delay_time,self._apply_living,[info])
+                thread.setName(mac)
                 thread.start()
                 _record_thread.append(thread)
 
             if _living == 'true' and _stop_delay_time>0:
-                stop_thread = threading.Timer(_stop_delay_time,self._apply_stop_living)
+                info = {}
+                info['_mac'] = mac
+                stop_thread = threading.Timer(_stop_delay_time,self._apply_stop_living,[info])
+                stop_thread.setName(mac)
                 stop_thread.start()
                 _record_thread.append(stop_thread)
 
@@ -196,29 +208,26 @@ class Schedule():
         except Exception as error:
             print str(error)
 
-    def analyse_json(self,ip='127.0.0.1',hosttype='x86'):
-        reload_thread = threading.Timer(3600, self.analyse_json)#1小时重新获取一次课表信息
+    def analyse_json(self,ip = '127.0.0.1',mac = ''):
+        reload_thread = threading.Timer(3600, self.analyse_json,(ip,mac))#1小时重新获取一次课表信息
         reload_thread.start()
+        print ip,mac
         rc = {}
         rc['result'] = 'ok'
         rc['info'] = ''
         try:      
-            _utils = zkutils()
-            mac = _utils.mymac()
-            #mac = '00E04CC20811'
             data = ''
             try:
                 response = urllib2.urlopen(self.__mgrt_base_url+'curriculum?mac=' + mac,timeout = 3)
                 data = json.load(response)
-                with open('CourseInfo.json','w') as savefile:
+                with open(mac + 'CourseInfo.json','w') as savefile:
                     json.dump(data,savefile)
             except Exception as err:
-                print err
                 data = {}
-                course_info_file = file('CourseInfo.json')
+                course_info_file = file(mac + 'CourseInfo.json')
                 data = json.load(course_info_file)
-            self._stop_execute_task()
-            self._analyse_data(data)
+            self._stop_execute_task(mac)
+            self._analyse_data(data, ip, mac)
         except Exception as err:
             print err
             rc['result'] = 'error'

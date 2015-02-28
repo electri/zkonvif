@@ -1,13 +1,24 @@
+#!/usr/bin/python
 # coding: utf-8
+#
+# @file: RecordServer.py
+# @date: 2015-02-25
+# @brief:
+# @detail:
+#
+#################################################################
 
+import sys, time, os
+import threading, Queue
+import json
+import CommonHelper
+import cardlive_log
+
+from socket import *
+from functools import wraps
 from tornado.web import *
 from tornado.ioloop import IOLoop
-from tornado.gen import  *
-import urllib, urllib2
-import thread, time, sys, io
-import socket
-import json
-
+from tornado.gen import *
 from RecordingCommand import RecordingCommand
 from ClassSchedule import Schedule
 from DiskManagement import del_dir_schedule
@@ -18,6 +29,7 @@ sys.path.append('../')
 from common.utils import zkutils
 from common.reght import RegHt
 from common.uty_token import *
+from LogWriter import log_info
 
 
 # 必须设置工作目录 ...
@@ -33,6 +45,7 @@ def _param(req, key):
 _rcmd = None
 _class_schedule = None
 rh = None
+_ioloop = None # 用于支持外面的结束 ...
 _tokens = load_tokens('../common/tokens.json')
 
 
@@ -44,56 +57,71 @@ class HelpHandler(tornado.web.RequestHandler):
     def get(self):
         self.render('help.html')
 
+def run_async(func):
+	@wraps(func)
+	def async_func(*args, **kwargs):
+		f = threading.Thread(target = func, args = args, kwargs = kwargs)
+		f.start()
+		return f
+	return async_func
+
 class CmdHandler(tornado.web.RequestHandler):
     def get(self,token,service_id):
+        self.__asy_cmd(token,service_id)
+
+    @asynchronous
+    @coroutine
+    def __asy_cmd(self,token,service_id):
+        rc = yield Task(self.__asy_cmd0, token=token,service_id=service_id)
+        self.write(str(rc))
+        self.set_header('Content-Type', 'application/json')
+        self.finish()
+
+    @run_async
+    def __asy_cmd0(self, callback, token, service_id):
         rc={}
-        rc['result']='ok'
-        rc['info']=''
+        rc['result'] = 'ok'
+        rc['info'] = ''
         ip = ''
         hosttype = None
-
-
+        mac = ''
         global _tokens
 
         if token == '0':
-            ip = '127.0.0.1'
-            hosttype = "x86" # ??
+            ip= '127.0.0.1'
+            hosttype = 'x86'
+            _utils = zkutils()
+            mac = _utils.mymac()
         else:
             if token not in _tokens:
                 rc['result'] = 'error'
                 rc['info'] = 'the %sth host does not exit'%token
-                self.write(rc)
+                callback(rc)
                 return
             else:
                 hosttype = _tokens[token]['hosttype']
-                id_port = get_private_from_tokens(token,service_id,'recording',_tokens)
-                ip = id_port['ip']
+                mac = _tokens[token]['mac']
+                ip = _tokens[token]['ip']
+                #print hosttype, mac, ip
+                #ip_port = get_private_from_tokens(token,service_id,'recording',_tokens)
+                #ip = ip_port['target_ip']
 
-
-        cmd = self.get_argument('RecordCmd','nothing')
+        cmd = self.get_argument('RecordCmd','nothing')        
 
         if cmd == 'RtspPreview':
             rc = _rcmd.preview(ip,hosttype)
-            self.write(rc)
-            return
+        elif cmd == 'CardLiveLog':
+            if ip == '127.0.0.1':
+                rc = cardlive_log.cardlive_log()
         elif cmd == 'UpdateClassSchedule':
-            rc = _class_schedule.analyse_json(ip,hosttype)
-            self.write(rc)
-            return 
+            rc = _class_schedule.analyse_json(ip,mac)
         elif cmd == 'RTMPLiving':
-            rc = StartLiving(ip,hosttype)
-            self.write(rc)
-            return
+            rc = StartLiving(ip, mac, hosttype)
         else:
             args = (self.request.uri.split('?'))[1]
-            print args
             rc=_rcmd.send_command(args,ip)
-            self.set_header('Content-Type', 'application/json')
-            self.write(rc)
 
-        return
-
-_ioloop = None # 用于支持外面的结束 ...
+        callback(rc)
 
 class InternalHandler(RequestHandler):
     def get(self):
@@ -116,63 +144,64 @@ class InternalHandler(RequestHandler):
             self.write(rc)
         elif command =='services':
             self.set_header('Content-Type', 'application/json')
-            self.write(_service)
+            rc['info'] = 'recording'
+            self.write(rc)
 
-_ioloop = IOLoop.instance()
-def main():
-    try:
-        tornado.options.parse_command_line()
-        application = tornado.web.Application([
+def make_app():
+    return Application([
             url(r"/", MainHandler),
             url(r"/recording/([^\/]+)/([^\/]+)/cmd",CmdHandler), #这里的 url 格式，必须与 tokens.json 中对应起来
             url(r"/recording/help", HelpHandler),
             url(r"/recording/internal",InternalHandler),
         ])
-        application.listen(10006)
 
-        global _rcmd
-        _rcmd = RecordingCommand()
+def start():
+    app = make_app()
+    app.listen(10006)
 
-        start_card_server()
+    global _rcmd
+    _rcmd = RecordingCommand()
 
-        stype = 'recording'
-        reglist = gather_sds('recording', '../common/tokens.json')
+    start_card_server()
 
-        #处理本机
-        service_url = r'http://<ip>:10006/recording/0/recording'
-        local_service_desc = {'type':stype, 'id':'recording', 'url':service_url}
-        reglist.append(local_service_desc)
+    stype = 'recording'
+    reglist = gather_sds('recording', '../common/tokens.json')
 
-        global _class_schedule
-        _class_schedule = Schedule(None)
-        _class_schedule.analyse_json('127.0.0.1','x86')
-        _class_schedule.restart_rtmp_living()
-        _class_schedule.set_recording_dir()
-        del_dir_schedule()
+    #处理本机
+    service_url = r'http://<ip>:10006/recording/0/recording'
+    local_service_desc = {}
+    local_service_desc['type'] = stype
+    local_service_desc['id'] = 'recording'
+    local_service_desc['url'] = service_url
+    _utils = zkutils()
+    mac = _utils.mymac()
+    local_service_desc['mac'] = mac
+    local_service_desc['ip'] = '127.0.0.1'
+    
+    reglist.append(local_service_desc)
 
-        global rh
-        rh = RegHt(reglist)
+    global _class_schedule
+    _class_schedule = Schedule(None)
+    for reg in reglist:
+        _class_schedule.analyse_json(reg['ip'],reg['mac'])
+    _class_schedule.restart_rtmp_living()
+    _class_schedule.set_recording_dir()
+    del_dir_schedule()
 
-        global _ioloop
-        _ioloop.start()
+    global rh
+    rh = RegHt(reglist)
 
-    except Exception as error:
-        print error
-       
-def is_running(ip,port):
-    s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)  
-    try:  
-        s.connect((ip,int(port)))
-        s.shutdown(2)
-        #利用shutdown()函数使socket双向数据传输变为单向数据传输。shutdown()需要一个单独的参数，  
-        #该参数表示了如何关闭socket。具体为：0表示禁止将来读；1表示禁止将来写；2表示禁止将来读和写。  
-        s.close()
-        return True  
-    except Exception as error:
-        return False 
-       
-if __name__ == "__main__":
-    result = is_running('127.0.0.1',10006)
+    global _ioloop
+    _ioloop = IOLoop.instance()
+    log_info('start')
+    _ioloop.start()
+
+
+if __name__ == '__main__':
+    result = CommonHelper.is_running()
     if result == False:
-        main()
+        start()
 
+
+
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
