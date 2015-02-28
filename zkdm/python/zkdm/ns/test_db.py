@@ -10,10 +10,15 @@
 
 import dbext as db
 
+MAC = 'AABB112233CC'
+STYPE = 'ptz'
+SID = 'teacher'
 
-x = db.get_private('AABB112233CC', 'ptz', 'teacher')
+hosttype = db.get_hosttype(MAC)
+print hosttype
 
-print x
+private = db.get_private(MAC, STYPE, SID)
+print private
 
 
 

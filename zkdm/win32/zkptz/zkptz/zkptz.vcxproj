@@ -159,9 +159,13 @@
     <ClInclude Include="..\..\..\ptz\polyfit.h" />
     <ClInclude Include="..\..\..\ptz\ptz.h" />
     <ClInclude Include="..\..\..\ptz\ZoomValueConvert.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="zkptz.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,6 +15,25 @@ import sqlite3
 
 DB_FNAME = "ns.db"
 
+
+def get_hosttype(tid):
+    ''' 根据 token id 查询对应的主机类型 '''
+    db = sqlite3.connect(DB_FNAME)
+    c = db.cursor()
+
+    s0 = 'select type from hosts where mac="%s"' % (tid)
+    result = c.execute(s0)
+
+    x = [r[0] for r in result]
+
+    db.close()
+
+    if len(x) == 0:
+        return None
+    else:
+        return x[0] # 返回 hosttype
+
+
 def get_private(tid, stype, sid):
     ''' 返回特定服务的 private 信息, 如果查不到，返回 None，
 
@@ -31,6 +50,9 @@ def get_private(tid, stype, sid):
     result = c.execute(s0)
     
     x = [(r[0], r[1]) for r in result]
+
+    db.close()
+
     if len(x) == 0:
         return None
     return x[0][0], x[0][1]
