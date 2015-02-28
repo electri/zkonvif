@@ -56,10 +56,18 @@ class RecordingCommand():
                 rc['result'] = 'error'
                 rc['info'] = rtsp_ip['info']
         else:
-            rc = self.send_command('RecordCmd=QueryRtspUrls',ip)
-            if rc['result'] == 'ok':
+            response = self.send_command('RecordCmd=QueryRtspUrls',ip)
+            if response['result'] == 'ok':
                 url = {}
-                #rc['info'].split
+                infos = response['info'].split('&')
+                i = 1
+                for info in infos:
+                    url['resource' + str(i)] = info
+                    i = i+1
+                rc['info'] = url
+            else:
+                rc['result'] = 'error'
+                rc['info'] = response['info']
 
         
         return rc

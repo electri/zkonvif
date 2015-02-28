@@ -18,22 +18,6 @@ def StartLiving(ip,mac,hosttype):
     rc = _rtmp_living(ip, mac, hosttype)
     return rc
 
-def _arm_rmtp_living(ip,hosttype):
-    arg = "RecordCmd = RtmpUrlS&rtmp://192.168.12.117:51935/zonekey/sereamid0^rtmp://192.168.12.117:51935/zonekey/sereamid1^rtmp://192.168.12.117:51935/zonekey/sereamid2"
-    print arg
-    print ip
-    _rcmd = RecordingCommand()
-    rc=_rcmd.send_command(arg,ip)
-
-    print rc
-
-    rc = _rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
-    print rc
-
-    rc = {}
-    rc['result'] = 'ok'
-    rc['info'] = ''
-    return rc
 
 def _x86_rtmp_living_data(mac):
     data = {}
@@ -76,8 +60,8 @@ def _arm_rtmp_living_data(mac, hosttype):
     resource5['uid'] = mac + '_student_full'
     resource6 = {}
     resource6['uid'] = mac + '_blackboard_writing'
-    if hosttype == 'd2200':
-        data['uids'] = [resource3,resource1,resource2]
+    if hosttype == 'D3100':
+        data['uids'] = [resource1, resource2, resource5, resource3]
     return data
 
 def _load_base_url():
