@@ -100,8 +100,11 @@ class CmdHandler(tornado.web.RequestHandler):
                 return
             else:
                 hosttype = _tokens[token]['hosttype']
-                ip_port = get_private_from_tokens(token,service_id,'recording',_tokens)
-                ip = id_port['ip']
+                mac = _tokens[token]['mac']
+                ip = _tokens[token]['ip']
+                #print hosttype, mac, ip
+                #ip_port = get_private_from_tokens(token,service_id,'recording',_tokens)
+                #ip = ip_port['target_ip']
 
         cmd = self.get_argument('RecordCmd','nothing')        
 

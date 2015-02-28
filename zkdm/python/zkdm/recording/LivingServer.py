@@ -15,10 +15,7 @@ def StartLiving(ip,mac,hosttype):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
-    if hosttype == 'x86':
-        rc = _x86_rtmp_living(ip,mac)
-    else:
-        rc = _arm_rmtp_living(ip,hosttype)
+    rc = _rtmp_living(ip, mac, hosttype)
     return rc
 
 def _arm_rmtp_living(ip,hosttype):
@@ -40,9 +37,6 @@ def _arm_rmtp_living(ip,hosttype):
 
 def _x86_rtmp_living_data(mac):
     data = {}
-    _utils = zkutils()
-    #mac = _utils.mymac()
-    #mac = '00E04CC20811'
     mac = mac.lower()
     data['group_id'] = mac
     move = {}
@@ -61,6 +55,29 @@ def _x86_rtmp_living_data(mac):
     resource6 = {}
     resource6['uid'] = mac + '_blackboard_writing'
     data['uids'] = [resource1,resource2,resource3]#保留三路资源
+    return data
+
+def _arm_rtmp_living_data(mac, hosttype):
+    data = {}
+    mac = mac.lower()
+    data['group_id'] = mac
+    move = {}
+    move['uid'] = mac + '_movie'
+
+    resource1 = {}
+    resource1['uid'] = mac + '_teacher'
+    resource2 = {}
+    resource2['uid'] = mac + '_student'
+    resource3 = {}
+    resource3['uid'] = mac + '_vga'
+    resource4 = {}
+    resource4['uid'] = mac + '_teacher_full'
+    resource5 = {}
+    resource5['uid'] = mac + '_student_full'
+    resource6 = {}
+    resource6['uid'] = mac + '_blackboard_writing'
+    if hosttype == 'd2200':
+        data['uids'] = [resource3,resource1,resource2]
     return data
 
 def _load_base_url():
@@ -144,15 +161,16 @@ def _error_code(code,content):
         rc['info'] = 'UNKNOWN_ERROR'
         return rc        
 
-def _x86_rtmp_living(ip,mac):
+def _rtmp_living(ip, mac, hosttype):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
 
-    if CardLive_Runing()==False:
-        rc['result'] = 'ok'
-        rc['info'] = 'cardlive.exe is not exit!'
-        return rc
+    if hosttype == 'x86':
+        if CardLive_Runing()==False:
+            rc['result'] = 'ok'
+            rc['info'] = 'cardlive.exe is not exit!'
+            return rc
 
     try:
         middle_req = urllib2.urlopen( _load_base_url()+'getServerUrl?type=middle',timeout=2)
@@ -161,7 +179,10 @@ def _x86_rtmp_living(ip,mac):
         log_info('middle_url:' + str(middle_url))
 
         req = urllib2.Request(middle_url+'/repeater/prepublishbatch')
-        data = _x86_rtmp_living_data(mac)
+        if hosttype == 'x86':
+            data = _x86_rtmp_living_data(mac)
+        else:
+            data = _arm_rtmp_living_data(mac,hosttype)
         data = json.dumps(data)
 
         response = urllib2.urlopen(req,data)
@@ -209,15 +230,22 @@ def _x86_rtmp_living(ip,mac):
                 url =url[len(port)+1:]
                 app = url.split('/')[0]
 
-        ReslivingS(rtmp_ip,port,app)
-        time.sleep(1)
         _rcmd = RecordingCommand()
-        rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
-        log_info('StartBroadCast')
+        if hosttype == 'x86':
+            ReslivingS(rtmp_ip,port,app)
+            time.sleep(1)
+            rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
+        else:
+            arm_arg = 'BroadCastCmd=RtmpUrlS&'
+            for info in infos:
+                arm_arg = arm_arg + info['rtmp_repeater'] +'^'
+            arm_arg = arm_arg[:-1]
+            rc = _rcmd.send_command(arm_arg,ip)
+
         if rc['result'] == 'ok':
             rc['info'] = infos
+
     except Exception as err:
-        print str(err)
         rc['result'] = 'error'
         rc['info'] = str(err)
 
