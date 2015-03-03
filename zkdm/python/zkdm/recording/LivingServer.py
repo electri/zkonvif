@@ -217,14 +217,16 @@ def _rtmp_living(ip, mac, hosttype):
         _rcmd = RecordingCommand()
         if hosttype == 'x86':
             ReslivingS(rtmp_ip,port,app)
-            time.sleep(1)
-            rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
         else:
             arm_arg = 'BroadCastCmd=RtmpUrlS&'
             for info in infos:
                 arm_arg = arm_arg + info['rtmp_repeater'] +'^'
             arm_arg = arm_arg[:-1]
+            log_info(arm_arg)
             rc = _rcmd.send_command(arm_arg,ip)
+
+        time.sleep(1)
+        rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
 
         if rc['result'] == 'ok':
             rc['info'] = infos
