@@ -8,13 +8,18 @@
 #
 #################################################################
 
-import sys, time
+import sys, time, os
 sys.path.append('../')
 from common.utils import zkutils
 from common.reght import RegHt
 from common.reght import RegHost
 import common.reght
 import portalocker
+
+try:
+    os.remove('reght.log')
+except:
+    pass
 
 pid_fname = "reg_dm.id"
 p = open(pid_fname, 'w')
