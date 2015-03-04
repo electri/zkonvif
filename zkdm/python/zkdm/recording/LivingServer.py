@@ -116,8 +116,8 @@ def _error_code(code,content):
 
         for url in urls:
             info = {}
-            info['uid'] = url['stream_uid']
-            info['rtmp_repeater'] = url['publish_url']
+            info['uid'] = str(url['stream_uid'])
+            info['rtmp_repeater'] = str(url['publish_url'])
             if 'teacher' in url['stream_uid']:
                 info['card_info'] = 'card0'
             if 'teacher_full' in url['stream_uid']:   
@@ -132,7 +132,7 @@ def _error_code(code,content):
                 info['card_info'] = 'card5'
             if 'movie' in url['stream_uid']:   
                 info['card_info'] = 'card6'
-
+            str(info)
             infos.append(info)
         rc['info'] = infos
         return rc
@@ -184,8 +184,8 @@ def _rtmp_living(ip, mac, hosttype):
 
         for url in urls:
             info = {}
-            info['uid'] = url['uid']
-            info['rtmp_repeater'] = url['rtmp_repeater']
+            info['uid'] = str(url['uid'])
+            info['rtmp_repeater'] = str(url['rtmp_repeater'])
             if 'teacher' in url['uid']:
                 info['card_info'] = 'card0'
             if 'teacher_full' in url['uid']:   
@@ -200,6 +200,8 @@ def _rtmp_living(ip, mac, hosttype):
                 info['card_info'] = 'card5'
             if 'movie' in url['uid']:   
                 info['card_info'] = 'card6'
+
+            str(info)
 
             infos.append(info)
 
