@@ -61,7 +61,7 @@ def _arm_rtmp_living_data(mac, hosttype):
     resource6 = {}
     resource6['uid'] = mac + '_blackboard_writing'
     if hosttype == 'D3100':
-        data['uids'] = [resource1, resource2, resource5, resource3]
+        data['uids'] = [resource2, resource3, resource5, resource1]
     return data
 
 def _load_base_url():
