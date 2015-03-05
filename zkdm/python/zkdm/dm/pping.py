@@ -31,6 +31,7 @@ def ping_all(fname):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     ips = db_init_from_tokens(fname)
+    print ips
 
     last_send_ping = 0
     while True:
@@ -45,6 +46,7 @@ def ping_all(fname):
             pong, remote = sock.recvfrom(16)
             if pong == 'pong':
                 remote_ip = remote[0]
+                print 'update:', remote_ip
                 db_update(remote_ip)
 
             t = time.time()

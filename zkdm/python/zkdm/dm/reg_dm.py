@@ -14,6 +14,7 @@ from common.utils import zkutils
 from common.reght import RegHt
 from common.reght import RegHost
 import common.reght
+from common.uty_token import *
 import portalocker
 
 try:
@@ -30,7 +31,9 @@ except:
     sys.exit()
 
 service_url = "http://<ip>:10000/dm"
-sds = [ {'type': 'dm', 'id': 'dm', 'url': service_url} ]
+local = {'type': 'dm', 'id': 'dm', 'url': service_url}
+sds = gather_sds('dm', '../common/tokens.json')
+sds.append(local)
 
 common.reght.verbose = True
 rh = RegHt(sds)
