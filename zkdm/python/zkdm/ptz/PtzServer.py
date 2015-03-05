@@ -43,7 +43,6 @@ lockFile(f_file)
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 _tokens = load_tokens('../common/tokens.json')
 logging.basicConfig(filename='ptz.log', filemode='w', level=logging.DEBUG)
-
 def all_ptzs_config():
     ''' 返回配置的云台 ... '''
     return _all_config['ptzs']
@@ -151,6 +150,8 @@ class ControllingHandler(RequestHandler):
             if token not in _tokens:
                 ret = {'result':'error', 'info': 'the %sth host does not exist'%token} 
             else:
+                logging.info("tokens is")
+                logging.info(_tokens)
                 id_port = get_private_from_tokens(token, name, 'ptz', _tokens)
                 # FIXME: 这里添加了是否找到 service id 的判断
                 if 'ip' not in id_port:
