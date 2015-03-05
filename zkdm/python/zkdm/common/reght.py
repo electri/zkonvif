@@ -134,13 +134,14 @@ class _GroupOfRegChk:
     def chk_alive(self, chkop):
         ''' 检查是否在线，如果在线，则从 death list 拿到 reg list '''
         i = 0
+        print 'chk_alive ...'
         while True:
             i %= len(self.__10bht)
-            self.__chk_alive(chkop, self.__10bht[i], self.__death[i])
+            self.__chk_alive(chkop, self.__10bht[i], self.__death[i], self.__10b[i])
             i += 1
             yield
 
-    def __chk_alive(self, op, bht, bdeath):
+    def __chk_alive(self, op, bht, bdeath, breg):
         death = []
         for sd in bht:
             if not op(sd):
@@ -151,7 +152,7 @@ class _GroupOfRegChk:
         for sd in bdeath:
             if op(sd):
                 print '-------- for %s online, to reg' % (sd['ip'])
-                bht.append(sd)
+                breg.append(sd)
                 bdeath.remove(sd)
 
         for sd in death:
@@ -528,8 +529,11 @@ def build_test_services(hds):
 if __name__ == '__main__':
     verbose = True
 
-    hds = build_test_hosts()
-    sds = build_test_services(hds)
+    import uty_token
+#    hds = build_test_hosts()
+#    sds = build_test_services(hds)
+    hds = uty_token.gather_hds()
+    sds = uty_token.gather_sds()
 
     rh = RegHost(hds)
     rs = RegHt(sds)
