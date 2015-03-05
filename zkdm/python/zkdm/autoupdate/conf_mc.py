@@ -53,8 +53,10 @@ def __def_conf():
 
 if __name__ == '__main__':
     conf = getconf_mulcast()
-    print conf
-    json.loads(conf)
+    c = json.loads(conf)
+
+    print '版本描述:', c['AutoUpdate']['version']
+    print '更新包:', c['AutoUpdate']['package']
 
 
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
