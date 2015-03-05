@@ -45,7 +45,7 @@ def __def_conf():
         现在的配置信息就是平台服务的吧
     '''
     abspath = os.path.abspath(__file__)
-    hosts_config_fname = os.path.dirname(abspath) + "/../host/config.json"
+    hosts_config_fname = os.path.dirname(abspath) + "/global_conf.json"
     ret = json.load(io.open(hosts_config_fname, 'r', encoding='utf-8'))
     return json.dumps(ret)
 
