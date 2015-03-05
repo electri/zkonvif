@@ -150,16 +150,12 @@ class ControllingHandler(RequestHandler):
             if token not in _tokens:
                 ret = {'result':'error', 'info': 'the %sth host does not exist'%token} 
             else:
-                logging.info("tokens is")
-                logging.info(_tokens)
                 id_port = get_private_from_tokens(token, name, 'ptz', _tokens)
                 # FIXME: 这里添加了是否找到 service id 的判断
                 if 'ip' not in id_port:
                     ret = {'result': 'error', 'info': 'the service_id=%s NOT found' % name }
                 else:
-                    nm = name
-                    if id_port['id'] is not '':
-                        nm = id_port['id']
+                    nm = id_port['name']
                     armcmd = ArmPtz.toArmStr(nm, method, self.request.arguments)
                     ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
         self.set_header('Constent-Type', 'application/json')
