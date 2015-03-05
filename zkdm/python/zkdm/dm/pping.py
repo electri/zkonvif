@@ -20,15 +20,11 @@ TARGET_PORT = 11011
 
 
 def _send_pings(fd, ips):
-    ''' TODO: 可以考虑在线的，60秒发一次，不在线的 10秒一次,
-        windows 上遇到一个操蛋的问题, 当给不存在的 ip 执行 sendto, 则下次 recvfrom会返回 10054 
-        错误, 所以 sendto 时都是临时创建 socket 吧:
-    '''
-    fd = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    ''' TODO: 可以考虑在线的，60秒发一次，不在线的 10秒一次 '''
     for ip in ips:
         print 'send ping to:', ip
         fd.sendto('ping', (ip, TARGET_PORT))
-    fd.close()
+
 
 def ping_all(fname):
     ''' fname 为 tokens.json '''
