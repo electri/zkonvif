@@ -2,26 +2,25 @@
 
 from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
-import ServicesManager
-import sys, os, io, json
+import sys, os, io, json, subprocess
 import platform
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+import ServicesManager
 sys.path.append('../')
-from common.reght import RegHt, RegHost
-sys.path.append('../host')
 from common.utils import zkutils
+from common.reght import RegHt
+from common.reght import RegHost
+import common.reght
+sys.path.append('../host')
 #import Stat
+from common.utils import zkutils
+from common.uty_token import *
+import thread 
+from pping import *
 
-_zkutils = zkutils()
-
-_myip = _zkutils.myip_real()
-_mac = _zkutils.mymac()
-
-
-# DM Service 端口
 DMS_PORT = 10000
-_sm = None # 在 main 中创建
-
-plat = platform.uname()[0]
+_ioloop = IOLoop.instance()
+_tokens = load_tokens("../common/tokens.json")
 
 class HelpHandler(RequestHandler):
     ''' 提示信息 ....
@@ -38,13 +37,13 @@ class ServiceHandler(RequestHandler):
         rc = {}
         rc['result'] = 'ok'
         rc['info'] = ''
-
+        global _sm
         if oper == 'start':
             if _sm.start_service(name):
                 rc['info'] = 'started'
             else:
-                rc['result'] = 'err'
-                rc['info'] = 'not found or disabled'
+                 rc['result'] = 'err'
+                 rc['info'] = 'not found or disabled'
         elif oper == 'stop':
             if _sm.stop_service(name):
                 rc['info'] = 'stopped'
@@ -70,7 +69,7 @@ class ListServiceHandler(RequestHandler):
         rc = {}
         rc['result'] = 'ok'
         rc['info'] = ''
-
+        global _sm
         ss = _sm.list_services_new()
         value = {}
         value['type'] = 'list'
@@ -79,12 +78,6 @@ class ListServiceHandler(RequestHandler):
         rc['value'] = value
 
         self.write(rc)
-
-# 全局，用于主动结束 ...
-_ioloop = IOLoop.instance()
-#pm = Stat.PerformanceMonitor()
-#pm.start()
-rh = RegHt([ {'type':'dm', 'id':'dm', 'url':r'http://<ip>:10000/dm'}])
 
 class InternalHandler(RequestHandler):
     def get(self):
@@ -96,6 +89,7 @@ class InternalHandler(RequestHandler):
         if command == 'exit':
             rc['info'] = 'exit!!!'
             self.write(rc)
+            global rh
             rh.join()
             global _ioloop
             _ioloop.stop()
@@ -108,6 +102,7 @@ class HostHandler(RequestHandler):
     ''' 返回主机类型 
     '''
     def get(self):
+        global plat
         rc = {}
         rc['result'] = 'ok'
         rc['info'] = ''
@@ -139,6 +134,7 @@ class HostHandler(RequestHandler):
                 os.system(r'sudo /sbin/reboot')
 
         elif command == 'performance':
+            global pm
             stats = pm.get_all()    
             rc['info'] = stats                    
         else:
@@ -154,16 +150,51 @@ def make_app():
             url(r'/dm/([^/]+)/(.*)', ServiceHandler),
             url(r'/dm/internal', InternalHandler),
             ])
+    
+def mainp():
+    #import chk_info
+    #chk_info.wait()
 
-if __name__ == '__main__':
-    rgHost =  RegHost([{'mac':_mac,'type':'x86', 'ip':_myip}])
+    _zkutils = zkutils()
+    _myip = _zkutils.myip_real()
+
+    _mac = _zkutils.mymac()
+    global rh, _tokens
+    
+    service_url = r'http://%s:10000/dm'%(_myip)
+    hds = gather_hds_from_tokens(_tokens)
+    hds.append({'mac': _myip, 'ip': _myip, 'type': 'dm', 'url' : service_url, 'id': 'dm'}) 
+    RegHost(hds)
+
+    #sds = gather_sds_from_tokens(_tokens, "dm")
+    #sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
+    #common.reght.verbose = True
+    #rh = RegHt(sds)
+    #os.system('start c:/Python27/python reg_dm.py')
+
+    a = 'python reg_dm.py'
+    import shlex
+    args = shlex.split(a)
+    subprocess.Popen(args)
+
+    # 启动 ping
+    thread.start_new_thread(ping_all,('../common/tokens.json',))
     # 服务管理器，何时 close ??
+    global _sm
     _sm = ServicesManager.ServicesManager(_myip, _myip)
+
     app = make_app()
+    global DMS_PORT
     app.listen(DMS_PORT)
     _ioloop.start()
 
     # 此时，必定执行了 internal?command=exit，可以执行销毁 ...
     print 'DM end ....'
     _sm.close()
+
+
+if __name__ == '__main__':
+    # Note that this code will not be run in the 'frozen' exe-file!!!
+    mainp()
+
 
