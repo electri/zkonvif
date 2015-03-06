@@ -188,11 +188,11 @@ class Schedule():
         reload_thread.start()
         try:
             _rcmd = RecordingCommand()
-            info = _rcmd.send_command('RecordCmd=QueryRAllInfo')
-            if 'LivingStart' in info['info']:
-                _rcmd.send_command('BroadCastCmd=StopBroadCast')
-                time.sleep(1)
-                _rcmd.send_command('BroadCastCmd=StartBroadCast')
+            #info = _rcmd.send_command('RecordCmd=QueryRAllInfo')
+            #if 'LivingStart' in info['info']:
+            _rcmd.send_command('BroadCastCmd=StopBroadCast')
+            time.sleep(3)
+            _rcmd.send_command('BroadCastCmd=StartBroadCast')
         except Exception as error:
             print str(error)
 
