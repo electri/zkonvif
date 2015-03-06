@@ -1,23 +1,23 @@
 #!/usr/bin/python
 # coding: utf-8
 #
-# @file: dbext.py
+# @file: ns_query.py
 # @date: 2015-01-13
 # @brief:
-# @detail:
+# @detail: 具体服务应 import 此模块，
 #
 #################################################################
 
 
-# WARNING: 不能 import dbhlp，会执行 db_init() 的！！！
 
-import sqlite3
+import sqlite3, os
 
-DB_FNAME = "ns.db"
+fpath = os.path.abspath(__file__)
+DB_FNAME = os.path.dirname(fpath) + "/../ns/ns.db"
 
 
 def get_hosttype(tid):
-    ''' 根据 token id 查询对应的主机类型 '''
+    ''' 根据 token id 查询对应的主机类型，如果找不到 token id，则返回 None '''
     db = sqlite3.connect(DB_FNAME)
     c = db.cursor()
 
