@@ -2,6 +2,7 @@
 
 import socket, select
 import re
+import logging
 
 def TurnStr(name, direction, speed):
     return 'PtzCmd=Turn&Who=%s&Direction=%s&Speed=%s'%(name,direction,speed)
@@ -115,12 +116,15 @@ def SendThenRecv(HOST, PORT, arm_command):
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    
     try:
+        logging.info('IP is %s, Port is %s', HOST, str(PORT))
         s.connect((HOST, PORT))
     except Exception as e:
         print e
         return {'result':'error', 'info':'not connect proxied hos'}
     s.sendall(arm_command)
     data = s.recv(1024)
+    logging.info('recv data:')
+    logging.info(data)
     ret = data.split(',')
     result = ret[0].split(':')[1]
     info = ret[1].split(':')[1]
