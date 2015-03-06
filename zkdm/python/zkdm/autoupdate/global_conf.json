@@ -5,8 +5,8 @@
 	},
 
 	"AutoUpdate": {
-		"version": "http://172.16.1.10/test/version",
-		"package": "http://172.16.1.10/test/update.zip"
+		"version": "http://172.16.30.251/update/update.txt",
+		"package": "http://172.16.30.251/update/update.zip"
 	}
 }
 
