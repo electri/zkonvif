@@ -97,6 +97,7 @@ class CheckVersion:
 			sys.exit(0)
 
 	def checkVersionProcess(self):
+		bZipModify = False
 		logging.debug("下载version文件")
 		self.download_file(self.version_url, self.version_file_name)
 
@@ -108,7 +109,10 @@ class CheckVersion:
 			logging.debug("更新py文件")
 			self.download_file(self.py_url, self.py_file_name)
 			self.local_version_config["py_version"] = self.remote_version_config["py_version"]
-			#self.savefile(self.version_local_file_name, self.local_version_config)
+
+			self.savefile(self.version_local_file_name, self.local_version_config)
+
+			return False
 
 		logging.debug("检查zip文件是否有更新")
 		if self.local_version_config["zip_version"] != self.remote_version_config["zip_version"]:
@@ -117,8 +121,11 @@ class CheckVersion:
 			logging.debug("解压zip文件")
 			self.extract_zip(self.zip_file_name, "../")
 			self.local_version_config["zip_version"] = self.remote_version_config["zip_version"]
+			bZipModify = True
+
 
 		self.savefile(self.version_local_file_name, self.local_version_config)
+		return bZipModify
 
 if __name__ == "__main__":
 	check = CheckVersion()
