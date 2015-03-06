@@ -24,22 +24,6 @@ except:
     print 'only one instance can be run!!!'
     sys.exit(0)
 
-'''
-#FIXME: why not do succeed using this style !!!!
-
-def lockFile(lf):
-    p = open(lf, 'w')
-    try:
-        portalocker.lock(p, portalocker.LOCK_EX|portalocker.LOCK_NB)
-    except:
-        print 'only one instance can be run!!!'
-        sys.exit(0) 
-        
-f_file = 'ptz.pid'
-lockFile(f_file)
-'''
-
-        
 _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 _tokens = load_tokens('../common/tokens.json')
 logging.basicConfig(filename='ptz.log', filemode='w', level=logging.DEBUG)

@@ -95,39 +95,27 @@ def recvt(s, timeout = 1.0):
 
 def SendThenRecv(HOST, PORT, arm_command):
     # FIXME: 我感觉应该这样写才能支持连接超时:
-    s = None
-    try:
-        print 'INFO: try connect to %s:%d' % (HOST, PORT)
-        s = socket.create_connection((HOST, PORT), 1.0) # 超时
-    except:
-        return {'result':'error', 'info':'not connect proxied hos'}
-
-    # FIXME: 发送到 client，也需要考虑接收超时的
-    s.sendall(arm_command)
-    data = recvt(s)
-    s.close
-    if data:
-        ret = data.split(',')
-        return {'result': ret[0].split(':')[1],
-            'info': ret[1].split(':')[1] }
-    else:
-        return {'result': 'err', 'info': 'cannot obtain info from target' }
-
-
+    logging.info('ArmPtz.py: ip = %s, port = %s', HOST, str(PORT))
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    
     try:
-        logging.info('IP is %s, Port is %s', HOST, str(PORT))
+        s.settimeout(2)
         s.connect((HOST, PORT))
+        s.settimeout(None)
     except Exception as e:
         print e
+        logging.info('in ArmPtz.py, connect error:')
+        logging.info(e)
         return {'result':'error', 'info':'not connect proxied hos'}
     s.sendall(arm_command)
     data = s.recv(1024)
-    logging.info('recv data:')
-    logging.info(data)
-    ret = data.split(',')
-    result = ret[0].split(':')[1]
-    info = ret[1].split(':')[1]
     s.close()
-
-    return {'result':result, 'info':info} 
+    print 'recv data'
+    print data
+    logging.info('ArmPtz.py: recv data %s', data)
+    if 'ok' in data:
+       return {'result':'ok', 'info':''}
+    else:
+     ret = data.split(',')
+     result = ret[0].split(':')[1]
+     info = ret[1].split(':')[1]
+     return {'result': result, 'info': info} 
