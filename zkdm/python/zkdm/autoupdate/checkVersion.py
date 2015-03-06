@@ -56,8 +56,10 @@ class CheckVersion:
 
 			file_version = urlopen(remote_file_url)
 			data = file_version.read()
+			print len(data)
 		except Exception, ex:
 			logging.debug(ex)
+			sys.exit(0)
 
 		with open(local_file_name, "wb") as local_zip:
 			local_zip.write(data)
@@ -80,11 +82,19 @@ class CheckVersion:
 
 	def extract_zip(self, zip_file_name, folder = ""):
 		try:
+			lastfile = None
 			f = zipfile.ZipFile(zip_file_name, "r")
 			for file in f.namelist():
+				if file.find("checkVersion.py") != -1:
+					lastfile = file
+					continue
 				f.extract(file, folder)
+			if lastfile != None:
+				f.extract(lastfile, folder)
+			f.close()
 		except Exception,ex:
 			logging.debug(ex)
+			sys.exit(0)
 
 	def checkVersionProcess(self):
 		logging.debug("下载version文件")
@@ -104,7 +114,8 @@ class CheckVersion:
 		if self.local_version_config["zip_version"] != self.remote_version_config["zip_version"]:
 			logging.debug("更新zip文件")
 			self.download_file(self.zip_url, self.zip_file_name)
-			self.extract_zip(self.zip_file_name, "./test")
+			logging.debug("解压zip文件")
+			self.extract_zip(self.zip_file_name, "../")
 			self.local_version_config["zip_version"] = self.remote_version_config["zip_version"]
 
 		self.savefile(self.version_local_file_name, self.local_version_config)
