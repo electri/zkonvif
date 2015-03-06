@@ -106,6 +106,7 @@ def SendThenRecv(HOST, PORT, arm_command):
         logging.info('in ArmPtz.py, connect error:')
         logging.info(e)
         return {'result':'error', 'info':'not connect proxied hos'}
+    logging.info('ArmPtz.py: send cmd = %s', arm_command)
     s.sendall(arm_command)
     data = s.recv(1024)
     s.close()
