@@ -36,12 +36,12 @@ class CheckVersion:
 		c = json.loads(conf)
 		logging.debug(c)
 
-		self.py_url = c['AutoUpdate']['version']
+		#self.py_url = c['AutoUpdate']['version']
 		self.version_url = c['AutoUpdate']['version']
 		self.zip_url = c['AutoUpdate']['package']
 
 		self.py_file_name = "checkVersion.py"
-		self.py_url = self.py_url.rstrip("version")  + self.py_file_name
+		#self.py_url = self.py_url.rstrip("version")  + self.py_file_name
 
 
 
@@ -95,7 +95,7 @@ class CheckVersion:
 			lastfile = None
 			f = zipfile.ZipFile(zip_file_name, "r")
 			for file in f.namelist():
-				if file.find("checkVersion.py") != -1:
+				if file.find(self.py_file_name) != -1:
 					lastfile = file
 					continue
 				if file.find("autoupdate/version")!=-1 or file.find("autoupdate/local")!= -1 or file.find("autoupdate/update.log") != -1:
@@ -121,15 +121,15 @@ class CheckVersion:
 		if self.loadfile(self.version_file_name, self.remote_version_config) == False:
 			return False
 
-		logging.debug("检查py文件是否有更新")
-		if self.local_version_config.get("py_version") != self.remote_version_config.get("py_version"):
-			logging.debug("更新py文件")
-			self.download_file(self.py_url, self.py_file_name)
-			self.local_version_config["py_version"] = self.remote_version_config.get("py_version")
-
-			self.savefile(self.version_local_file_name, self.local_version_config)
-
-			return False
+		# logging.debug("检查py文件是否有更新")
+		# if self.local_version_config.get("py_version") != self.remote_version_config.get("py_version"):
+		# 	logging.debug("更新py文件")
+		# 	self.download_file(self.py_url, self.py_file_name)
+		# 	self.local_version_config["py_version"] = self.remote_version_config.get("py_version")
+		#
+		# 	self.savefile(self.version_local_file_name, self.local_version_config)
+		#
+		# 	return False
 
 		logging.debug("检查zip文件是否有更新")
 		if self.local_version_config.get("zip_version") != self.remote_version_config.get("zip_version"):
