@@ -10,7 +10,7 @@
 				"addr":1,
 				"extent": "card0.config"
 			}
-		},	
+		},		
 		{
 			
 			"name": "card2",
@@ -24,24 +24,6 @@
 				"addr":1,
 				
 				"extent": "card2.config"
-			
-			}
-		
-		},
-		
-		{
-			
-			"name": "card5",
-			
-			"config": 
-			
-			{
-				
-				"serial": "COMX",
-				
-				"addr":1,
-				
-				"extent": "card5.config"
 			
 			}
 		
