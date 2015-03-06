@@ -2,6 +2,7 @@
 
 import socket
 import getopt, sys
+from LogWriter import log_info
 
 class RecordingCommand():
     """
@@ -16,11 +17,10 @@ class RecordingCommand():
         rc['info']=''
         try:
             s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            #host='192.168.12.47'
             host = ip
             port=1230
             s.connect((host,port))
-            #command = command.encode('utf-8')
+            log_info(command)
             s.send(command+"\n")
             #È¥³ýUTF-8 BOM
             s.recv(3)
