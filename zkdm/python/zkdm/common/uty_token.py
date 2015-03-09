@@ -107,7 +107,7 @@ def get_private_from_tokens(token, service_id, service_type, tokens):
     j = tokens
     for i in j:
         h = j[i]
-        if __valid_host(h) and 'services' in h:
+        if __valid_host(h) and 'services' in h and i == token:
             for sk in h['services']:
                 st = h['services'][sk] # type
                 if sk != service_type:
