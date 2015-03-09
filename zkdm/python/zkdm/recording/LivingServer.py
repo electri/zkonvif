@@ -41,12 +41,12 @@ def _x86_rtmp_living_data(mac):
     data['uids'] = [resource1,resource2,resource3]#保留三路资源
     return data
 
-def _arm_rtmp_living_data(mac, hosttype):
+def _arm_rtmp_living_data(ip, mac, hosttype):
     data = {}
     mac = mac.lower()
     data['group_id'] = mac
-    move = {}
-    move['uid'] = mac + '_movie'
+    movie = {}
+    movie['uid'] = mac + '_movie'
 
     resource1 = {}
     resource1['uid'] = mac + '_teacher'
@@ -60,8 +60,22 @@ def _arm_rtmp_living_data(mac, hosttype):
     resource5['uid'] = mac + '_student_full'
     resource6 = {}
     resource6['uid'] = mac + '_blackboard_writing'
+    
+    livingMode = 'Resource'
+    #_rcmd = RecordingCommand()
+    #info = _rcmd.send_command('RecordCmd=QueryRAllInfo', ip)
+    #if 'livingMode=All' in info['info']:
+        #livingMode = 'All'
+    #elif 'livingMode=Movie' in info['info']:
+        #livingMode = 'Movie'
+
     if hosttype == 'D3100':
-        data['uids'] = [resource2, resource3, resource5, resource1]
+        #if livingMode == 'Recource':
+            #data['uids'] = [resource2, resource3, resource5, resource1]
+        #elif livingMode == 'All':
+        data['uids'] = [resource2, resource3, resource5, resource1, movie]
+        #elif livingMode == 'Movie':
+            #data['uids'] = [movie]
     return data
 
 def _load_base_url():
@@ -166,7 +180,7 @@ def _rtmp_living(ip, mac, hosttype):
         if hosttype == 'x86':
             data = _x86_rtmp_living_data(mac)
         else:
-            data = _arm_rtmp_living_data(mac,hosttype)
+            data = _arm_rtmp_living_data(ip, mac, hosttype)
         data = json.dumps(data)
 
         response = urllib2.urlopen(req,data)
@@ -226,6 +240,7 @@ def _rtmp_living(ip, mac, hosttype):
             arm_arg = arm_arg[:-1]
             log_info(arm_arg)
             rc = _rcmd.send_command(arm_arg,ip)
+            print rc
 
         time.sleep(1)
         rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)

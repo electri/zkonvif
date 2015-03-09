@@ -17,9 +17,11 @@ class RecordingCommand():
         rc['info']=''
         try:
             s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(2)
             host = ip
             port=1230
             s.connect((host,port))
+            s.settimeout(None)
             log_info(command)
             s.send(command+"\n")
             #È¥³ýUTF-8 BOM
