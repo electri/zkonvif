@@ -62,12 +62,12 @@ def _arm_rtmp_living_data(ip, mac, hosttype):
     resource6['uid'] = mac + '_blackboard_writing'
     
     livingMode = 'Resource'
-    _rcmd = RecordingCommand()
-    info = _rcmd.send_command('RecordCmd=QueryRAllInfo', ip)
-    if 'livingMode=All' in info['info']:
-        livingMode = 'All'
-    elif 'livingMode=Movie' in info['info']:
-        livingMode = 'Movie'
+    #_rcmd = RecordingCommand()
+    #info = _rcmd.send_command('RecordCmd=QueryRAllInfo', ip)
+    #if 'livingMode=All' in info['info']:
+        #livingMode = 'All'
+    #elif 'livingMode=Movie' in info['info']:
+        #livingMode = 'Movie'
 
     if hosttype == 'D3100':
         #if livingMode == 'Recource':
@@ -240,6 +240,7 @@ def _rtmp_living(ip, mac, hosttype):
             arm_arg = arm_arg[:-1]
             log_info(arm_arg)
             rc = _rcmd.send_command(arm_arg,ip)
+            print rc
 
         time.sleep(1)
         rc=_rcmd.send_command('BroadCastCmd=StartBroadCast',ip)
