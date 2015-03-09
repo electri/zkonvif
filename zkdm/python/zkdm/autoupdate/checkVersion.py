@@ -13,8 +13,12 @@ from conf_mc import *
 class CheckVersion:
 	def __init__(self):
 		#日志大于5M，删除
-		if os.path.getsize("update.log") > 5000000:
-			os.remove("update.log")
+		try:
+			if os.path.getsize("update.log") > 5000000:
+				os.remove("update.log")
+		except Exception, ex:
+			pass
+
 		#日志格式
 		logging.basicConfig(level=logging.DEBUG,
                 format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',

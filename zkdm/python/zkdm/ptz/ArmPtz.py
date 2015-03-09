@@ -96,8 +96,13 @@ def recvt(s, timeout = 1.0):
 def SendThenRecv(HOST, PORT, arm_command):
     # FIXME: 我感觉应该这样写才能支持连接超时:
     logging.info('ArmPtz.py: ip = %s, port = %s', HOST, str(PORT))
+    logging.info('ArmPtz.py: send command = %s', arm_command)
+    if arm_command == None:
+        return {'result':'error', 'info': 'do not support this command'}
+
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    
     try:
+
         s.settimeout(2)
         s.connect((HOST, PORT))
         s.settimeout(None)
@@ -106,17 +111,28 @@ def SendThenRecv(HOST, PORT, arm_command):
         logging.info('in ArmPtz.py, connect error:')
         logging.info(e)
         return {'result':'error', 'info':'not connect proxied hos'}
-    logging.info('ArmPtz.py: send cmd = %s', arm_command)
-    s.sendall(arm_command)
-    data = s.recv(1024)
+    s.sendall(arm_command) 
+    try:
+        s.settimeout(2)
+        data = s.recv(1024)
+        s.settimeout(None)
+    except Exception as e:
+        s.close()
+        print e
+        logging.info('in ArmPtz.py, recv error:')
+        logging.info(e)
+        return {'result':'error', 'info': 'recv timeout or other reasons'}
+
     s.close()
     print 'recv data'
     print data
     logging.info('ArmPtz.py: recv data %s', data)
     if 'ok' in data:
-       return {'result':'ok', 'info':''}
+        return {'result':'ok', 'info':''}
+    elif 'unsupported' in data:
+        return {'result':'error', 'info':'do not support this command'}
     else:
-     ret = data.split(',')
-     result = ret[0].split(':')[1]
-     info = ret[1].split(':')[1]
-     return {'result': result, 'info': info} 
+        ret = data.split(',')
+        result = ret[0].split(':')[1]
+        info = ret[1].split(':')[1]
+        return {'result': result, 'info': info} 
