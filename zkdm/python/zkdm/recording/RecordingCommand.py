@@ -15,8 +15,8 @@ class RecordingCommand():
         rc={}
         rc['result']='ok'
         rc['info']=''
+        s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.settimeout(2)
             host = ip
             port=1230
@@ -29,12 +29,12 @@ class RecordingCommand():
             message=s.recv(512)
             message = message.strip()
             rc['info']=message
-            s.close()
-            return rc
         except Exception as err:
             rc['result']='error'
             rc['info']=str(err)
-            return rc
+
+        s.close()
+        return rc
 
     def preview(self,ip,hosttype):
         rc={}
