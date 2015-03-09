@@ -70,12 +70,12 @@ def _arm_rtmp_living_data(ip, mac, hosttype):
         livingMode = 'Movie'
 
     if hosttype == 'D3100':
-        if livingMode == 'Recource':
-            data['uids'] = [resource2, resource3, resource5, resource1]
-        elif livingMode == 'All':
-            data['uids'] = [resource2, resource3, resource5, resource1, movie]
-        elif livingMode == 'Movie':
-            data['uids'] = [movie]
+        #if livingMode == 'Recource':
+            #data['uids'] = [resource2, resource3, resource5, resource1]
+        #elif livingMode == 'All':
+        data['uids'] = [resource2, resource3, resource5, resource1, movie]
+        #elif livingMode == 'Movie':
+            #data['uids'] = [movie]
     return data
 
 def _load_base_url():
