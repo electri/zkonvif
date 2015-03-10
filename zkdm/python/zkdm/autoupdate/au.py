@@ -95,7 +95,19 @@ def checkVersion():
     try:
         logging.debug('to execute install ...')
         func = getattr(mod, 'setup') # install.py 中，必须实现 setup() 函数
-        func() # 强制执行
+        if not func(): # setup() 返回 False，一般是因为本次更新不包含本机
+            logging.debug('NOT include me')
+            os.chdir(curr_path)
+            shutil.rmtree(extract_path)
+            try:
+                os.remove('local_version')
+            except:
+                pass
+            try:
+                os.rename('tmp_version', 'local_version')
+            except:
+                pass
+            return False
     except:
         os.chdir(curr_path)
         logging.error('can\'t exec ')
