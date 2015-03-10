@@ -7,9 +7,11 @@ sys.path.append('../')
 
 # 首先检查是否有更新包 ..
 os.chdir('../autoupdate')
-import autoupdate.checkVersion as au
-update = au.CheckVersion()
-if update.checkVersionProcess():
+#import autoupdate.checkVersion as au
+import autoupdate.au as au
+#update = au.CheckVersion()
+#if update.checkVersionProcess():
+if au.checkVersion():
     # 一旦有更新，则重新机器
     os.system(r'c:/Windows/System32/shutdown.exe /r /t 3')
     sys.exit()
