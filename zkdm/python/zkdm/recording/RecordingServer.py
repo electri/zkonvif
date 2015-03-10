@@ -42,6 +42,7 @@ def _param(req, key):
     else:
         return None
 
+_utils = None
 _rcmd = None
 _class_schedule = None
 rh = None
@@ -90,7 +91,6 @@ class CmdHandler(tornado.web.RequestHandler):
         if token == '0':
             ip= '127.0.0.1'
             hosttype = 'x86'
-            _utils = zkutils()
             mac = _utils.mymac()
         else:
             if token not in _tokens:
@@ -161,6 +161,9 @@ def start():
 
     global _rcmd
     _rcmd = RecordingCommand()
+
+    global _utils
+    _utils = zkutils()
 
     start_card_server()
 
