@@ -4,7 +4,6 @@ import sys, os, io, json
 
 def chk_update():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    sys.path.append('../')
     
     # 首先检查是否有更新包 ..
     reboot = False
@@ -22,6 +21,8 @@ def chk_update():
         sys.exit()
 
 
+sys.path.append('../')
+sys.path.append('../host')
 from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
 import platform
@@ -30,7 +31,6 @@ from common.utils import zkutils
 from common.reght import RegHt
 from common.reght import RegHost
 import common.reght
-sys.path.append('../host')
 #import Stat
 from common.utils import zkutils
 from common.uty_token import *
