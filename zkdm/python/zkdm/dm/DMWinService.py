@@ -21,8 +21,10 @@ def chk_update():
         sys.exit()
 
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append('../')
 sys.path.append('../host')
+
 from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
 import platform
