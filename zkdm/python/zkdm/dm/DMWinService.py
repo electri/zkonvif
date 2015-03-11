@@ -5,6 +5,7 @@ import sys, os, io, json
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append('../')
 
+
 # 首先检查是否有更新包 ..
 reboot = False
 try:
