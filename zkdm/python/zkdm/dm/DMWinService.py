@@ -2,29 +2,25 @@
 
 import sys, os, io, json
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append('../')
-
-
-# 首先检查是否有更新包 ..
-reboot = False
-try:
-    os.chdir('../autoupdate')
-    import autoupdate.au as au
-    if au.checkVersion():
-        # 一旦有更新，则重新机器
-        reboot = True
-except:
-    pass
-
-if reboot:
-    os.system(r'c:/Windows/System32/shutdown.exe /r /t 3')
-    sys.exit()
-
+def chk_update():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append('../')
     
+    # 首先检查是否有更新包 ..
+    reboot = False
+    try:
+        os.chdir('../autoupdate')
+        import autoupdate.au as au
+        if au.checkVersion():
+            # 一旦有更新，则重新机器
+            reboot = True
+    except:
+        pass
+    
+    if reboot:
+        os.system(r'c:/Windows/System32/shutdown.exe /r /t 3')
+        sys.exit()
 
-# 正常启动 ..
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
@@ -163,9 +159,68 @@ class HostHandler(RequestHandler):
             rc['result'] = 'err'    
         self.write(rc)
 
+
+class ProxiedHostHandler(RequestHandler):
+    def get(self, tid):
+        print 'recv tid:', tid
+
+        rc = {'result':'ok', 'info':''}
+        if tid not in _tokens:
+            rc = {'result': 'err', 'info': 'tid of %s NOT found' % tid }
+            self.write(rc)
+        else:
+            # 直接使用 ip, 
+            target_ip = _tokens[tid]['ip']
+            target_port = 1230
+            command = self.get_argument('command', 'nothing')
+            if command == 'restart':
+                rc = self.__call_arm((target_ip, target_port), 'RecordCmd=Reboot')
+            else:
+                rc['result'] = 'err'
+                rc['info'] = 'NOT impl'
+            self.write(rc)
+
+    def __recv_t(self, sock, n, timeout = 2.0):
+        import select
+        r,w,e = select.select([sock], [], [], timeout)
+        if r:
+            return sock.recv(n)
+        else:
+            raise Exception('RECV TIMEOUT')
+
+    def __call_arm(self, addr, cmd):
+        print 'call arm: (%s:%d) cmd="%s"' % (addr[0], addr[1], cmd)
+
+        rc={}
+        rc['result']='ok'
+        rc['info']=''
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        try:
+            s.settimeout(2)
+            s.connect(addr)
+            s.settimeout(None)
+            s.send(command+"\n")
+            # skip UTF-8 BOM
+            #s.recv(3)
+            self.__recv_t(s, 3, 1.0)
+            #message=s.recv(512)
+            message = self.__recv_t(s, 512, 1.0)
+            message = message.strip()
+            rc['info']=message
+        except Exception as err:
+            rc['result']='error'
+            rc['info']=str(err)
+
+        s.close()
+        return rc
+
+
 def make_app():
     return Application([
             url(r'/dm/help', HelpHandler),
+            url(r'/dm/([^/]+)/dm/host', ProxiedHostHandler), # 中间为 token id
             url(r'/dm/host', HostHandler),
             url(r'/dm/list', ListServiceHandler),
             url(r'/dm/([^/]+)/(.*)', ServiceHandler),
@@ -173,6 +228,10 @@ def make_app():
             ])
     
 def main():
+    # 正常启动 ..
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+    chk_update()
 
     import chk_info
     chk_info.wait()
