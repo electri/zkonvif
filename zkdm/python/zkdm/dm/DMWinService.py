@@ -235,6 +235,8 @@ def main():
 
     chk_update()
 
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
     import chk_info
     chk_info.wait()
 
