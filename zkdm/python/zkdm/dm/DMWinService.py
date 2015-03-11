@@ -2,28 +2,25 @@
 
 import sys, os, io, json
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append('../')
-
-# 首先检查是否有更新包 ..
-reboot = False
-try:
-    os.chdir('../autoupdate')
-    import autoupdate.au as au
-    if au.checkVersion():
-        # 一旦有更新，则重新机器
-        reboot = True
-except:
-    pass
-
-if reboot:
-    os.system(r'c:/Windows/System32/shutdown.exe /r /t 3')
-    sys.exit()
-
+def chk_update():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.append('../')
     
+    # 首先检查是否有更新包 ..
+    reboot = False
+    try:
+        os.chdir('../autoupdate')
+        import autoupdate.au as au
+        if au.checkVersion():
+            # 一旦有更新，则重新机器
+            reboot = True
+    except:
+        pass
+    
+    if reboot:
+        os.system(r'c:/Windows/System32/shutdown.exe /r /t 3')
+        sys.exit()
 
-# 正常启动 ..
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 from tornado.web import RequestHandler, Application, url
 from tornado.ioloop import IOLoop
@@ -231,6 +228,10 @@ def make_app():
             ])
     
 def main():
+    # 正常启动 ..
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+    chk_update()
 
     import chk_info
     chk_info.wait()
