@@ -31,7 +31,7 @@ def cardlive_log():
                 s_list = s.split(':',1)
                 info['start'] = s_list[1]
             elif 'stop' in s.lower():
-                s_list = s.split(':')
+                s_list = s.split(':',1)
                 info['stop'] = s_list[1]
             if 'teacher' in s.lower():
                 info['card0'] = s
