@@ -24,10 +24,20 @@ except:
     print 'only one instance can be run!!!'
     sys.exit(0)
 
-_all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-_local_config = None
+_all_config = None
+try:
+    _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
+except:
+    print 'faile for loading ptz config.json'
+    sys.exit(0)
+
 if os.path.isfile('./local.json'):
-    _local_config = json.load(io.open('./local.json', 'r', encoding='utf-8'))
+    _local_config = None
+    try:
+        _local_config = json.load(io.open('./local.json', 'r', encoding='utf-8'))
+    except:
+        print 'fail for loading ptz local.json'
+        sys.exit(0)
     _all_config.update(_local_config)
 
 _tokens = load_tokens('../common/tokens.json')
