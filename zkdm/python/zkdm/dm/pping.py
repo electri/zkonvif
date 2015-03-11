@@ -30,13 +30,17 @@ def ping_all(fname):
     ''' fname 为 tokens.json '''
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     import platform
+
     if platform.uname()[0] == 'Windows':
         try:
-            # windows 若不设置该参数，recvfrom可能返回 10054 错误
-            SIO_UDP_CONNRESET = 0x9800000c
+            if not hasattr(socket, 'SIO_UDP_CONNRESET'):
+                SIO_UDP_CONNRESET = 0x9800000c
+            else:
+                SIO_UDP_CONNRESET = socket.SIO_UDP_CONNRESET
+                
             sock.ioctl(SIO_UDP_CONNRESET, False)
         except:
-            print 'need\'t SIO_UDP_CONNRESET'
+            print 'needn\'t UDP_CONNRESET Fase'
 
     ips = db_init_from_tokens(fname)
     print ips
