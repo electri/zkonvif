@@ -76,6 +76,15 @@ def _arm_rtmp_living_data(ip, mac, hosttype):
         data['uids'] = [resource2, resource3, resource5, resource1, movie]
         #elif livingMode == 'Movie':
             #data['uids'] = [movie]
+    elif hosttype == 'D3101':
+        data['uids'] = [recource2, resource3, movie]
+    elif hosttype == 'D31020':
+        data['uids'] = [resource1, recource2, resource3]
+    elif hosttype == 'D31021' or hosttype == 'D3103':
+        data['uids'] == [resource3, resource1, resource2]
+    elif hosttype == 'D3104':
+        data['uids'] == [resource1, resource2, resource5, resource4, resource3]
+     
     return data
 
 def _load_base_url():

@@ -22,10 +22,10 @@ class RecordingCommand():
             port=1230
             s.connect((host,port))
             s.settimeout(None)
-            log_info(command)
             s.send(command+"\n")
             #È¥³ýUTF-8 BOM
-            s.recv(3)
+            self.__recv_t(s,3,1.0)
+            message = self.__recv_t(s,512,1.0)
             message=s.recv(512)
             message = message.strip()
             rc['info']=message
@@ -35,6 +35,14 @@ class RecordingCommand():
 
         s.close()
         return rc
+
+    def __recv_t(self, sock, n, timeout = 2.0):
+        import select
+        r,w,e = select.select([sock], [], [], timeout)
+        if r:
+            return sock.recv(n)
+        else:
+            raise Exception('RECV TIMEOUT')
 
     def preview(self,ip,hosttype):
         rc={}
