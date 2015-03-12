@@ -48,35 +48,5 @@
 
 <p><p>
 
-保存日志：支持 GET/PUT 两种方式，GET 用于短小的，PUT 用于长记录 <br>
-
-<B>GET /save?project=XXX&amplevel=N&ampstamp=NN&content=XXX</B><br>
-<ul>
-	<li>project: 必需</li>
-	<li>level: 可选，缺省 99</li>
-	<li>stamp: 可选，缺省当前时间</li>
-	<li>content: 可选，缺省当前时间<li>
-</ul>
-
-<p>
-<B>PUT /save</B>
-<br> request Content-Type 必须为 application/json，body 为上面提到的json格式 ...
-
-<br>
-save 返回：Content-Type: application/json
-
-<br>{
-<br>	"result":"ok",
-<br>	"info”:"log saved",
-<br>}
-<br>
-<br>或者错误时：目前为没有提供 project
-<br>
-<br>{
-<br>	"result":"err",
-<br>	"info":"project MUST be supplied!!"
-<br>}
-<br>
-
 </body>
 </html>
