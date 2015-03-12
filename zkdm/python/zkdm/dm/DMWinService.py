@@ -165,7 +165,7 @@ class HostHandler(RequestHandler):
 class ProxiedHostHandler(RequestHandler):
     def get(self, tid):
         print 'recv tid:', tid
-
+        
         rc = {'result':'ok', 'info':''}
         if tid not in _tokens:
             rc = {'result': 'err', 'info': 'tid of %s NOT found' % tid }
@@ -174,6 +174,7 @@ class ProxiedHostHandler(RequestHandler):
             # 直接使用 ip, 
             target_ip = _tokens[tid]['ip']
             target_port = 1230
+            
             command = self.get_argument('command', 'nothing')
             if command == 'restart':
                 rc = self.__call_arm((target_ip, target_port), 'RecordCmd=Reboot')
@@ -182,6 +183,7 @@ class ProxiedHostHandler(RequestHandler):
                 rc['info'] = 'NOT impl'
             self.write(rc)
 
+           
     def __recv_t(self, sock, n, timeout = 2.0):
         import select
         r,w,e = select.select([sock], [], [], timeout)
@@ -191,8 +193,6 @@ class ProxiedHostHandler(RequestHandler):
             raise Exception('RECV TIMEOUT')
 
     def __call_arm(self, addr, cmd):
-        print 'call arm: (%s:%d) cmd="%s"' % (addr[0], addr[1], cmd)
-
         rc={}
         rc['result']='ok'
         rc['info']=''
@@ -203,7 +203,7 @@ class ProxiedHostHandler(RequestHandler):
             s.settimeout(2)
             s.connect(addr)
             s.settimeout(None)
-            s.send(command+"\n")
+            s.send(cmd+"\n")
             # skip UTF-8 BOM
             #s.recv(3)
             self.__recv_t(s, 3, 1.0)
