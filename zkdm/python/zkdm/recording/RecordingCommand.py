@@ -23,10 +23,10 @@ class RecordingCommand():
             s.connect((host,port))
             s.settimeout(None)
             s.send(command+"\n")
+            print command
             #È¥³ýUTF-8 BOM
             self.__recv_t(s,3,1.0)
             message = self.__recv_t(s,512,1.0)
-            message=s.recv(512)
             message = message.strip()
             rc['info']=message
         except Exception as err:
