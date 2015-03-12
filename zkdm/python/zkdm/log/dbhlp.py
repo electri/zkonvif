@@ -8,7 +8,6 @@ DBNAME = 'logs.db'
 TABLENAME = 'log'
 S0 = r'create table log (id integer primary key, project varchar(64), level integer, stamp integer, content text)' 
 
-
 class DBHlp:
 	''' 封装到 sqlite3 的读写 '''
 	def __init__(self):

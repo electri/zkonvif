@@ -12,101 +12,8 @@ import portalocker
 sys.path.append('../')
 import common.reght
 
-VERSION = 0.9
+VERSION = 0.91
 VERSION_INFO = 'Log Service ...'
-
-
-class SaveHandler(RequestHandler):
-    ''' 保存 
-
-            支持 GET/PUT 两种方式, GET 支持短小的 content ...
-            PUT 使用 Content-Type: application/json; charset=utf-8
-    '''
-    def get(self):
-        p = self.request.arguments
-        rc = {}
-        rc['result'] = 'ok'
-        rc['info'] = ''
-        rc['value'] = {}
-
-        if 'project' not in p:
-            rc['result'] = 'err'
-            rc['info'] = '"project" MUST be supplied!'
-            self.write(rc)
-            return
-
-        project = p['project'][0]
-
-        if 'level' in p:
-            level = int(p['level'][0])
-        else:
-            level = 99
-
-        if 'stamp' in p:
-            stamp = float(p['stamp'][0])
-        else:
-            stamp = time.time()
-
-        if 'content' in p:
-            content = p['content'][0]
-        else:
-            content = ''
-
-        db = DBHlp()
-        db.save(project, level, stamp, content)
-
-        rc['info'] = 'log saved'
-        self.write(rc)
-        
-
-
-    def put(self):
-        rc = {'result': 'ok', 'info':'' }
-        if 'Content-Type' not in self.request.headers:
-            rc['result'] = 'err'
-            rc['info'] = 'Content-Type: MUST be application/json'
-            self.write(rc)
-            return
-        else:
-            ct = self.request.headers.get('Content-Type')
-            if ct.find('application/json') == -1:
-                rc['result'] = 'err'
-                rc['info'] = 'Content-Type: MUST be application/json'
-                self.write(rc)
-                return
-            else:
-                try:
-                    item = json.loads(self.request.body)
-                    if not self.__save(item):
-                        rc['result'] = 'err'
-                        rc['info'] = 'format err'
-                        self.write(rc)
-                        return
-                    else:
-                        rc['info'] = 'log saved'
-                        self.write(rc)
-                except Exception as e:
-                    print '------------------------------------------------------------'
-                    print 'deocde json error ???, body=', self.request.body
-                    print e
-                    print '------------------------------------------------------------'
-                    rc['result'] = 'err'
-                    rc['info'] = 'decode content fault????'
-                    self.write(rc)
-
-    
-    def __save(self, item):
-        if 'project' in item and 'level' in item and 'content' in item:
-            if 'stamp' in item:
-                stamp = item['stamp']
-            else:
-                stamp = int(time.time())
-            db = DBHlp()
-            db.save(item['project'], item['level'], stamp, item['content'])
-            return True
-        else:
-            return False
-
 
 
 class HelpHandler(RequestHandler):
@@ -189,7 +96,6 @@ class InternalHandler(RequestHandler):
 
 def make_app():
     return Application([
-            url(r'/log/save', SaveHandler),
             url(r'/log/query', QueryHandler),
             url(r'/log/help', HelpHandler),
             url(r'/log/internal', InternalHandler),
