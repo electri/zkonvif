@@ -12,7 +12,7 @@ def PresetStr(cmd, name, ids):
     return 'PtzCmd=%s&Who=%s%ID=%s'%(cmd, name, ids) 
 
 def ZoomStr(cmd, name, speed):
-    return 'ptzCmd=%s&Who=%s&speed=%s'%(cmd, name, speed)
+    return 'PtzCmd=%s&Who=%s&speed=%s'%(cmd, name, speed)
 
 def toArmStr(name, cmd, params=None):
     if cmd == 'left':
@@ -72,13 +72,13 @@ def toArmStr(name, cmd, params=None):
         if 'speed' in params:
             speed = params['speed'][0]
         
-        return ZoomStr('Zoom_tele', name, speed)
+        return ZoomStr('ZoomTele', name, speed)
 
     elif cmd == 'zoom_wide':
         speed = '1'
         if 'speed' in params:
             speed = params['speed'][0]
-        return ZoomStr('Zoom_wide', name, speed)
+        return ZoomStr('ZoomWide', name, speed)
 
     elif cmd == 'zoom_stop':
         return ZoomStr('ZoomStop', name)
