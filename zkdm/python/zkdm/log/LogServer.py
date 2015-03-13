@@ -34,7 +34,7 @@ class QueryHandler(RequestHandler):
         level = self.__param('level', p)
         stamp_begin = self.__param('stamp_begin', p)
         if stamp_begin is None:
-            stamp_begin = str(time.time() - 60) # 缺省返回最近一分钟的日志
+            stamp_begin = str(time.time() - 600) # 缺省返回最近十分钟的日志
         stamp_end = self.__param('stamp_end', p)
         db = DBHlp()
         logs = db.query(project, level, stamp_begin, stamp_end)

@@ -5,13 +5,14 @@ import urllib,urllib2,sys,io
 from CardServer import livingS, ReslivingS
 from RecordingCommand import RecordingCommand
 from Check_CardLive import CardLive_Runing
-from LogWriter import log_info
 
 
 sys.path.append('../')
 from common.utils import zkutils
+from common.uty_log import log
 
 def StartLiving(ip,mac,hosttype):
+    log('StartLiving calling, ip=%s, mac=%s, hosttype=%s' % (ip, mac, hosttype), project = 'recording', level = 3)
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
@@ -87,6 +88,7 @@ def _arm_rtmp_living_data(ip, mac, hosttype):
      
     return data
 
+
 def _load_base_url():
     '''
     平台地址
@@ -98,6 +100,7 @@ def _load_base_url():
     if r['sip'] == '' or r['sport'] == '':
         raise Exception("include''")
     return 'http://%s:%s/deviceService/'%(r['sip'],r['sport'])
+
 
 def _error_code(code,content):
     rc = {}
@@ -168,23 +171,37 @@ def _error_code(code,content):
         rc['info'] = 'UNKNOWN_ERROR'
         return rc        
 
+
 def _rtmp_living(ip, mac, hosttype):
     rc = {}
     rc['result'] = 'ok'
     rc['info'] = ''
 
+    log('_rtmp_living: starting ...., ip=%s, mac=%s, hosttype=%s' % (ip, mac, hosttype), \
+            project = 'recording')
+
     if hosttype == 'x86':
-        if CardLive_Runing()==False:
-            rc['result'] = 'ok'
+        if not CardLive_Runing():
+            log('_rtmp_living: cardlive.exe NOT prepared?', project='recording', level = 2)
+            rc['result'] = 'error'
             rc['info'] = 'cardlive.exe is not exit!'
             return rc
 
     try:
-        middle_req = urllib2.urlopen( _load_base_url()+'getServerUrl?type=middle',timeout=2)
-        middle_url =middle_req.read()
+        log('_rtmp_living: try to get relay url', project = 'recording')
+        middle_req = urllib2.urlopen(_load_base_url() + 'getServerUrl?type=middle', timeout = 2)
+        middle_url = middle_req.read()
+    except Exception as e:
+        log('_rtmp_living: to get relay url fault! reason=%s' % e, project = 'recording', level = 1)
+        rc['result'] = 'error'
+        rc['info'] = str(err)
+        return rc
 
-        log_info('middle_url:' + str(middle_url))
 
+    log('_rtmp_living: en, got relay url: %s' % middle_url, project = 'recording')
+
+    try:
+        log('_rtmp_living: to call relay of prepublishbatch', project = 'recording')
         req = urllib2.Request(middle_url+'/repeater/prepublishbatch')
         if hosttype == 'x86':
             data = _x86_rtmp_living_data(mac)
@@ -192,12 +209,14 @@ def _rtmp_living(ip, mac, hosttype):
             data = _arm_rtmp_living_data(ip, mac, hosttype)
         data = json.dumps(data)
 
-        response = urllib2.urlopen(req,data)
+        response = urllib2.urlopen(req, data)
         content = json.load(response)
 
-        log_info('reponse_code' + str(content['response_code']))
+        log('_rtmp_living: response_code=%s' % str(content['response_code']), project = 'recording')    
+
         if content['response_code'] != 0:
             rc = _error_code(content['response_code'],content)
+            log('_rtmp_living: err: info=%s' % rc['info'], project = 'recording', level = 1)
             return rc
 
         urls = []
@@ -260,10 +279,14 @@ def _rtmp_living(ip, mac, hosttype):
     except Exception as err:
         rc['result'] = 'error'
         rc['info'] = str(err)
+        log('_rtmp_living: exception info=%s' % rc['info'], \
+                project = 'recording', level = 1)
 
     return rc
 
+
 def StopLiving():
+    log('StopLiving called', project = 'recording', level = 3)
     _rcmd = RecordingCommand()
     rc=_rcmd.send_command('BroadCastCmd=StopBroadCast',ip)
     return rc

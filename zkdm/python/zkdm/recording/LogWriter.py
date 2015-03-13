@@ -1,12 +1,17 @@
 # coding: utf-8
 
 import logging, os
-import time
+import time, sys
+sys.path.append('../')
+from common.uty_log import log
 
 def log_info(content):
     '''保存信息类日志
 
     '''
+    
+    log(content, project='recording', level=3)
+
     debug = False
     if debug == True:
         date = time.strftime('%Y-%m-%d',time.localtime(time.time()))

@@ -10,21 +10,15 @@
 
 import urllib2, sys, json, io, time, threading, re, sqlite3, os
 from utils import zkutils
-from Log import Log
+from uty_log import log
+
+
+def logme(info, level = 5):
+    log(info, project='reght', level = level)
 
 
 verbose = False
-_log = Log('reg/ht')
 TIMEOUT = 3 # urllib2.urlopen 的超时 ...
-
-def logme(info):
-    try:
-        f = open('reght.log', 'a')
-        f.write('%s: %s' % (time.asctime(), info))
-        f.write('\n')
-        f.close()
-    except:
-        pass
 
 myip = zkutils().myip_real()
 mymac = zkutils().mymac()
@@ -207,9 +201,7 @@ class _RegHtOper:
     def __init__(self, mgrt_base_url, ip, mac):
         if mgrt_base_url is None:
             mgrt_base_url = self.__load_base_url()
-        if verbose:
-            print 'INFO: using name service url:', mgrt_base_url
-            logme('INFO: using name service url: %s' % mgrt_base_url)
+        logme('INFO: using name service url: %s' % mgrt_base_url, level=3)
         self.__mgrt_base_url = mgrt_base_url
         self.__ip = ip
         self.__mac = mac
@@ -250,7 +242,7 @@ class _RegHtOper:
             print '----- reghost except ----'
             print '-- url:', url
             print e
-            logme('ERR: reghost exception, url=%s' % url)
+            logme('ERR: reghost exception, url=%s' % url, level=1)
             return False
 
     def reghost_chkop(self, hd):
@@ -289,11 +281,11 @@ class _RegHtOper:
             body = self.__get_utf8_body(req)
             ret = json.loads(body)
         except Exception as e:
+            logme('ERR: regService exception: url=%s' % url, level=1)
             if verbose:
                 print '-------------------- regService- Exception ---------------'
                 print e
                 print '==========================================================='
-                logme('ERR: regService exception: url=%s' % url)
             return False
 
         if u'已经注册' not in ret['info']:
@@ -312,9 +304,11 @@ class _RegHtOper:
 
         url = self.__mgrt_base_url + 'heartbeat?serviceinfo=%s_%s_%s_%s' % \
               (self.__ip, mac, sd['type'], sd['id'])
+
+        logme('DEBUG: htop: url=%s' % url)
+
         if verbose:
             print url
-            logme('DEBUG: htop: url=%s' % url)
 
         try:
             req = urllib2.urlopen(url, None, TIMEOUT)
@@ -448,15 +442,15 @@ class RegHt(threading.Thread):
                 next(regfunc)
                 next(htfunc)
             except:
-                logme('Exception: in RegHt: run ...')
+                logme('Exception: in RegHt: run ...', level=0)
             try:
                 next(chkalivefunc)
             except:
-                logme('Exception: in RegHt: chkalive ...')
+                logme('Exception: in RegHt: chkalive ...', level=0)
             try:
                 self.__to_unreg(gos, oper.unregop)
             except:
-                logme('Exception: in RegHt: to unreg ...')
+                logme('Exception: in RegHt: to unreg ...', level=0)
     
     def __to_unreg(self, gos, func):
         self.__lock.acquire()

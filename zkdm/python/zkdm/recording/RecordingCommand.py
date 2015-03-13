@@ -2,7 +2,8 @@
 
 import socket
 import getopt, sys
-from LogWriter import log_info
+sys.path.append('../')
+from common.uty_log import log
 
 class RecordingCommand():
     """
@@ -10,30 +11,35 @@ class RecordingCommand():
     def __init__(self):
         pass
 	
-    #录像程序的命令接收端口号固定为1230
-    def send_command(self,command,ip='127.0.0.1'):
-        rc={}
-        rc['result']='ok'
-        rc['info']=''
-        s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def send_command(self, command, ip='127.0.0.1'):
+        rc = {}
+        rc['result'] = 'ok'
+        rc['info'] = ''
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        log('RecordingCommand.send_command: ip=%s, cmd=%s' % (ip, command), \
+                project = 'recording')
         try:
             s.settimeout(2)
             host = ip
-            port=1230
-            s.connect((host,port))
+            port = 1230
+            s.connect((host, port))
             s.settimeout(None)
-            s.send(command+"\n")
+            s.send(command + "\n")
             print command
-            #去除UTF-8 BOM
-            self.__recv_t(s,3,1.0)
-            message = self.__recv_t(s,512,1.0)
+            # utf8 BOM
+            self.__recv_t(s, 3, 1.0)
+            message = self.__recv_t(s, 512, 1.0)
             message = message.strip()
-            rc['info']=message
+            rc['info'] = message
         except Exception as err:
-            rc['result']='error'
-            rc['info']=str(err)
+            rc['result'] = 'error'
+            rc['info'] = str(err)
 
         s.close()
+        if rc['result'] == 'ok':
+            log('    ok', project = 'recording')
+        else:
+            log('RecordingCommand.send_command: err, info=%s' % rc['info'], project = 'recording', level=1)
         return rc
 
     def __recv_t(self, sock, n, timeout = 2.0):
@@ -44,13 +50,16 @@ class RecordingCommand():
         else:
             raise Exception('RECV TIMEOUT')
 
-    def preview(self,ip,hosttype):
-        rc={}
-        rc['result']='ok'
+    def preview(self, ip, hosttype):
+        rc = {}
+        rc['result'] = 'ok'
         rc['info'] = ''
+        log('RecordingCommand.preview: ip=%s, hosttype=%s' % (ip, hosttype), \
+                project = 'recording')
+
         if hosttype == 'x86':
-            rtsp_ip = self.send_command('BroadCastCmd=GetDeviceIP',ip)
-            if(rtsp_ip['result'] == 'ok' and len(rtsp_ip['info'])>0):            
+            rtsp_ip = self.send_command('BroadCastCmd=GetDeviceIP', ip)
+            if(rtsp_ip['result'] == 'ok' and len(rtsp_ip['info']) > 0):            
                 rtsp_ip = rtsp_ip['info']
                 rtsp_ip = rtsp_ip[:-2]
                 url = {}
@@ -79,6 +88,11 @@ class RecordingCommand():
                 rc['result'] = 'error'
                 rc['info'] = response['info']
 
+        if rc['result'] == 'ok':
+            log('RecordingCommand.preview: ok', project = 'recording')
+        else:
+            log('RecordingCommand.preview: err, info=%s' % rc['info'], \
+                    project = 'recording', level = 1)
         
         return rc
 

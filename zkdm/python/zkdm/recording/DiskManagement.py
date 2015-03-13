@@ -6,14 +6,21 @@ from operator import itemgetter, attrgetter
 import threading
 import win32file
 import shutil
+sys.path.append('../')
+from common.uty_log import log
 
 def get_fs_info(caption = "D:"):
     '''
     获取磁盘信息
     '''
-    sectorsPerCluster, bytesPerSector, numFreeClusters, totalNumClusters = \
-		win32file.GetDiskFreeSpace(caption)
-    freespace = (numFreeClusters * sectorsPerCluster * bytesPerSector) /(1024 * 1024 * 1024)
+    try:
+        # 有可能不在 d:
+        sectorsPerCluster, bytesPerSector, numFreeClusters, totalNumClusters = win32file.GetDiskFreeSpace(caption)
+        freespace = (numFreeClusters * sectorsPerCluster * bytesPerSector) /(1024 * 1024 * 1024)
+    except:
+        log("can't stat disk space of %s" % caption, project = 'recording', level = 2)
+        freespace = 11
+
     if freespace<10:#小于10G的时候开始清理空间
         return True
     else:
@@ -51,6 +58,7 @@ def del_dir_schedule():
             if len(dir_list)==0:
                 return
             try:
+                log('del dir: %s' % dir_list[0]['path'], project = 'recording', level = 2)
                 shutil.rmtree(dir_list[0]['path'],True)
             except Exception as error:
                 print error

@@ -15,7 +15,7 @@ PNAME = 'CardLive.exe'
 def CardLive_Runing():
     pythoncom.CoInitialize()
     w = wmi.WMI()
-    cs = [(ps.Name,ps.ThreadCount) for ps in w.Win32_Process()]
+    cs = [(ps.Name, ps.ThreadCount) for ps in w.Win32_Process()]
     f = None
     
     for c in cs:

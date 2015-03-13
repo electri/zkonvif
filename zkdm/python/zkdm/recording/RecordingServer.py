@@ -29,7 +29,7 @@ sys.path.append('../')
 from common.utils import zkutils
 from common.reght import RegHt
 from common.uty_token import *
-from LogWriter import log_info
+from common.uty_log import log
 
 
 # 必须设置工作目录 ...
@@ -67,13 +67,13 @@ def run_async(func):
 	return async_func
 
 class CmdHandler(tornado.web.RequestHandler):
-    def get(self,token,service_id):
-        self.__asy_cmd(token,service_id)
+    def get(self, token, service_id):
+        self.__asy_cmd(token, service_id)
 
     @asynchronous
     @coroutine
-    def __asy_cmd(self,token,service_id):
-        rc = yield Task(self.__asy_cmd0, token=token,service_id=service_id)
+    def __asy_cmd(self, token, service_id):
+        rc = yield Task(self.__asy_cmd0, token=token, service_id=service_id)
         self.write(str(rc))
         self.set_header('Content-Type', 'application/json')
         self.finish()
@@ -92,6 +92,7 @@ class CmdHandler(tornado.web.RequestHandler):
             ip= '127.0.0.1'
             hosttype = 'x86'
             mac = _utils.mymac()
+            print 'mac is', mac
         else:
             if token not in _tokens:
                 rc['result'] = 'error'
@@ -108,6 +109,7 @@ class CmdHandler(tornado.web.RequestHandler):
 
         cmd = self.get_argument('RecordCmd','nothing')        
 
+
         if cmd == 'RtspPreview':
             rc = _rcmd.preview(ip,hosttype)
         elif cmd == 'CardLiveLog':
@@ -121,7 +123,15 @@ class CmdHandler(tornado.web.RequestHandler):
             args = (self.request.uri.split('?'))[1]
             rc=_rcmd.send_command(args,ip)
 
+        try:
+            # 记录所有收到的命令和执行结果
+            cont ='token=%s, sid=%s, cmd=%s, result=%s, info=%s' % (token, service_id, cmd, rc['result'], rc['info']) 
+            log(cont, project='recording', level=9)
+        except:
+            pass
+
         callback(rc)
+
 
 class InternalHandler(RequestHandler):
     def get(self):
@@ -159,6 +169,8 @@ def start():
     app = make_app()
     app.listen(10006)
 
+    log('recording srv starting, using port 10006', project='recording', level = 3)
+
     global _rcmd
     _rcmd = RecordingCommand()
 
@@ -183,6 +195,8 @@ def start():
     
     reglist.append(local_service_desc)
 
+    log('mac:%s, ip:%s' % (mac, _utils.myip()), project='recording', level = 3)
+
     global _class_schedule
     _class_schedule = Schedule(None)
     for reg in reglist:
@@ -196,8 +210,9 @@ def start():
 
     global _ioloop
     _ioloop = IOLoop.instance()
-    log_info('start')
+    log('running ...', project='recording', level = 3)
     _ioloop.start()
+    log('terminated!!!!!', project='recording', level=3)
 
 
 if __name__ == '__main__':
