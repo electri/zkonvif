@@ -1,6 +1,6 @@
 # coding: utf-8
 
-import socket, select
+import sys, socket, select
 import re
 sys.path.append('../')
 from common.uty_log import log
