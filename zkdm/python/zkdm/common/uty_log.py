@@ -24,16 +24,14 @@ DEBUG = 4
 
 def log(info, project = 'unknown', level = DEBUG):
     ''' 保存日志，必须保证 DBNAME 有效 '''
-    if len(info) > 1000:
-        info = info[:1000]
-    info = info.replace('"', "'")
 
     if level > DEBUG:
         level = DEBUG
+    if level < FAULT:
+        level = FAULT
 
     try:
-        s1 = 'insert into log (project, level, stamp, content) values("%s",%d,%d,"%s")' % (project, \
-                level, time.time(), info)
+		s1 = r'insert into log (project, level, stamp, content) values ("{}",{},{},"{}")'.format(project, level, time.time(), info)
     except Exception as e:
         print 'Exception: log:', e
         return

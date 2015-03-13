@@ -9,6 +9,9 @@ from tornado.options import define, options
 from tornado.web import RequestHandler, Application, url
 
 from suds.client import Client
+import sys
+sys.path.append('../')
+from common.uty_log import log
 
 
 def set_resource_info(data):
@@ -479,9 +482,13 @@ def ReslivingS(ip,port,app):
 def start_card_server():
     global client
     wsdl_url = 'http://127.0.0.1:8086/UIServices?WSDL' 
+    log('start_card_server: to get wsdl from %s' % wsdl_url, \
+            project = 'recording')
     try:
         client = Client(wsdl_url)
     except:
+        log('start_card_server: cannot get wsdl schema from %s' % wsdl_url, \
+                project = 'recording', level = 1)
         print 'wsdl_url is disable!'
 
 if __name__ == "__main__":

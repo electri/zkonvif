@@ -21,7 +21,6 @@ class HelpHandler(RequestHandler):
         self.render('help.html')
 
 
-
 class QueryHandler(RequestHandler):
     ''' 查询 '''
     def get(self):
@@ -114,8 +113,9 @@ def main():
     app = make_app()
     app.listen(10005)
   
-    sds = [ {'type':'log', 'id':'0', 'url':'http://<ip>:10005/log'}, ]
-    rh = common.reght.RegHt(sds)
+    # 日志服务就不去注册了
+    #sds = [ {'type':'log', 'id':'0', 'url':'http://<ip>:10005/log'}, ]
+    #rh = common.reght.RegHt(sds)
     _ioloop.start()
 
     # 结束 ..

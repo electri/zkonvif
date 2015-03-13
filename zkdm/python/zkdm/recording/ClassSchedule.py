@@ -9,6 +9,8 @@ sys.path.append('../')
 from common.utils import zkutils
 from RecordingCommand import RecordingCommand
 from LivingServer import StartLiving, StopLiving
+from common.uty_log import log
+
 _record_thread = []
 
 class Schedule():
@@ -208,8 +210,10 @@ class Schedule():
         except Exception as error:
             print str(error)
 
-    def analyse_json(self,ip = '127.0.0.1',mac = ''):
-        reload_thread = threading.Timer(3600, self.analyse_json,(ip,mac))#1小时重新获取一次课表信息
+    def analyse_json(self, ip = '127.0.0.1', mac = ''):
+        log('ClassSchedule.analyse_json: starting ..., ip=%s, mac=%s' % (ip, mac), project = 'recording')
+
+        reload_thread = threading.Timer(3600, self.analyse_json, (ip, mac))#1小时重新获取一次课表信息
         reload_thread.start()
         print ip,mac
         rc = {}
@@ -218,11 +222,14 @@ class Schedule():
         try:      
             data = ''
             try:
-                response = urllib2.urlopen(self.__mgrt_base_url+'curriculum?mac=' + mac,timeout = 3)
+                url = self.__mgrt_base_url+'curriculum?mac=' + mac 
+                log('ClassSchedule.analyse: try download cs from %s' % url, project = 'recording')
+                response = urllib2.urlopen(url, timeout = 3)
                 data = json.load(response)
                 with open(mac + 'CourseInfo.json','w') as savefile:
                     json.dump(data,savefile)
             except Exception as err:
+                log('ClassSchedule.analyse: download cs err, just load local??', project = 'recording', level = 1)
                 data = {}
                 course_info_file = file(mac + 'CourseInfo.json')
                 data = json.load(course_info_file)
@@ -235,3 +242,4 @@ class Schedule():
             return rc
           
         return rc
+
