@@ -6,6 +6,8 @@ import time
 
 DBNAME = 'logs.db'
 TABLENAME = 'log'
+KEEP_DAYS = 3 # 保留三天的历史
+
 S0 = r'create table log (id integer primary key, project varchar(64), level integer, stamp integer, content text)' 
 
 class DBHlp:
@@ -50,7 +52,7 @@ class DBHlp:
 		if project:
 			s0 += r' and project="{}"'.format(project)
 		if level is not None:
-			s0 += r' and level>={}'.format(level)
+			s0 += r' and level <= {}'.format(level)
 
 
 		for item in c.execute(s0):
@@ -79,8 +81,12 @@ def __check_init():
 		print 'to init db ...'
 		c.execute(S0)
 	else:
-		print TABLENAME, 'existed!'
-	conn.close
+        # 删除 N 天之前的历史
+		print TABLENAME, 'existed! to remove tooooo old data'
+        stamp_last = time.time() - KEEP_DAYS * 24 * 3600
+        s2 = 'delete from log where stamp < %d' % stamp_last
+        c.execute(s2)
+	conn.close()
 
 
 # 保证数据结构 ...
