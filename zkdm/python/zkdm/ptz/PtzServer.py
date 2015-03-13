@@ -14,7 +14,7 @@ from common.reght import RegHt
 import thread
 import ArmPtz
 
-import logging
+from common.uty_log import log 
 import portalocker
 
 p = open('ptz.pid', 'w')
@@ -28,6 +28,7 @@ _all_config = None
 try:
     _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 except:
+    log('fail for loading ptz config.json', 'ptz', 1) 
     print 'faile for loading ptz config.json'
     sys.exit(0)
 
@@ -36,12 +37,13 @@ if os.path.isfile('./local.json'):
     try:
         _local_config = json.load(io.open('./local.json', 'r', encoding='utf-8'))
     except:
+        log('fail for loading ptz local.json', 'ptz', 1)
         print 'fail for loading ptz local.json'
         sys.exit(0)
     _all_config.update(_local_config)
 
 _tokens = load_tokens('../common/tokens.json')
-logging.basicConfig(filename='ptz.log', filemode='w', level=logging.DEBUG)
+
 def all_ptzs_config():
     ''' 返回配置的云台 ... '''
     return _all_config['ptzs']
@@ -67,11 +69,11 @@ def load_ptz(config):
             filename = ptz['cfgfile'].encode('ascii')
             print 'open with cfg:', filename
             is_ptz = ptz['ptz'].open_with_config(filename)
-            logging.info('open with cfg: %s', filename)
             if is_ptz == False:
-                logging.info('failure')    
+                log('open %s failure'%(filename), 'ptz', 3)    
             else:
-                logging.info('succeed')
+                log('open %s succeed'%(filename), 'ptz', 3)
+
         else:
             print 'open ptz:', ptz['serial'], 'addr:', ptz['addr']
             is_ptz = ptz['ptz'].open(ptz['serial'].encode('ascii'), int(ptz['addr']))
@@ -137,6 +139,7 @@ class ControllingHandler(RequestHandler):
     def get(self, token, name, method):
         ''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
         '''
+        log('token:%s, name:%s, method:%s, arguments:%s'%(token,name,method,self.request.arguments), 'ptz', 3)
         print token, name, method
         thread.start_new_thread(self.callback, (token, name, method))
 
@@ -157,6 +160,7 @@ class ControllingHandler(RequestHandler):
                     nm = id_port['name']
                     armcmd = ArmPtz.toArmStr(nm, method, self.request.arguments)
                     ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
+        log('ret:%s'%(ret), 'ptz', 3)
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
         self.finish()

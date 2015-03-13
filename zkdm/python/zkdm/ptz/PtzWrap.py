@@ -3,7 +3,6 @@
 import time
 from ctypes import *
 import platform, os
-import logging
 
 _ptz_so = 'libzkptz.so.0.0.0'
 
@@ -54,7 +53,6 @@ class PtzWrap(object):
             self.__ptz = self.__ptr['func_open2'](cfg_filename)
             return (self.__ptz is not None)
         else:
-            logging.info('failure')
             return False
 
 
