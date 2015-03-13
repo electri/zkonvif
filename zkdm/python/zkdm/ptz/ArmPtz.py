@@ -2,7 +2,8 @@
 
 import socket, select
 import re
-import logging
+sys.path.append('../')
+from common.uty_log import log
 
 def TurnStr(name, direction, speed):
     return 'PtzCmd=Turn&Who=%s&Direction=%s&Speed=%s'%(name,direction,speed)
@@ -95,8 +96,8 @@ def recvt(s, timeout = 1.0):
 
 def SendThenRecv(HOST, PORT, arm_command):
     # FIXME: 我感觉应该这样写才能支持连接超时:
-    logging.info('ArmPtz.py: ip = %s, port = %s', HOST, str(PORT))
-    logging.info('ArmPtz.py: send command = %s', arm_command)
+    log('ArmPtz.py: ip = %s, port = %s'%(HOST,PORT), 'ptz', 3)
+    log('ArmPtz.py: send command = %s'%(arm_command), 'ptz', 3)
     if arm_command == None:
         return {'result':'error', 'info': 'do not support this command'}
 
@@ -108,8 +109,7 @@ def SendThenRecv(HOST, PORT, arm_command):
         s.settimeout(None)
     except Exception as e:
         print e
-        logging.info('in ArmPtz.py, connect error:')
-        logging.info(e)
+        log('in ArmPtz.py, connect error:', 'ptz', 3)
         return {'result':'error', 'info':'not connect proxied hos'}
     s.sendall(arm_command) 
     try:
@@ -119,14 +119,13 @@ def SendThenRecv(HOST, PORT, arm_command):
     except Exception as e:
         s.close()
         print e
-        logging.info('in ArmPtz.py, recv error:')
-        logging.info(e)
+        log('in ArmPtz.py, recv error:', 'ptz', 3)
         return {'result':'error', 'info': 'recv timeout or other reasons'}
 
     s.close()
     print 'recv data'
     print data
-    logging.info('ArmPtz.py: recv data %s', data)
+    log('ArmPtz.py: recv data %s'%(data), 'ptz', 3)
     if 'ok' in data:
         return {'result':'ok', 'info':''}
     elif 'unsupported' in data:
