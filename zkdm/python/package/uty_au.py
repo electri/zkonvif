@@ -28,15 +28,13 @@ def __is_vm(m):
     return False
 
 
-if _windows:
-    import wmi
-
 def get_mac_ip():
     ''' 返回本机首选mac地址和首选ip地址，并且排除虚拟机 ...
     '''
     mac, ip = None, None
 
     if _windows:
+        import wmi
         c = wmi.WMI()
         for nif in c.Win32_NetworkAdapterConfiguration(IPEnabled=1):
             m = str(nif.MACAddress)
@@ -45,7 +43,18 @@ def get_mac_ip():
                 return m,nif.IPAddress[0]
         return None,None
     else:
-        raise Exception('NOT impl')
+        import netifaces as nif
+        nic = 'eth0'
+        if platform.uname()[0] == 'Darwin':
+            nic = 'en0'
+
+        for i in nif.interfaces():
+            if i == nic:
+                addr = nif.ifaddresses(i)
+                mac = addr[nif.AF_LINK][0]['addr']
+                mac = mac.replace(':', '').lower()
+                ip = addr[nif.AF_INET][0]['addr']
+                return mac,ip
         return None,None
 
 
