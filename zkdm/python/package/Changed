@@ -4,3 +4,4 @@
 	2. log: 启动日志服务
 	3. ptz：支持日志服务
 	4. recording：支持日志服务
+	5. uty_au: 支持linux/mac

@@ -30,7 +30,7 @@ def setup():
         pf = 'common/' + f
         shutil.copyfile(pf, 'c:/zkdm/common/' + f)
 
-    # 更像日志服务
+    # 更像日志服务, 但是不更新 logs.db
     print 'to update log'
     for f in os.listdir('log/'):
         if f == 'logs.db' and os.path.isfile('c:/zkdm/log/logs.db'):
