@@ -8,7 +8,6 @@ import re, sys
 import json, io, os
 from PtzWrap import PtzWrap
 sys.path.append('../')
-from common.Log import Log
 from common.uty_token import *
 from common.reght import RegHt
 import thread
@@ -28,7 +27,7 @@ _all_config = None
 try:
     _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
 except:
-    log('fail for loading ptz config.json', 'ptz', 1) 
+    log('fail for loading ptz config.json', 'ptz', 0) 
     print 'faile for loading ptz config.json'
     sys.exit(0)
 
@@ -37,7 +36,7 @@ if os.path.isfile('./local.json'):
     try:
         _local_config = json.load(io.open('./local.json', 'r', encoding='utf-8'))
     except:
-        log('fail for loading ptz local.json', 'ptz', 1)
+        log('fail for loading ptz local.json', 'ptz', 0)
         print 'fail for loading ptz local.json'
         sys.exit(0)
     _all_config.update(_local_config)
@@ -70,9 +69,9 @@ def load_ptz(config):
             print 'open with cfg:', filename
             is_ptz = ptz['ptz'].open_with_config(filename)
             if is_ptz == False:
-                log('open %s failure'%(filename), 'ptz', 3)    
+                log('open %s failure'%(filename), 'ptz', 2)    
             else:
-                log('open %s succeed'%(filename), 'ptz', 3)
+                log('open %s succeed'%(filename), 'ptz', 2)
 
         else:
             print 'open ptz:', ptz['serial'], 'addr:', ptz['addr']
@@ -139,7 +138,7 @@ class ControllingHandler(RequestHandler):
     def get(self, token, name, method):
         ''' sid 指向云台，method_params 为 method?param1=value1&param2=value2& ....
         '''
-        log('token:%s, name:%s, method:%s, arguments:%s'%(token,name,method,self.request.arguments), 'ptz', 3)
+        log('token:%s, name:%s, method:%s, arguments:%s'%(token,name,method,self.request.arguments), 'ptz')
         print token, name, method
         thread.start_new_thread(self.callback, (token, name, method))
 
@@ -160,7 +159,7 @@ class ControllingHandler(RequestHandler):
                     nm = id_port['name']
                     armcmd = ArmPtz.toArmStr(nm, method, self.request.arguments)
                     ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
-        log('ret:%s'%(ret), 'ptz', 3)
+        log('ret:%s'%(ret), 'ptz')
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
         self.finish()
