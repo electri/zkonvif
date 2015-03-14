@@ -1,0 +1,39 @@
+{
+   "services" : [
+      {
+         "enable" : true,
+         "fork" : true,
+         "url" : "http://<ip>:10005/log",
+         "name" : "Log.service",
+         "type" : "log",
+         "path" : "python ../log/LogServer.py",
+         "title" : "日志服务"
+      },
+      {
+         "enable" : true,
+         "fork" : true,
+         "url" : "http://<ip>:10003/ptz",
+         "name" : "ptz.service",
+         "type" : "ptz",
+         "path" : "python ../ptz/PtzServer.py",
+         "title" : "云台服务"
+      },
+      {
+          "enable": false,
+          "fork" : true,
+          "url" : "http://<ip>:10004/host",
+          "name" : "host",
+          "path" : "python ../host/HostUtils.py",
+          "title" : "主机服务"
+      },
+      {
+         "enable" : true,
+         "fork" : true,
+         "url" : "http://<ip>:10006/recording",
+         "name" : "recording.service",
+         "type" : "recording",
+         "path" : "python ../recording/RecordingServer.py",
+         "title" : "录播服务"
+      }
+   ]
+}
