@@ -4,12 +4,20 @@
 # @file: install.py
 # @date: 2015-03-09
 # @brief:
-# @detail:
+# @detail: setup() 函数将被自动更新执行，应首先将需要替换的文件进行备份 ...
 #
 #################################################################
 
-import os, shutil, sys
+import os, shutil, sys, time
 import uty_au as uty
+
+
+__backup_path = 'c:/zkdm/backup/%s/' % time.strftime('%Y-%m-%d')
+try:
+    os.makedirs(__backup_path)
+except:
+    sys.exit()
+
 
 def setup():
     mac, ip = uty.get_mac_ip()
@@ -28,6 +36,7 @@ def setup():
     print 'to update common'
     for f in os.listdir('common/'):
         pf = 'common/' + f
+        __backup(pf)
         shutil.copyfile(pf, 'c:/zkdm/common/' + f)
 
     # 更像日志服务, 但是不更新 logs.db
@@ -37,6 +46,7 @@ def setup():
             continue
         pf = 'log/' + f
         if os.path.isfile(pf):
+            __backup(pf)
             shutil.copyfile(pf, 'c:/zkdm/log/' + f)
 
     # 更新 recording 服务, 简单的复制目录中所有文件
@@ -44,6 +54,7 @@ def setup():
     for f in os.listdir('recording/'):
         pf = 'recording/' + f
         if os.path.isfile(pf):
+            __backup(pf)
             shutil.copyfile(pf, 'c:/zkdm/recording/' + f)
 
     # 更新 dm 服务，简单的复制目录中所有文件
@@ -51,6 +62,7 @@ def setup():
     for f in os.listdir('dm/'):
         pf = 'dm/' + f
         if os.path.isfile(pf):
+            __backup(pf)
             shutil.copyfile(pf, 'c:/zkdm/dm/' + f)
 
     # 更新 ptz 服务，简单的复制目录中所有文件
@@ -58,11 +70,22 @@ def setup():
     for f in os.listdir('ptz/'):
         pf = 'ptz/' + f
         if os.path.isfile(pf):
+            __backup(pf)
             shutil.copyfile(pf, 'c:/zkdm/ptz/' + f)
 
     # 覆盖 changedlog
     print 'to update Changed'
+    __backup('Changed')
     shutil.copyfile('Changed', 'c:/zkdm/Changed')
+
+
+ def __backup(fname):
+     ''' 备份 fname，fname 应为完整路径 '''
+     try:
+         basename = os.path.basename(fname)
+         shutil.copyfile(fname, __backup_path + basename)
+     except:
+        pass
 
 
 if __name__ == '__main__':
