@@ -236,11 +236,11 @@ def main():
     # 正常启动 ..
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     curr_path = os.path.dirname(os.path.abspath(__file__)) 
-    #chk_update()
+    chk_update()
     os.chdir(curr_path)
 
     import chk_info
-    #chk_info.wait()
+    chk_info.wait()
 
     _zkutils = zkutils()
     _myip = _zkutils.myip_real()
