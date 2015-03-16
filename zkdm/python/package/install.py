@@ -79,8 +79,11 @@ def setup():
     shutil.copyfile('Changed', 'c:/zkdm/Changed')
 
     # 保存 curl.exe 为了方便调试
-    shutil.copyfile('3rd/curl.exe', 'c:/Windows/curl.exe')
-    shutil.copyfile('3rd/jq.exe', 'c:/Windows/jq.exe')
+    try:
+        shutil.copyfile('3rd/curl.exe', 'c:/Windows/curl.exe')
+        shutil.copyfile('3rd/jq.exe', 'c:/Windows/jq.exe')
+    except:
+        pass
 
 
 def __backup(fname):
