@@ -7,7 +7,7 @@
 # @detail:
 #
 #################################################################
-from DMServer3 import *
+from DMServer import *
 import win32serviceutil
 import win32service
 import win32event
