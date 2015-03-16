@@ -6,10 +6,10 @@ import threading, time
 import sys, re, os
 import threading
 
-#sys.path.append('../')
-#sys.path.append('../common')
-# 本地配置文件
+sys.path.append('../')
+from common.uty_log import log
 
+# 本地配置文件
 FNAME = os.path.dirname(os.path.abspath(__name__)) + '/config.json'
 
 class ServicesManager:
@@ -122,6 +122,9 @@ class ServicesManager:
             TODO:  if !fork 直接启动 py 脚本？是否能在 arm 上节省点内存？ ..
         '''
 
+        log('ServicesManager.__start_service: to start %s' % sd['name'], \
+                project = 'dm', level = 3)
+
         for s in self.__activated:
             if s[1]['name'] == sd['name']:
                 return None # 已经启动 ..
@@ -136,7 +139,7 @@ class ServicesManager:
 
         psu = (p, sd, self.__fix_url(sd['url']))
         self.__activated.append(psu)
-        return    psu 
+        return psu 
         
 
     def __stop_service(self, sd):

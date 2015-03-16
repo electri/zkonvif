@@ -15,6 +15,7 @@ sys.path.append('../common')
 import uty_token
 import select, time
 import os 
+from uty_log import log
 
 TARGET_PORT = 11011
 
@@ -44,6 +45,7 @@ def ping_all(fname):
 
     ips = db_init_from_tokens(fname)
     print ips
+    log('pping: load ips from tokens, include %s' % str(ips), project = 'dm', level = 3)
 
     last_send_ping = 0
     while True:
