@@ -37,7 +37,7 @@ using "http://ip:port/config" to get all configured ptz.
 &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp }<br/>
 &nbsp &nbsp &nbsp &nbsp }<br/>
 </p>
-using "http://ip:port/ptz/host_no/<b>which</b>/<b>method</b>?<b>params...</b>" to control.
+using "http://ip:port/ptz/token/<b>which</b>/<b>method</b>?<b>params...</b>" to control.
 <br> 如: /ptz/0/teacher/left?speed=1
 <br>
 <br>
@@ -47,28 +47,28 @@ method: <B> left, right, up, down, stop, set_pos, get_pos, set_zoom, get_zoom, p
 <p>method 具体描述:</p>
 
 <ul> <B>无返回值:</B>
-	<li>/ptz/host_no/WHO/left?speed=N : 向左转动云台, 速度范围从 1 到 30 加快.</li>
-	<li>/ptz/WHO/right?speed=N: 右转 </li>
-	<li>/ptz/WHO/up?speed=N : 向上 </li>
-	<li>/ptz/WHO/down?speed=N : 向下 </li>
-	<li>/ptz/WHO/stop : 停止上面四个转动 </li>
-	<li>/ptz/WHO/set_pos?x=X&ampy=Y&ampsx=SX&ampsy=SY : 转动到指定位置, X,Y 为绝对位置, SX, SY 为转动速度</li>
-	<li>/ptz/WHO/mouse_trace?x=X&y=Y&sx=SX&sy=Sy : 转动到鼠标指定图像位置,X是鼠标点到左边的距离跟宽的比例,Y是鼠标点到上端的距离跟高的比例, SX, SY 为转动速度</li>
-	<li>/ptz/WHO/set_zoom?z=Z : 设置倍率 </li>
-	<li>/ptz/WHO/preset_save?id=ID : 保存预置位, ID为预置位序号,ID取值范围 0 ~ 5</li>
-	<li>/ptz/WHO/preset_call?id=ID : 调用预置位, ID同上</li>
-	<li>/ptz/WHO/preset_clear?id=ID : 删除预置位, ID同上</li>
-	<li>/ptz/WHO/zoom_tele?speed=SPEED : 镜头拉远, SPEED为速度 </li>
-	<li>/ptz/WHO/zoom_wide?speed=SPEED : 镜头拉近, SPEED同上</li>
-	<li>/ptz/WHO/zoom_stop: 停止拉近或拉远镜头</li>
+	<li>/ptz/token/WHO/left?speed=N : 向左转动云台, 速度范围从 1 到 30 加快.</li>
+	<li>/ptz/token/WHO/right?speed=N: 右转 </li>
+	<li>/ptz/token/WHO/up?speed=N : 向上 </li>
+	<li>/ptz/token/WHO/down?speed=N : 向下 </li>
+	<li>/ptz/token/WHO/stop : 停止上面四个转动 </li>
+	<li>/ptz/token/WHO/set_pos?x=X&ampy=Y&ampsx=SX&ampsy=SY : 转动到指定位置, X,Y 为绝对位置, SX, SY 为转动速度</li>
+	<li>/ptz/token/WHO/mouse_trace?x=X&y=Y&sx=SX&sy=Sy : 转动到鼠标指定图像位置,X是鼠标点到左边的距离跟宽的比例,Y是鼠标点到上端的距离跟高的比例, SX, SY 为转动速度</li>
+	<li>/ptz/token/WHO/set_zoom?z=Z : 设置倍率 </li>
+	<li>/ptz/token/WHO/preset_save?id=ID : 保存预置位, ID为预置位序号,ID取值范围 0 ~ 5</li>
+	<li>/ptz/token/WHO/preset_call?id=ID : 调用预置位, ID同上</li>
+	<li>/ptz/token/WHO/preset_clear?id=ID : 删除预置位, ID同上</li>
+	<li>/ptz/token/WHO/zoom_tele?speed=SPEED : 镜头拉远, SPEED为速度 </li>
+	<li>/ptz/token/WHO/zoom_wide?speed=SPEED : 镜头拉近, SPEED同上</li>
+	<li>/ptz/token/WHO/zoom_stop: 停止拉近或拉远镜头</li>
 </ul>
 
 <ul> <B> 有返回值, 返回 json 格式 </B>
-	<li>/ptz/WHO/get_pos: 返回云台当前位置, 具体格式为: { "result":"ok", "info":"", "value":{"type":"position","data":{"x":X, "y":Y}}}
+	<li>/ptz/token/WHO/get_pos: 返回云台当前位置, 具体格式为: { "result":"ok", "info":"", "value":{"type":"position","data":{"x":X, "y":Y}}}
 	</li>
-	<li>/ptz/WHO/get_zoom: 返回倍率值, 具体格式位: {"result":"ok","info":"","value":{"type":"position","data":{"z":Z}}}
+	<li>/ptz/token/WHO/get_zoom: 返回倍率值, 具体格式位: {"result":"ok","info":"","value":{"type":"position","data":{"z":Z}}}
 	</li>
-	<li>/ptz/WHO/ext_get_scales: 返回当前镜头的实际倍率，注意，这个值与 get_zoom 返回的含义不同, 具体格式为： {"result":"ok", "info":"", "value":{"type":"double", "data":XXX }} </li>
+	<li>/ptz/token/WHO/ext_get_scales: 返回当前镜头的实际倍率，注意，这个值与 get_zoom 返回的含义不同, 具体格式为： {"result":"ok", "info":"", "value":{"type":"double", "data":XXX }} </li>
 </ul>
 
 </body>
