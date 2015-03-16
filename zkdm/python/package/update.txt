@@ -1,0 +1,5 @@
+1 zip_version = 20
+
+enable logservice, just using 
+   curl http://ip:10005/log/query | jd .  
+to look into
