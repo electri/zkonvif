@@ -11,6 +11,9 @@ sys.path.append('../')
 from common.utils import zkutils
 from common.uty_log import log
 
+def log_info(info):
+    log(log, project='recording')
+
 def StartLiving(ip,mac,hosttype):
     log('StartLiving calling, ip=%s, mac=%s, hosttype=%s' % (ip, mac, hosttype), project = 'recording', level = 3)
     rc = {}
