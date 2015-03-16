@@ -14,6 +14,7 @@ def chk_update():
             # 一旦有更新，则重新机器
             reboot = True
     except:
+        print 'exception of au!!!!!!!!!!!!!!'
         pass
     
     if reboot:
