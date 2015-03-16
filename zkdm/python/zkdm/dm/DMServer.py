@@ -250,7 +250,7 @@ def main():
     
     service_url = r'http://%s:10000/dm'%(_myip)
     hds = gather_hds_from_tokens(_tokens)
-    hds.append({'mac': _myip, 'ip': _myip, 'type': 'dm', 'url' : service_url, 'id': 'dm'}) 
+    hds.append({'mac': _mac, 'ip': _myip, 'type': 'dm', 'url' : service_url, 'id': 'dm'}) 
     RegHost(hds)
 
     #sds = gather_sds_from_tokens(_tokens, "dm")
