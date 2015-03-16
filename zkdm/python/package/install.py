@@ -16,7 +16,7 @@ __backup_path = 'c:/zkdm/backup/%s/' % time.strftime('%Y-%m-%d')
 try:
     os.makedirs(__backup_path)
 except:
-    sys.exit()
+    pass
 
 
 def setup():
@@ -78,13 +78,22 @@ def setup():
     __backup('Changed')
     shutil.copyfile('Changed', 'c:/zkdm/Changed')
 
+    # 保存 curl.exe 为了方便调试
+    shutil.copyfile('3rd/curl.exe', 'c:/Windows/curl.exe')
+    shutil.copyfile('3rd/jq.exe', 'c:/Windows/jq.exe')
 
- def __backup(fname):
-     ''' 备份 fname，fname 应为完整路径 '''
-     try:
-         basename = os.path.basename(fname)
-         shutil.copyfile(fname, __backup_path + basename)
-     except:
+
+def __backup(fname):
+    ''' 备份 fname，fname 应为完整路径 '''
+    try:
+        basename = os.path.basename(fname)
+        dirname = os.path.basename(os.path.dirname(fname))
+        try:
+            os.makedirs(__backup_path + dirname)
+        except:
+            pass
+        shutil.copyfile(fname, __backup_path + dirname + '/' + basename)
+    except:
         pass
 
 
