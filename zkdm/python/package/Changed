@@ -1,3 +1,13 @@
+2015-3-17:
+	1. recording: 修复LivingServer 中 log_info 没有定义的bug
+	2. 3rd: 新增 netcat
+	3. ptz: 修复与arm之间的交互问题
+
+2015-3-16:
+	1. log: 允许跨域访问
+	2. log: 允许不包含值的参数 ...
+
+
 2015-3-14：
     1. dm：分离 windows services 与功能实现模块
 		   支持日志服务

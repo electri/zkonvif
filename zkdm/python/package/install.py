@@ -82,8 +82,11 @@ def setup():
     try:
         shutil.copyfile('3rd/curl.exe', 'c:/Windows/curl.exe')
         shutil.copyfile('3rd/jq.exe', 'c:/Windows/jq.exe')
+        shutil.copyfile('3rd/nc.exe', 'c:/Windows/nc.exe')
     except:
         pass
+
+    return True
 
 
 def __backup(fname):

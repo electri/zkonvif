@@ -9,10 +9,13 @@ def TurnStr(name, direction, speed):
     return 'PtzCmd=Turn&Who=%s&Direction=%s&Speed=%s'%(name,direction,speed)
 
 def PresetStr(cmd, name, ids):
-    return 'PtzCmd=%s&Who=%s%ID=%s'%(cmd, name, ids) 
+    return 'PtzCmd=%s&Who=%s&ID=%s'%(cmd, name, ids) 
 
 def ZoomStr(cmd, name, speed):
     return 'PtzCmd=%s&Who=%s&speed=%s'%(cmd, name, speed)
+
+def ZoomStrWithoutSpeed(cmd, name):
+    return 'PtzCmd=%s&Who=%s'%(cmd, name)
 
 def toArmStr(name, cmd, params=None):
     if cmd == 'left':
@@ -81,7 +84,7 @@ def toArmStr(name, cmd, params=None):
         return ZoomStr('ZoomWide', name, speed)
 
     elif cmd == 'zoom_stop':
-        return ZoomStr('ZoomStop', name)
+        return ZoomStrWithoutSpeed('ZoomStop', name)
     
     else:
         return None
