@@ -78,6 +78,7 @@ def regservice(params):
         url = params['url']
 
     db = DBHlp()
+
     if is_service_exist(db, params['host'], params['name'], params['type']):
         s = 'update %s set url="%s" where host="%s" and name="%s" and type="%s"' % \
             (TAB_SERVICES, url, params['host'], params['name'], params['type'])

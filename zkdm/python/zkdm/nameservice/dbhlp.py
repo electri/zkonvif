@@ -18,9 +18,13 @@ S1 = r'create table hosts (name varchar(128), type varchar(128))'
 S2 = r'create table services (host varchar(128), name varchar(128), type varchar(128), url varchar(255))'
 S3 = r'create table states (host varchar(128), name varchar(128), type varchar(128), stamp integer)'
 
-TABS = [ { "name": TAB_HOSTS, "create": S1 },
-         { "name": TAB_SERVICES, "create": S2 },
-         { "name": TAB_STATES, "create": S3 }
+I1 = r'create index hosts_idx on hosts (name)'
+I2 = r'create index services_idx on services (host, name, type)'
+I3 = r'create index states_idx on states (host, name, type)'
+
+TABS = [ { "name": TAB_HOSTS, "create": S1, "index": I1 },
+         { "name": TAB_SERVICES, "create": S2, "index": I2 },
+         { "name": TAB_STATES, "create": S3, "index": I3 }
        ]
 
 
@@ -65,7 +69,7 @@ class DBThread(threading.Thread):
                     if req['commit']:
                         conn.commit()
 
-            
+
     def __query(self, cursor, req):
         ''' 执行查询 '''
         s = req['sql']
@@ -138,6 +142,7 @@ def g__chk_db(conn, cursor, reset = False):
         if not found:
             print 'INFO: dbhlp: init:', chk['name']
             cursor.execute(chk['create'])
+            cursor.execute(chk['index'])
         else:
             if reset:
                 s1 = 'delete from {}'.format(chk['name'])
