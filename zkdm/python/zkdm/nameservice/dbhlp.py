@@ -24,28 +24,6 @@ TABS = [ { "name": TAB_HOSTS, "create": S1 },
        ]
 
 
-class DBHlp:
-    queue_ = Queue.Queue()  # 用于序列化
-
-    def execute(self, sent, commit = False):
-        ''' 直接执行 sql 语句，没有返回 '''
-        t = { 'query': False, 'commit': commit, 'sql': sent }
-        DBHlp.queue_.put(t)
-
-
-    def query(self, sent):
-        ''' 执行查询，返回 [] '''
-        result = { 'result': None }
-        complete = threading.Event()
-        t = {
-            'query': True, 'sql': sent,
-            'complete': complete,
-            'result': result
-        }
-        DBHlp.queue_.put(t)
-        complete.wait()
-        return result['result']
-
 
 class DBThread(threading.Thread):
     ''' 单线程访问内存数据库 
@@ -72,19 +50,22 @@ class DBThread(threading.Thread):
 
         g__chk_db(conn, cursor)
         
-        while !self.__quit:
+        while not self.__quit:
             req = self.__fifo.get() # 得到下一个命令
+			print req
             if req['query']:
                 self.__query(cursor, req)
             else:
                 # 无返回值
                 s = req['sql']
                 try:
+                    print 'to exec:', s
                     cursor.execute(s)
                 except Exception as e:
                     print 'ERR: exception for "%s",' % s, e
-                elif req['commit']:
-                    conn.commit()
+                else:
+                    if req['commit']:
+                        conn.commit()
 
             
     def __query(self, cursor, req):
@@ -102,46 +83,29 @@ class DBThread(threading.Thread):
             req['complete'].set()
 
 
+class DBHlp:
+    queue_ = Queue.Queue()  # 用于序列化
+    th_ = DBThread(queue_)
 
-class BackupThread(threading.Thread):
-    ''' 备份线程，每隔几分钟，将内存数据库完整备份 '''
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.daemon = True
-        self.start()
-
-    def run(self):
-        fdb = sqlite3.connect(DBNAME)
-        fc = fdb.cursor()
-        g__chk_db(fdb, fc)
-
-        mdb = sqlite3.connect(DBNAME_MEM, check_same_thread = False)
-        mc = mdb.cursor()
-
-        while True:
-            time.sleep(INTERVAL)
-            self.__backup(mdb, mc, fdb, fc)
-
-    def __backup(self, mdb, mc, fdb, fc):
-        print 'INFO: to backup db'
-        self.__sql_delete('hosts', fc)
-        self.__sql_delete('services', fc)
-        self.__sql_delete('states', fc)
-        self.__copyall('hosts', mc, fc)
-        self.__copyall('services', mc, fc)
-        self.__copyall('states', mc, fc)
-        fdb.commit()
+    def execute(self, sent, commit = False):
+        ''' 直接执行 sql 语句，没有返回 '''
+        t = { 'query': False, 'commit': commit, 'sql': sent }
+        DBHlp.queue_.put(t)
 
 
-    def __sql_delete(self, tab, cursor):
-        s0 = 'delete from "%s"' % tab
-        cursor.execute(s0)
+    def query(self, sent):
+        ''' 执行查询，返回 [] '''
+        result = { 'result': None }
+        complete = threading.Event()
+        t = {
+            'query': True, 'sql': sent,
+            'complete': complete,
+            'result': result
+        }
+        DBHlp.queue_.put(t)
+        complete.wait()
+        return result['result']
 
-    def __copyall(self, tab, sc, dc):
-        rs = sc.execute('select * from "%s"' % tab)
-        for r in rs:
-            print r[0]
-        pass
 
 
 def g__chk_db(conn, cursor):
@@ -171,6 +135,8 @@ if __name__ == '__main__':
     db1.execute('insert into hosts values("aabbccddeeff", "x86")', commit = True)
     db2.execute('insert into hosts values("112233445566", "arm")', commit = True)
 
+    r = db3.execute('select * from hosts')
+    print r
     
 
     time.sleep(30.0)
