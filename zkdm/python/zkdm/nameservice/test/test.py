@@ -10,7 +10,7 @@
 
 import urllib2, time
 
-NSURL = 'http://localhost:9999/ns'
+NSURL = 'http://172.16.1.10:9999/ns'
 
 def reghost(name, t):
     ''' 主机注册 '''
