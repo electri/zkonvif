@@ -52,14 +52,12 @@ class DBThread(threading.Thread):
         
         while not self.__quit:
             req = self.__fifo.get() # 得到下一个命令
-			print req
             if req['query']:
                 self.__query(cursor, req)
             else:
                 # 无返回值
                 s = req['sql']
                 try:
-                    print 'to exec:', s
                     cursor.execute(s)
                 except Exception as e:
                     print 'ERR: exception for "%s",' % s, e
@@ -83,12 +81,13 @@ class DBThread(threading.Thread):
             req['complete'].set()
 
 
+
 class DBHlp:
     queue_ = Queue.Queue()  # 用于序列化
     th_ = DBThread(queue_)
 
     def execute(self, sent, commit = False):
-        ''' 直接执行 sql 语句，没有返回 '''
+        ''' 执行非 select 语句，没有返回 '''
         t = { 'query': False, 'commit': commit, 'sql': sent }
         DBHlp.queue_.put(t)
 
@@ -97,18 +96,36 @@ class DBHlp:
         ''' 执行查询，返回 [] '''
         result = { 'result': None }
         complete = threading.Event()
-        t = {
-            'query': True, 'sql': sent,
-            'complete': complete,
-            'result': result
-        }
+
+        t = { 'query': True, 'sql': sent, 'complete': complete, 'result': result }
         DBHlp.queue_.put(t)
         complete.wait()
         return result['result']
 
 
+    def dump(self, fname):
+        ''' dump 内存数据库 '''
+        db = sqlite3.connect(fname)
+        cursor = db.cursor()
+        g__chk_db(db, cursor, reset = True)
+        rs = self.query('select * from hosts')
+        for r in rs:
+            s1 = 'insert into hosts values("{}", "{}")'.format(r[0], r[1])
+            cursor.execute(s1)
+        rs = self.query('select * from services')
+        for r in rs:
+            s1 = 'insert into services values("{}", "{}", "{}", "{}")'.format(r[0], r[1], r[2], r[3])
+            cursor.execute(s1)
+        rs = self.query('select * from states')
+        for r in rs:
+            s1 = 'insert into states values("{}", "{}", "{}", {})'.format(r[0], r[1], r[2], int(r[3]))
+            cursor.execute(s1)
+        db.commit()
+        db.close()
 
-def g__chk_db(conn, cursor):
+
+
+def g__chk_db(conn, cursor, reset = False):
     for chk in TABS:
         s0 = 'select COUNT(*) from sqlite_master where name="{}"'.format(chk['name'])
         n = cursor.execute(s0)
@@ -122,7 +139,9 @@ def g__chk_db(conn, cursor):
             print 'INFO: dbhlp: init:', chk['name']
             cursor.execute(chk['create'])
         else:
-            print 'INFO: dbhlp: exist:', chk['name']
+            if reset:
+                s1 = 'delete from {}'.format(chk['name'])
+                cursor.execute(s1)
     conn.commit()
 
 
@@ -135,9 +154,7 @@ if __name__ == '__main__':
     db1.execute('insert into hosts values("aabbccddeeff", "x86")', commit = True)
     db2.execute('insert into hosts values("112233445566", "arm")', commit = True)
 
-    r = db3.execute('select * from hosts')
+    r = db3.query('select * from hosts')
     print r
     
-
-    time.sleep(30.0)
 

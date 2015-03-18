@@ -18,7 +18,7 @@ import query
 import types
 
 
-VERSION = 0.9
+VERSION = 0.902
 VERSION_INFO = 'NS Service ...'
 
 
@@ -55,6 +55,11 @@ class InternalHandler(RequestHandler):
             rh.join()
             self.write(rc)
             _ioloop.stop()
+
+        if cmd == 'dump':
+            db = DBHlp()
+            db.dump("ns.db")
+            self.write(rc)
         
 
     def __param(self, key):
@@ -195,7 +200,7 @@ def make_app():
             url(r'/ns/internal', InternalHandler),
             url(r'/ns/register/(.*)', RegisterHandler),
             url(r'/ns/query/(.*)', QueryHandler),
-            url(r'/deviceService/(.*)', OldRegisterHandler), # 仅仅为了兼容张福春设计的接口
+            url(r'/deviceService/(.*)', OldRegisterHandler), # 仅仅为了兼容张工设计的接口
             ])
 
 
@@ -210,6 +215,7 @@ def main():
 
     app = make_app()
     app.listen(9999)
+    print 'INFO: server listen on 9999....'
   
     _ioloop.start()
 

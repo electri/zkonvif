@@ -9,29 +9,29 @@
 from dbhlp import *
 import time
 
-def is_host_exist(db, c, name):
+def is_host_exist(db, name):
     ''' select COUNT(*) from tab where name=key '''
     s = 'select COUNT(*) from %s where name="%s"' % (TAB_HOSTS, name)
-    rc = db.query(c, s)
+    rc = db.query(s)
     if len(rc) > 0 and int(rc[0][0]) != 0:
         return True
     else:
         return False
 
-def is_service_exist(db, c, host, name, t):
+def is_service_exist(db, host, name, t):
     s = 'select COUNT(*) from %s where host="%s" and name="%s" and type="%s"' % \
         (TAB_SERVICES, host, name, t)
-    rc = db.query(c, s)
+    rc = db.query(s)
     if len(rc) > 0 and int(rc[0][0]) != 0:
         return True
     else:
         return False
 
-def update_states(db, c, host, name, t, stamp):
+def update_states(db, host, name, t, stamp):
     ''' 更新心跳 '''
     s = 'select COUNT(*) from %s where host="%s" and name="%s" and type="%s"' % \
         (TAB_STATES, host, name, t)
-    rc = db.query(c, s)
+    rc = db.query(s)
 
     s2 = ''
     if len(rc) > 0 and int(rc[0][0]) != 0:
@@ -40,7 +40,7 @@ def update_states(db, c, host, name, t, stamp):
     else:
         s2 = 'insert into %s VALUES("%s", "%s", "%s", %d)' % \
              (TAB_STATES, host, name, t, stamp)
-    db.execute(c, s2)
+    db.execute(s2)
 
 def reghost(params):
     ''' 注册主机信息，写入数据库 
@@ -54,14 +54,12 @@ def reghost(params):
     s = ''
     info = 'created'
     db = DBHlp()
-    c = db.db_open()
-    if is_host_exist(db, c, params['name']):
+    if is_host_exist(db, params['name']):
         s = 'update %s set type="%s" where name="%s"' % (TAB_HOSTS, params['type'], params['name'])
         info = 'update'
     else:
         s = 'insert into %s VALUES("%s", "%s")' % (TAB_HOSTS, params['name'], params['type'])
-    db.execute(c, s)
-    db.db_close()
+    db.execute(s)
 
     return { 'result': 'ok', 'info': info }
 
@@ -80,17 +78,15 @@ def regservice(params):
         url = params['url']
 
     db = DBHlp()
-    c = db.db_open()
-    if is_service_exist(db, c, params['host'], params['name'], params['type']):
+    if is_service_exist(db, params['host'], params['name'], params['type']):
         s = 'update %s set url="%s" where host="%s" and name="%s" and type="%s"' % \
             (TAB_SERVICES, url, params['host'], params['name'], params['type'])
         info = "updated"
     else:
         s = 'insert into %s VALUES("%s", "%s", "%s", "%s")' %\
             (TAB_SERVICES, params['host'], params['name'], params['type'], url)
-    db.execute(c, s)
-    update_states(db, c, params['host'], params['name'], params['type'], time.time())
-    db.db_close()
+    db.execute(s)
+    update_states(db, params['host'], params['name'], params['type'], time.time())
 
     return { 'result': 'ok', 'info': info }
 
@@ -102,10 +98,8 @@ def unregservice(params):
         return { 'result': 'err', 'info': 'unregservice MUST be supplied with host, name and type' }
 
     db = DBHlp()
-    c = db.db_open()
     s = 'delete from states where host="%s" and name="%s" and type="%s"' % (params['host'], params['name'], params['type'])
-    db.execute(c, s)
-    db.close()
+    db.execute(s)
     return { 'result': 'ok', 'info':'' }
 
 
@@ -117,9 +111,7 @@ def heartbeat(params):
         return {'result': 'err', 'info': 'regservice MUST supply host, name & type, opt url' }
 
     db = DBHlp()
-    c = db.db_open()
-    update_states(db, c, params['host'], params['name'], params['type'], time.time())
-    db.db_close()
+    update_states(db, params['host'], params['name'], params['type'], time.time())
 
     return { 'result': 'ok', 'info': 'updated' }
 
