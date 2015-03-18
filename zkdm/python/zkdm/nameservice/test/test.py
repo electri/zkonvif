@@ -54,9 +54,9 @@ def async_many(s, e):
     print 'END: from %d to %d, using %f seconds' % (s, e, t2-t1)
 
 if __name__ == '__main__':
-    step = 100
+    step = 125 
     start, end = 0, step
-    for i in range(0, 10):
+    for i in range(0, 8):
         th = threading.Thread(target=async_many, args=(start, end))
         th.start()
         start += step
