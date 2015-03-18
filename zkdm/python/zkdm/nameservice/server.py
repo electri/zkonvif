@@ -8,10 +8,12 @@
 
 
 from tornado.ioloop import IOLoop
-from tornado.web import RequestHandler, Application, url
+from tornado.web import *
+from tornado.gen import *
 from dbhlp import DBHlp
+from functools import wraps
 import time, json
-import sys
+import sys, threading
 import portalocker
 import register
 import query
@@ -81,27 +83,41 @@ def simple_params(args):
     return params
 
 
+def run_async(func):
+    ''' 启动工作线程执行 '''
+    @wraps(func)
+    def async_func(*args, **kwargs):
+        t = threading.Thread(target = func, args = args, kwargs = kwargs)
+        t.start()
+        return t
+    return async_func
+
+
 class RegisterHandler(RequestHandler):
     def get(self, cmd):
-        ''' 支持的格式：
-                reghost?name=<host name>&type=<host type>
-                regservice?host=<host name>&name=<service name>&type=<service type>&url=<service url>
-                heartbeat?host=<host name>&name=<service name>&type=<service type>
-                unregservice?host=<host name>&name=<service name>&type=<service type>
-        '''
+        self.__async_get(cmd)
+
+    @asynchronous
+    @coroutine
+    def __async_get(self, cmd):
+        rc = yield Task(self.__async_get0, cmd = cmd)
+        self.write(rc)
+        self.finish()
+                
+    @run_async
+    def __async_get0(self, callback, cmd):
         optabs = [ {'cmd': 'help', 'func': self.help },
                    {'cmd': 'reghost', 'func': register.reghost },
                    {'cmd': 'regservice', 'func': register.regservice },
                    {'cmd': 'heartbeat', 'func': register.heartbeat },
-                   {'cmd': 'unregservice', 'func': register.unregservice },
-                 ]
+                   {'cmd': 'unregservice', 'func': register.unregservice } ]
         params = simple_params(self.request.arguments)
         result = { 'result': 'err', 'info': 'NOT supported cmd:' + cmd }
         for x in optabs:
             if x['cmd'] == cmd:
                 result = x['func'](params)
+        callback(result)
 
-        self.write(result)
 
     def help(self, params):
         info = ''
@@ -117,10 +133,19 @@ class RegisterHandler(RequestHandler):
 
 class QueryHandler(RegisterHandler):
     def get(self, cmd):
-        ''' 支持的格式：
-                getAllService?[offline=1]
-                getServicesByType?type=<service type>[&host=<host name>]
-        '''
+        self.__async_get(cmd)
+
+
+    @asynchronous
+    @coroutine
+    def __async_get(self, cmd):
+        rc = yield Task(self.__async_get0, cmd = cmd)
+        self.write(rc)
+        self.finish()
+                
+
+    @run_async
+    def __async_get0(self, callback, cmd):
         # 这个表格，可以通过 query 得到，自动生成更合理
         optabs = [ { 'cmd': 'getAllServices', 'func': query.getAllServices },
                    { 'cmd': 'getServicesByType', 'func': query.getServicesByType },
@@ -133,8 +158,8 @@ class QueryHandler(RegisterHandler):
         for x in optabs:
             if x['cmd'] == cmd:
                 result = x['func'](params)
+        callback(result)
 
-        self.write(result)
 
     def help(self, params):
         ''' 打开 query.py，然后显示每个函数的 help ??
