@@ -16,7 +16,7 @@ class RecordingCommand():
         rc['result'] = 'ok'
         rc['info'] = ''
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        log('RecordingCommand.send_command: ip=%s, cmd=%s' % (ip, command), \
+        log('RecordingCommand.send_command: ip=%s, port=%d, cmd=%s' % (ip, 1230, command), \
                 project = 'recording')
         try:
             s.settimeout(2)
