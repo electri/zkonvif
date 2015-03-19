@@ -28,6 +28,27 @@ TABS = [ { "name": TAB_HOSTS, "create": S1, "index": I1 },
        ]
 
 
+def g__chk_db(conn, cursor, reset = False):
+    for chk in TABS:
+        s0 = 'select COUNT(*) from sqlite_master where name="{}"'.format(chk['name'])
+        n = cursor.execute(s0)
+        found = False
+        for x in n:
+            if int(x[0]) == 1:
+                found = True
+                break
+
+        if not found:
+            print 'INFO: dbhlp: init:', chk['name']
+            cursor.execute(chk['create'])
+            cursor.execute(chk['index'])
+        else:
+            if reset:
+                s1 = 'delete from {}'.format(chk['name'])
+                cursor.execute(s1)
+    conn.commit()
+
+
 
 class DBThread(threading.Thread):
     ''' 单线程访问内存数据库 
@@ -127,27 +148,6 @@ class DBHlp:
         db.commit()
         db.close()
 
-
-
-def g__chk_db(conn, cursor, reset = False):
-    for chk in TABS:
-        s0 = 'select COUNT(*) from sqlite_master where name="{}"'.format(chk['name'])
-        n = cursor.execute(s0)
-        found = False
-        for x in n:
-            if int(x[0]) == 1:
-                found = True
-                break
-
-        if not found:
-            print 'INFO: dbhlp: init:', chk['name']
-            cursor.execute(chk['create'])
-            cursor.execute(chk['index'])
-        else:
-            if reset:
-                s1 = 'delete from {}'.format(chk['name'])
-                cursor.execute(s1)
-    conn.commit()
 
 
 

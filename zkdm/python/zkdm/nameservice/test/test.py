@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# coding=utf-8
+# coding: utf-8
 # 
 # @file: test.py
 # @date: 2014-12-22
@@ -10,7 +10,7 @@
 
 import urllib2, time
 
-NSURL = 'http://172.16.1.10:9999/ns'
+NSURL = 'http://localhost:9999/ns'
 
 def reghost(name, t):
     ''' 主机注册 '''
