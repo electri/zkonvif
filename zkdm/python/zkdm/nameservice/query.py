@@ -21,15 +21,13 @@ def getHosts(params):
         s = 'select * from hosts where type="%s"' % (params['type'])
     
     db = DBHlp()
-    c = db.db_open()
-    rc = db.query(c, s)
+    rc = db.query(s)
     value = []
     for rec in rc:
         item = {}
         item['host'] = rec[0]
         item['type'] = rec[1]
         value.append(item)
-    db.db_close()
     return { 'result': 'ok', 'info':'', 'value':value }
 
 
@@ -45,8 +43,7 @@ def getAllServices(params):
             states on (services.host=states.host and services.name=states.name and \
                     services.type=states.type)'
     db = DBHlp()
-    c = db.db_open()
-    rc = db.query(c, s)
+    rc = db.query(s)
 
     value = []
     for rec in rc:
@@ -57,7 +54,6 @@ def getAllServices(params):
         item['url'] = rec[3]
         value.append(item)
 
-    db.db_close()
     return { 'result': 'ok', 'info': '', 'value':value }
 
 
@@ -91,8 +87,7 @@ def getServicesByType(params):
                     services.type=states.type) where services.type="%s"' % (t)
 
     db = DBHlp()
-    c = db.db_open()
-    rc = db.query(c, s)
+    rc = db.query(s)
     value = []
     for rec in rc:
         item = {}
@@ -101,7 +96,6 @@ def getServicesByType(params):
         item['type'] = rec[2]
         item['url'] = rec[3]
         value.append(item)
-    db.db_close()
     return { 'result': 'ok', 'info':'', 'value':value }
 
 
@@ -120,8 +114,7 @@ def getServicesByHost(params):
             states on (services.host=states.host and services.name=states.name and services.type=states.type) \
             where services.host="%s"' % (params['host'])
     db = DBHlp()
-    c = db.db_open()
-    rc = db.query(c, s)
+    rc = db.query(s)
     value = []
     for rec in rc:
         item = {}
@@ -130,7 +123,6 @@ def getServicesByHost(params):
         item['type'] = rec[2]
         item['url'] = rec[3]
         value.append(item)
-    db.db_close()
     return { 'result': 'ok', 'info':'', 'value': value }
 
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4

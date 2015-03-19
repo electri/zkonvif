@@ -41,13 +41,16 @@ class QueryHandler(RequestHandler):
         value['type'] = 'list'
         value['data'] = logs
         rc['value'] = value
+        self.add_header('Access-Control-Allow-Origin', '*') # to enable cross domain calling
         self.write(rc)
 
 
     def __param(self, key, params):
         if key in params:
             value = params[key]
-            return value[0]
+            v = value[0]
+            if v == '':
+                return None
         return None
 
 

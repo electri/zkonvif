@@ -49,7 +49,7 @@ class DBHlp:
         rc = []
         c = self.__db_open()
         s0 = r'select * from log where stamp > {} and stamp < {}'.format(stamp_begin, stamp_end)
-        if project:
+        if project is not None:
             s0 += r' and project="{}"'.format(project)
         if level is not None:
             s0 += r' and level <= {}'.format(level)
