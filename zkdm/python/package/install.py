@@ -21,10 +21,11 @@ except:
 
 def setup():
     mac, ip = uty.get_mac_ip()
-    print 'my mac:', mac
-    print 'my ip:', ip
+    print 'my mac:', mac, ' and my ip:', ip
 
-    # 测试
+    # 检查是否需要进行本次更新
+    if not __include_me(mac, ip): 
+        return False
 
 
     ''' 本次更新主要是启用日志服务，
@@ -37,7 +38,10 @@ def setup():
     for f in os.listdir('common/'):
         pf = 'common/' + f
         __backup(pf)
-        shutil.copyfile(pf, 'c:/zkdm/common/' + f)
+        try:
+            shutil.copyfile(pf, 'c:/zkdm/common/' + f)
+        except Exception as e:
+            print e
 
     # 更像日志服务, 但是不更新 logs.db
     print 'to update log'
@@ -47,7 +51,10 @@ def setup():
         pf = 'log/' + f
         if os.path.isfile(pf):
             __backup(pf)
-            shutil.copyfile(pf, 'c:/zkdm/log/' + f)
+            try:
+                shutil.copyfile(pf, 'c:/zkdm/log/' + f)
+            except Exception as e:
+                print e
 
     # 更新 recording 服务, 简单的复制目录中所有文件
     print 'to update recording'
@@ -55,7 +62,10 @@ def setup():
         pf = 'recording/' + f
         if os.path.isfile(pf):
             __backup(pf)
-            shutil.copyfile(pf, 'c:/zkdm/recording/' + f)
+            try:
+                shutil.copyfile(pf, 'c:/zkdm/recording/' + f)
+            except Exception as e:
+                print e
 
     # 更新 dm 服务，简单的复制目录中所有文件
     print 'to update dm'
@@ -63,7 +73,10 @@ def setup():
         pf = 'dm/' + f
         if os.path.isfile(pf):
             __backup(pf)
-            shutil.copyfile(pf, 'c:/zkdm/dm/' + f)
+            try:
+                shutil.copyfile(pf, 'c:/zkdm/dm/' + f)
+            except Exception as e:
+                print e
 
     # 更新 ptz 服务，简单的复制目录中所有文件
     print 'to update ptz'
@@ -71,12 +84,18 @@ def setup():
         pf = 'ptz/' + f
         if os.path.isfile(pf):
             __backup(pf)
-            shutil.copyfile(pf, 'c:/zkdm/ptz/' + f)
+            try:
+                shutil.copyfile(pf, 'c:/zkdm/ptz/' + f)
+            except Exception as e:
+                print e
 
     # 覆盖 changedlog
     print 'to update Changed'
     __backup('Changed')
-    shutil.copyfile('Changed', 'c:/zkdm/Changed')
+    try:
+        shutil.copyfile('Changed', 'c:/zkdm/Changed')
+    except Exception as e:
+        print e
 
     # 保存 curl.exe 为了方便调试
     try:
@@ -85,6 +104,16 @@ def setup():
         shutil.copyfile('3rd/nc.exe', 'c:/Windows/nc.exe')
     except:
         pass
+
+    # 尝试执行更多的按照操作
+    try:
+        if os.path.isfile('./extra.py'):
+            import extra
+            extra.install()
+        else:
+            print 'NO extra install'
+    except Exception as e:
+        print 'Excp for extra.install:', e
 
     return True
 
@@ -101,6 +130,23 @@ def __backup(fname):
         shutil.copyfile(fname, __backup_path + dirname + '/' + basename)
     except:
         pass
+
+
+def __include_me(mac, ip):
+    ''' 检查是否执行本次更新 '''
+    import json
+    try:
+        with open('scope.json') as jd:
+            j = json.load(jd)
+            if uty.isin_mac_scope(j['mac_from'], j['mac_to']):
+                return True
+            else:
+                print 'scope from', j['mac_from'], 'to', j['mac_to'], \
+                    'and NOT include me, my mac is', mac
+                return False
+    except:
+        print 'load scope.json fault!!!'
+        return True
 
 
 if __name__ == '__main__':
