@@ -1,3 +1,7 @@
+2015-3-19:
+	包含完整脚本，但不包含 dll 等二进制代码
+
+
 2015-3-17:
 	1. recording: 修复LivingServer 中 log_info 没有定义的bug
 	2. 3rd: 新增 netcat
