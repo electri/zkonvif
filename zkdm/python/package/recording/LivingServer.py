@@ -10,6 +10,7 @@ from Check_CardLive import CardLive_Runing
 sys.path.append('../')
 from common.utils import zkutils
 from common.uty_log import log
+from common.conf_mc import getconf_mulcast
 
 def log_info(info):
     log(log, project='recording')
@@ -96,8 +97,9 @@ def _load_base_url():
     '''
     平台地址
     '''
-    ret = json.load(io.open(r'../host/config.json', 'r', encoding='utf-8'))
-    r = ret['regHbService']
+    conf = getconf_mulcast()
+    ret = json.loads(con)
+    r = ret['NSService']
     if ' ' in r['sip'] or ' ' in r['sport']:
         raise Exception("include ' '")
     if r['sip'] == '' or r['sport'] == '':
