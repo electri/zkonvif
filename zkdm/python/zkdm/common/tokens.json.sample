@@ -1,0 +1,72 @@
+{
+    "1": {
+        "comment": "一个token对应一个主机，一个主机包含mac,ip,hosttype，和一个服务列表",
+        "mac": "00096F24A0AF",
+        "mac_comment": "被代理主机的 mac",
+        "ip": "192.168.12.222",
+        "ip_comment": "被代理主机的 ip",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/1/recording",
+                    "url_comment": "url 中需要包含 token ...",
+                    "private": {
+                        "comment": " private 字段描述该转发需要的私有信息 ",
+                        "target_ip": "192.168.12.222",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/1/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.12.222",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/1/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.12.222",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/1/dm"
+                }
+            }
+        }
+    },
+    "2": {
+        "comment": "一个token对应一个主机，一个主机包含mac,ip,hosttype，和一个服务列表",
+        "mac": "112233445567",
+        "mac_comment": "被代理主机的 mac",
+        "ip": "172.16.1.105",
+        "ip_comment": "被代理主机的 ip",
+        "hosttype": "x86",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/2/recording",
+                    "url_comment": "url 中需要包含 token ...",
+                    "private": {
+                        "comment": " private 字段描述该转发需要的私有信息 ",
+                        "target_ip": "192.168.12.33",
+                        "target_port": 3300
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/2/dm"
+                }
+            }
+        }
+    }
+}
