@@ -31,10 +31,14 @@ def log(info, project = 'unknown', level = DEBUG):
         level = FAULT
 
     try:
-		s1 = r'insert into log (project, level, stamp, content) values ("{}",{},{},"{}")'.format(project, level, time.time(), info)
+        info = info.replace('"', r'""')  
+        s1 = r'insert into log (project, level, stamp, content) values ("{}",{},{},"{}")'.format( \
+                project, level, time.time(), info)
     except Exception as e:
         print 'Exception: log:', e
         return
+        
+    print s1
 
     try:
         conn = sql.connect(DBNAME)
