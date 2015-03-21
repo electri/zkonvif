@@ -10,7 +10,6 @@ import portalocker
 
 
 sys.path.append('../')
-import common.reght
 
 VERSION = 0.91
 VERSION_INFO = 'Log Service ...'
