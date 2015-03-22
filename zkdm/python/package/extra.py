@@ -19,8 +19,8 @@ def install():
     # 然后强制复制文件 ...
     print 'to replace cardlive.exe'
     try:
-        os.system('taskkill /im /f cardlive.exe')
-        shutil.copyfile('patch/cardlive.exe', 'c:/program files/zonekey/cardlive/cardlive.exe')
+        os.system('taskkill /f /im cardlive.exe')
+        shutil.copyfile('patch/cardlive.exe', 'c:/program files/zonekey/cardlive.exe')
     except Exception as e:
         print 'Excp: replace cardlive.exe:', e
 
