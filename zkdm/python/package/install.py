@@ -136,6 +136,10 @@ def __include_me(mac, ip):
     ''' 检查是否执行本次更新 '''
     import json
     try:
+        if not os.path.isfile('scope.json'):
+            # 如果没有 scope.json 文件，则认为完全更新
+            return True
+
         with open('scope.json') as jd:
             j = json.load(jd)
             if uty.isin_mac_scope(j['mac_from'], j['mac_to']):

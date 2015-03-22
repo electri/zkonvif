@@ -10,6 +10,7 @@ from common.utils import zkutils
 from RecordingCommand import RecordingCommand
 from LivingServer import StartLiving, StopLiving
 from common.uty_log import log
+from common.conf_mc import getconf_mulcast
 
 _record_thread = []
 
@@ -29,8 +30,9 @@ class Schedule():
         '''
         平台地址
         '''
-        ret = json.load(io.open(r'../host/config.json', 'r', encoding='utf-8'))
-        r = ret['regHbService']
+        conf = getconf_mulcast()
+        ret = json.loads(conf)
+        r = ret['NSService']
         if ' ' in r['sip'] or ' ' in r['sport']:
             raise Exception("include ' '")
         if r['sip'] == '' or r['sport'] == '':

@@ -30,8 +30,12 @@ class DBHlp:
 
     def save(self, project, level, stamp, content):
         c = self.__db_open()
-        s0 = r'insert into log (project, level, stamp, content) values ("{}",{},{},"{}")'.format(project, level, stamp, content)
-        c.execute(s0)
+        try:
+            content = content.replace('"', '""') # 防止包含双引号导致sql语句出错
+            s0 = r'insert into log (project, level, stamp, content) values ("{}",{},{},"{}")'.format(project, level, stamp, content)
+            c.execute(s0)
+        except:
+            pass
         self.__db_close()
 
 

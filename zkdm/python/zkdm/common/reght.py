@@ -15,6 +15,7 @@ import conf_mc
 
 def logme(info, level = 5):
     log(info, project='reght', level = level)
+    print info
 
 
 verbose = False
@@ -22,8 +23,26 @@ TIMEOUT = 3 # urllib2.urlopen 的超时 ...
 
 myip = zkutils().myip_real()
 mymac = zkutils().mymac()
-
 abspath = os.path.abspath(__file__)
+
+# 全局配置
+global_conf = {
+	"NSService": {
+		"sip" : "172.16.30.251",
+		"sport" :"8080" 
+	}
+}
+
+gcs = conf_mc.getconf_mulcast()
+logme('using global info:' + gcs)
+
+try:
+    conf = json.loads(gcs)
+    global_conf = conf
+except:
+    pass
+
+
 
 # 主机状态数据库文件名字
 # 只对 ip 存在的记录处理 isLive 状态
@@ -126,7 +145,6 @@ class _GroupOfRegChk:
     def chk_alive(self, chkop):
         ''' 检查是否在线，如果在线，则从 death list 拿到 reg list '''
         i = 0
-        print 'chk_alive ...'
         while True:
             i %= len(self.__10bht)
             self.__chk_alive(chkop, self.__10bht[i], self.__death[i], self.__10b[i])
@@ -190,7 +208,7 @@ class _ChkDBAlive:
             db.close()
             return result
         except Exception as e:
-            print 'Exception:', e
+            print 'Exception: abcd', e
             return []
 
 
@@ -336,9 +354,7 @@ class _RegHtOper:
 
 
     def __load_base_url(self):
-        conf = conf_mc.getconf_mulcast()
-    	ret = json.loads(conf) 
-        r = ret['NSService']
+        r = global_conf['NSService']
         if ' ' in r['sip'] or ' ' in r['sport']:
             raise Exception("include ' '")
         if r['sip'] == '' or r['sport'] == '':
@@ -523,10 +539,10 @@ if __name__ == '__main__':
     verbose = True
 
     import uty_token
-#    hds = build_test_hosts()
-#    sds = build_test_services(hds)
-    hds = uty_token.gather_hds()
-    sds = uty_token.gather_sds()
+    hds = build_test_hosts()
+    sds = build_test_services(hds)
+#hds = uty_token.gather_hds()
+#    sds = uty_token.gather_sds()
 
     rh = RegHost(hds)
     rs = RegHt(sds)

@@ -11,7 +11,7 @@
 import urllib2, sys, json, io, time, threading, re, sqlite3, os
 from utils import zkutils
 from uty_log import log
-
+import conf_mc
 
 def logme(info, level = 5):
     log(info, project='reght', level = level)
@@ -23,14 +23,14 @@ TIMEOUT = 3 # urllib2.urlopen 的超时 ...
 myip = zkutils().myip_real()
 mymac = zkutils().mymac()
 
+global_conf = conf_mc.getconf_mulcast()
+
 abspath = os.path.abspath(__file__)
 
 # 主机状态数据库文件名字
 # 只对 ip 存在的记录处理 isLive 状态
 hosts_state_fname = os.path.dirname(abspath) + "/../dm/proxied_hosts.db"
 hosts_state_tabname = "hosts_state"
-
-hosts_config_fname = os.path.dirname(abspath) + "/../host/config.json"
 
 class _GroupOfRegChk:
     ''' 实现一个生成器，每次 next() 就执行一次注册/心跳
@@ -338,8 +338,9 @@ class _RegHtOper:
 
 
     def __load_base_url(self):
-    	ret = json.load(io.open(hosts_config_fname, 'r', encoding='utf-8'))
-        r = ret['regHbService']
+        conf = conf_mc.getconf_mulcast()
+    	ret = json.loads(conf) 
+        r = ret['NSService']
         if ' ' in r['sip'] or ' ' in r['sport']:
             raise Exception("include ' '")
         if r['sip'] == '' or r['sport'] == '':
