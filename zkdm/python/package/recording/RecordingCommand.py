@@ -27,8 +27,8 @@ class RecordingCommand():
             s.send(command + "\n")
             print command
             # utf8 BOM
-            self.__recv_t(s, 3, 1.0)
-            message = self.__recv_t(s, 512, 1.0)
+            self.__recv_t(s, 3, 10.0)
+            message = self.__recv_t(s, 512, 10.0)
             message = message.strip()
             rc['info'] = message
         except Exception as err:
