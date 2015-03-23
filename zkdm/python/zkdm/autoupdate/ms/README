@@ -1,8 +1,26 @@
-本程序用于通过组播方式，发布全局配置信息，目前包含：
-    1. 平台服务的ip和端口号: NSService
+本文描述如何在linux环境下部署全局配置服务
+
+本程序用于通过组播方式，发布全局配置信息，要求每个接受全局配置的client与本程序之间
+能够组播通讯，如果存在不通组播的网段，则需要在每个网段都部署本程序，只需要global_config.json
+中的内容一致即可。
+
+目前配置项：
+    1. 平台服务的ip和端口号: NSService:
+		其中 sip 指向张工的平台的ip地址，
+		sport 指向张工平台的端口号
 	2. 自动更新的url：AutoUpdate
+		version: 指向下载版本信息的url
+		package: 指向下载更新包的 url
 
 部署：
 	1. 保证 conf_srv.py 拥有执行权限：chmod +x conf_srv.py
-	2. 修改 global_config.json 的配置；
+	2. 检查/修改 global_config.json 的配置；
 	3. 让 conf_srv.py 能够开机启动，建议使用 cron，可以每分钟执行一遍 conf_srv.sh 脚本
+
+通过 cron 启动 conf_srv.py：
+	建议使用非root账号执行；
+	修改 conf_srv.sh 中的 APP 的路径，然后执行 conf_srv.sh，应该能够启动 conf_srv.py
+	输入 crontab -e
+	新增一行：
+		* * * * * conf_srv.sh 
+	注意，cron 应该能够找到 conf_srv.sh 才行，建议也使用完整路径名字

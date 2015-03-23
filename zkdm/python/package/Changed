@@ -1,3 +1,9 @@
+2015-3-23:
+    1. tokens.json 不再包含任何配置;
+	2. recording: RecordingCommand 与 windowsRecordService 的通讯改为10秒超时;
+	3. dm: pping 处理 recvfrom 异常
+
+
 2015-3-20:
     在 extra.py install() 中实现额外的安装，比如更新 msi 之类的 ...
 
