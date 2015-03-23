@@ -3,6 +3,7 @@
 	2. recording: RecordingCommand 与 windowsRecordService 的通讯改为10秒超时;
 	3. dm: pping 处理 recvfrom 异常
 	4. 日志服务修正bug，该bug导致project查询失效
+	5. 安装notepad++
 
 
 2015-3-20:
