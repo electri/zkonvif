@@ -10,7 +10,6 @@ import portalocker
 
 
 sys.path.append('../')
-import common.reght
 
 VERSION = 0.91
 VERSION_INFO = 'Log Service ...'
@@ -51,6 +50,8 @@ class QueryHandler(RequestHandler):
             v = value[0]
             if v == '':
                 return None
+            else:
+                return v
         return None
 
 

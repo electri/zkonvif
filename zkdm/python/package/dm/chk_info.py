@@ -9,6 +9,9 @@
 #################################################################
 
 import wmi, pythoncom, time
+import sys
+sys.path.append('../')
+from common.uty_log import log
 
 PNAME = 'cardlive.exe' # 
 
@@ -29,8 +32,10 @@ def wait():
     
         if f is None:
             print 'Warning: %s NOT running ...' % PNAME
+            log('%s NOT running...'%PNAME, project='dm', level=2)
         else:
             print 'INFO: %s is running, thread count: %d' % (PNAME, f[1])
+            log('%s is running, thread count=%d' % (PNAME, f[1]), project='dm', level=3)
     
         if f and f[1] > 30:
             print 'OK: cardlive.exe has %d threads' % f[1]

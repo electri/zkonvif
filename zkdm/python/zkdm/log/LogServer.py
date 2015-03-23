@@ -50,6 +50,8 @@ class QueryHandler(RequestHandler):
             v = value[0]
             if v == '':
                 return None
+            else:
+                return v
         return None
 
 

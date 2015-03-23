@@ -12,6 +12,23 @@ from common.utils import zkutils
 from common.uty_log import log
 from common.conf_mc import getconf_mulcast
 
+# 全局配置
+global_conf = {
+	"NSService": {
+		"sip" : "172.16.30.251",
+		"sport" :"8080" 
+	}
+}
+
+gcs = getconf_mulcast()
+
+try:
+    conf = json.loads(gcs)
+    global_conf = conf
+except:
+    pass
+
+
 def log_info(info):
     log(log, project='recording')
 
@@ -97,8 +114,7 @@ def _load_base_url():
     '''
     平台地址
     '''
-    conf = getconf_mulcast()
-    ret = json.loads(con)
+    ret = global_conf
     r = ret['NSService']
     if ' ' in r['sip'] or ' ' in r['sport']:
         raise Exception("include ' '")
@@ -199,7 +215,7 @@ def _rtmp_living(ip, mac, hosttype):
     except Exception as e:
         log('_rtmp_living: to get relay url fault! reason=%s' % e, project = 'recording', level = 1)
         rc['result'] = 'error'
-        rc['info'] = str(err)
+        rc['info'] = str(e)
         return rc
 
 

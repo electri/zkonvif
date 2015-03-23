@@ -14,6 +14,23 @@ from common.conf_mc import getconf_mulcast
 
 _record_thread = []
 
+# 全局配置
+global_conf = {
+	"NSService": {
+		"sip" : "172.16.30.251",
+		"sport" :"8080" 
+	}
+}
+
+gcs = getconf_mulcast()
+
+try:
+    conf = json.loads(gcs)
+    global_conf = conf
+except:
+    pass
+
+
 class Schedule():
     '''
     课表解析
@@ -30,8 +47,7 @@ class Schedule():
         '''
         平台地址
         '''
-        conf = getconf_mulcast()
-        ret = json.loads(conf)
+        ret = global_conf
         r = ret['NSService']
         if ' ' in r['sip'] or ' ' in r['sport']:
             raise Exception("include ' '")
