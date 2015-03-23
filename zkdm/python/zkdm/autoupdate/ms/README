@@ -1,0 +1,8 @@
+本程序用于通过组播方式，发布全局配置信息，目前包含：
+    1. 平台服务的ip和端口号: NSService
+	2. 自动更新的url：AutoUpdate
+
+部署：
+	1. 保证 conf_srv.py 拥有执行权限：chmod +x conf_srv.py
+	2. 修改 global_config.json 的配置；
+	3. 让 conf_srv.py 能够开机启动，建议使用 cron，可以每分钟执行一遍 conf_srv.sh 脚本
