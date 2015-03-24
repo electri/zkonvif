@@ -1,5 +1,4 @@
-zip_version = 38
+zip_version = 40
 
 enable CROS
 recording.LivingServer
-install notepad++

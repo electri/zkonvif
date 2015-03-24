@@ -19,9 +19,11 @@ def get_fs_info(caption = "D:"):
         freespace = (numFreeClusters * sectorsPerCluster * bytesPerSector) /(1024 * 1024 * 1024)
     except:
         log("can't stat disk space of %s" % caption, project = 'recording', level = 2)
-        freespace = 11
+        freespace = 16
 
-    if freespace<10:#小于10G的时候开始清理空间
+    log('get_fs_info ret free space %d' % freespace, project='recording', level=4)
+
+    if freespace < 15:#小于10G的时候开始清理空间
         return True
     else:
         return False
@@ -50,7 +52,7 @@ def dir_list_file(path = 'D:\RecordFile'):
     return dir_list
 
 def del_dir_schedule():
-    thread = threading.Timer(3600,del_dir_schedule) #1小时执行一次
+    thread = threading.Timer(600, del_dir_schedule) #10分钟执行一次
     thread.start()
     if get_fs_info():
         dir_list = dir_list_file()
@@ -61,6 +63,6 @@ def del_dir_schedule():
                 log('del dir: %s' % dir_list[0]['path'], project = 'recording', level = 2)
                 shutil.rmtree(dir_list[0]['path'],True)
             except Exception as error:
-                print error
+                log('del dir: %s exception?: %s' % (dir_list[0]['path'], str(error)), project='recording', level=1)
             dir_list.remove(dir_list[0])
 

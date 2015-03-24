@@ -1,3 +1,8 @@
+2015-3-24:
+	1. recording: 修改为每个10分钟检查磁盘剩余空间是否大于15g
+	2. common/conf_mc.py 不再强制要求 global_conf.json 存在
+
+
 2015-3-23:
     1. tokens.json 不再包含任何配置;
 	2. recording: RecordingCommand 与 windowsRecordService 的通讯改为10秒超时;

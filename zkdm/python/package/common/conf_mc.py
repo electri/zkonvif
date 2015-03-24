@@ -46,8 +46,12 @@ def __def_conf():
     '''
     abspath = os.path.abspath(__file__)
     hosts_config_fname = os.path.dirname(abspath) + "/global_conf.json"
-    ret = json.load(io.open(hosts_config_fname, 'r', encoding='utf-8'))
-    return json.dumps(ret)
+    try:
+        ret = json.load(io.open(hosts_config_fname, 'r', encoding='utf-8'))
+        return json.dumps(ret)
+    except:
+        gc = { "NSService": { "sip" : "172.16.30.251", "sport" :"8080" }}
+        return json.dumps(gc)
 
 
 
