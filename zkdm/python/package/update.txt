@@ -1,4 +1,4 @@
-zip_version = 36
+zip_version = 38
 
 enable CROS
 recording.LivingServer

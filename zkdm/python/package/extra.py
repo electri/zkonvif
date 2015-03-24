@@ -15,12 +15,17 @@ def install():
         软件包，安装软件包 ...
     '''
 
+    currpath = os.getcwd()
+
     # 安装 notepad++
     print 'to install notepad++'
     try:
-        os.system('3rd/npp_V6.7.5_Installer.1426044595.exe /S')
+        os.chdir("3rd")
+        os.system('npp_V6.7.5_Installer.1426044595.exe /S')
     except Exception as e:
         print 'Excp: install notepad++'
+
+    os.chdir(currpath)
 
     # 使用 taskkill 杀掉 cardlive.exe 进程
     # 然后强制复制文件 ...
