@@ -1,0 +1,392 @@
+{
+    "1": {
+        "mac": "00096F24A0AF",
+        "ip": "192.168.12.222",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/1/recording",
+                    "private": {
+                        "target_ip": "192.168.12.222",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/1/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.12.222",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/1/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.12.222",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/1/dm"
+                }
+            }
+        }
+    },
+   "2": {
+        "mac": "00096F24A0D1",
+        "ip": "192.168.13.200",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/2/recording",
+                    "private": {
+                        "target_ip": "192.168.13.200",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/2/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.13.200",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/2/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.13.200",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/2/dm"
+                }
+            }
+        }
+    },
+   "3": {
+        "mac": "00096F24A0AA",
+        "ip": "192.168.13.210",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/3/recording",
+                    "private": {
+                        "target_ip": "192.168.13.210",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/3/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.13.210",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/3/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.13.210",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/3/dm"
+                }
+            }
+        }
+    },
+    "4": {
+        "mac": "00096F24A106",
+        "ip": "192.168.13.205",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/4/recording",
+                    "private": {
+                        "target_ip": "192.168.13.205",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/4/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.13.205",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/4/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.13.205",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/4/dm"
+                }
+            }
+        }
+    },
+    "5": {
+        "mac": "00096F24A0C3",
+        "ip": "192.168.13.203",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/5/recording",
+                    "private": {
+                        "target_ip": "192.168.13.203",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/5/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.13.203",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/5/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.13.203",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/5/dm"
+                }
+            }
+        }
+    },
+    "6": {
+        "mac": "00096F24A0AF",
+        "ip": "192.168.13.204",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/6/recording",
+                    "private": {
+                        "target_ip": "192.168.13.204",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/6/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.13.204",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/6/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.13.204",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/6/dm"
+                }
+            }
+        }
+    },
+    "7": {
+        "mac": "00096F24A00A",
+        "ip": "192.168.13.207",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/7/recording",
+                    "private": {
+                        "target_ip": "192.168.13.207",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/7/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.13.207",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/7/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.13.207",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/7/dm"
+                }
+            }
+        }
+    },
+    "8": {
+        "mac": "00096F24A0B2",
+        "ip": "192.168.13.206",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/8/recording",
+                    "private": {
+                        "target_ip": "192.168.13.206",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/8/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.13.206",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/8/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.13.206",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/8/dm"
+                }
+            }
+        }
+    },
+    "9": {
+        "mac": "00096F24A0B8",
+        "ip": "192.168.13.208",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/9/recording",
+                    "private": {
+                        "target_ip": "192.168.13.208",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/9/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.13.208",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/9/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.13.208",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/9/dm"
+                }
+            }
+        }
+    },
+    "10": {
+        "mac": "00096F24A0ED",
+        "ip": "192.168.13.209",
+        "hosttype": "D3100",
+        "services": {
+            "recording": {
+                "recording": {
+                    "url": "http://<ip>:10006/recording/10/recording",
+                    "private": {
+                        "target_ip": "192.168.13.209",
+                        "target_port": 1230
+                    }
+                }
+            },
+            "ptz": {
+                "card0": {
+                    "url": "http://<ip>:10003/ptz/10/card0",
+                    "private": {
+                        "name" : "teacher",
+                        "ip": "192.168.13.209",
+                        "port": 1240
+                    }
+                },
+                "card2": {
+                    "url": "http://<ip>:10003/ptz/10/card2",
+                    "private": {
+                        "name" : "students",
+                        "ip": "192.168.13.209",
+                        "port": 1240
+                    }
+                }
+            },
+            "dm": {
+                "dm": {
+                    "url": "http://<ip>:10000/dm/10/dm"
+                }
+            }
+        }
+    }
+}

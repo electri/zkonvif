@@ -1,6 +1,7 @@
 2015-3-24:
 	1. recording: 修改为每个10分钟检查磁盘剩余空间是否大于15g
 	2. common/conf_mc.py 不再强制要求 global_conf.json 存在
+	3. 支持 13.123 作为代理3100主机，而不更新 tokens.json
 
 
 2015-3-23:

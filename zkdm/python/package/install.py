@@ -97,6 +97,13 @@ def setup():
     except Exception as e:
         print e
 
+    # 如果是代理主机，需要更新 common/tokens.json.sample
+    if ip == '192.168.13.123':
+        try:
+            shutil.copyfile('common/tokens.json.sample', 'c:/zkdm/common/tokens.json')
+        except:
+            pass
+
     # 保存 curl.exe 为了方便调试
     try:
         shutil.copyfile('3rd/curl.exe', 'c:/Windows/curl.exe')
