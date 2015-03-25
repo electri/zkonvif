@@ -15,7 +15,6 @@ import conf_mc
 
 def logme(info, level = 5):
     log(info, project='reght', level = level)
-    print info
 
 
 verbose = False
@@ -178,7 +177,7 @@ class _ChkDBAlive:
                  但是这样实现会比较麻烦 ...
 
         '''
-        if 'ip' not in sd:
+        if 'ip' not in sd or sd['ip'] == '127.0.0.1':
             return True
 
         rc = self.__query(sd['ip'])

@@ -1,5 +1,5 @@
 2015-3-25:
-	???
+	common/reght.py 修复一个bug，该bug导致在代理模式时，主机自身recording服务没有注册
 
 
 2015-3-24:

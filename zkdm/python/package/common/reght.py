@@ -15,7 +15,6 @@ import conf_mc
 
 def logme(info, level = 5):
     log(info, project='reght', level = level)
-    print info
 
 
 verbose = False
@@ -178,21 +177,26 @@ class _ChkDBAlive:
                  但是这样实现会比较麻烦 ...
 
         '''
-        if 'ip' not in sd:
+        if 'ip' not in sd or sd['ip'] == '127.0.0.1':
             return True
 
         rc = self.__query(sd['ip'])
         for item in rc:
             if item == 0:
-                print '============== chkdb: for %s offline' % (sd['ip'])
+                log('chkalive: %s offline' % (sd['ip']), project='reght')
+                print '**********************************************'
+                print 'chkalive: %s offline' % sd['ip']
                 return False
             else:
-                print '============== chkdb: fior %s online ' % (sd['ip'])
-        return True
+                log('chkalive: %s online' % (sd['ip']), project='reght')
+                print '**********************************************'
+                print 'chkalive: %s online' % sd['ip']
+                return True
 
     def __query(self, ip):
         if not os.path.isfile(hosts_state_fname): # 防止主动创建 xxx.db 文件
             print 'WARNING: db fname:', hosts_state_fname, ' NOT exist!!'
+            log('chkalive: db %s NOT exist!' % hosts_state_tabname, project='reght', level=3)
             return []
 
         try:
@@ -202,13 +206,12 @@ class _ChkDBAlive:
             rc = c.execute(s0)
             result = []
 
-            #result = [r[0] for r in rc]
             for r in rc:
                 result.append(r[0])
             db.close()
             return result
         except Exception as e:
-            print 'Exception: abcd', e
+            log('chkalive: query except: %s' % str(e), project='reght', level=2)
             return []
 
 
@@ -539,10 +542,10 @@ if __name__ == '__main__':
     verbose = True
 
     import uty_token
-    hds = build_test_hosts()
-    sds = build_test_services(hds)
-#hds = uty_token.gather_hds()
-#    sds = uty_token.gather_sds()
+#    hds = build_test_hosts()
+#    sds = build_test_services(hds)
+    hds = uty_token.gather_hds('tokens.json.sample')
+    sds = uty_token.gather_sds('tokens.json.sample')
 
     rh = RegHost(hds)
     rs = RegHt(sds)
