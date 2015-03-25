@@ -20,6 +20,9 @@ def getconf_mulcast():
     ''' 向周知的组播地址发送请求,等待3秒,如果收到配置,则返回,否则返回缺省配置 
         返回的配置项, 使用 json.loads() 加载解析 ...
     '''
+    if os.getenv('zonekey_mc', '1') == '0':
+        return __def_conf()
+
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.setblocking(0) # 设置非阻塞
         
