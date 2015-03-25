@@ -35,7 +35,7 @@ local = {'type': 'dm', 'id': 'dm', 'url': service_url}
 sds = gather_sds('dm', '../common/tokens.json')
 sds.append(local)
 
-common.reght.verbose = True
+#common.reght.verbose = True
 rh = RegHt(sds)
 
 while True:

@@ -38,8 +38,6 @@ def log(info, project = 'unknown', level = DEBUG):
         print 'Exception: log:', e
         return
         
-    print s1
-
     try:
         conn = sql.connect(DBNAME)
         c = conn.cursor()

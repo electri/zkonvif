@@ -47,7 +47,7 @@
         "comment": "一个token对应一个主机，一个主机包含mac,ip,hosttype，和一个服务列表",
         "mac": "112233445567",
         "mac_comment": "被代理主机的 mac",
-        "ip": "172.16.1.105",
+        "ip": "172.16.1.103",
         "ip_comment": "被代理主机的 ip",
         "hosttype": "x86",
         "services": {
