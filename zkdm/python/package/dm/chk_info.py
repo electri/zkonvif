@@ -17,6 +17,7 @@ PNAME = 'cardlive.exe' #
 
 def wait():
     time.sleep(3 * 60) # 此处无条件等待3分钟
+    return # 不再检查 cardlive.exe 进程了
     pythoncom.CoInitialize()
     w = wmi.WMI()
 

@@ -23,7 +23,7 @@ TARGET_PORT = 11011
 def _send_pings(fd, ips):
     ''' TODO: 可以考虑在线的，60秒发一次，不在线的 10秒一次 '''
     for ip in ips:
-        print 'send ping to:', ip
+        log('pping: ping %s' % ip, project='dm', level=4)
         fd.sendto('ping', (ip, TARGET_PORT))
 
 
@@ -64,7 +64,7 @@ def ping_all(fname):
             else:
                 if pong == 'pong':
                     remote_ip = remote[0]
-                    print 'update:', remote_ip
+                    log('pping: update %s' % remote_ip, project='dm', level=4)
                     db_update(remote_ip)
 
             t = time.time()
@@ -75,7 +75,7 @@ def ping_all(fname):
 
 
 if __name__ == '__main__':
-    ping_all('../common/tokens.json')
+    ping_all('../common/tokens.json.sample')
 
 
 
