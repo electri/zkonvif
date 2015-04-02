@@ -18,12 +18,12 @@ def install():
     currpath = os.getcwd()
 
     # 安装 notepad++
-    print 'to install notepad++'
-    try:
-        os.chdir("3rd")
-        os.system('npp_V6.7.5_Installer.1426044595.exe /S')
-    except Exception as e:
-        print 'Excp: install notepad++'
+#    print 'to install notepad++'
+#    try:
+#        os.chdir("3rd")
+#        os.system('npp_V6.7.5_Installer.1426044595.exe /S')
+#    except Exception as e:
+#        print 'Excp: install notepad++'
 
     os.chdir(currpath)
 

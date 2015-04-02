@@ -473,7 +473,7 @@ def ReslivingS(ip,port,app):
             res_living_info_d['IsStartRtmpLiving'] = 'True'
         #print res_living_info_d
         client.service.RTSPLivingS(res_living_info_d)
-    except:
+    except Exception as err:
         rc['result'] = 'error'
         rc['info'] = str(err)
     return rc

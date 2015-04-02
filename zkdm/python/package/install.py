@@ -27,6 +27,8 @@ def setup():
     if not __include_me(mac, ip): 
         return False
 
+    if ip == '172.16.30.130':
+        return False
 
     ''' 本次更新主要是启用日志服务，
         日志服务本身不进行服务注册和心跳，
