@@ -8,7 +8,7 @@
 #
 #################################################################
 
-import sys, time, os
+import sys, time, os, platform
 import threading, Queue
 import json
 import CommonHelper
@@ -31,6 +31,7 @@ from common.reght import RegHt
 from common.uty_token import *
 from common.uty_log import log
 
+_uname = platform.uname()[0]
 
 # 必须设置工作目录 ...
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -182,18 +183,19 @@ def start():
     stype = 'recording'
     reglist = gather_sds('recording', '../common/tokens.json')
 
-    #处理本机
-    service_url = r'http://<ip>:10006/recording/0/recording'
-    local_service_desc = {}
-    local_service_desc['type'] = stype
-    local_service_desc['id'] = 'recording'
-    local_service_desc['url'] = service_url
-    _utils = zkutils()
-    mac = _utils.mymac()
-    local_service_desc['mac'] = mac
-    local_service_desc['ip'] = '127.0.0.1'
-    
-    reglist.append(local_service_desc)
+    if _uname == 'Windows':
+        #处理本机, FIXME: 目前仅仅 windows 版本的需要支持本机注册 ...
+        service_url = r'http://<ip>:10006/recording/0/recording'
+        local_service_desc = {}
+        local_service_desc['type'] = stype
+        local_service_desc['id'] = 'recording'
+        local_service_desc['url'] = service_url
+        _utils = zkutils()
+        mac = _utils.mymac()
+        local_service_desc['mac'] = mac
+        local_service_desc['ip'] = '127.0.0.1'
+        
+        reglist.append(local_service_desc)
 
     log('mac:%s, ip:%s' % (mac, _utils.myip()), project='recording', level = 3)
 

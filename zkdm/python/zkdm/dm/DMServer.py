@@ -40,6 +40,7 @@ import thread
 from pping import *
 
 _tokens = load_tokens("../common/tokens.json")
+_uname = platform.uname()[0]
 
 class HelpHandler(RequestHandler):
     ''' 提示信息 ....
@@ -236,11 +237,18 @@ def main():
     # 正常启动 ..
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     curr_path = os.path.dirname(os.path.abspath(__file__)) 
-    chk_update()
+    if _uname == 'Linux':
+        # 目前linux下仅仅作为代理，暂时不要自动更新
+        pass
+    else:
+        chk_update()
     os.chdir(curr_path)
 
-    import chk_info
-    chk_info.wait()
+    if _uname == 'Linux':
+        pass
+    else:
+        import chk_info
+        chk_info.wait()
 
     _zkutils = zkutils()
     _myip = _zkutils.myip_real()
@@ -257,7 +265,15 @@ def main():
     #sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
     #common.reght.verbose = True
     #rh = RegHt(sds)
-    os.system('start c:/Python27/python reg_dm.py')
+    if _uname == 'Linux':
+        # FIXME: 目前 linux 下仅仅支持代理模式即可
+        from common.reght import RegHt
+        from common.uty_token import *
+        sds = gather_sds('dm', '../common/tokens.json')
+        rh = RegHt(sds)
+    else:
+        # 貌似在 windows 下，如果相同进程中执行 reg_dm，会导致异常，原因不明，所以放在独立进程中
+        os.system('start c:/Python27/python reg_dm.py')
 
     # 启动 ping
     thread.start_new_thread(ping_all,('../common/tokens.json',))
