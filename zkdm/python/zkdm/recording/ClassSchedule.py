@@ -71,7 +71,7 @@ class Schedule():
             _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Movie')
         time.sleep(0.2)
         _directory_name = 'RecordCmd=SetFileFolder&SubFileFolder=' + info['_directory_name']
-        _rcmd.send_command(_directory_name)
+        _rcmd.send_command(_directory_name, info['_ip'])
         time.sleep(0.2)
         _course_info = 'RecordCmd=SetCourseInfo&Department=%s&Subject=%s&CourseName=%s&\
                 Teacher=%s&Address=%s&DateTime=%s&Description=%s&Grade=%s'\
