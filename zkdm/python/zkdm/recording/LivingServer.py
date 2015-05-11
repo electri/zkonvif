@@ -1,11 +1,15 @@
 # coding: utf-8
 import json
-import thread, time
+import thread, time, platform
 import urllib,urllib2,sys,io
 from CardServer import livingS, ReslivingS
 from RecordingCommand import RecordingCommand
-from Check_CardLive import CardLive_Runing
 
+_uname = platform.uname()[0]
+
+if _uname == 'Windows':
+    # windows 
+    from Check_CardLive import CardLive_Runing
 
 sys.path.append('../')
 from common.utils import zkutils
