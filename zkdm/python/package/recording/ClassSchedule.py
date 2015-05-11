@@ -61,17 +61,17 @@ class Schedule():
         '''
         print 'start record_task'
         _rcmd = RecordingCommand()
-        _rcmd.send_command('RecordCmd=StopRecord')
+        _rcmd.send_command('RecordCmd=StopRecord', info['_ip'])
         time.sleep(0.2)
         if info['_record_mode'].lower() == 'all':
-            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=All')
+            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=All', info['_ip'])
         elif info['_record_mode'].lower() == 'resource':
-            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Resource')
+            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Resource', info['_ip'])
         elif info['_record_mode'].lower() == 'movie':
-            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Movie')
+            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Movie', info['_ip'])
         time.sleep(0.2)
         _directory_name = 'RecordCmd=SetFileFolder&SubFileFolder=' + info['_directory_name']
-        _rcmd.send_command(_directory_name)
+        _rcmd.send_command(_directory_name, info['_ip'])
         time.sleep(0.2)
         _course_info = 'RecordCmd=SetCourseInfo&Department=%s&Subject=%s&CourseName=%s&\
                 Teacher=%s&Address=%s&DateTime=%s&Description=%s&Grade=%s'\

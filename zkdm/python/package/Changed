@@ -1,3 +1,7 @@
+2015-5-11:
+	recording/ClassSchedule.py: 修复了代理模式下，不转发录像命令给3100的bug
+
+
 2015-3-30:
 	修复cardserver中err变量没有定义的错误
 
