@@ -1,11 +1,16 @@
 # coding: utf-8
 
-import os,sys
+import os,sys,platform
 import time
 from operator import itemgetter, attrgetter
 import threading
-import win32file
-import shutil
+
+uname = platform.uname()[0]
+
+if uname == 'Windows':
+    import win32file
+    import shutil
+
 sys.path.append('../')
 from common.uty_log import log
 
@@ -13,6 +18,9 @@ def get_fs_info(caption = "D:"):
     '''
     获取磁盘信息
     '''
+    if uname != 'Windows':
+        return True
+
     try:
         # 有可能不在 d:
         sectorsPerCluster, bytesPerSector, numFreeClusters, totalNumClusters = win32file.GetDiskFreeSpace(caption)

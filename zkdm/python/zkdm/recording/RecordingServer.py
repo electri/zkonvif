@@ -67,9 +67,43 @@ def run_async(func):
 		return f
 	return async_func
 
+
+class AtomCount:
+    def __init__(self):
+        self.__cnt = 0;
+        self.__lock = threading.RLock()
+
+    def add(self):
+        self.__lock.acquire()
+        self.__cnt += 1
+        self.__lock.release()
+
+    def dec(self):
+        self.__lock.acquire()
+        self.__cnt -= 1
+        self.__lock.release()
+
+    def val(self):
+        self.__lock.acquire()
+        curr = self.__cnt
+        self.__lock.release()
+        print 'cnt=', self.__cnt
+        return curr
+
+
+global_ac = AtomCount()
+
+
 class CmdHandler(tornado.web.RequestHandler):
     def get(self, token, service_id):
-        self.__asy_cmd(token, service_id)
+        if global_ac.val() > 10:
+            self.write(self.__too_many_connection())
+        else:
+            global_ac.add()
+            self.__asy_cmd(token, service_id)
+
+    def __too_many_connection(self):
+        return { "result": "error", "info": "tooo many connection...., just wait 1 miniter" }
 
     @asynchronous
     @coroutine
@@ -78,6 +112,7 @@ class CmdHandler(tornado.web.RequestHandler):
         self.write(str(rc))
         self.set_header('Content-Type', 'application/json')
         self.finish()
+        global_ac.dec()
 
     @run_async
     def __asy_cmd0(self, callback, token, service_id):
@@ -128,8 +163,8 @@ class CmdHandler(tornado.web.RequestHandler):
             # 记录所有收到的命令和执行结果
             cont ='token=%s, sid=%s, cmd=%s, result=%s, info=%s' % (token, service_id, cmd, rc['result'], rc['info']) 
             log(cont, project='recording', level=9)
-        except:
-            pass
+        except Exception as e:
+            log('exception for return content for cmd=' % cmd, project='recording', level=3)
 
         callback(rc)
 
@@ -196,8 +231,6 @@ def start():
         local_service_desc['ip'] = '127.0.0.1'
         
         reglist.append(local_service_desc)
-
-    log('mac:%s, ip:%s' % (mac, _utils.myip()), project='recording', level = 3)
 
     global _class_schedule
     _class_schedule = Schedule(None)
