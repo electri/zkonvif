@@ -2,8 +2,7 @@
 
 import sys, socket, select
 import re
-sys.path.append('../')
-from common.uty_log import log
+
 
 def TurnStr(name, direction, speed):
     return 'PtzCmd=Turn&Who=%s&Direction=%s&Speed=%s'%(name,direction,speed)
@@ -22,8 +21,19 @@ def toArmStr(name, cmd, params=None):
         speed = '1'
         if 'speed' in params:
             speed = params['speed'][0]
-        
         return TurnStr(name, 'left', speed)
+
+    elif cmd == 'get_pos':
+        return 'PtzCmd=GetPos&Who={}'.format(name)
+
+    elif cmd == 'get_zoom':
+        return 'PtzCmd=GetZoom&Who={}'.format(name)
+
+    elif cmd == 'set_zoom':
+        zoom = 0
+        if 'z' in params:
+            z = int(params['z'][0])
+        return 'PtzCmd=SetZoom&Who={}&Zoom={}'.format(name, zoom);
         
     elif cmd == 'right':
         speed = '1'
@@ -50,16 +60,16 @@ def toArmStr(name, cmd, params=None):
         return 'PtzCmd=StopTurn&Who=%s'%(name)
 
     elif cmd == 'set_pos':
-        sx = '1'
-        sy = '1'
-        x = str(hex(int(params['x'][0])))
-        y = str(hex(int(params['y'][0])))
+        sx = 30
+        sy = 30
+        x = int(params['x'][0])
+        y = int(params['y'][0])
 
         if 'sx' in params:
-            sx = params['sx'][0]
+            sx = int(params['sx'][0])
         if 'sy' in params:
-            sy = params['sy'][0]
-        return 'PtzCmd=TurnToPos&Who=%s&X=0x%s&Y=0x%s&SX=%s&SY=%s'%(name, x, y, sx, sy)
+            sy = int(params['sy'][0])
+        return 'PtzCmd=TurnToPos&Who=%s&X=%d&Y=%d&SX=%d&SY=%d'%(name, x, y, sx, sy)
         
     elif cmd == 'preset_save':
         return PresetStr('PresetSave', name, params['id'][0])    
@@ -99,10 +109,10 @@ def recvt(s, timeout = 1.0):
 
 def SendThenRecv(HOST, PORT, arm_command):
     # FIXME: 我感觉应该这样写才能支持连接超时:
-    log('ArmPtz.py: ip = %s, port = %s'%(HOST,PORT), 'ptz')
-    log('ArmPtz.py: send command = %s'%(arm_command), 'ptz')
     if arm_command == None:
-        return {'result':'error', 'info': 'do not support this command'}
+        return (False, 'command is None???')
+
+    print 'req:', arm_command
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)    
     try:
@@ -111,9 +121,10 @@ def SendThenRecv(HOST, PORT, arm_command):
         s.settimeout(None)
     except Exception as e:
         print e
-        log('in ArmPtz.py, connect error:', 'ptz', 1)
-        return {'result':'error', 'info':'not connect proxied hos'}
+        return (False, 'not connect proxied host %s:%d' % (HOST, PORT))
+
     s.sendall(arm_command) 
+
     try:
         s.settimeout(2)
         data = s.recv(1024)
@@ -121,19 +132,103 @@ def SendThenRecv(HOST, PORT, arm_command):
     except Exception as e:
         s.close()
         print e
-        log('in ArmPtz.py, recv error:', 'ptz', 1)
-        return {'result':'error', 'info': 'recv timeout or other reasons'}
+        return (False, 'recv timeout or other reasons')
 
     s.close()
-    print 'recv data'
-    print data
-    log('ArmPtz.py: recv data %s'%(data), 'ptz')
-    if 'ok' in data:
-        return {'result':'ok', 'info':''}
-    elif 'unsupported' in data:
-        return {'result':'error', 'info':'do not support this command'}
+
+    print 'recv data', data
+
+    res = data.strip()
+    res = data.strip('###')
+    if 'unsupported' in data:
+        return (False, 'unsipported')
+    elif 'error' in data:
+        return (False, data)
     else:
-        ret = data.split(',')
-        result = ret[0].split(':')[1]
-        info = ret[1].split(':')[1]
-        return {'result': result, 'info': info} 
+        return (True, data)
+
+
+def func_without_res(ip, port, who, method, args):
+    cmd_str = toArmStr(who, method, args)
+    ret, reason = SendThenRecv(ip, port, cmd_str)
+    if ret:
+        return { 'result':'ok', 'info': reason }
+    else:
+        return { 'result': 'error', 'info': reason }
+
+def func_get_pos(ip, port, who, method, args):
+    cmd_str = toArmStr(who, method, args)
+    ret, reason = SendThenRecv(ip, port, cmd_str)
+    if ret:
+        if 'X=' in reason and 'Y=' in reason:
+            x_and_y = reason.split('&')
+            x_str = x_and_y[0].split('=')
+            x = int(x_str[1])
+            y_str = x_and_y[1].split('=')
+            y = int(y_str[1])
+
+            return {'result':'ok', 'info':'', \
+                'value': { 'type':'position', \
+                    'data': {'x': x, 'y': y } } }
+        else:
+            return { 'result':'error', 'info': 'd3100 return invalid format' }
+
+    else:
+        return {'result': 'error', 'info': reason }
+
+
+def func_get_zoom(ip, port, who, method, args):
+    cmd_str = toArmStr(who, method, args)
+    ret, reason = SendThenRecv(ip, port, cmd_str)
+    if ret:
+        if 'Zoom' in reason:
+            z_str = reason.split('=')
+            z = int(z_str[1])
+
+            return {'result':'ok', 'info':'', \
+                'value': { 'data': { 'z': z } } }
+        else:
+            return { 'result':'error', 'info': 'd3100 return invalid format' }
+           
+    else:
+        return {'result': 'error', 'info': reason }
+
+
+_tables = {
+    'left': func_without_res,
+    'right': func_without_res,
+    'up': func_without_res,
+    'down': func_without_res,
+    'stop': func_without_res,
+    'set_pos': func_without_res,
+    'set_zoom': func_without_res,
+    'preset_call': func_without_res,
+    'preset_save': func_without_res,
+    'preset_clear': func_without_res,
+    'zoom_tele': func_without_res,
+    'zoom_wide': func_without_res,
+    'zoom_stop': func_without_res,
+
+    'get_pos': func_get_pos,
+    'get_zoom': func_get_zoom,
+}
+
+
+def call(ip, port, who, method, args):
+    if method in _tables:
+        return _tables[method](ip, port, who, method, args)
+    else:
+        return { 'result': 'error', 'info': 'NOT supported method' }
+
+
+if __name__ == '__main__':
+    ip = '192.168.12.238'
+    port = 1240
+
+    print call(ip, port, 'teacher', 'left', { 'speed':[3] })
+    print call(ip, port, 'teacher', 'stop', None)
+
+    print call(ip, port, 'teacher', 'set_pos', { 'x':[400], 'y':[400] })
+    print call(ip, port, 'teacher', 'get_pos', None)
+    print call(ip, port, 'teacher', 'get_zoom', None)
+
