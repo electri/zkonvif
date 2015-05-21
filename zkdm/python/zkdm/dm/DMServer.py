@@ -34,10 +34,10 @@ from common.reght import RegHt
 from common.reght import RegHost
 import common.reght
 #import Stat
-from common.utils import zkutils
 from common.uty_token import *
-import thread 
 from pping import *
+from common.utils import zkutils
+import threading, thread
 
 _tokens = load_tokens("../common/tokens.json")
 _uname = platform.uname()[0]
@@ -261,10 +261,6 @@ def main():
     hds.append({'mac': _mac, 'ip': _myip, 'type': 'dm', 'url' : service_url, 'id': 'dm'}) 
     RegHost(hds)
 
-    #sds = gather_sds_from_tokens(_tokens, "dm")
-    #sds.append({'type': 'dm', 'id': 'dm', 'url': service_url})
-    #common.reght.verbose = True
-    #rh = RegHt(sds)
     if _uname == 'Linux':
         # FIXME: 目前 linux 下仅仅支持代理模式即可
         from common.reght import RegHt
@@ -288,8 +284,6 @@ def main():
     # 此时，必定执行了 internal?command=exit，可以执行销毁 ...
     print 'DM end ....'
     _sm.close()
-
-import threading
 
 class DMThread(threading.Thread):
     def __init__(self):
