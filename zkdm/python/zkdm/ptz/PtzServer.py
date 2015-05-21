@@ -5,8 +5,9 @@ from tornado.web import RequestHandler, Application, url
 from tornado import gen
 from ctypes import *
 import re, sys
-import json, io, os
-from PtzWrap import PtzWrap
+import json, io, os, platform
+if platform.uname()[0] != 'Linux':
+    from PtzWrap import PtzWrap
 sys.path.append('../')
 from common.uty_token import *
 from common.reght import RegHt
@@ -23,13 +24,16 @@ except:
     print 'only one instance can be run!!!'
     sys.exit(0)
 
-_all_config = None
-try:
-    _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-except:
-    log('fail for loading ptz config.json', 'ptz', 0) 
-    print 'faile for loading ptz config.json'
-    sys.exit(0)
+_all_config = { 'ptzs': {} }
+
+if platform.uname()[0] == 'Windows':
+    try:
+        _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
+    except:
+        log('fail for loading ptz config.json', 'ptz', 0) 
+        print 'faile for loading ptz config.json'
+        sys.exit(0)
+
 
 if os.path.isfile('./local.json'):
     _local_config = None
