@@ -164,7 +164,7 @@ class CmdHandler(tornado.web.RequestHandler):
             cont ='token=%s, sid=%s, cmd=%s, result=%s, info=%s' % (token, service_id, cmd, rc['result'], rc['info']) 
             log(cont, project='recording', level=9)
         except Exception as e:
-            log('exception for return content for cmd=' % cmd, project='recording', level=3)
+            pass
 
         callback(rc)
 

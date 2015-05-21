@@ -101,7 +101,7 @@ class Schedule():
         像平台申请直播
         '''
         mac = info['_mac']
-        end_time = info['_stop_time']
+        endtime = info['_stop_time']
         resopnse = urllib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime,timeout=2)
 
     def _apply_stop_living(self,info):
@@ -210,9 +210,9 @@ class Schedule():
             _rcmd = RecordingCommand()
             #info = _rcmd.send_command('RecordCmd=QueryRAllInfo')
             #if 'LivingStart' in info['info']:
-            _rcmd.send_command('BroadCastCmd=StopBroadCast')
+            _rcmd.send_command('BroadCastCmd=StopBroadCast', ip)
             time.sleep(3)
-            _rcmd.send_command('BroadCastCmd=StartBroadCast')
+            _rcmd.send_command('BroadCastCmd=StartBroadCast', ip)
         except Exception as error:
             print str(error)
 
@@ -223,7 +223,7 @@ class Schedule():
         set_thread.start()
         try:
             _rcmd = RecordingCommand()
-            _rcmd.send_command('RecordCmd=SetFileProperty&FileFormat=mp4&TotalFilePath=D:/RecordFile')
+            _rcmd.send_command('RecordCmd=SetFileProperty&FileFormat=mp4&TotalFilePath=D:/RecordFile', ip)
 
         except Exception as error:
             print str(error)
