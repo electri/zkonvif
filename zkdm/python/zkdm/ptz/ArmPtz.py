@@ -225,9 +225,6 @@ if __name__ == '__main__':
     ip = '192.168.12.238'
     port = 1240
 
-    print call(ip, port, 'teacher', 'left', { 'speed':[3] })
-    print call(ip, port, 'teacher', 'stop', None)
-
     print call(ip, port, 'teacher', 'set_pos', { 'x':[400], 'y':[400] })
     print call(ip, port, 'teacher', 'get_pos', None)
     print call(ip, port, 'teacher', 'get_zoom', None)
