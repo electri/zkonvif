@@ -160,9 +160,10 @@ class ControllingHandler(RequestHandler):
                 if 'ip' not in id_port:
                     ret = {'result': 'error', 'info': 'the service_id=%s NOT found' % name }
                 else:
-                    nm = id_port['name']
-                    armcmd = ArmPtz.toArmStr(nm, method, self.request.arguments)
-                    ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
+#                    nm = id_port['name']
+#                    armcmd = ArmPtz.toArmStr(nm, method, self.request.arguments)
+#                    ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
+                    ret = ArmPtz.call(id_port['ip'], id_port['port'], id_port['name'], method, self.request.arguments)
         log('ret:%s'%(ret), 'ptz')
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)
