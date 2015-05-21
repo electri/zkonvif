@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.63])
 AC_INIT([zkdm], [0.0.1], [sunkwei@gmail.com])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([ptz/ptz.h])
