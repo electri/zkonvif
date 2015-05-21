@@ -23,6 +23,14 @@ def toArmStr(name, cmd, params=None):
             speed = params['speed'][0]
         return TurnStr(name, 'left', speed)
 
+    elif cmd == 'mouse_trace':
+        x, y = 0.5, 0.5
+        if 'x' in params:
+            x = float(params['x'][0])
+        if 'y' in params:
+            y = float(params['y'][0])
+        return 'PtzCmd=MouseTrace&Who={}&X={}&Y={}'.format(name, x, y)
+
     elif cmd == 'get_pos':
         return 'PtzCmd=GetPos&Who={}'.format(name)
 
@@ -211,6 +219,8 @@ _tables = {
 
     'get_pos': func_get_pos,
     'get_zoom': func_get_zoom,
+
+    'mouse_trace': func_without_res,
 }
 
 
@@ -222,10 +232,17 @@ def call(ip, port, who, method, args):
 
 
 if __name__ == '__main__':
+    import time
+
     ip = '192.168.12.238'
     port = 1240
+    who = 'teacher2'
 
-    print call(ip, port, 'teacher', 'set_pos', { 'x':[400], 'y':[400] })
-    print call(ip, port, 'teacher', 'get_pos', None)
-    print call(ip, port, 'teacher', 'get_zoom', None)
+    print call(ip, port, who, 'mouse_trace', { 'x':['0.0'], 'y':['0.0'] } )
+    time.sleep(1.0)
+    print call(ip, port, who, 'get_pos', None)
+    
+    print call(ip, port, who, 'set_pos', { 'x':['0'], 'y':['0'] } )
+    time.sleep(1.6)
+    print call(ip, port, who, 'get_pos', None)
 
