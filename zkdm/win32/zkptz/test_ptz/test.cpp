@@ -15,7 +15,13 @@ int main(int argc, char **argv)
 		char name[16];
 		_snprintf(name, sizeof(name), "COM%d", atoi(argv[1]));
 
-		ptz = ptz_open(name, 0);
+		int addr = 1;
+
+		if (argc == 3) {
+			addr = atoi(argv[2]);
+		}
+
+		ptz = ptz_open(name, addr);
 	}
 	else {
 		ptz = ptz_open_with_config(argv[1]);

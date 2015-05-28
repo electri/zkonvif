@@ -203,7 +203,8 @@ ptz_t *ptz_open(const char *name, int addr)
 		serial->iface.broadcast = 0;
 
 		// 存在 m 个云台.
-		for (int i = 0; i < m; i++) {
+		// FIXME: 这里认为 0 和 1 是一个吧 :)
+		for (int i = 0; i <= m; i++) {
 			serial->cams.push_back(0);
 		}
 
