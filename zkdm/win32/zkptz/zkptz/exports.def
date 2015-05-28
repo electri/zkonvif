@@ -31,3 +31,5 @@ EXPORTS
 
 	ptz_set_zoom_with_reply
 	ptz_set_pos_with_reply
+
+	ptz_last_error

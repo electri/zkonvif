@@ -57,6 +57,8 @@ public:
 	}
 };
 
+static DWORD _tls_idx;
+
 namespace {
 	struct Serial;
 	struct Ptz
@@ -71,25 +73,111 @@ namespace {
 
 		ZoomValueConvert *zvc;
 		KVConfig *cfg;
+
+		std::string cfg_fname;
+		std::string serial_name;
 	};
 
 	struct Serial
 	{
+	public:
+		Serial()
+		{
+			ref = 0;
+		}
+
 		VISCAInterface_t iface;
 		std::vector<Ptz*> cams;
+
+		int ref;
 	};
 
 	typedef std::map<std::string, Serial*> SERIALS;
 	static SERIALS _serials;
 };
 
+enum {
+	ERR_OK = 0,
+	ERR_SERIAL = -1,		// 无法打开串口.
+	ERR_PTZ_NOT_EXIST = -2,	// 找不到云台.
+	ERR_INVALID_PARAMS = -3,
+	ERR_ADDR_OVERFLOW = -4,	// 没有这个地址的云台.
+};
+
+/// 线程相关存储.
+struct thread_vars
+{
+	int last_err;	// 云台操作的最后错误值.
+};
+
+BOOL WINAPI DllMain(HINSTANCE hinst, DWORD r, LPVOID p)
+{
+	switch (r) {
+	case DLL_PROCESS_ATTACH:
+		_tls_idx = TlsAlloc();
+		{
+			thread_vars *vars = (thread_vars*)malloc(sizeof(thread_vars));
+			TlsSetValue(_tls_idx, vars);
+		}
+		break;
+
+	case DLL_PROCESS_DETACH:
+		{
+			void *p = TlsGetValue(_tls_idx);
+			free(p);
+		}
+		TlsFree(_tls_idx);
+		break;
+
+	case DLL_THREAD_ATTACH:
+		{
+			thread_vars *vars = (thread_vars*)malloc(sizeof(thread_vars));
+			TlsSetValue(_tls_idx, vars);
+		}
+		break;
+
+	case DLL_THREAD_DETACH:
+		{
+			void *p = TlsGetValue(_tls_idx);
+			free(p);
+		}
+		break;
+	}
+
+	return TRUE;
+}
+
+static void set_last_error(int err)
+{
+	thread_vars *vars = (thread_vars*)TlsGetValue(_tls_idx);
+	vars->last_err = err;
+}
+
+static int get_last_error()
+{
+	thread_vars *vars = (thread_vars*)TlsGetValue(_tls_idx);
+	return vars->last_err;
+}
+
+int ptz_last_error()
+{
+	return get_last_error();
+}
+
 ptz_t *ptz_open(const char *name, int addr)
 {
 	fprintf(stderr, "DEBUG: %s: try to open serial name: %s, addr=%d\n", __FUNCTION__, name, addr);
 
 		//XXX:当 addr = 0时, 程序最后三行会出问题 
-	if (!name) return 0;
-	if (addr > 7 || addr < 0) return 0;
+	if (!name) {
+		set_last_error(ERR_INVALID_PARAMS);
+		return 0;
+	}
+
+	if (addr > 7 || addr < 0) {
+		set_last_error(ERR_INVALID_PARAMS);
+		return 0;
+	}
 
 	SERIALS::const_iterator itf = _serials.find(name);
 	if (itf == _serials.end()) {
@@ -98,20 +186,24 @@ ptz_t *ptz_open(const char *name, int addr)
 		if (VISCA_open_serial(&serial->iface, name) == VISCA_FAILURE) {
 			printf("ERR: %s: can't open '%s'\n", __func__, name);
 			_serials[name] = serial; // 下次没有必要再试了 ..
+			set_last_error(ERR_SERIAL);
 			return 0;
 		}
 
-#if 1
 		int m;
-		VISCA_set_address(&serial->iface, &m);
-		fprintf(stdout, "DEBUG: %s: %s: m=%d\n", __FUNCTION__, name);
-#endif 
-		
-		printf("name = %s, addr = %d\n", name, addr); 
+		if (VISCA_set_address(&serial->iface, &m) == VISCA_FAILURE) {
+			printf("ERR: %s: set_address fault!\n", __func__);
+			_serials[name] = serial;	// 下次没有必要测试了.
+			set_last_error(ERR_PTZ_NOT_EXIST);
+			return 0;
+		}
 
+		fprintf(stdout, "DEBUG: %s: %s: has %d ptzs\n", __FUNCTION__, name, m);
+		
 		serial->iface.broadcast = 0;
 
-		for (int i = 0; i < 8; i++) {
+		// 存在 m 个云台.
+		for (int i = 0; i < m; i++) {
 			serial->cams.push_back(0);
 		}
 
@@ -126,6 +218,12 @@ ptz_t *ptz_open(const char *name, int addr)
 			return 0;
 		}
 
+		if (addr >= serial->cams.size()) {
+			fprintf(stderr, "ERR: %s: there are %d cams, addr overflow!!!\n", __func__, serial->cams.size());
+			set_last_error(ERR_ADDR_OVERFLOW);
+			return 0;
+		}
+
 		if (!serial->cams[addr]) {
 			Ptz *ptz = new Ptz;
 			ptz->cfg = 0;
@@ -136,12 +234,19 @@ ptz_t *ptz_open(const char *name, int addr)
 			ptz->serial = serial;
 			ptz->addr = addr;
 			ptz->cam.address = ptz->addr;
+			ptz->serial_name = name;
 
 			serial->cams[addr] = ptz;
+	
+			serial->ref++;
+
+			fprintf(stderr, "INFO: %s: %s:%d opened!\n", __func__, name, addr);
 		}
 		else {
 			fprintf(stderr, "WARNING: %s: ptz has been opened!!!\n", __FUNCTION__);
 		}
+
+		set_last_error(ERR_OK);
 
 		return (ptz_t*)serial->cams[addr];
 	}
@@ -159,6 +264,7 @@ ptz_t *ptz_open_with_config(const char *cfg_name)
 	ptz_t *p = ptz_open(serial_name, addr);
 	if (p) {
 		Ptz *ptz = (Ptz*)p;
+		ptz->cfg_fname = cfg_name;
 		ptz->cfg = cfg;
 		ptz->zvc = new ZoomValueConvert(ptz->cfg);
 		VISCA_set_bugfix(&ptz->serial->iface, (BugFix)atoi(ptz->cfg->get_value("bug_fix", "0")));
@@ -173,9 +279,27 @@ void ptz_close(ptz_t *ptz)
 	// TODO: 应该根据串口的引用计数关闭 ...
 	// FIXME:  ...
 	Ptz *p = (Ptz*)ptz;
-	VISCA_close_serial(&p->serial->iface);
-}
 
+	fprintf(stderr, "INFO: %s calling\n", __func__);
+
+	delete p->cfg;
+	delete p->zvc;
+
+	p->serial->ref--;
+
+	if (p->serial->ref == 0) {
+		VISCA_close_serial(&p->serial->iface);
+		
+		for (SERIALS::iterator it = _serials.begin(); it != _serials.end(); ++it) {
+			if (it->second->ref == 0) {
+				fprintf(stderr, "INFO: %s: serial %s closed!\n", __func__, it->first.c_str());
+				delete it->second;
+				_serials.erase(it);
+				break;
+			}
+		}
+	}
+}
 
 int ptz_stop(ptz_t *ptz)
 {
@@ -238,7 +362,6 @@ int ptz_get_pos(ptz_t *ptz, int *x, int *y)
 	ss << __FUNCTION__ << ':' << p->serial->iface.name;
 	TimeUsed tu(ss.str().c_str());
 	if (PurgeComm(p->serial->iface.port_fd, PURGE_RXCLEAR) == 0) {
-		fprintf(stderr, "%s can't free input buffer\n", __FUNCTION__);
 		return VISCA_FAILURE;
 	}
 	if (VISCA_get_pantilt_position(&p->serial->iface, &p->cam, x, y) != VISCA_SUCCESS)
@@ -273,7 +396,6 @@ int ptz_set_relative_pos(ptz_t *ptz, int x, int y, int sx, int sy)
 
 int ptz_set_pos_with_reply(ptz_t *ptz, int x, int y, int sx, int sy)
 {
-	fprintf(stdout, "now start %s test\n", __FUNCTION__);
 	Ptz *p = (Ptz*)ptz;
 	std::stringstream ss;
 	ss << __FUNCTION__ << ':' << p->serial->iface.name;
@@ -317,7 +439,6 @@ int ptz_get_zoom(ptz_t *ptz, int *z)
 	TimeUsed tu(ss.str().c_str());	int v1;
 	uint16_t v;
 	if (PurgeComm(p->serial->iface.port_fd, PURGE_RXCLEAR) == 0) {
-		fprintf(stderr, "%s can't free input buffer\n", __FUNCTION__);
 		return VISCA_FAILURE;
 	}
 	if (VISCA_get_zoom_value(&p->serial->iface, &p->cam, &v) != VISCA_SUCCESS) {
@@ -389,30 +510,25 @@ int ptz_zoom_stop(ptz_t *ptz)
 
 int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx, int sy)
 {
-	fprintf(stdout, "hvs = %f, vvs = %f\n", hvs, vvs);
 	Ptz *p = (Ptz*)ptz; 
 
 	if (!p->cfg) {
-		fprintf(stdout, "no configuration file\n");
 		return -1;
 	}
 
 	double HVA = atof(p->cfg->get_value("hva", "55.2"));
 	double VVA = atof(p->cfg->get_value("vva", "42.1"));
 
-	fprintf(stdout, "HVA = %f, VVA = %f\n", HVA, VVA);
-
 	int zv;
 	if (ptz_get_zoom(ptz, &zv) != 0)
 		return -1;
-	fprintf(stdout, "zv = %d\n", zv);
+
 	double zs = ptz_ext_get_scals(ptz, zv);
 	double hva = HVA / zs;
 	double vva = VVA / zs;
 
 	int h_rpm = (int)(hva*(hvs-0.5) / 0.075);
 	int v_rpm = (int)(vva*(0.5-vvs) /0.075);
-	fprintf(stdout, "h_rpm = %d, v_rpm = %d\n", h_rpm, v_rpm);
 	if (VISCA_set_pantilt_relative_position_without_reply(&p->serial->iface, &p->cam , sx, sy, h_rpm, v_rpm) != VISCA_SUCCESS) 
 		return VISCA_FAILURE;
 
@@ -440,7 +556,6 @@ int is_prepared(ptz_t *ptz)
 	uint8_t power;
 	Ptz *p = (Ptz*)ptz;
 	if (PurgeComm(p->serial->iface.port_fd, PURGE_RXCLEAR) == 0) {
-		fprintf(stderr, "%s can't free input buffer\n", __FUNCTION__);
 		return VISCA_FAILURE;
 	}
 	if (VISCA_get_power(&p->serial->iface, &p->cam, &power) != VISCA_SUCCESS)
@@ -449,6 +564,3 @@ int is_prepared(ptz_t *ptz)
 	return VISCA_SUCCESS;
 		
 }
-
-
-

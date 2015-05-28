@@ -11,6 +11,8 @@ ptz_t *ptz_open(const char *serial_name, int addr);
 ptz_t *ptz_open_with_config(const char *cfg_name);
 void ptz_close(ptz_t *ptz);
 
+int ptz_last_error();
+
 int ptz_left(ptz_t *ptz, int speed);
 int ptz_right(ptz_t *ptz, int speed);
 int ptz_up(ptz_t *ptz, int speed);
