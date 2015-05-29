@@ -62,6 +62,9 @@ int ptz2_zoom_wide(ptz_t *ptz, int speed);
 int ptz2_zoom_stop(ptz_t *ptz);
 int ptz2_set_pos_with_reply(ptz_t *ptz, int x, int y, int sx, int sy);
 int ptz2_set_zoom_with_reply(ptz_t *ptz, int z);
+int ptz2_preset_call(ptz_t *ptz, int id);
+int ptz2_preset_save(ptz_t *ptz, int id);
+int ptz2_preset_clear(ptz_t *ptz, int id);
 
 #ifdef __cplusplus
 }

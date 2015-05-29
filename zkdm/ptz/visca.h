@@ -44,6 +44,14 @@ int visca_zoom_stop(visca_serial_t *ctx, int addr);
 int visca_get_zoom(visca_serial_t *ctx, int addr, int *z);
 int visca_set_zoom(visca_serial_t *ctx, int addr, int z, int wait_complete);
 
+// preset
+int visca_preset_save(visca_serial_t *ctx, int addr, int id);
+int visca_preset_call(visca_serial_t *ctx, int addr, int id);
+int visca_preset_clear(visca_serial_t *ctx, int addr, int id);
+
+// others ...
+int visca_get_power(visca_serial_t *ctx, int addr, int *power);
+
 #ifdef __cplusplus
 }
 #endif // c++

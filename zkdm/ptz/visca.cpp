@@ -621,3 +621,124 @@ int visca_get_zoom(visca_serial_t *s, int addr, int *x)
 		return -1000+rc;
 	}
 }
+
+int visca_preset_call(visca_serial_t *s, int addr, int id)
+{
+	// 8x 01 04 3F 02 0Z FF
+	addr &= 0x7;
+	unsigned char codes[7] = { 0x80|addr, 1, 4, 0x3f, 2, id, 0xff };
+	int n = sizeof(codes)/sizeof(unsigned char);
+	if (serial_write(s->serial, codes, n) != n) {
+		fprintf(stderr, "[ptz][%s]: %s write comm err!\n", s->name, __FUNCTION__);
+		return -1;
+	}
+
+	int who;
+	int rc = get_next_ack(s, &who);
+	if (rc < 0) {
+		fprintf(stderr, "[ptz][%s]: %s can't get ack\n", s->name, __FUNCTION__);
+		return -1;
+	}
+	else if (rc) {
+		print_err(rc);
+		return -1000+rc;
+	}
+
+	// 不关心完成 :)
+
+	return 0;
+}
+
+int visca_preset_save(visca_serial_t *s, int addr, int id)
+{
+	// 8x 01 04 3F 01 0Z FF
+	addr &= 0x7;
+	unsigned char codes[7] = { 0x80|addr, 1, 4, 0x3f, 1, id, 0xff };
+	int n = sizeof(codes)/sizeof(unsigned char);
+	if (serial_write(s->serial, codes, n) != n) {
+		fprintf(stderr, "[ptz][%s]: %s write comm err!\n", s->name, __FUNCTION__);
+		return -1;
+	}
+
+	int who;
+	int rc = get_next_ack(s, &who);
+	if (rc < 0) {
+		fprintf(stderr, "[ptz][%s]: %s can't get ack\n", s->name, __FUNCTION__);
+		return -1;
+	}
+	else if (rc) {
+		print_err(rc);
+		return -1000+rc;
+	}
+
+	// 不关心完成 :)
+
+	return 0;
+}
+
+int visca_preset_clear(visca_serial_t *s, int addr, int id)
+{
+	// 8x 01 04 3F 00 0Z FF
+	addr &= 0x7;
+	unsigned char codes[7] = { 0x80|addr, 1, 4, 0x3f, 0, id, 0xff };
+	int n = sizeof(codes)/sizeof(unsigned char);
+	if (serial_write(s->serial, codes, n) != n) {
+		fprintf(stderr, "[ptz][%s]: %s write comm err!\n", s->name, __FUNCTION__);
+		return -1;
+	}
+
+	int who;
+	int rc = get_next_ack(s, &who);
+	if (rc < 0) {
+		fprintf(stderr, "[ptz][%s]: %s can't get ack\n", s->name, __FUNCTION__);
+		return -1;
+	}
+	else if (rc) {
+		print_err(rc);
+		return -1000+rc;
+	}
+
+	// 不关心完成 :)
+
+	return 0;
+}
+
+int visca_get_power(visca_serial_t *s, int addr, int *power)
+{
+	// 8x 09 04 00 FF
+	// Y0 50 02 FF		ON
+	// Y0 50 03 FF		OFF
+	addr &= 0x7;
+	unsigned char codes[5] = { 0x80|addr, 9, 4, 0, 0xff };
+	int n = sizeof(codes);
+	if (serial_write(s->serial, codes, n) != n) {
+		fprintf(stderr, "[ptz][%s]: %s write comm err\n!", s->name, __FUNCTION__);
+		return -1;
+	}
+
+	unsigned char res[16];
+	int who;
+	int rc = get_response(s, &who, res, sizeof(res));
+	if (rc == 0) {
+		if (res[2] == 2) {
+			*power = 1;
+		}
+		else if (res[2] == 3) {
+			*power = 0;
+		}
+		else {
+			*power = 0;
+			fprintf(stderr, "[ptz][%s]: %s !!!!!! power state=%d\n", res[2]);
+		}
+		return 0;
+	}
+	else if (rc < 0) {
+		fprintf(stderr, "[ptz][%s]: %s can't get response!\n", s->name, __FUNCTION__);
+		return -1;
+	}
+	else {
+		print_err(rc);
+		return -1000+rc;
+	}
+
+}
