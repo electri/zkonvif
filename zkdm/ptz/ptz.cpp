@@ -18,6 +18,8 @@
 #include "ptz.h"
 #include "ZoomValueConvert.h"
 
+#include "visca.h"
+
 #ifdef WIN32
 static double now()
 {
@@ -84,12 +86,15 @@ namespace {
 		Serial()
 		{
 			ref = 0;
+			vs = 0;
 		}
 
 		VISCAInterface_t iface;
 		std::vector<Ptz*> cams;
 
 		int ref;
+
+		visca_serial_t *vs;
 	};
 
 	typedef std::map<std::string, Serial*> SERIALS;
@@ -185,7 +190,6 @@ ptz_t *ptz_open(const char *name, int addr)
 		_snprintf(serial->iface.name, sizeof(serial->iface.name), "%s", name);
 		if (VISCA_open_serial(&serial->iface, name) == VISCA_FAILURE) {
 			printf("ERR: %s: can't open '%s'\n", __func__, name);
-			_serials[name] = serial; // 下次没有必要再试了 ..
 			set_last_error(ERR_SERIAL);
 			return 0;
 		}
@@ -193,8 +197,8 @@ ptz_t *ptz_open(const char *name, int addr)
 		int m;
 		if (VISCA_set_address(&serial->iface, &m) == VISCA_FAILURE) {
 			printf("ERR: %s: set_address fault!\n", __func__);
-			_serials[name] = serial;	// 下次没有必要测试了.
 			set_last_error(ERR_PTZ_NOT_EXIST);
+			VISCA_close_serial(&serial->iface);
 			return 0;
 		}
 
@@ -280,6 +284,7 @@ void ptz_close(ptz_t *ptz)
 	// TODO: 应该根据串口的引用计数关闭 ...
 	// FIXME:  ...
 	Ptz *p = (Ptz*)ptz;
+	if (!p) return;
 
 	fprintf(stderr, "INFO: %s calling\n", __func__);
 
@@ -564,4 +569,201 @@ int is_prepared(ptz_t *ptz)
 	
 	return VISCA_SUCCESS;
 		
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+static SERIALS _serials2;
+
+ptz_t *ptz2_open(const char *name, int addr)
+{
+	SERIALS::iterator it = _serials2.find(name);
+	if (it == _serials2.end()) {
+		int err;
+		visca_serial_t *vs = visca_open_serial(name, &err);
+		if (!vs) {
+			fprintf(stderr, "[ptz][%s]: %s: open %s fault!\n", name, __FUNCTION__, name);
+			return 0;
+		}
+		
+		int m;
+		if (visca_set_address(vs, &m) < 0) {
+			fprintf(stderr, "[ptz][%s]: %s: can't get cam nums\n", name, __FUNCTION__);
+			return 0;
+		}
+
+		fprintf(stderr, "[ptz][%s]: %s There are %d cams\n", name, __FUNCTION__, m);
+
+		Serial *s = new Serial;
+		s->vs = vs;
+		_serials2[name] = s;
+
+		/// prepare addrs 
+		for (int i = 0; i <= m; i++) {
+			Ptz *p = new Ptz;
+			if (i == 0) {
+				p->addr = 1;	// 当外部传递 addr=0 时，使用 1
+			}
+			else {
+				p->addr = addr;
+			}
+
+			p->serial = s;
+			p->serial_name = name;
+			p->cfg = 0;
+			p->zvc = 0;
+
+			s->cams.push_back(p);
+		}
+
+		return ptz2_open(name, addr);
+	}
+	else {
+		Serial *s = it->second;
+		
+		if (addr >= s->cams.size()) {
+			fprintf(stderr, "[ptz][%s]: %s: invalid addr, using 1..%d\n", visca_name(s->vs), __FUNCTION__, s->cams.size()-1);
+			return 0;
+		}
+		else {
+			s->ref++;
+			return (ptz_t*)s->cams[addr];
+		}
+	}
+}
+
+ptz_t *ptz2_open_with_config(const char *cfg_name)
+{
+	fprintf(stderr, "DEBUG: %s: cfg_name=%s\n", __FUNCTION__, cfg_name);
+
+	KVConfig *cfg = new KVConfig(cfg_name);
+	
+	const char *serial_name = cfg->get_value("ptz_serial_name", "COMX");
+	int addr = atoi(cfg->get_value("ptz_addr", "1"));
+
+	ptz_t *p = ptz2_open(serial_name, addr);
+	if (p) {
+		Ptz *ptz = (Ptz*)p;
+		ptz->cfg_fname = cfg_name;
+		ptz->cfg = cfg;
+		ptz->zvc = new ZoomValueConvert(ptz->cfg);
+	}
+
+	fprintf(stderr, "DEBUG: %s: ret %p\n", __FUNCTION__, p);
+	return p;
+}
+
+void ptz2_close(ptz_t *ptz)
+{
+	Ptz *p = (Ptz*)ptz;
+	p->serial->ref--;
+	fprintf(stderr, "[ptz][%s]: %s closing, ref=%d.\n", visca_name(p->serial->vs), __FUNCTION__, p->serial->ref);
+	if (p->serial->ref == 0) {
+		fprintf(stderr, "[ptz][%s]: %s closed.\n", visca_name(p->serial->vs), __FUNCTION__);
+		visca_close(p->serial->vs);
+
+		std::string name = p->serial_name;
+		Serial *s = p->serial;
+
+		for (int i = 0; i < s->cams.size(); i++) {
+			delete p->serial->cams[i];
+		}
+
+		delete s;
+
+		SERIALS::iterator it = _serials.find(name);
+		if (it != _serials.end()) {
+			_serials.erase(it);
+		}
+	}
+}
+
+int ptz2_left(ptz_t *ptz, int speed)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_left(p->serial->vs, p->addr, speed);
+}
+
+int ptz2_right(ptz_t *ptz, int speed)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_right(p->serial->vs, p->addr, speed);
+}
+
+int ptz2_up(ptz_t *ptz, int speed)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_up(p->serial->vs, p->addr, speed);
+}
+
+int ptz2_down(ptz_t *ptz, int speed)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_down(p->serial->vs, p->addr, speed);
+}
+
+int ptz2_stop(ptz_t *ptz)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_stop(p->serial->vs, p->addr);
+}
+
+int ptz2_set_pos(ptz_t *ptz, int x, int y, int sx, int sy)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_set_pos(p->serial->vs, p->addr, x, y, sx, sy, 0);
+}
+
+int ptz2_set_relative_pos(ptz_t *ptz, int x, int y, int sx, int sy)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_set_rpos(p->serial->vs, p->addr, x, y, sx, sy);
+}
+
+int ptz2_get_pos(ptz_t *ptz, int *x, int *y)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_get_pos(p->serial->vs, p->addr, x, y);
+}
+
+int ptz2_get_zoom(ptz_t *ptz, int *z)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_get_zoom(p->serial->vs, p->addr, z);
+}
+
+int ptz2_set_zoom(ptz_t *ptz, int z)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_set_zoom(p->serial->vs, p->addr, z, 0);
+}
+
+int ptz2_zoom_tele(ptz_t *ptz, int s)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_zoom_tele(p->serial->vs, p->addr, s);
+}
+
+int ptz2_zoom_wide(ptz_t *ptz, int s)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_zoom_wide(p->serial->vs, p->addr, s);
+}
+
+int ptz2_zoom_stop(ptz_t *ptz)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_zoom_stop(p->serial->vs, p->addr);
+}
+
+int ptz2_set_pos_with_reply(ptz_t *ptz, int x, int y, int sx, int sy)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_set_pos(p->serial->vs, p->addr, x, y, sx, sy, 1);
+}
+
+int ptz2_set_zoom_with_reply(ptz_t *ptz, int z)
+{
+	Ptz *p = (Ptz*)ptz;
+	return visca_set_zoom(p->serial->vs, p->addr, z, 1);
 }

@@ -42,6 +42,27 @@ int ptz_mouse_trace(ptz_t *ptz, double hvs, double vvs, int sx = 5, int sy = 5);
 /// 从 zoom value 计算返回实际倍率 ..
 double ptz_ext_get_scals(ptz_t *ptz, int z);
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ptz_t *ptz2_open(const char *name, int addr);
+ptz_t *ptz2_open_with_config(const char *cfg_name);
+void ptz2_close(ptz_t *ptz);
+
+int ptz2_left(ptz_t *ptz, int speed);
+int ptz2_right(ptz_t *ptz, int speed);
+int ptz2_up(ptz_t *ptz, int speed);
+int ptz2_down(ptz_t *ptz, int speed);
+int ptz2_stop(ptz_t *ptz);
+int ptz2_set_pos(ptz_t *ptz, int x, int y, int sx, int sy);
+int ptz2_set_relative_pos(ptz_t *ptz, int x, int y, int sx, int sy);
+int ptz2_get_pos(ptz_t *ptz, int *x, int *y);
+int ptz2_get_zoom(ptz_t *ptz, int *z);
+int ptz2_set_zoom(ptz_t *ptz, int z);
+int ptz2_zoom_tele(ptz_t *ptz, int speed);
+int ptz2_zoom_wide(ptz_t *ptz, int speed);
+int ptz2_zoom_stop(ptz_t *ptz);
+int ptz2_set_pos_with_reply(ptz_t *ptz, int x, int y, int sx, int sy);
+int ptz2_set_zoom_with_reply(ptz_t *ptz, int z);
+
 #ifdef __cplusplus
 }
 #endif // c++
