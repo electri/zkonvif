@@ -32,8 +32,14 @@ int main(int argc, char **argv)
 		fprintf(stderr, "XXX: open fault, code=%d\n", ptz_last_error());
 	}
 	else {
+		int prepared = is_prepared(ptz);
+		fprintf(stderr, "is_prepared is %d\n", prepared);
+
 		fprintf(stderr, "== set_pos: 0, 0\n");
-		ptz2_set_pos_with_reply(ptz, 0, 0, 1, 1);
+		ptz2_set_pos_with_reply(ptz, 0, 0, 30, 30);
+
+		fprintf(stderr, "== preset call 3\n");
+		ptz2_preset_call(ptz, 3);
 
 		fprintf(stderr, "== zoom tele\n");
 		ptz2_zoom_tele(ptz, 1);
@@ -79,6 +85,15 @@ int main(int argc, char **argv)
 		if (ptz2_get_pos(ptz, &x, &y) == 0) {
 			fprintf(stderr, "get pos: %d, %d\n", x, y);
 		}
+
+		fprintf(stderr, "== set rpos -100, -100\n");
+		ptz2_set_relative_pos(ptz, -100, -100, 26, 26);
+		if (ptz2_get_pos(ptz, &x, &y) == 0) {
+			fprintf(stderr, "get pos: %d, %d\n", x, y);
+		}
+
+		fprintf(stderr, "== save preset 3\n");
+		ptz2_preset_save(ptz, 3);
 
 		ptz2_close(ptz);
 		fprintf(stderr, "XXX: end!\n");

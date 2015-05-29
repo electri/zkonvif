@@ -52,3 +52,6 @@ EXPORTS
 	ptz2_zoom_stop
 	ptz2_set_pos_with_reply
 	ptz2_set_zoom_with_reply
+	ptz2_preset_save
+	ptz2_preset_call
+	ptz2_preset_clear
