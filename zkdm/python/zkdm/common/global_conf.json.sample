@@ -7,6 +7,9 @@
 	"AutoUpdate": {
 		"version": "http://172.16.30.251/update/update.txt",
 		"package": "http://172.16.30.251/update/update.zip"
-	}
+	},
+
+    "mode": 1,
+    "mode_comment": "1 主机模式，2 代理模式，3 主机+代理模式"
 }
 

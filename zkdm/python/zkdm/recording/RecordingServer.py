@@ -8,7 +8,7 @@
 #
 #################################################################
 
-import sys, time, os
+import sys, time, os, platform
 import threading, Queue
 import json
 import CommonHelper
@@ -31,6 +31,7 @@ from common.reght import RegHt
 from common.uty_token import *
 from common.uty_log import log
 
+_uname = platform.uname()[0]
 
 # 必须设置工作目录 ...
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -66,9 +67,43 @@ def run_async(func):
 		return f
 	return async_func
 
+
+class AtomCount:
+    def __init__(self):
+        self.__cnt = 0;
+        self.__lock = threading.RLock()
+
+    def add(self):
+        self.__lock.acquire()
+        self.__cnt += 1
+        self.__lock.release()
+
+    def dec(self):
+        self.__lock.acquire()
+        self.__cnt -= 1
+        self.__lock.release()
+
+    def val(self):
+        self.__lock.acquire()
+        curr = self.__cnt
+        self.__lock.release()
+        print 'cnt=', self.__cnt
+        return curr
+
+
+global_ac = AtomCount()
+
+
 class CmdHandler(tornado.web.RequestHandler):
     def get(self, token, service_id):
-        self.__asy_cmd(token, service_id)
+        if global_ac.val() > 10:
+            self.write(self.__too_many_connection())
+        else:
+            global_ac.add()
+            self.__asy_cmd(token, service_id)
+
+    def __too_many_connection(self):
+        return { "result": "error", "info": "tooo many connection...., just wait 1 miniter" }
 
     @asynchronous
     @coroutine
@@ -77,6 +112,7 @@ class CmdHandler(tornado.web.RequestHandler):
         self.write(str(rc))
         self.set_header('Content-Type', 'application/json')
         self.finish()
+        global_ac.dec()
 
     @run_async
     def __asy_cmd0(self, callback, token, service_id):
@@ -127,7 +163,7 @@ class CmdHandler(tornado.web.RequestHandler):
             # 记录所有收到的命令和执行结果
             cont ='token=%s, sid=%s, cmd=%s, result=%s, info=%s' % (token, service_id, cmd, rc['result'], rc['info']) 
             log(cont, project='recording', level=9)
-        except:
+        except Exception as e:
             pass
 
         callback(rc)
@@ -182,20 +218,19 @@ def start():
     stype = 'recording'
     reglist = gather_sds('recording', '../common/tokens.json')
 
-    #处理本机
-    service_url = r'http://<ip>:10006/recording/0/recording'
-    local_service_desc = {}
-    local_service_desc['type'] = stype
-    local_service_desc['id'] = 'recording'
-    local_service_desc['url'] = service_url
-    _utils = zkutils()
-    mac = _utils.mymac()
-    local_service_desc['mac'] = mac
-    local_service_desc['ip'] = '127.0.0.1'
-    
-    reglist.append(local_service_desc)
-
-    log('mac:%s, ip:%s' % (mac, _utils.myip()), project='recording', level = 3)
+    if _uname == 'Windows':
+        #处理本机, FIXME: 目前仅仅 windows 版本的需要支持本机注册 ...
+        service_url = r'http://<ip>:10006/recording/0/recording'
+        local_service_desc = {}
+        local_service_desc['type'] = stype
+        local_service_desc['id'] = 'recording'
+        local_service_desc['url'] = service_url
+        _utils = zkutils()
+        mac = _utils.mymac()
+        local_service_desc['mac'] = mac
+        local_service_desc['ip'] = '127.0.0.1'
+        
+        reglist.append(local_service_desc)
 
     global _class_schedule
     _class_schedule = Schedule(None)

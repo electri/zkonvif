@@ -31,3 +31,27 @@ EXPORTS
 
 	ptz_set_zoom_with_reply
 	ptz_set_pos_with_reply
+
+	ptz_last_error
+
+	ptz2_open
+	ptz2_open_with_config
+	ptz2_close
+	ptz2_left
+	ptz2_right
+	ptz2_up
+	ptz2_down
+	ptz2_stop
+	ptz2_set_pos
+	ptz2_set_relative_pos
+	ptz2_get_pos
+	ptz2_set_zoom
+	ptz2_get_zoom
+	ptz2_zoom_tele
+	ptz2_zoom_wide
+	ptz2_zoom_stop
+	ptz2_set_pos_with_reply
+	ptz2_set_zoom_with_reply
+	ptz2_preset_save
+	ptz2_preset_call
+	ptz2_preset_clear

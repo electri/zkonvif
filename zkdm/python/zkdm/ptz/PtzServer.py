@@ -5,8 +5,9 @@ from tornado.web import RequestHandler, Application, url
 from tornado import gen
 from ctypes import *
 import re, sys
-import json, io, os
-from PtzWrap import PtzWrap
+import json, io, os, platform
+if platform.uname()[0] != 'Linux':
+    from PtzWrap import PtzWrap
 sys.path.append('../')
 from common.uty_token import *
 from common.reght import RegHt
@@ -23,13 +24,16 @@ except:
     print 'only one instance can be run!!!'
     sys.exit(0)
 
-_all_config = None
-try:
-    _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
-except:
-    log('fail for loading ptz config.json', 'ptz', 0) 
-    print 'faile for loading ptz config.json'
-    sys.exit(0)
+_all_config = { 'ptzs': {} }
+
+if platform.uname()[0] == 'Windows':
+    try:
+        _all_config = json.load(io.open('./config.json', 'r', encoding='utf-8'))
+    except:
+        log('fail for loading ptz config.json', 'ptz', 0) 
+        print 'faile for loading ptz config.json'
+        sys.exit(0)
+
 
 if os.path.isfile('./local.json'):
     _local_config = None
@@ -156,9 +160,10 @@ class ControllingHandler(RequestHandler):
                 if 'ip' not in id_port:
                     ret = {'result': 'error', 'info': 'the service_id=%s NOT found' % name }
                 else:
-                    nm = id_port['name']
-                    armcmd = ArmPtz.toArmStr(nm, method, self.request.arguments)
-                    ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
+#                    nm = id_port['name']
+#                    armcmd = ArmPtz.toArmStr(nm, method, self.request.arguments)
+#                    ret = ArmPtz.SendThenRecv(id_port['ip'], id_port['port'],armcmd)
+                    ret = ArmPtz.call(id_port['ip'], id_port['port'], id_port['name'], method, self.request.arguments)
         log('ret:%s'%(ret), 'ptz')
         self.set_header('Constent-Type', 'application/json')
         self.write(ret)

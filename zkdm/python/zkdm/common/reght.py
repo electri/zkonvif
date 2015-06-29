@@ -154,13 +154,11 @@ class _GroupOfRegChk:
         death = []
         for sd in bht:
             if not op(sd):
-                print '------- for %s offline, to death' % (sd['ip'])
                 death.append(sd)
                 bht.remove(sd)
 
         for sd in bdeath:
             if op(sd):
-                print '-------- for %s online, to reg' % (sd['ip'])
                 breg.append(sd)
                 bdeath.remove(sd)
 
@@ -183,14 +181,8 @@ class _ChkDBAlive:
         rc = self.__query(sd['ip'])
         for item in rc:
             if item == 0:
-                log('chkalive: %s offline' % (sd['ip']), project='reght')
-                print '**********************************************'
-                print 'chkalive: %s offline' % sd['ip']
                 return False
             else:
-                log('chkalive: %s online' % (sd['ip']), project='reght')
-                print '**********************************************'
-                print 'chkalive: %s online' % sd['ip']
                 return True
 
     def __query(self, ip):

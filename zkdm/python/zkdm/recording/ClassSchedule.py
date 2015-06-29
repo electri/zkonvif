@@ -61,17 +61,17 @@ class Schedule():
         '''
         print 'start record_task'
         _rcmd = RecordingCommand()
-        _rcmd.send_command('RecordCmd=StopRecord')
+        _rcmd.send_command('RecordCmd=StopRecord', info['_ip'])
         time.sleep(0.2)
         if info['_record_mode'].lower() == 'all':
-            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=All')
+            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=All', info['_ip'])
         elif info['_record_mode'].lower() == 'resource':
-            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Resource')
+            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Resource', info['_ip'])
         elif info['_record_mode'].lower() == 'movie':
-            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Movie')
+            _rcmd.send_command('RecordCmd=SetRecordMode&RecordMode=Movie', info['_ip'])
         time.sleep(0.2)
         _directory_name = 'RecordCmd=SetFileFolder&SubFileFolder=' + info['_directory_name']
-        _rcmd.send_command(_directory_name)
+        _rcmd.send_command(_directory_name, info['_ip'])
         time.sleep(0.2)
         _course_info = 'RecordCmd=SetCourseInfo&Department=%s&Subject=%s&CourseName=%s&\
                 Teacher=%s&Address=%s&DateTime=%s&Description=%s&Grade=%s'\
@@ -101,7 +101,7 @@ class Schedule():
         像平台申请直播
         '''
         mac = info['_mac']
-        end_time = info['_stop_time']
+        endtime = info['_stop_time']
         resopnse = urllib2.urlopen(self.__mgrt_base_url+'livingStart?mac='+mac+'&endTime='+endtime,timeout=2)
 
     def _apply_stop_living(self,info):
@@ -210,9 +210,9 @@ class Schedule():
             _rcmd = RecordingCommand()
             #info = _rcmd.send_command('RecordCmd=QueryRAllInfo')
             #if 'LivingStart' in info['info']:
-            _rcmd.send_command('BroadCastCmd=StopBroadCast')
+            _rcmd.send_command('BroadCastCmd=StopBroadCast', ip)
             time.sleep(3)
-            _rcmd.send_command('BroadCastCmd=StartBroadCast')
+            _rcmd.send_command('BroadCastCmd=StartBroadCast', ip)
         except Exception as error:
             print str(error)
 
@@ -223,7 +223,7 @@ class Schedule():
         set_thread.start()
         try:
             _rcmd = RecordingCommand()
-            _rcmd.send_command('RecordCmd=SetFileProperty&FileFormat=mp4&TotalFilePath=D:/RecordFile')
+            _rcmd.send_command('RecordCmd=SetFileProperty&FileFormat=mp4&TotalFilePath=D:/RecordFile', ip)
 
         except Exception as error:
             print str(error)
