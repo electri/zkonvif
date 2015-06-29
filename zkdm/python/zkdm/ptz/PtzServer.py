@@ -15,7 +15,7 @@ import ArmPtz
 
 from common.uty_log import log 
 import portalocker
-
+import config.config_utils as cu
 p = open('ptz.pid', 'w')
 try:
     portalocker.lock(p, portalocker.LOCK_EX | portalocker.LOCK_NB)
@@ -203,10 +203,47 @@ class InternalHandler(RequestHandler):
 def make_app():
     return Application([
             url(r'/ptz/help', HelpHandler),
+			url(r'/ptz/config/([^/]*)/([^/]*)', ConfigHandler),
             url(r"/ptz/config(/?)", GetConfigHandler),
             url(r'/ptz/([^\/]+)/([^\/]+)/([^\?]+)', ControllingHandler),
             url(r'/ptz/internal', InternalHandler),
             ])
+
+class ConfigHandler(RequestHandler):
+	def get(self, fname, process):
+		if process == "get_cfg":
+			data = cu.fn_config(fname, 'display')	
+			self.set_header('Content-Type', 'application/json')
+			ret = {'result':'0k', 'info':data}
+			jret = json.dumps(ret)
+			self.set_header("Cache-control", "no-cache")
+			self.write(jret)
+
+		elif process == "reset":
+			rc['info'] = 'exit!!!'
+            global rh     
+            rh.join()
+            global _ioloop
+            _ioloop.stop()
+            self.write(rc)
+	
+			python = sys.executable
+			os.execl(python, python, * sys.argv)
+		
+		else:
+			ret = {'result': 'error', 'info': 'method %s don\'t exist'%(process)} 
+			self.set_header('Content-Type', 'application/json')
+			jret = json.dumps(ret)
+			self.set_header("Cache-control", "no-cache")
+			self.write(jret)
+
+	def put(self, fname, process):
+		if process == "save":
+			ret = cu.fn_config(fname, 'save', self.request.body)
+			self.set_header('Content-Type', 'application/json')
+			jret = json.dumps(ret)
+			self.set_header("Cache-control", "no-cache")
+			self.write(jret)
 
 def main():
     app = make_app()
