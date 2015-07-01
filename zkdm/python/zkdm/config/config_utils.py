@@ -1,14 +1,48 @@
 import os
 import json
 
+def get_kvs(kvs, mask_kvs):
+	ret = {}
+	no_exists = []
+
+	for m_kv in mask_kvs:
+		if kvs.__contains__(m_kv):
+			ret[m_kv] = kvs[m_kv]
+		else:
+		 	no_exists.append(m_kv)
+				
+	return ret, no_exists
+
+def read_all_cfgs(cu, cu_session):
+	ret = cu.read_cfg()
+	ret_session = cu_session.read_cfg()
+	ret.update(ret_session)
+	return ret
+
 def fn_config(fname, method, parameters = None):
 	old_cwd = os.getcwd()
 	os.chdir(os.path.dirname(__file__))
 	cu = ConfigUtils(fname)
+	cu_session = ConfigUtils(fname + '.session')
 	if method == 'display':
-		return cu.read_cfg()
+		ret = read_all_cfgs(cu, cu_session)	
+		return ret 
+
+	if method == "get_kvs":
+		kvs = read_all_cfgs(cu, cu_session)
+		return get_kvs(kvs, parameters)
+
 	elif method == 'alter':
-		return cu.alter_cfg(parameters)
+		ret = {}
+		if parameters == None:
+			ret['result'] = 'error'
+			ret['info'] = 'body is empty'
+		else:
+			kvs = {}
+			for e in parameters:
+				kvs[e] = parameters[e][0]
+			return cu.alter_cfg(kvs)
+
 	elif method == 'save':
 		ret = {}
 		if parameters == None:
@@ -16,7 +50,7 @@ def fn_config(fname, method, parameters = None):
 			ret['info'] = 'body is empty'
 		else:
 			kvs  = json.loads(parameters)
-			ret = cu.save_cfg(kvs) 
+			ret = cu_session.save_cfg(kvs) 
 		return ret
 	else:
 		return {'result':'error', 'infor':'%s method dos\'nt exit'%method}
@@ -27,8 +61,6 @@ class ConfigUtils:
 
 	def read_cfg(self):
 		data = self.__read_cfg()
-		data_session = self.__read_cfg(suffix='.session')
-		data.update(data_session)
 		return data
 
 	def __read_cfg(self, suffix =''):
@@ -49,6 +81,8 @@ class ConfigUtils:
 						if line[0] != '#' and  line[0] != ' ':
 							words = line.split('=')
 							data[words[0]] = words[1]
+		except:
+			pass
 		finally:
 			os.chdir(old_cwd)
 		return	data 
@@ -62,7 +96,7 @@ class ConfigUtils:
 			for k in kvs:
 				s += k + '=' + kvs[k] + '\n'
 			s = s.strip()
-			with open(self.__fname+'.session', 'w') as fp:
+			with open(self.__fname, 'w') as fp:
 					fp.write(s)
 
 			ret['result'] = 'ok'
@@ -94,7 +128,7 @@ class ConfigUtils:
 			os.chdir(os.path.dirname(os.path.abspath(__file__)))	
 			with open(self.__fname, 'w') as fp:
 				fp.writelines(lines)
-				if error_keys != None:
+				if error_keys != []:
 					ret['result'] = 'error'
 					ret['info'] = 'keys list: %s does\'nt exist'%(str(error_keys))
 				else:

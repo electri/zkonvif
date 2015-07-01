@@ -16,11 +16,44 @@ class DefaltHandler(tornado.web.RequestHandler):
 			
 class ConfigHandler(tornado.web.RequestHandler):
 	def get(self, fname, process):
+		print 'request'
+		print self.request.arguments
 		if process == "get_cfg":
 			ret = cu.fn_config(fname, 'display')	
 			self.set_header('Content-Type', 'application/json')
 			jret = json.dumps(ret)
 			self.set_header("Cache-control", "no-cache")
+			self.write(jret)
+
+		elif process == "getValueByKey":
+			arguments = self.request.arguments
+			if arguments  == {}:
+				ret = None
+			else:
+				k = arguments.keys()[0]
+				v = arguments[k][0]
+				kvs, no_exists = cu.fn_config(fname, "get_kvs", arguments)
+				if kvs == {}:
+					if v == '':
+						ret  = None
+					else:
+						ret = v
+				else:
+					ret = kvs[kvs.keys()[0]]
+					if ret =='':
+						if v == '':
+							ret = None
+						else:
+							ret = v
+			self.set_header("Content-type", "text/plain")
+			self.set_header("Cache-control", "no-cache")
+			return self.write(str(ret))
+
+		elif process == "setValueByKey":
+			ret = cu.fn_config(fname, 'alter', self.request.arguments)
+			jret = json.dumps(ret)
+			self.set_header('Content-Type', 'application/json')
+			self.set_header('Cache-control', 'no-cache')
 			self.write(jret)
 
 		elif process == "reset":

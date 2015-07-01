@@ -235,15 +235,32 @@ class ConfigHandler(RequestHandler):
 			python = sys.executable
 			os.execl(python, python, * sys.argv)
 		
-		else:
-			ret = {'result': 'error', 'info': 'method %s don\'t exist'%(process)} 
+		elif process == "getValuesByKeys":
+			ret = {}
+			info = cu.fn_config(fname, 'get_kvs', self.request.arguments)
+			info_ret = {}
+			info_ret['no_exist_keys'] = ret_tmp[0]
+			info_ret['kvs'] = ret_tmp[1]
+			ret['result'] = 'ok'
+			ret['info'] = info_ret
 			self.set_header('Content-Type', 'application/json')
 			jret = json.dumps(ret)
 			self.set_header("Cache-control", "no-cache")
 			self.write(jret)
+		elif process == "setValuesByKeys":
+			ret = {}
+			if parameters == None:
+				ret['result'] = 'error'
+				ret['info'] = 'body is empty'
+			else:
+				kvs = {}
+			for e in parameters:
+				kvs[e] = parameters[e][0]
+			return cu.alter_cfg(kvs)
+
 
 	def put(self, fname, process):
-		if process == "save":
+		if process == "alter":
 			ret = cu.fn_config(fname, 'save', self.request.body)
 			self.set_header('Content-Type', 'application/json')
 			jret = json.dumps(ret)

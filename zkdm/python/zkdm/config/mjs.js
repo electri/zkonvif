@@ -118,7 +118,7 @@ function reset()
 	if(xmlHttp.readyState == 4)
 	{
 		txt = xmlHttp.responseText;
-		alert(txt);
+		//alert(txt);
 	}
 }
 	xmlHttp.open("GET", "reset", true);
@@ -133,7 +133,7 @@ function save()
 	if(xmlHttp.readyState == 4)
 	{
 		txt = xmlHttp.responseText;
-		alert(txt);
+		//alert(txt);
 	}
 }
 
