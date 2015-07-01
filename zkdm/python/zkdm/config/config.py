@@ -16,8 +16,6 @@ class DefaltHandler(tornado.web.RequestHandler):
 			
 class ConfigHandler(tornado.web.RequestHandler):
 	def get(self, fname, process):
-		print 'request'
-		print self.request.arguments
 		if process == "get_cfg":
 			ret = cu.fn_config(fname, 'get_cfg')	
 			self.set_header('Content-Type', 'application/json')
