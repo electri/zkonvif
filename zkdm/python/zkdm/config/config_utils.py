@@ -24,7 +24,7 @@ def fn_config(fname, method, parameters = None):
 	os.chdir(os.path.dirname(__file__))
 	cu = ConfigUtils(fname)
 	cu_session = ConfigUtils(fname + '.session')
-	if method == 'display':
+	if method == 'get_cfg':
 		ret = read_all_cfgs(cu, cu_session)	
 		return ret 
 

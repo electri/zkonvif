@@ -208,7 +208,7 @@ class InternalHandler(RequestHandler):
 def make_app():
     return Application([
             url(r'/ptz/help', HelpHandler),
-			url(r'/ptz/config/([^/]*)/([^/]*)', ConfigHandler),
+		url(r'/ptz/config/([^/]*)/([^/]*)', ConfigHandler),
             url(r"/ptz/config(/?)", GetConfigHandler),
             url(r'/ptz/([^\/]+)/([^\/]+)/([^\?]+)', ControllingHandler),
             url(r'/ptz/internal', InternalHandler),
@@ -217,30 +217,32 @@ def make_app():
 class ConfigHandler(RequestHandler):
 	def get(self, fname, process):
 		if process == "get_cfg":
-			data = cu.fn_config(fname, 'display')	
+			data = cu.fn_config(fname, 'get_cfg')	
 			self.set_header('Content-Type', 'application/json')
 			ret = {'result':'0k', 'info':data}
 			jret = json.dumps(ret)
 			self.set_header("Cache-control", "no-cache")
 			self.write(jret)
 
-		elif process == "reset":
-			rc['info'] = 'exit!!!'
-            global rh     
-            rh.join()
-            global _ioloop
-            _ioloop.stop()
-            self.write(rc)
+		elif process == "restart":
+			ret = {}
+			ret['result'] = 'ok'
+			ret['info'] = 'exit!!!'
+            		global rh     
+            		rh.join()
+            		global _ioloop
+            		_ioloop.stop()
+            		self.write(ret)
 	
 			python = sys.executable
 			os.execl(python, python, * sys.argv)
 		
 		elif process == "getValuesByKeys":
 			ret = {}
-			info = cu.fn_config(fname, 'get_kvs', self.request.arguments)
 			info_ret = {}
-			info_ret['no_exist_keys'] = ret_tmp[0]
-			info_ret['kvs'] = ret_tmp[1]
+			info = cu.fn_config(fname, 'get_kvs', self.request.arguments)
+			info_ret['no_exist_list'] = info[1]
+			info_ret['kvs'] = info[0]
 			ret['result'] = 'ok'
 			ret['info'] = info_ret
 			self.set_header('Content-Type', 'application/json')
@@ -248,15 +250,11 @@ class ConfigHandler(RequestHandler):
 			self.set_header("Cache-control", "no-cache")
 			self.write(jret)
 		elif process == "setValuesByKeys":
-			ret = {}
-			if parameters == None:
-				ret['result'] = 'error'
-				ret['info'] = 'body is empty'
-			else:
-				kvs = {}
-			for e in parameters:
-				kvs[e] = parameters[e][0]
-			return cu.alter_cfg(kvs)
+			ret = cu.fn_config(fname, 'alter', self.request.arguments)
+			jret = json.dumps(ret)
+			self.set_header('Content-Type', 'application/json')
+			self.set_header('Cache-control', 'no-cache')
+			self.write(jret)
 
 
 	def put(self, fname, process):

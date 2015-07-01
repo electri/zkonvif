@@ -19,7 +19,7 @@ class ConfigHandler(tornado.web.RequestHandler):
 		print 'request'
 		print self.request.arguments
 		if process == "get_cfg":
-			ret = cu.fn_config(fname, 'display')	
+			ret = cu.fn_config(fname, 'get_cfg')	
 			self.set_header('Content-Type', 'application/json')
 			jret = json.dumps(ret)
 			self.set_header("Cache-control", "no-cache")
