@@ -79,7 +79,7 @@ class ConfigUtils:
 					line = line.strip()
 					if line != '':
 						if line[0] != '#' and  line[0] != ' ':
-							words = line.split('=')
+							words = line.split('=', 1)
 							data[words[0]] = words[1]
 		except:
 			pass
@@ -150,7 +150,7 @@ class ConfigUtils:
 
 		for no in range(length):
 			if lines[no][0] != '#' and lines[no][0] != ' ':
-				words = lines[no].split('=')
+				words = lines[no].split('=', 1)
 				if words[0] == kv.keys()[0]:
 					suffix = '\n'
 					if lines[no][-1] != '\n':
