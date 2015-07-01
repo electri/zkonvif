@@ -20,10 +20,11 @@ def read_all_cfgs(cu, cu_session):
 	return ret
 
 def fn_config(fname, method, parameters = None):
-	old_cwd = os.getcwd()
-	os.chdir(os.path.dirname(__file__))
+	#old_cwd = os.getcwd()
+	#os.chdir(os.path.dirname(__file__))
 	cu = ConfigUtils(fname)
 	cu_session = ConfigUtils(fname + '.session')
+	#os.chdir(old_cwd)
 	if method == 'get_cfg':
 		ret = read_all_cfgs(cu, cu_session)	
 		return ret 
@@ -67,8 +68,8 @@ class ConfigUtils:
 		data = {}
 
 		try:
-			old_cwd = os.getcwd()
-			os.chdir(os.path.dirname(os.path.abspath(__file__)))	
+			#old_cwd = os.getcwd()
+			#os.chdir(os.path.dirname(os.path.abspath(__file__)))	
 			if suffix == '':
 				fname = self.__fname
 			else:
@@ -84,14 +85,15 @@ class ConfigUtils:
 		except:
 			pass
 		finally:
-			os.chdir(old_cwd)
+			#os.chdir(old_cwd)
+			pass
 		return	data 
 
 	def save_cfg(self, kvs):
 		ret = {}
 		try:
-			old_cwd = os.getcwd()
-			os.chdir(os.path.dirname(os.path.abspath(__file__)))
+			#old_cwd = os.getcwd()
+			#os.chdir(os.path.dirname(os.path.abspath(__file__)))
 			s = ''
 			for k in kvs:
 				s += k + '=' + kvs[k] + '\n'
@@ -106,14 +108,15 @@ class ConfigUtils:
 			ret['result'] = 'error'
 			ret['info'] = e.strerror
 		finally:
-			os.chdir(old_cwd)
+			#os.chdir(old_cwd)
+			pass
 		return ret
 
 	def alter_cfg(self, kvs):
 		ret = {}	
 		try:
-			old_cwd = os.getcwd()
-			os.chdir(os.path.dirname(os.path.abspath(__file__)))
+			#old_cwd = os.getcwd()
+			#os.chdir(os.path.dirname(os.path.abspath(__file__)))
 			with open(self.__fname, 'r') as fp:
 				lines = fp.readlines()
 			error_keys = self.__alter_values(lines, kvs)
@@ -121,11 +124,12 @@ class ConfigUtils:
 			ret['result'] = 'error'
 			ret['info'] = e.strerror
 		finally:
-			os.chdir(old_cwd)
+			#os.chdir(old_cwd)
+			pass
 
 		try:
-			old_cwd = os.getcwd()
-			os.chdir(os.path.dirname(os.path.abspath(__file__)))	
+			#old_cwd = os.getcwd()
+			#os.chdir(os.path.dirname(os.path.abspath(__file__)))	
 			with open(self.__fname, 'w') as fp:
 				fp.writelines(lines)
 				if error_keys != []:
@@ -138,7 +142,8 @@ class ConfigUtils:
 			ret['result'] = 'error'
 			ret['info'] = e.message
 		finally:
-			os.chdir(old_cwd)
+			#os.chdir(old_cwd)
+			pass
 		return ret
 			
 	def __alter_value(self, lines, kv):
