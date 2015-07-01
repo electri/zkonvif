@@ -65,6 +65,7 @@ class ConfigHandler(tornado.web.RequestHandler):
 			self.write(jret)
 
 		else:
+			self.set_header("Cache-control", "no-cache")
 			self.render(process)
 
 	def put(self, fname, process):

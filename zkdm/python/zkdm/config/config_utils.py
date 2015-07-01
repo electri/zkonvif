@@ -41,7 +41,7 @@ def fn_config(fname, method, parameters = None):
 			kvs = {}
 			for e in parameters:
 				kvs[e] = parameters[e][0]
-			return cu.alter_cfg(kvs)
+			return cu_session.alter_cfg(kvs)
 
 	elif method == 'save':
 		ret = {}
