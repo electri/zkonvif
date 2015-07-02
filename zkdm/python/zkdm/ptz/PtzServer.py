@@ -224,7 +224,7 @@ class ConfigHandler(RequestHandler):
 		if process == "get_cfg":
 			data = cu.fn_config(fname, 'get_cfg')	
 			self.set_header('Content-Type', 'application/json')
-			ret = {'result':'0k', 'info':data}
+			ret = {'result':'ok', 'info':data}
 			jret = json.dumps(ret)
 			self.set_header("Cache-control", "no-cache")
 			self.write(jret)
@@ -244,12 +244,9 @@ class ConfigHandler(RequestHandler):
 		
 		elif process == "getValuesByKeys":
 			ret = {}
-			info_ret = {}
-			info = cu.fn_config(fname, 'get_kvs', self.request.arguments)
-			info_ret['no_exist_list'] = info[1]
-			info_ret['kvs'] = info[0]
+			data = cu.fn_config(fname, 'get_kvs', self.request.arguments)
 			ret['result'] = 'ok'
-			ret['info'] = info_ret
+			ret['info'] = data 
 			self.set_header('Content-Type', 'application/json')
 			jret = json.dumps(ret)
 			self.set_header("Cache-control", "no-cache")
