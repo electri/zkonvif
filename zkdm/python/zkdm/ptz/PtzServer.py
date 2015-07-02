@@ -208,7 +208,7 @@ class InternalHandler(RequestHandler):
 def make_app():
     return Application([
             url(r'/ptz/help', HelpHandler),
-            url(r'/ptz/config_file/config_file_help', ConfigHelpHandler),
+            url(r'/ptz/config_file/help', ConfigHelpHandler),
             url(r'/ptz/config_file/([^/]*)/([^/]*)', ConfigHandler),
             url(r"/ptz/config", GetConfigHandler),
             url(r'/ptz/([^\/]+)/([^\/]+)/([^\?]+)', ControllingHandler),
@@ -218,7 +218,7 @@ def make_app():
 class ConfigHelpHandler(RequestHandler):
     def get(self):
         self.set_header("Cache-control", "no-cache")
-        self.render("control_help.html")
+        self.render("config_file_help.html")
 class ConfigHandler(RequestHandler):
 	def get(self, fname, process):
 		if process == "get_cfg":
