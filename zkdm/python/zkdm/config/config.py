@@ -16,6 +16,8 @@ class DefaltHandler(tornado.web.RequestHandler):
 			
 class ConfigHandler(tornado.web.RequestHandler):
 	def get(self, fname, process):
+		env_path = os.environ.get('image_trace')
+		fname = env_path + fname
 		if process == "help":
 			self.set_header("Cache-control", "no-cache")
 			self.render(fname)
@@ -28,24 +30,15 @@ class ConfigHandler(tornado.web.RequestHandler):
 
 		elif process == "getValueByKey":
 			arguments = self.request.arguments
-			if arguments  == {}:
+			kvs = cu.fn_config(fname, "get_kvs", arguments)
+			if kvs == {}:
 				ret = None
 			else:
 				k = arguments.keys()[0]
-				v = arguments[k][0]
-				kvs, no_exists = cu.fn_config(fname, "get_kvs", arguments)
-				if kvs == {}:
-					if v == '':
-						ret  = None
-					else:
-						ret = v
+				if kvs[k] == '':
+					ret = None
 				else:
-					ret = kvs[kvs.keys()[0]]
-					if ret =='':
-						if v == '':
-							ret = None
-						else:
-							ret = v
+					ret = kvs[k]
 			self.set_header("Content-type", "text/plain")
 			self.set_header("Cache-control", "no-cache")
 			return self.write(str(ret))
@@ -70,8 +63,11 @@ class ConfigHandler(tornado.web.RequestHandler):
 			self.render(process)
 
 	def put(self, fname, process):
+		env_path = os.environ.get('image_trace')
+		fname = env_path + fname
+
 		if process == "save":
-			ret = cu.fn_config(fname, 'save', self.request.body)
+			env_path = os.environ.get('image_trace')
 			self.set_header('Content-Type', 'application/json')
 			jret = json.dumps(ret)
 			self.set_header("Cache-control", "no-cache")
