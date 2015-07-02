@@ -16,7 +16,10 @@ class DefaltHandler(tornado.web.RequestHandler):
 			
 class ConfigHandler(tornado.web.RequestHandler):
 	def get(self, fname, process):
-		if process == "get_cfg":
+		if process == "help":
+			self.set_header("Cache-control", "no-cache")
+			self.render(fname)
+		elif process == "get_cfg":
 			ret = cu.fn_config(fname, 'get_cfg')	
 			self.set_header('Content-Type', 'application/json')
 			jret = json.dumps(ret)

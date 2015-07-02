@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--...-->
+<html>
+<head>
+<style>
+.red_center 
+{
+color:red;text-align:center
+}
+.green
+{
+color:green;
+}
+</style>
+<meta charset="UTF-8";content="HTML,CSS">
+</head>
+<title>config file interfaces</title>
+<body>
+<h1 class="red_center">config file interfaces</h1></title>
+<p>
+<h2>1 get all parameters about config file</h2>
+<b>http://ip:10003/ptz/config_file/fname/get_cfg</b>
+<br/>
+<b>parameters:</b>
+<ul>
+	<li>fname: config file name</li>
+	<li>return type: json</li>
+	<li class="green"><b>example:http://127.0.0.1:10003/ptz/config_file/test.config/get_cfg(at server point)</b></li>
+</ul>
+</p>
+<p>
+<h2>2 get values by keys</h2>
+<b>http://ip:10003/ptz/config_file/fname/getValuesByKeys?key1&key2&...&keyN</b>
+<br/>
+<b>parameters:</b>
+<ul>
+	<li>fname:ditto</li>
+	<li>return type:ditto</li>
+	<li>return content:existing key-value pairs and not existing keys</li>
+	<li class="green"><b>example:http://127.0.0.1:10003/ptz/config_file/test.config/getValuesByKeys?hva&vva</b></li>
+</ul>
+</p>
+<p>
+<h2> 3 set values by keys</h2>
+<b>http://ip:10003/127.0.0.1:10003/ptz/config_file/fname/getValuesByKeys?key1=value1&key2=values...&keyN=valueN</b>
+<br/>
+<b>parameters:</b>
+<ul>
+	<li>fname:ditto</li>
+	<li>return type:ditto</li>
+	<li class="green"><b>example:http://127.0.0.1:10003/ptz/config_file/test.config/setValuesByKeys?hva=50</b></li>
+</ul>
+</p>
+<p>
+<h2>4 restart ptz service</h2>
+<b>http://ip:10003/127.0.0.1:10003/ptz/config_file/fname/restart</b>
+<br/>
+<b>patameters:</b>
+<ul>
+	<li>fname:ditto</li>
+	<li>return type:ditto</li>
+	<li class="green"><b>example:http://127.0.0.1:10003/ptz/config_file/test.config/restart</b></li>
+</ul>
+</p>
+</body>
+</html>
