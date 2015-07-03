@@ -63,6 +63,7 @@ class ConfigHandler(tornado.web.RequestHandler):
 	def put(self, fname, process):
 		if process == "save":
 			env_path = os.environ.get('image_trace')
+			ret = cu.fn_config(fname, "save", self.request.body)
 			self.set_header('Content-Type', 'application/json')
 			jret = json.dumps(ret)
 			self.set_header("Cache-control", "no-cache")
