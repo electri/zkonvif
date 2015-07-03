@@ -14,7 +14,7 @@
 <br />
 <div id="control">
 <button type="button" onclick="save()">save</button>
-<button type="button" onclick="reset()">reset</button>
+<button type="button" onclick="restart()">restart</button>
 </div>
 </body>
 </html>

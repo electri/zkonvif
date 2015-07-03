@@ -48,7 +48,7 @@ class ConfigHandler(tornado.web.RequestHandler):
 			self.set_header('Cache-control', 'no-cache')
 			self.write(jret)
 
-		elif process == "reset":
+		elif process == "restart":
 			self.set_header('Content-Type', 'application/json')
 			self.set_header("Cache-control", "no-cache")
 			stdlib.send_udp_data("\x09\x01", "127.0.0.1")	

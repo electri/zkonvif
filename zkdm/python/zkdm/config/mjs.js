@@ -111,7 +111,7 @@ function get_json_txt()
 	return JSON.stringify(jn)
 }
 
-function reset()
+function restart()
 {
 		xmlHttp.onreadystatechange = function()
 {
@@ -121,7 +121,7 @@ function reset()
 		//alert(txt);
 	}
 }
-	xmlHttp.open("GET", "reset", true);
+	xmlHttp.open("GET", "restart", true);
 	xmlHttp.send();
 }
 
