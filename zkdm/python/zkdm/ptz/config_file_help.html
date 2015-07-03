@@ -19,7 +19,7 @@ function printExample(func)
 {
 	var base_href = window.location.href.split("help")[0];
 	var href = base_href  + "test.config/" + func;
-	var example = "<li class='green'><b>example:<a href=" + href + ">" + href + "</a></b></li>"
+	var example = "<p class='green'><b>example:<a href=" + href + ">" + href + "</a></b></p>"
 	document.write(example)
 }
 </script>
@@ -37,10 +37,10 @@ function printExample(func)
 <ul>
 	<li>fname: config file name</li>
 	<li>return type: json</li>
+</ul>
 <script type="text/javascript">
 printExample("get_cfg")
 </script>
-</ul>
 </p>
 <p>
 <h2>2 get values by keys</h2>
@@ -51,10 +51,10 @@ printExample("get_cfg")
 	<li>fname:ditto</li>
 	<li>return type:ditto</li>
 	<li>return content:existing key-value pairs and not existing keys</li>
+</ul>
 <script type="text/javascript">
 printExample("getValuesByKeys?hva&vva")
 </script>
-</ul>
 </p>
 <p>
 <h2> 3 set values by keys</h2>
@@ -64,10 +64,10 @@ printExample("getValuesByKeys?hva&vva")
 <ul>
 	<li>fname:ditto</li>
 	<li>return type:ditto</li>
+</ul>
 <script type="text/javascript">
 printExample("setValuesByKeys?hva=50")
 </script>
-</ul>
 </p>
 <p>
 <h2>4 restart ptz service</h2>
@@ -77,10 +77,10 @@ printExample("setValuesByKeys?hva=50")
 <ul>
 	<li>fname:ditto</li>
 	<li>return type:ditto</li>
+</ul>
 <script type="text/javascript">
 printExample("restart")
 </script>
-</ul>
 </p>
 </body>
 </html>
