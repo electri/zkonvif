@@ -50,7 +50,7 @@ class ConfigHandler(tornado.web.RequestHandler):
 			self.set_header('Cache-control', 'no-cache')
 			self.write(jret)
 
-		elif process == "reset":
+		elif process == "restart":
 			self.set_header('Content-Type', 'application/json')
 			self.set_header("Cache-control", "no-cache")
 			stdlib.send_udp_data("\x09\x01", "127.0.0.1")	
@@ -68,6 +68,7 @@ class ConfigHandler(tornado.web.RequestHandler):
 
 		if process == "save":
 			env_path = os.environ.get('image_trace')
+			ret = cu.fn_config(fname, "save", self.request.body)
 			self.set_header('Content-Type', 'application/json')
 			jret = json.dumps(ret)
 			self.set_header("Cache-control", "no-cache")
