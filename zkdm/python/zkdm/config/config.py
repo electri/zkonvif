@@ -16,6 +16,8 @@ class DefaltHandler(tornado.web.RequestHandler):
 			
 class ConfigHandler(tornado.web.RequestHandler):
 	def get(self, fname, process):
+		env_path = os.environ.get('image_trace')
+		fname = env_path + '/' + fname
 		if process == "help":
 			self.set_header("Cache-control", "no-cache")
 			self.render(fname)
@@ -61,6 +63,9 @@ class ConfigHandler(tornado.web.RequestHandler):
 			self.render(process)
 
 	def put(self, fname, process):
+		env_path = os.environ.get('image_trace')
+		fname = env_path + '/' + fname
+
 		if process == "save":
 			env_path = os.environ.get('image_trace')
 			self.set_header('Content-Type', 'application/json')
