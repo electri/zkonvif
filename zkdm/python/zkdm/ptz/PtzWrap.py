@@ -195,7 +195,7 @@ class PtzWrap(object):
             return {'result':'error', 'info':'NO ptz'}
         else:
             pos = {} 
-            if self.__ptz.get_pos(pos) == 0:
+            if self.__ptz.get_pos(pos) == True:
                 return { 'value': { 'type':'position', 'data': {'x': pos['x'], 'y': pos['y']} } }
             else:
                 return { 'result':'error', 'info':'get_pos failure' }
@@ -305,7 +305,7 @@ class PtzWrap(object):
             return {'result':'error', 'info':'NO ptz'}
         else:
             zoom = {} 
-            if self.__ptz.get_zoom(zoom) == 0:
+            if self.__ptz.get_zoom(zoom) == True:
                 return {'value': { 'type':'position', 'data': {'z':zoom['z'] }}}
             else:
                 return {'result':'error', 'info':'get_zoom failure' }
