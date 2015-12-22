@@ -7,6 +7,7 @@ sys_name = platform.system()
 # Address set broadcast
 ADDRESS_SET = bytearray('\x88\x30\x01\xFF')
 
+
 # pan tilt drive
 UP = bytearray('\x8F\x01\x06\x01\x00\x00\x03\x01\xFF')
 DOWN = bytearray('\x8F\x01\x06\x01\x00\x00\x03\x02\xFF')
@@ -129,7 +130,7 @@ class Ptz:
             print 'return ack error'
         return is_ack
 
-    def __recv_cmd_packet(self):
+    def __recv_cmd_packet_with_blocked(self):
         is_ack = self.__is_cmd_return(4)
         if is_ack == False:
             print 'return ack error'
@@ -140,6 +141,9 @@ class Ptz:
             print 'return completion error'
             return False
 
+        return True
+
+    def __recv_cmd_packet(self):
         return True
        
     def left(self, vv):
@@ -170,7 +174,7 @@ class Ptz:
         paras[3] = para & 0x0F
         return paras 
         
-    def set_absolute_pos(self, y_para, z_para, vv, ww):
+    def set_pos(self, y_para, z_para, vv, ww):
         ABSOLUTE_POS[4] = vv
         ABSOLUTE_POS[5] = ww
         y_paras = self.__encode_para(y_para)
@@ -182,17 +186,36 @@ class Ptz:
         self.__sr.write(ABSOLUTE_POS)
         return self.__recv_cmd_packet()
 
+    def set_pos_with_blocked(self, y_para, z_para, vv, ww):
+        ABSOLUTE_POS[4] = vv
+        ABSOLUTE_POS[5] = ww
+        y_paras = self.__encode_para(y_para)
+        ABSOLUTE_POS[6:10] = y_paras
+
+        z_paras = self.__encode_para(z_para)
+        ABSOLUTE_POS[10:14] = z_paras
+
+        self.__sr.write(ABSOLUTE_POS)
+        return self.__recv_cmd_packet_with_blocked()
+
+
     def set_zoom(self, z_para):
         z_paras = self.__encode_para(z_para)
         ZOOM_SET[4:8] = z_paras
         self.__sr.write(ZOOM_SET)
         return self.__recv_cmd_packet()
 
+    def set_zoom_with_blocked(self, z_para):
+        z_paras = self.__encode_para(z_para)
+        ZOOM_SET[4:8] = z_paras
+        self.__sr.write(ZOOM_SET)
+        return self.__recv_cmd_packet_with_blocked()
+
     def stop(self):
         self.__sr.write(STOP)
         return self.__recv_cmd_packet()
 
-    def zoom_tel(self, para):
+    def zoom_tele(self, para):
         tz = 0x20 | para
         ZOOM_TEL[4] = tz
         self.__sr.write(ZOOM_TEL)
@@ -345,7 +368,7 @@ if __name__ == '__main__':
 
     # test raw
     # test get_pos
-    ptz.set_absolute_pos(0, 0, 20, 20)
+    ptz.set_pos(0, 0, 20, 20)
     time.sleep(2)
     pos = {}
     begin = time.time()
@@ -364,7 +387,7 @@ if __name__ == '__main__':
     # test set_pos
     x = 1000
     y = -300
-    ptz.set_absolute_pos(x, y, 24, 24)
+    ptz.set_pos(x, y, 24, 24)
     time.sleep(4)
     ptz.get_pos(pos)
     if math.fabs(pos["x"] - x) < 20 \
@@ -379,7 +402,7 @@ if __name__ == '__main__':
     y = pos["y"]
     ptz.preset_set(0)
     time.sleep(2)
-    ptz.set_absolute_pos(0, 0, 24, 24)
+    ptz.set_pos(0, 0, 24, 24)
     time.sleep(2)
     ptz.preset_call(0)
     time.sleep(2)
@@ -392,7 +415,7 @@ if __name__ == '__main__':
         sys.exit()
     ptz.preset_clear(0)
     time.sleep(2)
-    ptz.set_absolute_pos(0, 0, 24, 24)
+    ptz.set_pos(0, 0, 24, 24)
     time.sleep(2)
     ptz.preset_call(0)
     time.sleep(2)
@@ -405,7 +428,7 @@ if __name__ == '__main__':
         sys.exit()
 
     # test stop, left, right, up, down
-    ptz.set_absolute_pos(0, 0, 24, 24)
+    ptz.set_pos(0, 0, 24, 24)
     time.sleep(2)
     ptz.left(10)
     time.sleep(2)
@@ -482,16 +505,16 @@ if __name__ == '__main__':
         print 'set_zoom and get_zoom is err'
         sys.exit()
     ptz.set_zoom(0)
-    ptz.zoom_tel(3)
+    ptz.zoom_tele(3)
     time.sleep(2)
     ptz.zoom_stop()
     ptz.zoom_stop()
     ptz.get_zoom(zoom)
     z = zoom['z']
     if z > 0:
-        print 'zoom_tel is ok'
+        print 'zoom_tele is ok'
     else:
-        print 'zoom_tel is err'
+        print 'zoom_tele is err'
         sys.exit()
     ptz.get_zoom(zoom)
     if zoom['z'] == z:

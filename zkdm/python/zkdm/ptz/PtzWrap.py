@@ -277,7 +277,7 @@ class PtzWrap(object):
             if 'sy' in params:
                 sy = int(params['sy'][0])
                 
-            self.__ptz.set_pos_blocked(x, y, sx, sy)
+            self.__ptz.set_pos_with_blocked(x, y, sx, sy)
             return { 'info':'completed' }
        
             
@@ -328,7 +328,7 @@ class PtzWrap(object):
             z = 0
             if 'z' in params:
                 z = int(params['z'][0])
-            self.__ptz.set_zoom_blocked(z)
+            self.__ptz.set_zoom_with_blocked(z)
             return { 'info':'completed' }
 
 
