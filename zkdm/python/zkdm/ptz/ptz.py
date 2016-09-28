@@ -10,7 +10,6 @@ sys_name = platform.system()
 # Address set broadcast
 ADDRESS_SET = bytearray('\x88\x30\x01\xFF')
 
-
 # pan tilt drive
 UP = bytearray('\x8F\x01\x06\x01\x00\x00\x03\x01\xFF')
 DOWN = bytearray('\x8F\x01\x06\x01\x00\x00\x03\x02\xFF')
@@ -53,20 +52,8 @@ class Ptz:
             else:
                 self.__sr = ptzs[self.__com]
 
-        # FIXME: better warning than current
-        except OSError as e:
-            print "{0}: {1}".format(self.__com, e.strerror)
-            sys.exit()
-        except serialutil.SerialException as e:
-            if sys_name == 'Windows':
-                if "(2," in e.message:
-                    print "{0} doesn\'t exist".format(self.__com)
-                elif "(5," in e.message:
-                    print "{0} was already used by another process".format(self.__com)
-                else:
-                    print "other error: %s"%(e.message) 
-            else:
-                pass
+        except SerialException as e:
+            print e
         else:
             # FIXME: if many cameras are connected, usage???
             self.__sr.write(ADDRESS_SET)
@@ -131,16 +118,27 @@ class Ptz:
                 pass
         return s
 
+     def __test_send_recv(self, ba):
+        self.__sr.write(ba)
+        s = self.__sr.read(1)
+        print 'all inWaiting: ', self.__sr.inWaiting() + 1
+        len = self.__sr.inWaiting()
+        s = s + self.__sr.read(len)
+        ba = bytearray(s)
+                
     def __is_cmd_return(self, v):
         ba = bytearray()
-        is_ack = False
+        is_v = False
+        if __debug__ != True:
+            print '\n=== function: %s'%(inspect.stack()[1][3])    
+            beg = time.time()
         s = self.__sr.read(1)
         while True:
             if s != '':
                 ba.append(s)
                 if s == '\xFF':
-                    is_ack = self.__is_cmd_str(ba, v)				
-                    if is_ack:					
+                    is_v = self.__is_cmd_str(ba, v)                
+                    if is_v:                    
                         break
                     else:
                         err_s = self.__error_type(ba)
@@ -157,71 +155,43 @@ class Ptz:
 
             else:
                 break
-        print 'yes: ', is_ack
-        return is_ack
-
-    def __recv_ack_packet(self):
-        is_ack = self.__is_cmd_return(4)
-        if is_ack == False:
-            print 'return ack error'
-        return is_ack
-    
-    def __recv_complete_packet(self):
-        is_complete = self.__is_cmd_return(5)
-        if is_complete == False:
-            print 'return completion error'
-            return False
-        return is_complete
-
-    def __recv_cmd_packet_with_blocked(self):
-        return self.__recv_ack_packet() and \
-                self.__recv_complete_packet()
-
-    def __recv_cmd_packet(self):
-        is_ack = self.__recv_ack_packet()
-        return is_ack
+        if __debug__ != True:
+            print '\t value: ', self.__decode_ba(ba)
+            print '\t reading time: ', time.time() - beg
+            print '=== function %s over ...'%(inspect.stack()[1][3])
+   
+        print 'yes: ', is_v
+        return is_v
 
     def left(self, vv):
         LEFT[4] = vv
         self.__sr.open()
-        if __debug__:
-            self.__sr.write(LEFT)
-            v = self.__recv_cmd_packet()         
-        else:
-            self.__test_send_recv(LEFT)
+        self.__sr.write(LEFT)
+        v = self.__is_cmd_return(4)         
         self.__sr.close()
         return v
 
     def right(self, vv):
         RIGHT[4] = vv
         self.__sr.open()
-        if __debug__:
-            self.__sr.write(RIGHT)
-            v =  self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(RIGHT)
+        self.__sr.write(RIGHT)
+        v =  self.__is_cmd_return(4)
         self.__sr.close()
         return v
 
     def up(self, ww):
         UP[5] = ww
         self.__sr.open()
-        if __debug__:
-            self.__sr.write(UP)
-            v = self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(UP)
+        self.__sr.write(UP)
+        v = self.__is_cmd_return(4)
         self.__sr.close()
         return v
 
     def down(self, ww):
         DOWN[5] = ww
         self.__sr.open()
-        if __debug__:
-            self.__sr.write(DOWN)
-            v = self.__recv_cmd_packet()    
-        else:
-            self.__test_send_recv(DOWN)
+        self.__sr.write(DOWN)
+        v = self.__is_cmd_return(4)    
         self.__sr.close()
 
     def __encode_para(self, para):
@@ -240,117 +210,115 @@ class Ptz:
 
         z_paras = self.__encode_para(z_para)
         ABSOLUTE_POS[10:14] = z_paras
-
-        if __debug__:
-            self.__sr.write(ABSOLUTE_POS)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(ABSOLUTE_POS)
-
+        self.__sr.open()
+        self.__sr.write(ABSOLUTE_POS)
+        v = self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
+        
     def set_relative_pos(self, y_para, z_para, vv, ww):
         RELATIVE_POS[4] = vv
         RELATIVE_POS[5] = ww
         y_paras = self.__encode_para(y_para)
         RELATIVE_POS[6:10] = y_paras
-
-        if __debug__:
-            z_paras = self.__encode_para(z_para)
-            RELATIVE_POS[10:14] = z_paras
-            self.__sr.write(RELATIVE_POS)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(RELATIVE_POS)
+        z_paras = self.__encode_para(z_para)
+        RELATIVE_POS[10:14] = z_paras
+        self.__sr.open()
+        self.__sr.write(RELATIVE_POS)
+        v =  self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
 
     def set_pos_with_blocked(self, y_para, z_para, vv, ww):
         ABSOLUTE_POS[4] = vv
         ABSOLUTE_POS[5] = ww
         y_paras = self.__encode_para(y_para)
         ABSOLUTE_POS[6:10] = y_paras
-
-        if __debug__:
-            z_paras = self.__encode_para(z_para)
-            ABSOLUTE_POS[10:14] = z_paras
-
-            self.__sr.write(ABSOLUTE_POS)
-            return self.__recv_cmd_packet_with_blocked()
-        else:
-            self.__test_send_recv(ABSOLUTE_POS)
+        z_paras = self.__encode_para(z_para)
+        ABSOLUTE_POS[10:14] = z_paras
+        self.__sr.open()
+        self.__sr.write(ABSOLUTE_POS)
+        is_ack = self.__is_cmd_return(4)
+        is_complete = self.__is_cmd_return(5)
+        self.__sr.close()
+        return is_ack and is_complete 
 
 
     def set_zoom(self, z_para):
         z_paras = self.__encode_para(z_para)
         ZOOM_SET[4:8] = z_paras
-        if __debug__:
-            self.__sr.write(ZOOM_SET)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(ZOOM_SET)
+        self.__sr.open()
+        self.__sr.write(ZOOM_SET)
+        v =  self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
 
     def set_zoom_with_blocked(self, z_para):
         z_paras = self.__encode_para(z_para)
         ZOOM_SET[4:8] = z_paras
-        if __debug__:
-            self.__sr.write(ZOOM_SET)
-            return self.__recv_cmd_packet_with_blocked()
-        else:
-            self.__test_send_recv(ZOOM_SET)
-
+        self.__sr.open()
+        self.__sr.write(ZOOM_SET)
+        is_ack = self.__is_cmd_return(4)
+        is_complete = self.__is_cmd_return(5)
+        self.__sr.close()
+        return is_ack and is_complete
+        
     def stop(self):
-        if __debug__:
-            self.__sr.write(STOP)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(STOP)
+        self.__sr.open()
+        self.__sr.write(STOP)
+        v = self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
 
     def zoom_tele(self, para):
         tz = 0x20 | para
         ZOOM_TEL[4] = tz
-        if __debug__:
-            self.__sr.write(ZOOM_TEL)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(ZOOM_TEL)
+        self.__sr.open()
+        self.__sr.write(ZOOM_TEL)
+        v = self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
 
     def zoom_wide(self, para):
         wz = 0x30 | para       
         ZOOM_WIDE[4] = wz
-        if __debug__:
-            self.__sr.write(ZOOM_WIDE)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(ZOOM_WIDE)
+        self.__sr.open()
+        self.__sr.write(ZOOM_WIDE)
+        v =  self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
 
     # note: it must be called twice
     def zoom_stop(self):
-        if __debug__:
-            self.__sr.write(ZOOM_STOP)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(ZOOM_STOP)
-
+        self.__sr.open()
+        self.__sr.write(ZOOM_STOP)
+        v = self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
+        
     def preset_clear(self, z):
         MEMORY_RESET[5] = z
-        if __debug__:
-            self.__sr.write(MEMORY_RESET)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(MEMORY_RESET)
+        self.__sr.open()
+        self.__sr.write(MEMORY_RESET)
+        v = self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
 
     def preset_set(self, z):
         MEMORY_SET[5] = z
-        if __debug__:
-            self.__sr.write(MEMORY_SET)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(MEMORY_SET)
+        self.__sr.open()
+        self.__sr.write(MEMORY_SET)
+        v = self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
 
     def preset_call(self, z):
         MEMORY_CALL[5] = z
-        if __debug__:
-            self.__sr.write(MEMORY_CALL)
-            return self.__recv_cmd_packet()
-        else:
-            self.__test_send_recv(MEMORY_CALL)
+        self.__sr.open()
+        self.__sr.write(MEMORY_CALL)
+        v = self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
 
     def __is_packet(self, ba):
         length = len(ba)
@@ -418,9 +386,11 @@ class Ptz:
         return v
 
     def get_pos(self, kwargs = {'x':0, 'y':0}):
+        self.__sr.open()
         self.__sr.flushInput()
         self.__sr.write(POS_INFO) 
         rt = self.get_paras()
+        self.__sr.close()
         if len(rt) == 2:
             kwargs['x'] = self.__to_short_int(rt[0])
             kwargs['y'] = self.__to_short_int(rt[1])
@@ -429,57 +399,46 @@ class Ptz:
             return False
              
     def get_zoom(self, kwargs = {'z':0}):            
+        self.__sr.open()
         self.__sr.flushInput()
         self.__sr.write(ZOOM_INFO)
         rt = self.get_paras()
+        self.__sr.close()
         if len(rt) == 1:
             kwargs['z'] = self.__to_short_int(rt[0])
             return True
         else:
             return False
 
-    def read(self):
-        while True:
-            time.sleep(1)
-            n = self.__sr.inWaiting()
-            if n is not  0:
-                ba = self.__sr.read(n)
-
-                for i in range(n):
-                    print hex(ord(ba[i]))
-            break
-
     ''' usage for testing ptz'''
     def pos_reset(self):
+        self.__sr.open()
         self.__sr.write(POS_RESET)
-        return self.__recv_cmd_packet()
+        v =  self.__is_cmd_return(4)
+        self.__sr.close()
+        return v
 
-    def __test_send_recv(self, ba):
-        print '===function: %s'%(inspect.stack()[1][3])    
-        self.__sr.write(ba)
-        beg = time.time()
-        s = self.__sr.read(1)
-        print 'all inWaiting: ', self.__sr.inWaiting() + 1
-        len = self.__sr.inWaiting()
-        s = s + self.__sr.read(len)
-        ba = bytearray(s)
-        print '\t value: ', self.__decode_ba(ba)
-        print '\t reading time: ', time.time() - beg
-        print '#####function %s over'%(inspect.stack()[1][3])
+
             
 
     def raw(self, value, mode, bas= None):
+        self.__sr.open()
         self.__sr.write(value)
         if mode == 'ack':
-            is_ack = self.__recv_cmd_packet()
+            is_ack = self.__is_cmd_return(4)
+            self.__sr.close()
             return is_ack 
         elif mode == 'complete':
-            is_complete = self.__recv_cmd_packet_with_blocked()
-            return is_complete
+            is_ack = self.__is_cmd_return(4)
+            is_complete = self.__is_cmd_return(5)
+            self.__sr.close()
+            return is_ack and is_complete
         elif mode == 'info':
             ipacket = self.__get_info(bas)
+            self.__sr.close()
             return ipacket
         else:
+            self.__sr.close()
             return False
 
     def mouse_trace(self, hvs, vvs, sx, sy, paras ={'s':0, 'hva':0, 'vva':0}):
