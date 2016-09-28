@@ -58,6 +58,8 @@ class Ptz:
             # FIXME: if many cameras are connected, usage???
             self.__sr.write(ADDRESS_SET)
             pass
+        self.__sr.write(ADDRESS_SET)
+        self.__is_cmd_return(4)
 
         self.__sr.close()
 
@@ -95,6 +97,8 @@ class Ptz:
             and ba[1] >> 4 == v \
             and ba[2] == 0xFF:
             return True
+        elif ba == bytearray('\x88\x30\x02\xff'):
+            return True
         else:
             return False
 
@@ -118,15 +122,9 @@ class Ptz:
                 pass
         return s
 
-     def __test_send_recv(self, ba):
-        self.__sr.write(ba)
-        s = self.__sr.read(1)
-        print 'all inWaiting: ', self.__sr.inWaiting() + 1
-        len = self.__sr.inWaiting()
-        s = s + self.__sr.read(len)
-        ba = bytearray(s)
                 
     def __is_cmd_return(self, v):
+        err_s = ''
         ba = bytearray()
         is_v = False
         if __debug__ != True:
@@ -135,6 +133,8 @@ class Ptz:
         s = self.__sr.read(1)
         while True:
             if s != '':
+                if __debug__ != True:
+                    print s.encode('hex') 
                 ba.append(s)
                 if s == '\xFF':
                     is_v = self.__is_cmd_str(ba, v)                
@@ -143,12 +143,10 @@ class Ptz:
                     else:
                         err_s = self.__error_type(ba)
                         if err_s != '':
-                            print err_s
                             break
-                        if s[0] == 0x88:
-                            print 'broadcast'
-                            break
-                        ba = bytearray()
+                        length = len(ba)
+                        for i in range(length):
+                            ba.pop()
                         s = self.__sr.read(1)
                 else:
                     s = self.__sr.read(1)
@@ -156,11 +154,20 @@ class Ptz:
             else:
                 break
         if __debug__ != True:
-            print '\t value: ', self.__decode_ba(ba)
-            print '\t reading time: ', time.time() - beg
+            if err_s != '':
+                print err_s
+            if len(ba) == 3 and ba[1] >> 4 == 4:
+                print 'ACK state: ', is_v
+            elif len(ba) == 3 and ba[1] >> 4 == 5:
+                print 'Command completion state: ', is_v
+            elif ba[0] == 0x88 and ba[1] == 0x30 and ba[2] == 0X02 and ba[3] == 0xFF:
+                print 'camera send command when power on'
+            else:
+                pass
+            print 'value: ', self.__decode_ba(ba)
+            print 'reading time: ', time.time() - beg
             print '=== function %s over ...'%(inspect.stack()[1][3])
-   
-        print 'yes: ', is_v
+                `
         return is_v
 
     def left(self, vv):
@@ -487,4 +494,5 @@ if __name__ == '__main__':
         sys.exit("usage: {0} COMX".format(sys.argv[0]))
     com = sys.argv[1]
     ptz = Ptz(com) 
+    ptz.left(4)
 
