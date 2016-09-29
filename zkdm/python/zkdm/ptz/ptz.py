@@ -45,42 +45,62 @@ class Ptz:
         self.__get_addr_head()
         self.__y0 = 0x80 + (self.__addr << 4)
         self.__sr = None
-        try:
-            if self.__com not in ptzs:
-                self.__sr = Serial(self.__com)
-                self.__sr.timeout = 30
-                ptzs[self.__com] = self.__sr
-            else:
-                self.__sr = ptzs[self.__com]
-
-        except SerialException as e:
-            if 'WindowsError(5' in e.message:
-                print u'串口%s被另一个进程占用 ...'%(self.__com)
-            elif 'WindowsError(2'in e.message:
-                print u'串口%s不存在'%(self.__com)
-            else:
-                print u'串口%s不能被打开 ...'%(self.__com) 
-            sys.exit(u'请解决此错误')
+        if self.__com not in ptzs:
+            self.__sr = Serial()
+            self.__sr.timeout = 30
+            ptzs[self.__com] = self.__sr
         else:
+            self.__sr = ptzs[self.__com]
+
+        self.__sr.setPort(self.__com)
+        __quit = False
+        while not __quit:
+            self.__open()
             beg = time.time()
             self.__sr.write(ADDRESS_SET)
-            self.__is_cmd_return(4)
-            if time.time() - beg >= 30:
+            __quit = self.__is_cmd_return(4)
+            if __quit:
+                self.__sr.close()
+                print u'串口%s及其所连接设备正常启动 ...'%(self.__com)
+            elif time.time() - beg >= 30:
                 self.__sr.close()
                 print u'读超时，有可能串口线电源线没插好或坏了 ...'
-                sys.exit()
-        if self.__sr != None and self.__sr.isOpen():
-            print u'串口%s及其所连接设备正常启动 ...'%(self.__com)
-            self.__sr.close()
+            else:
+                pass
+
+
+    def __open(self):
+        opened = False
+        while not opened:
+            try:
+                self.__sr.open()
+            except SerialException as e:
+                if 'WindowsError(5' in e.message:
+                    print u'串口%s被另一个进程占用 ...'%(self.__com)
+                elif 'WindowsError(2'in e.message:
+                    print u'串口%s不存在'%(self.__com)
+                else:
+                    print u'串口%s不能被打开 ...'%(self.__com) 
+ 
+                time.sleep(25)
+            else:
+                opened = True
+
 
     def __open_n(self):
         opened = False
         i = 0
         while not opened and i < 3:
             try:
-                opened = self.__sr.open()
+                self.__sr.open()
             except SerialException as e:
-                print 'open fail'
+                if 'WindowsError(5' in e.message:
+                    print u'串口%s被另一个进程占用 ...'%(self.__com)
+                elif 'WindowsError(2'in e.message:
+                    print u'串口%s不存在'%(self.__com)
+                else:
+                    print u'串口%s不能被打开 ...'%(self.__com) 
+ 
                 time.sleep(25)
                 i = i + 1
             else:
@@ -448,9 +468,6 @@ class Ptz:
         self.__sr.close()
         return v
 
-
-            
-
     def raw(self, value, mode, bas= None):
         self.__open_n()
         self.__sr.write(value)
@@ -517,5 +534,4 @@ if __name__ == '__main__':
         sys.exit("usage: {0} COMX".format(sys.argv[0]))
     com = sys.argv[1]
     ptz = Ptz(com)
-    time.sleep(25)
-    ptz.right(13)
+    ptz.left(13)
