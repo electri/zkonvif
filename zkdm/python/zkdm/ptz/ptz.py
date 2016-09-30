@@ -45,6 +45,7 @@ class Ptz:
         self.__get_addr_head()
         self.__y0 = 0x80 + (self.__addr << 4)
         self.__sr = None
+        self.__is_address = False
         if self.__com not in ptzs:
             self.__sr = Serial()
             self.__sr.timeout = 30
@@ -68,6 +69,14 @@ class Ptz:
             else:
                 pass
 
+    def __set_address(self):
+        self.__open_n()
+	    self.__sr.write(ADDRESS_SET)
+        v = self.__is_cmd_return(4)
+        retrun v
+ 	
+        
+
 
     def __open(self):
         opened = False
@@ -85,6 +94,7 @@ class Ptz:
                 time.sleep(25)
             else:
                 opened = True
+        return opened
 
 
     def __open_n(self):
@@ -105,6 +115,8 @@ class Ptz:
                 i = i + 1
             else:
                 opened = True
+        if not opened:
+            sys.exit('请调试错误！！！')
 
     def __del__(self):
         if self.__sr != None:
