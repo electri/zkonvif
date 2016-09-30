@@ -54,48 +54,15 @@ class Ptz:
             self.__sr = ptzs[self.__com]
 
         self.__sr.setPort(self.__com)
-        __quit = False
-        while not __quit:
-            self.__open()
-            beg = time.time()
-            self.__sr.write(ADDRESS_SET)
-            __quit = self.__is_cmd_return(4)
-            if __quit:
-                self.__sr.close()
-                print u'串口%s及其所连接设备正常启动 ...'%(self.__com)
-            elif time.time() - beg >= 30:
-                self.__sr.close()
-                print u'读超时，有可能串口线电源线没插好或坏了 ...'
-            else:
-                pass
 
     def __set_address(self):
-        self.__open_n()
+        rt = self.__open_n()
+        if rt != True:
+            sys.exit()
 	    self.__sr.write(ADDRESS_SET)
         v = self.__is_cmd_return(4)
+        self.__sr.close()
         retrun v
- 	
-        
-
-
-    def __open(self):
-        opened = False
-        while not opened:
-            try:
-                self.__sr.open()
-            except SerialException as e:
-                if 'WindowsError(5' in e.message:
-                    print u'串口%s被另一个进程占用 ...'%(self.__com)
-                elif 'WindowsError(2'in e.message:
-                    print u'串口%s不存在'%(self.__com)
-                else:
-                    print u'串口%s不能被打开 ...'%(self.__com) 
- 
-                time.sleep(25)
-            else:
-                opened = True
-        return opened
-
 
     def __open_n(self):
         opened = False
@@ -115,9 +82,20 @@ class Ptz:
                 i = i + 1
             else:
                 opened = True
-        if not opened:
-            sys.exit('请调试错误！！！')
 
+        return opened
+    
+    def __open_begin(self):
+        if not self.__is_address:
+            self.__is_address = self.__set_address()
+            if self.__is_address:
+                print u'串口%s及其所连接设备正常启动 ...'%(self.__com)
+            else:
+                print u'设置地址失败 ...'
+        rt = self.__open_n()
+        if rt != True:
+            sys.exit()
+                
     def __del__(self):
         if self.__sr != None:
             self.__sr.close()
@@ -227,7 +205,7 @@ class Ptz:
 
     def left(self, vv):
         LEFT[4] = vv
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(LEFT)
         v = self.__is_cmd_return(4)         
         self.__sr.close()
@@ -235,7 +213,7 @@ class Ptz:
 
     def right(self, vv):
         RIGHT[4] = vv
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(RIGHT)
         v =  self.__is_cmd_return(4)
         self.__sr.close()
@@ -243,7 +221,7 @@ class Ptz:
 
     def up(self, ww):
         UP[5] = ww
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(UP)
         v = self.__is_cmd_return(4)
         self.__sr.close()
@@ -251,7 +229,7 @@ class Ptz:
 
     def down(self, ww):
         DOWN[5] = ww
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(DOWN)
         v = self.__is_cmd_return(4)    
         self.__sr.close()
@@ -272,7 +250,7 @@ class Ptz:
 
         z_paras = self.__encode_para(z_para)
         ABSOLUTE_POS[10:14] = z_paras
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(ABSOLUTE_POS)
         v = self.__is_cmd_return(4)
         self.__sr.close()
@@ -285,7 +263,7 @@ class Ptz:
         RELATIVE_POS[6:10] = y_paras
         z_paras = self.__encode_para(z_para)
         RELATIVE_POS[10:14] = z_paras
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(RELATIVE_POS)
         v =  self.__is_cmd_return(4)
         self.__sr.close()
@@ -298,7 +276,7 @@ class Ptz:
         ABSOLUTE_POS[6:10] = y_paras
         z_paras = self.__encode_para(z_para)
         ABSOLUTE_POS[10:14] = z_paras
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(ABSOLUTE_POS)
         is_ack = self.__is_cmd_return(4)
         is_complete = self.__is_cmd_return(5)
@@ -309,7 +287,7 @@ class Ptz:
     def set_zoom(self, z_para):
         z_paras = self.__encode_para(z_para)
         ZOOM_SET[4:8] = z_paras
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(ZOOM_SET)
         v =  self.__is_cmd_return(4)
         self.__sr.close()
@@ -318,7 +296,7 @@ class Ptz:
     def set_zoom_with_blocked(self, z_para):
         z_paras = self.__encode_para(z_para)
         ZOOM_SET[4:8] = z_paras
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(ZOOM_SET)
         is_ack = self.__is_cmd_return(4)
         is_complete = self.__is_cmd_return(5)
@@ -326,7 +304,7 @@ class Ptz:
         return is_ack and is_complete
         
     def stop(self):
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(STOP)
         v = self.__is_cmd_return(4)
         self.__sr.close()
@@ -335,7 +313,7 @@ class Ptz:
     def zoom_tele(self, para):
         tz = 0x20 | para
         ZOOM_TEL[4] = tz
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(ZOOM_TEL)
         v = self.__is_cmd_return(4)
         self.__sr.close()
@@ -344,7 +322,7 @@ class Ptz:
     def zoom_wide(self, para):
         wz = 0x30 | para       
         ZOOM_WIDE[4] = wz
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(ZOOM_WIDE)
         v =  self.__is_cmd_return(4)
         self.__sr.close()
@@ -352,7 +330,7 @@ class Ptz:
 
     # note: it must be called twice
     def zoom_stop(self):
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(ZOOM_STOP)
         v = self.__is_cmd_return(4)
         self.__sr.close()
@@ -360,7 +338,7 @@ class Ptz:
         
     def preset_clear(self, z):
         MEMORY_RESET[5] = z
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(MEMORY_RESET)
         v = self.__is_cmd_return(4)
         self.__sr.close()
@@ -368,7 +346,7 @@ class Ptz:
 
     def preset_set(self, z):
         MEMORY_SET[5] = z
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(MEMORY_SET)
         v = self.__is_cmd_return(4)
         self.__sr.close()
@@ -376,7 +354,7 @@ class Ptz:
 
     def preset_call(self, z):
         MEMORY_CALL[5] = z
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(MEMORY_CALL)
         v = self.__is_cmd_return(4)
         self.__sr.close()
@@ -448,7 +426,7 @@ class Ptz:
         return v
 
     def get_pos(self, kwargs = {'x':0, 'y':0}):
-        self.__open_n()
+        self.__open_begin()
         self.__sr.flushInput()
         self.__sr.write(POS_INFO) 
         rt = self.get_paras()
@@ -461,7 +439,7 @@ class Ptz:
             return False
              
     def get_zoom(self, kwargs = {'z':0}):            
-        self.__open_n()
+        self.__open_begin()
         self.__sr.flushInput()
         self.__sr.write(ZOOM_INFO)
         rt = self.get_paras()
@@ -474,14 +452,14 @@ class Ptz:
 
     ''' usage for testing ptz'''
     def pos_reset(self):
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(POS_RESET)
         v =  self.__is_cmd_return(4)
         self.__sr.close()
         return v
 
     def raw(self, value, mode, bas= None):
-        self.__open_n()
+        self.__open_begin()
         self.__sr.write(value)
         if mode == 'ack':
             is_ack = self.__is_cmd_return(4)

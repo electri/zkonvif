@@ -1,12 +1,9 @@
-from datetime import datetime
-import time
+rt = 'ACK: z0 4y FF\n
+     Command completion: z0 5y FF\n
+     Information return: z0 50 ... FF\n \
+     Address set: z0 38 FF\n'
+print rt
 
-from PtzWrap import PtzWrap
 
-Ptz = PtzWrap()
-Ptz.open('COM4', 1)
-time.sleep(5.0)
-Ptz.call("left", {'speed':[2]})
-time.sleep(5.0)
-Ptz.stop()
-Ptz.close()
+
+
