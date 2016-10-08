@@ -54,7 +54,8 @@ ptzs = {}
 
 class Ptz:
     def __init__(self, com, address = 1):
-        print RT
+        if __debug__ != True:
+            print RT
         self.__com = com
         self.__addr = address
         self.__get_addr_head()
