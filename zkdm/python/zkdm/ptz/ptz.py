@@ -36,10 +36,25 @@ MEMORY_CALL = bytearray('\x8F\x01\x04\x3F\x02\x0F\xFF')
 # info
 POS_INFO = bytearray('\x8F\x09\x06\x12\xFF')
 ZOOM_INFO = bytearray('\x8F\x09\x04\x47\xFF')
+
+
+RT = "======== return message ========\n" + \ 
+    "ACK: z0 4y FF\n" + \
+      "Command completion: z0 5y FF\n" + \
+      "Information return: z0 50 ... FF\n" + \
+      "Address set: z0 38 FF\n" + \
+      "syntax error: z0 60 02 FF\n" + \
+      "command buffer full: z0 60 03 FF\n" + \
+      "command cancel: z0 60 04 FF\n" + \
+      "No sockets: z0 60 05 FF\n" + \
+      "Command not executable z0 60 41 FF\n" + \
+      "==============================="
+
 ptzs = {}
 
 class Ptz:
     def __init__(self, com, address = 1):
+        print RT
         self.__com = com
         self.__addr = address
         self.__get_addr_head()
@@ -522,6 +537,7 @@ if __name__ == '__main__':
     if len(sys.argv) < 2 \
             or sys.argv[1] == "-help":
         sys.exit("usage: {0} COMX".format(sys.argv[0]))
+    print RT
     com = sys.argv[1]
     ptz = Ptz(com)
     ptz.left(13)
