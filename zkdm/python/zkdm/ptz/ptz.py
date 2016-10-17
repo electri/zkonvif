@@ -4,6 +4,7 @@ import inspect
 import sys 
 import platform
 import threading
+import numpy as np
 from serial import *
 
 sys_name = platform.system()
@@ -508,12 +509,21 @@ class Ptz:
         return ptz_set_relative_pos(h_rpm, v_rpm, sx, sy)
           
     def ext_get_scales(self, string, zs = {'z':-1}):
+        X = [0x0000, 0x1606, 0x2151, 0x2860, 0x2CB5, 0x3060, 0x32D3, 0x3545, \
+	        0x3727, 0x38A9, 0x3A42, 0x3B4B, 0x3C85, 0x3D75, 0x3E4E, 0x3EF7, \
+	        0x3FA0, 0x4000] 
+
+        Y = range(1, 19)
+        p = np.polyfit(X, Y, 6)
+
         if zs['z'] < 0: 
             if (self.get_zoom(zs) < 0):
                 return 1.0;            
         else:
             zm = zs['z']
-            return round(0.00399466*zm**3 - 0.08866182*zm**2 + 0.64376676*zm*1 + 0.92906087) 
+            return p[0] * zm ** 6 + p[1] * zm ** 5 + \
+                p[2] * zm ** 4 + p[3] * zm ** 3 + \
+                p[4] * zm ** 2 + p[5] * zm  + p[6]
 
     def __encode_ba(string):
         length = len(string) / 2;
