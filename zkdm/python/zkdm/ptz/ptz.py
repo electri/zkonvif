@@ -4,8 +4,9 @@ import inspect
 import sys 
 import platform
 import threading
-import numpy as np
 from serial import *
+
+#XXXX: set adderss 出现问题，中间要停顿一下才行（譬如打印）...
 
 sys_name = platform.system()
 
@@ -39,7 +40,7 @@ POS_INFO = bytearray('\x8F\x09\x06\x12\xFF')
 ZOOM_INFO = bytearray('\x8F\x09\x04\x47\xFF')
 
 
-RT = "======== return message ========\n" + \ 
+RT = "======== return message ========\n" + \
     "ACK: z0 4y FF\n" + \
       "Command completion: z0 5y FF\n" + \
       "Information return: z0 50 ... FF\n" + \
@@ -76,10 +77,10 @@ class Ptz:
         rt = self.__open_n()
         if rt != True:
             sys.exit()
-	    self.__sr.write(ADDRESS_SET)
+        self.__sr.write(ADDRESS_SET)
         v = self.__is_cmd_return(4)
         self.__sr.close()
-        retrun v
+        return v
 
     def __open_n(self):
         opened = False
@@ -260,6 +261,7 @@ class Ptz:
         return paras 
         
     def set_pos(self, y_para, z_para, vv, ww):
+		# only return ack , no comepletion
         ABSOLUTE_POS[4] = vv
         ABSOLUTE_POS[5] = ww
         y_paras = self.__encode_para(y_para)
@@ -414,7 +416,7 @@ class Ptz:
         s = self.__sr.read(1)
         while s != '':
             if __debug__ != True:
-                print s
+                print s.encode('hex') 
             ba.append(s)
             if s == '\xFF':
                 ipacket = self.__is_packet(ba)
@@ -514,7 +516,8 @@ class Ptz:
 	        0x3FA0, 0x4000] 
 
         Y = range(1, 19)
-        p = np.polyfit(X, Y, 6)
+        p = [6.995e-23, -3.7984e-18, 8.116e-14, \
+            -8.433e-10, 4.253e-06, -8.103e-03, 1.000e+00]
 
         if zs['z'] < 0: 
             if (self.get_zoom(zs) < 0):
@@ -548,7 +551,14 @@ if __name__ == '__main__':
     if len(sys.argv) < 2 \
             or sys.argv[1] == "-help":
         sys.exit("usage: {0} COMX".format(sys.argv[0]))
-    print RT
     com = sys.argv[1]
     ptz = Ptz(com)
-    ptz.left(13)
+    kvs = {}
+    ptz.set_pos(1000, 1000, 20, 20)
+    time.sleep(10)
+    ptz.preset_set(1)    
+    time.sleep(1)
+    ptz.set_pos(0, 0, 20, 20)
+    time.sleep(10)
+    ptz.preset_call(1)
+    print kvs
