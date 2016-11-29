@@ -1,0 +1,8 @@
+实现 visca 云台控制
+
+http://.../ptz/config/getall
+返回所有云台实例 { 'ptzs': [ { 'teacher': 1 }, { 'student' : 2 } ... ] }
+
+http://../ptz/control/1/<method>?<params ...>
+对编号为 1 的云台的 method 操作 ...
+
