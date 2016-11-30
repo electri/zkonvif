@@ -74,6 +74,9 @@ class Ptz:
         self.__serial.close()
         return v
 
+    def close(self):
+        self.__serial.close()
+
     def __open_n(self):
         opened = False
         i = 0
@@ -213,36 +216,63 @@ class Ptz:
             print '=== function %s over ...'%(inspect.stack()[1][3])
         return is_v
 
-    def left(self, vv):
+    def left(self, params):
+        vv  =  0
+        if 'speed' in params:
+            vv  = int(params['speed'][0])
         LEFT[4] = vv
         self.__open_begin()
         self.__serial.write(LEFT)
         v = self.__is_cmd_return(4)         
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok',  'info': 'completed'}
+        else:
+            return {'result': 'ok', 'info': 'ptz process error'}
 
-    def right(self, vv):
+    def right(self, params):
+        vv = 0
+        if 'speed' in params:
+            vv  = int(params['speed'][0])
         RIGHT[4] = vv
         self.__open_begin()
         self.__serial.write(RIGHT)
         v =  self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok',  'info':'completed'}
+        else:
+            return {'result': 'err',  'info': 'ptz process error'}
 
-    def up(self, ww):
+    def up(self, params):
+        ww = 0
+        if 'speed' in params:
+            ww  = int(params['speed'][0])
+
         UP[5] = ww
         self.__open_begin()
         self.__serial.write(UP)
         v = self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok',  'info': 'completed'}
+        else:
+            return {'result': 'err',  'info': 'ptz process error' }
 
-    def down(self, ww):
+    def down(self, params):
+        ww = 0
+        if 'speed' in params:
+            ww  = int(params['speed'][0])
+
         DOWN[5] = ww
         self.__open_begin()
         self.__serial.write(DOWN)
         v = self.__is_cmd_return(4)    
         self.__serial.close()
+        if v:
+            return {'result': 'ok',  'info': 'completed'}
+        else:
+            return {'result': 'err',  'info': 'ptz process error' }
 
     def __encode_para(self, para):
         paras = [0, 0, 0, 0]
@@ -252,92 +282,170 @@ class Ptz:
         paras[3] = para & 0x0F
         return paras 
         
-    def set_pos(self, y_para, z_para, vv, ww):
+    def set_pos(self, params):
         # only return ack , no comepletion
-        ABSOLUTE_POS[4] = vv
-        ABSOLUTE_POS[5] = ww
-        y_paras = self.__encode_para(y_para)
-        ABSOLUTE_POS[6:10] = y_paras
+        x = 0
+        if 'x' in params:
+            x = int(params['x'][0])
+        ABSOLUTE_POS[6:10] = self.__encode_para(x)
 
-        z_paras = self.__encode_para(z_para)
-        ABSOLUTE_POS[10:14] = z_paras
+        y = 0
+        if 'y' in params:
+            y = int(params['y'][0])
+        ABSOLUTE_POS[10:14] = self.__encode_para(y)
+
+        sx = 30
+        if 'sx' in params:
+            sx = int(params['sx'][0])
+        ABSOLUTE_POS[4] = sx
+
+        sy = 30
+        if 'sy' in params:
+            sy = int(params['sy'][0])
+        ABSOLUTE_POS[5] = sy
+
         self.__open_begin()
         self.__serial.write(ABSOLUTE_POS)
         v = self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok', 'info': 'completed'}
+        else:
+            return {'result': 'err', 'info': 'ptz process error'}
         
-    def set_relative_pos(self, y_para, z_para, vv, ww):
-        RELATIVE_POS[4] = vv
-        RELATIVE_POS[5] = ww
-        y_paras = self.__encode_para(y_para)
-        RELATIVE_POS[6:10] = y_paras
-        z_paras = self.__encode_para(z_para)
-        RELATIVE_POS[10:14] = z_paras
+    def set_rpos(self, params):
+        x = 0
+        if 'x' in params:
+            x = int(params['x'][0])
+        RELATIVE_POS[6:10] = self.__encode_para(x)
+
+        y = 0
+        if 'y' in params:
+            y = int(params['y'][0])
+        RELATIVE_POS[10:14] = self.__encode_para(y)
+
+        sx = 30
+        if 'sx' in params:
+            sx = int(params['sx'][0])
+        RELATIVE_POS[4] = sx
+
+        sy = 30
+        if 'sy' in params:
+            sy = int(params['sy'][0])
+        RELATIVE_POS[5] = sy
+
         self.__open_begin()
         self.__serial.write(RELATIVE_POS)
         v =  self.__is_cmd_return(4)
         self.__serial.close()
-        return v
 
-    def set_pos_with_blocked(self, y_para, z_para, vv, ww):
-        ABSOLUTE_POS[4] = vv
-        ABSOLUTE_POS[5] = ww
-        y_paras = self.__encode_para(y_para)
-        ABSOLUTE_POS[6:10] = y_paras
-        z_paras = self.__encode_para(z_para)
-        ABSOLUTE_POS[10:14] = z_paras
+        if v:
+            return {'result': 'ok', 'info': 'completed' }
+        else:
+            return { 'result': 'err', 'info': 'ptz process error' }
+
+    def set_pos_blocked(self, params):
+        x = 0
+        if 'x' in params:
+            x = int(params['x'][0])
+        ABSOLUTE_POS[6:10] = self.__encode_para(x)
+
+        y = 0
+        if 'y' in params:
+            y = int(params['y'][0])
+        ABSOLUTE_POS[10:14] = self.__encode_para(y)
+
+        sx = 30
+        if 'sx' in params:
+            sx = int(params['sx'][0])
+        ABSOLUTE_POS[4] = sx
+
+        sy = 30
+        if 'sy' in params:
+            sy = int(params['sy'][0])
+        ABSOLUTE_POS[5] = sy
+
         self.__open_begin()
         self.__serial.write(ABSOLUTE_POS)
         is_ack = self.__is_cmd_return(4)
         is_complete = self.__is_cmd_return(5)
         self.__serial.close()
-        return is_ack and is_complete 
+        if is_ack and is_complete:
+            return {'return': 'ok', 'info':'completed'}
+        else:
+            return {'return': 'err', 'info': 'ptz process error'}
 
-
-    def set_zoom(self, z_para):
-        z_paras = self.__encode_para(z_para)
+    def set_zoom(self, params):
+        z = 0
+        if 'z' in params:
+            z = int(params['z'][0])
+        z_paras = self.__encode_para(z)
         ZOOM_SET[4:8] = z_paras
         self.__open_begin()
         self.__serial.write(ZOOM_SET)
         v =  self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'return': 'ok',  'info':'completed'}
+        else:
+            return {'return': 'err',  'info': 'ptz process error'}
 
-    def set_zoom_with_blocked(self, z_para):
-        z_paras = self.__encode_para(z_para)
+
+    def set_zoom_blocked(self, params):
+        z = 0
+        if 'z' in params:
+            z = int(params['z'][0])
+        z_paras = self.__encode_para(z)
         ZOOM_SET[4:8] = z_paras
         self.__open_begin()
         self.__serial.write(ZOOM_SET)
         is_ack = self.__is_cmd_return(4)
         is_complete = self.__is_cmd_return(5)
         self.__serial.close()
-        return is_ack and is_complete
+        if is_ack and is_complete:
+            return {'return': 'ok',  'info':'completed'}
+        else:
+            return {'return': 'err',  'info': 'ptz process error'}
         
     def stop(self):
         self.__open_begin()
         self.__serial.write(STOP)
         v = self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return { 'result': 'ok', 'info':'completed' } 
+        else:
+            return { 'result': 'err', 'info': 'ptz process  error' }
 
-    def zoom_tele(self, para):
-        tz = 0x20 | para
+    def zoom_tele(self, params):
+        speed = 1
+        if 'speed' in params:
+            speed = int(params['speed'][0])
+        tz = 0x20 | speed
         ZOOM_TEL[4] = tz
         self.__open_begin()
         self.__serial.write(ZOOM_TEL)
         v = self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok', 'info':'completed'}
+        else:
+            return {'result': 'err', 'info': 'ptz process error'}
 
-    def zoom_wide(self, para):
-        wz = 0x30 | para       
+    def zoom_wide(self, params):
+        speed = 1
+        if 'speed' in params:
+            speed = int(params['speed'][0])
+        wz = 0x30 | speed      
         ZOOM_WIDE[4] = wz
         self.__open_begin()
         self.__serial.write(ZOOM_WIDE)
         v =  self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok', 'info':'completed'}
+        else:
+            return {'result': 'err', 'info': 'ptz process error'}
 
     # note: it must be called twice
     def zoom_stop(self):
@@ -345,31 +453,56 @@ class Ptz:
         self.__serial.write(ZOOM_STOP)
         v = self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok', 'info':'completed'}
+        else:
+            return {'result': 'err', 'info': 'ptz process error'}
         
-    def preset_clear(self, z):
+    def preset_clear(self, params):
+        if 'id' in params:
+            z  = int(params['id'][0])
+        else:
+            return {'result': 'err',  'info': 'id dosn\'t be set'}
+
         MEMORY_RESET[5] = z
         self.__open_begin()
         self.__serial.write(MEMORY_RESET)
         v = self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok', 'info': 'completed'}
+        else:
+            return {'result': 'err', 'info': 'ptz proccess error'} 
 
-    def preset_set(self, z):
+    def preset_save(self, params):
+        if 'id' in params:
+            z  = int(params['id'][0])
+        else:
+            return {'result': 'err', 'info': 'id dosn\'t be set'}
         MEMORY_SET[5] = z
         self.__open_begin()
         self.__serial.write(MEMORY_SET)
         v = self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok', 'info': 'completed'}
+        else:
+            return {'result': 'err',  'info': 'ptz proccess error'}
 
-    def preset_call(self, z):
+    def preset_call(self, params):
+        if 'id' in params:
+            z  = int(params['id'][0])
+        else:
+            return {'result': 'err', 'info': 'id dosn\'t be set' }
         MEMORY_CALL[5] = z
         self.__open_begin()
         self.__serial.write(MEMORY_CALL)
         v = self.__is_cmd_return(4)
         self.__serial.close()
-        return v
+        if v:
+            return {'result': 'ok', 'info': 'completed'}
+        else:
+            return {'result': 'err', 'info': 'ptz proccess error' }
 
     def __is_packet(self, ba):
         length = len(ba)
@@ -436,30 +569,44 @@ class Ptz:
             v = -v
         return v
 
-    def get_pos(self, kwargs = {'x':0, 'y':0}):
+    def get_pos_zoom(self):
+        pos = self.get_pos()
+        zoom = self.get_zoom()
+
+        if pos_ret['result'] == 'ok' \
+            and zoom_ret['result'] == 'ok':
+            return {'result': 'ok', 'info': '', \
+                'value': {'type':'position_zoom', \
+                    'data':{'x': pos['value']['data']['x'],'y':pos['value']['data']['y'],'z':zoom['value']['data']['z']}}}
+        else:
+            return {'result': 'err', 'info': 'ptz process error'}
+
+    def get_pos(self):
         self.__open_begin()
         self.__serial.flushInput()
         self.__serial.write(POS_INFO) 
         rt = self.get_paras()
         self.__serial.close()
         if len(rt) == 2:
-            kwargs['x'] = self.__to_short_int(rt[0])
-            kwargs['y'] = self.__to_short_int(rt[1])
-            return True
+            pos = {'x':0, 'y':0}
+            pos['x'] = self.__to_short_int(rt[0])
+            pos['y'] = self.__to_short_int(rt[1])
+            return {'result': 'ok', 'info':'', 'value': {'type':'position', 'data': {'x': pos['x'], 'y': pos['y']}}}
         else:
-            return False
+            return {'result':'err', 'info':'ptz process error'}
              
-    def get_zoom(self, kwargs = {'z':0}):            
+    def get_zoom(self):            
         self.__open_begin()
         self.__serial.flushInput()
         self.__serial.write(ZOOM_INFO)
         rt = self.get_paras()
         self.__serial.close()
         if len(rt) == 1:
-            kwargs['z'] = self.__to_short_int(rt[0])
-            return True
+            zoom = {'z':0}
+            zoom['z'] = self.__to_short_int(rt[0])
+            return {'result': 'ok', 'info': '', 'value': {'type':'zoom', 'data': {'z':zoom['z']}}}
         else:
-            return False
+            return {'result':'err', 'info':'ptz process error'}
 
     ''' usage for testing ptz'''
     def pos_reset(self):
@@ -469,7 +616,7 @@ class Ptz:
         self.__serial.close()
         return v
 
-    def raw(self, value, mode, bas= None):
+    def __raw(self, value, mode, bas= None):
         self.__open_begin()
         self.__serial.write(value)
         if mode == 'ack':
@@ -489,36 +636,63 @@ class Ptz:
             self.__serial.close()
             return False
 
-    def mouse_trace(self, hvs, vvs, sx, sy, paras ={'s':0, 'hva':0, 'vva':0}):
-        zooms ={}
-        if self.get_zoom(zoom) != True:
-            return -1;
-        zs = self.ext_get_scales(paras['s'], zooms)
-        hva = paras['hva'] / zs
-        vva = paras['vva'] / zs
+    def raw(self, params):
+        if 'value' in params and 'mode' in params:
+            result = {}
+            value = params['value'][0]
+            ba = self.__encode_ba(value)
+            mode = params['mode'][0]
+            is_ret  = self.__raw(ba, mode, result)
+            if  is_ret != True:
+                return {'result': 'err', 'info': 'timeout'}
+            else:
+                if mode == 'info':
+                    print '##########'
+                    print result
+                    s = self.__decode_ba(result['ba']) 
+                    return {'result': 'ok', 'info': s} 
+                else:
+                    return {'result': 'ok', 'info': ''}
+        else:
+            return {'result':'error', 'info': 'no params'}
 
-        h_rpm = int(hva*(hvs-0.5) / 0.075)
-        v_rpm = int(vva*(0.5-vvs) / 0.075)
+    def mouse_trace(self, params):
+        ret  = self.ext_get_scales()
+        if ret['result'] == 'err':
+            return ret
+        else:
+            zs = ret['value']['data']['z']
+            hva = params['hva'] / zs
+            vva = params['vva'] / zs
+            hvs = float(params['hvs'])
+            vvs = float(params['vvs'])
 
-        return ptz_set_relative_pos(h_rpm, v_rpm, sx, sy)
+            h_rpm = int(hva*(hvs-0.5) / 0.075)
+            v_rpm = int(vva*(0.5-vvs) / 0.075)
+
+            sx = int(params['sx'])
+            sy = int(params['sy'])
+
+            return set_rpos({'x': h_rpm, 'y': v_rpm, 'sx': sx, 'sy': sy})
           
-    def ext_get_scales(self, string, zs = {'z':-1}):
+    def ext_get_scales(self):
         X = [0x0000, 0x1606, 0x2151, 0x2860, 0x2CB5, 0x3060, 0x32D3, 0x3545, \
             0x3727, 0x38A9, 0x3A42, 0x3B4B, 0x3C85, 0x3D75, 0x3E4E, 0x3EF7, \
             0x3FA0, 0x4000] 
 
         Y = range(1, 19)
+
         p = [6.995e-23, -3.7984e-18, 8.116e-14, \
             -8.433e-10, 4.253e-06, -8.103e-03, 1.000e+00]
-
-        if zs['z'] < 0: 
-            if (self.get_zoom(zs) < 0):
-                return 1.0;            
+        zoom = self.get_zoom()
+        if zoom['result'] == 'err':
+            return zoom
         else:
-            zm = zs['z']
-            return p[0] * zm ** 6 + p[1] * zm ** 5 + \
+            zm = zoom['value']['data']['z']
+            popular_z = p[0] * zm ** 6 + p[1] * zm ** 5 + \
                 p[2] * zm ** 4 + p[3] * zm ** 3 + \
                 p[4] * zm ** 2 + p[5] * zm  + p[6]
+            return {'result': 'ok', 'info': '', 'value': { 'type':'double', 'data': {'z': int(popular_z)}}}
 
     def __encode_ba(string):
         length = len(string) / 2;
