@@ -60,18 +60,17 @@ class Ptz:
         self.__addr = address
         self.__get_addr_head()
         self.__y0 = 0x80 + (self.__addr << 4)
-        self.__serial = None
-        self.__is_address = False
-        self.__serial = ptzs[self.__com]
+        self.__is_address = True 
+        self.__serial = Serial(timeout=30)
         self.__serial.setPort(self.__com)
 
     def __set_address(self):
         rt = self.__open_n()
         if rt != True:
-            sys.exit()
+            sys.exit('ptz set address fails')
         self.__serial.write(ADDRESS_SET)
         v = self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         return v
 
     def close(self):
@@ -83,6 +82,7 @@ class Ptz:
         while not opened and i < 3:
             try:
                 self.__serial.open()
+        
             except SerialException as e:
                 if 'WindowsError(5' in e.message:
                     print u'串口%s被另一个进程占用 ...'%(self.__com)
@@ -107,13 +107,9 @@ class Ptz:
                 print u'设置地址失败 ...'
         rt = self.__open_n()
         if rt != True:
-            sys.exit()
+            print "serial {0} can\'t be opened".format(self.__com)
+        return rt
                 
-    def __del__(self):
-        if self.__serial != None:
-            self.__serial.close()
-            ptzs.pop(self.__com) 
-
     def __get_addr_head(self):
         hr = 0x80 + self.__addr
 
@@ -221,14 +217,17 @@ class Ptz:
         if 'speed' in params:
             vv  = int(params['speed'][0])
         LEFT[4] = vv
-        self.__open_begin()
+        print self.__decode_ba(LEFT)
+        opened = self.__open_begin()
+        if opened == False:
+            return {'result': 'err', 'info': '{0} can\'t be opened'.format(self.__com)}
         self.__serial.write(LEFT)
         v = self.__is_cmd_return(4)         
-        self.__serial.close()
+        self.close()
         if v:
-            return {'result': 'ok',  'info': 'completed'}
+            return {'result': 'ok',  'info': 'ptz left completed'}
         else:
-            return {'result': 'ok', 'info': 'ptz process error'}
+            return {'result': 'err', 'info': 'ptz left error'}
 
     def right(self, params):
         vv = 0
@@ -236,9 +235,10 @@ class Ptz:
             vv  = int(params['speed'][0])
         RIGHT[4] = vv
         self.__open_begin()
+        print self.__decode_ba(RIGHT) 
         self.__serial.write(RIGHT)
         v =  self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return {'result': 'ok',  'info':'completed'}
         else:
@@ -253,11 +253,11 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(UP)
         v = self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
-            return {'result': 'ok',  'info': 'completed'}
+            return {'result': 'ok',  'info': 'up completed'}
         else:
-            return {'result': 'err',  'info': 'ptz process error' }
+            return {'result': 'err',  'info': 'ptz up error' }
 
     def down(self, params):
         ww = 0
@@ -268,11 +268,13 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(DOWN)
         v = self.__is_cmd_return(4)    
-        self.__serial.close()
+        self.close()
+        if not self.__serial.isOpen():
+            print 'down close'
         if v:
-            return {'result': 'ok',  'info': 'completed'}
+            return {'result': 'ok',  'info': 'down completed'}
         else:
-            return {'result': 'err',  'info': 'ptz process error' }
+            return {'result': 'err',  'info': 'ptz down error' }
 
     def __encode_para(self, para):
         paras = [0, 0, 0, 0]
@@ -307,7 +309,7 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(ABSOLUTE_POS)
         v = self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return {'result': 'ok', 'info': 'completed'}
         else:
@@ -337,7 +339,7 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(RELATIVE_POS)
         v =  self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
 
         if v:
             return {'result': 'ok', 'info': 'completed' }
@@ -369,7 +371,7 @@ class Ptz:
         self.__serial.write(ABSOLUTE_POS)
         is_ack = self.__is_cmd_return(4)
         is_complete = self.__is_cmd_return(5)
-        self.__serial.close()
+        self.close()
         if is_ack and is_complete:
             return {'return': 'ok', 'info':'completed'}
         else:
@@ -384,7 +386,7 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(ZOOM_SET)
         v =  self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return {'return': 'ok',  'info':'completed'}
         else:
@@ -401,17 +403,17 @@ class Ptz:
         self.__serial.write(ZOOM_SET)
         is_ack = self.__is_cmd_return(4)
         is_complete = self.__is_cmd_return(5)
-        self.__serial.close()
+        self.close()
         if is_ack and is_complete:
             return {'return': 'ok',  'info':'completed'}
         else:
             return {'return': 'err',  'info': 'ptz process error'}
         
-    def stop(self):
+    def stop(self, params={}):
         self.__open_begin()
         self.__serial.write(STOP)
         v = self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return { 'result': 'ok', 'info':'completed' } 
         else:
@@ -426,7 +428,7 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(ZOOM_TEL)
         v = self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return {'result': 'ok', 'info':'completed'}
         else:
@@ -441,18 +443,18 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(ZOOM_WIDE)
         v =  self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return {'result': 'ok', 'info':'completed'}
         else:
             return {'result': 'err', 'info': 'ptz process error'}
 
     # note: it must be called twice
-    def zoom_stop(self):
+    def zoom_stop(self, params={}):
         self.__open_begin()
         self.__serial.write(ZOOM_STOP)
         v = self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return {'result': 'ok', 'info':'completed'}
         else:
@@ -468,7 +470,7 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(MEMORY_RESET)
         v = self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return {'result': 'ok', 'info': 'completed'}
         else:
@@ -483,7 +485,7 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(MEMORY_SET)
         v = self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return {'result': 'ok', 'info': 'completed'}
         else:
@@ -498,7 +500,7 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(MEMORY_CALL)
         v = self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         if v:
             return {'result': 'ok', 'info': 'completed'}
         else:
@@ -581,12 +583,12 @@ class Ptz:
         else:
             return {'result': 'err', 'info': 'ptz process error'}
 
-    def get_pos(self):
+    def get_pos(self, params={}):
         self.__open_begin()
         self.__serial.flushInput()
         self.__serial.write(POS_INFO) 
         rt = self.get_paras()
-        self.__serial.close()
+        self.close()
         if len(rt) == 2:
             pos = {'x':0, 'y':0}
             pos['x'] = self.__to_short_int(rt[0])
@@ -595,12 +597,12 @@ class Ptz:
         else:
             return {'result':'err', 'info':'ptz process error'}
              
-    def get_zoom(self):            
+    def get_zoom(self, params={}):            
         self.__open_begin()
         self.__serial.flushInput()
         self.__serial.write(ZOOM_INFO)
         rt = self.get_paras()
-        self.__serial.close()
+        self.close()
         if len(rt) == 1:
             zoom = {'z':0}
             zoom['z'] = self.__to_short_int(rt[0])
@@ -613,7 +615,7 @@ class Ptz:
         self.__open_begin()
         self.__serial.write(POS_RESET)
         v =  self.__is_cmd_return(4)
-        self.__serial.close()
+        self.close()
         return v
 
     def __raw(self, value, mode, bas= None):
@@ -621,19 +623,19 @@ class Ptz:
         self.__serial.write(value)
         if mode == 'ack':
             is_ack = self.__is_cmd_return(4)
-            self.__serial.close()
+            self.close()
             return is_ack 
         elif mode == 'complete':
             is_ack = self.__is_cmd_return(4)
             is_complete = self.__is_cmd_return(5)
-            self.__serial.close()
+            self.close()
             return is_ack and is_complete
         elif mode == 'info':
             ipacket = self.__get_info(bas)
-            self.__serial.close()
+            self.close()
             return ipacket
         else:
-            self.__serial.close()
+            self.close()
             return False
 
     def raw(self, params):
@@ -714,17 +716,22 @@ class Ptz:
         return s
 
 if __name__ == '__main__':
+    import time
     if len(sys.argv) < 2 \
             or sys.argv[1] == "-help":
         sys.exit("usage: {0} COMX".format(sys.argv[0]))
     com = sys.argv[1]
     ptz = Ptz(com)
-    kvs = {}
-    ptz.set_pos(1000, 1000, 20, 20)
-    time.sleep(10)
-    ptz.preset_set(1)    
-    time.sleep(1)
-    ptz.set_pos(0, 0, 20, 20)
-    time.sleep(10)
-    ptz.preset_call(1)
-    print kvs
+    params = {'speed':['5']}
+    ptz.down(params)
+    time.sleep(5)
+    ptz.stop()
+    
+    '''
+    ptz = Serial(port=com, baudrate=9600)
+    if ptz.isOpen():
+        print 'open'
+    ptz.write(bytearray('\x81\x01\x06\x01\x09\x00\x02\x03\xFF'))
+    time.sleep(5)
+    ptz.write(bytearray('\x81\x01\x06\x01\x0A\x00\x01\x03\xFF'))
+   ''' 
