@@ -4,58 +4,19 @@ import inspect
 import sys 
 import platform
 import threading
+import json
 from serial import *
 
 #XXXX: set adderss 出现问题，中间要停顿一下才行（譬如打印）...
 
 sys_name = platform.system()
 
-# Address set broadcast
-ADDRESS_SET = bytearray('\x88\x30\x01\xFF')
-
-# pan tilt drive
-UP = bytearray('\x8F\x01\x06\x01\x00\x00\x03\x01\xFF')
-DOWN = bytearray('\x8F\x01\x06\x01\x00\x00\x03\x02\xFF')
-LEFT= bytearray('\x8F\x01\x06\x01\x00\x00\x01\x03\xFF')
-RIGHT= bytearray('\x8F\x01\x06\x01\x00\x00\x02\x03\xFF')
-STOP = bytearray('\x8F\x01\x06\x01\x00\x00\x03\x03\xFF')
-POS_RESET = bytearray('\x8F\x01\x06\x05\xFF')
-
-ABSOLUTE_POS = bytearray('\x8F\x01\x06\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF')
-RELATIVE_POS = bytearray('\x8F\x01\x06\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF')
-
-# standard zoom drive
-ZOOM_STOP = bytearray('\x8F\x01\x04\x07\x00\xFF')
-ZOOM_TEL = bytearray('\x8F\x01\x04\x07\x20\xFF')
-ZOOM_WIDE = bytearray('\x8F\x01\x04\x07\x30\xFF')
-ZOOM_SET = bytearray('\x8F\x01\x04\x47\x00\x00\x00\x00\xFF') 
-
-# cam memory
-MEMORY_RESET = bytearray('\x8F\x01\x04\x3F\x00\x0F\xFF')
-MEMORY_SET = bytearray('\x8F\x01\x04\x3F\x01\x0F\xFF')
-MEMORY_CALL = bytearray('\x8F\x01\x04\x3F\x02\x0F\xFF')
-
-# info
-POS_INFO = bytearray('\x8F\x09\x06\x12\xFF')
-ZOOM_INFO = bytearray('\x8F\x09\x04\x47\xFF')
-
-
-RT = "======== return message ========\n" + \
-    "ACK: z0 4y FF\n" + \
-      "Command completion: z0 5y FF\n" + \
-      "Information return: z0 50 ... FF\n" + \
-      "Address set: z0 38 FF\n" + \
-      "syntax error: z0 60 02 FF\n" + \
-      "command buffer full: z0 60 03 FF\n" + \
-      "command cancel: z0 60 04 FF\n" + \
-      "No sockets: z0 60 05 FF\n" + \
-      "Command not executable z0 60 41 FF\n" + \
-      "==============================="
-
 class Ptz:
     def __init__(self, com, address = 1):
-        if __debug__ != True:
-            print RT
+        with open("ptz.config", "r") as fp: 
+            cfg = json.loads(fp) 
+        self.__cmds = cfg['cmds']
+        self.__rets = cfg['rets']
         self.__com = com
         self.__addr = address
         self.__get_addr_head()
@@ -64,19 +25,10 @@ class Ptz:
         self.__serial = Serial(timeout=30)
         self.__serial.setPort(self.__com)
 
-    def __set_address(self):
-        rt = self.__open_n()
-        if rt != True:
-            sys.exit('ptz set address fails')
-        self.__serial.write(ADDRESS_SET)
-        v = self.__is_cmd_return(4)
-        self.close()
-        return v
-
     def close(self):
         self.__serial.close()
 
-    def __open_n(self):
+    def __open(self):
         opened = False
         i = 0
         while not opened and i < 3:
@@ -97,94 +49,67 @@ class Ptz:
                 opened = True
 
         return opened
-    
-    def __open_begin(self):
-        if not self.__is_address:
-            self.__is_address = self.__set_address()
-            if self.__is_address:
-                print u'串口%s及其所连接设备正常启动 ...'%(self.__com)
-            else:
-                print u'设置地址失败 ...'
-        rt = self.__open_n()
-        if rt != True:
-            print "serial {0} can\'t be opened".format(self.__com)
-        return rt
                 
     def __get_addr_head(self):
         hr = 0x80 + self.__addr
+        for e in self.__cmds:
+            e[0] = hr
 
-        UP[0] = hr
-        DOWN[0] = hr
-        LEFT[0] = hr
-        RIGHT[0] = hr
-        STOP[0] = hr
-        POS_RESET[0] = hr
-        ABSOLUTE_POS[0] = hr
-        RELATIVE_POS[0] = hr
-
-        ZOOM_TEL[0] = hr
-        ZOOM_WIDE[0] = hr
-        ZOOM_STOP[0] = hr
-        ZOOM_SET[0] = hr
-
-        MEMORY_RESET[0] = hr
-        MEMORY_SET[0] = hr
-        MEMORY_CALL[0] = hr
-        POS_INFO[0] = hr
-        ZOOM_INFO[0] = hr
-
-    def __is_cmd_str(self, ba, v):
+    def __is_cmd_id(self, ba, v):
         if len(ba) == 3 \
             and ba[0] == self.__y0 \
             and ba[1] >> 4 == v \
             and ba[2] == 0xFF:
-            return True
+            if v == 4:
+                return 0
+            elif v == 5:
+                return 1
+            else:
+                return -7
         elif ba == bytearray('\x88\x30\x02\xff'):
-            return True
+            return 2
         else:
-            return False
+            return -7
 
-    def __error_type(self, ba):
-        s = ''
+    def __error_id(self, ba):
+        ret = -7
         if len(ba) == 4 \
             and ba[0] == self.__y0 \
             and ba[1] >> 4 == 6 \
             and ba[3] == 0xFF:
             if ba[2] == 0x02:
-                s = 'syntax error'
+                ret  = -2 
             elif ba[2] == 0x03:
-                s = 'command buffer full'
+                ret = -3 
             elif ba[2] == 0x04:
-                s = 'command cancel'
+                ret = -4 
             elif ba[2] == 0x05:
-                s = 'no sockets'
+                ret  = -5 
             elif ba[2] == 0x41:
-                s = 'command not executable'
+                ret = -6 
             else:
                 pass
-        return s
-
-                
-    def __is_cmd_return(self, v):
-        err_s = ''
-        ba = bytearray()
-        is_v = False
+        return ret 
+    
+    def DEBUG(s):
+        '''Print string converting from byte ...'''
         if __debug__ != True:
-            print '\n=== function: %s'%(inspect.stack()[1][3])    
-            beg = time.time()
+            print s.encode('hex')
+
+    def __response(self, v):
+        ba = bytearray()
+        ret_id = -7
         s = self.__serial.read(1)
         while True:
             if s != '':
-                if __debug__ != True:
-                    print s.encode('hex') 
                 ba.append(s)
                 if s == '\xFF':
-                    is_v = self.__is_cmd_str(ba, v)                
-                    if is_v:                    
+                    ret_id = self.__is_cmd_id(ba, v)                
+                    if ret_id == 0 or ret_id == 1:                    
                         break
                     else:
-                        err_s = self.__error_type(ba)
-                        if err_s != '':
+                        ret_id = self.__error_id(ba)
+                        if ret_id != -7:
                             break
                         length = len(ba)
                         for i in range(length):
@@ -194,87 +119,66 @@ class Ptz:
                     s = self.__serial.read(1)
 
             else:
+                ret_id = -1
                 break
-        if __debug__ != True:
-            if err_s != '':
-                print err_s
-            if len(ba) == 3 and ba[1] >> 4 == 4:
-                print 'ACK state: ', is_v
-            elif len(ba) == 3 and ba[1] >> 4 == 5:
-                print 'Command completion state: ', is_v
-            elif len(ba) ==4 and ba[0] == 0x88 and ba[1] == 0x30 and \
-                          ba[2] == 0X02 and ba[3] == 0xFF:
-                print 'address set state: ', is_v
-            else:
-                pass
-            print 'value: ', self.__decode_ba(ba)
-            print 'reading time: ', time.time() - beg
-            print '=== function %s over ...'%(inspect.stack()[1][3])
-        return is_v
 
-    def left(self, params):
-        vv  =  0
-        if 'speed' in params:
-            vv  = int(params['speed'][0])
-        LEFT[4] = vv
-        print self.__decode_ba(LEFT)
-        opened = self.__open_begin()
+        caller = inspect.stack()[1][3]
+        return {'return': self.__rets['result'], \
+            'info': 'function ' + caller +' ' \
+                + self.__rets['info']}
+
+    def __communicate(cmd_protocal):
+        opened = self.__open()
         if opened == False:
-            return {'result': 'err', 'info': '{0} can\'t be opened'.format(self.__com)}
-        self.__serial.write(LEFT)
-        v = self.__is_cmd_return(4)         
-        self.close()
-        if v:
-            return {'result': 'ok',  'info': 'ptz left completed'}
+            v = {'result': 'err', 'info': '{0} can\'t be opened'.format(self.__com)}
         else:
-            return {'result': 'err', 'info': 'ptz left error'}
+            self.__serial.write(cmd_protocal)
+            v = self.__is_cmd_return(4)         
+            self.close()
+        return v
 
+ 
+    def __communicate_blocked(cmd_protocal):
+        self.__open()
+        self.__serial.write(ABSOLUTE_POS)
+        ack = self.__is_cmd_return(4)
+        complete = self.__is_cmd_return(5)
+        self.close()
+        if ack['result'] == 'ok' \
+            and complete['result'] == 'ok':
+            return complet 
+        else if ack['result'] == 'ok' \
+            and complete['result'] == 'err':
+            return {'return': 'err', 'info': 'ack succeeds and comeplet fails'}
+        else if ack['result'] == 'err' \
+            and complete['result'] == 'ok':
+            return {'result': 'err', 'info': 'ack fails and complete succeeds'}
+        else:
+            return {'result': 'err', 'info': 'ack fails and complete failes'}
+       
     def right(self, params):
         vv = 0
         if 'speed' in params:
             vv  = int(params['speed'][0])
+        RIGHT = bytearray(self.__cmds['right'])
         RIGHT[4] = vv
-        self.__open_begin()
-        print self.__decode_ba(RIGHT) 
-        self.__serial.write(RIGHT)
-        v =  self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'result': 'ok',  'info':'completed'}
-        else:
-            return {'result': 'err',  'info': 'ptz process error'}
+        return  self.__communicate(RIGHT)
 
     def up(self, params):
         ww = 0
         if 'speed' in params:
             ww  = int(params['speed'][0])
-
+        UP = bytearray(self.__cmds['up'])
         UP[5] = ww
-        self.__open_begin()
-        self.__serial.write(UP)
-        v = self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'result': 'ok',  'info': 'up completed'}
-        else:
-            return {'result': 'err',  'info': 'ptz up error' }
+        return self.__communicate(UP)
 
     def down(self, params):
         ww = 0
         if 'speed' in params:
             ww  = int(params['speed'][0])
-
+        DOWN = bytearray(self.__cmds['down'])
         DOWN[5] = ww
-        self.__open_begin()
-        self.__serial.write(DOWN)
-        v = self.__is_cmd_return(4)    
-        self.close()
-        if not self.__serial.isOpen():
-            print 'down close'
-        if v:
-            return {'result': 'ok',  'info': 'down completed'}
-        else:
-            return {'result': 'err',  'info': 'ptz down error' }
+        return self.__communicate(DOWN)
 
     def __encode_para(self, para):
         paras = [0, 0, 0, 0]
@@ -286,6 +190,7 @@ class Ptz:
         
     def set_pos(self, params):
         # only return ack , no comepletion
+        ABSOLUTE_POS = bytearray(self.__cmds['absolute_pos'])
         x = 0
         if 'x' in params:
             x = int(params['x'][0])
@@ -306,16 +211,10 @@ class Ptz:
             sy = int(params['sy'][0])
         ABSOLUTE_POS[5] = sy
 
-        self.__open_begin()
-        self.__serial.write(ABSOLUTE_POS)
-        v = self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'result': 'ok', 'info': 'completed'}
-        else:
-            return {'result': 'err', 'info': 'ptz process error'}
+        return self.__communicate(ABSOLUTE_POS)
         
     def set_rpos(self, params):
+        RELATIVE_POS = bytearray(self.__cmds['relative_pos'])
         x = 0
         if 'x' in params:
             x = int(params['x'][0])
@@ -336,15 +235,7 @@ class Ptz:
             sy = int(params['sy'][0])
         RELATIVE_POS[5] = sy
 
-        self.__open_begin()
-        self.__serial.write(RELATIVE_POS)
-        v =  self.__is_cmd_return(4)
-        self.close()
-
-        if v:
-            return {'result': 'ok', 'info': 'completed' }
-        else:
-            return { 'result': 'err', 'info': 'ptz process error' }
+        return self.__communicate(RELATIVE_POS)
 
     def set_pos_blocked(self, params):
         x = 0
@@ -367,31 +258,17 @@ class Ptz:
             sy = int(params['sy'][0])
         ABSOLUTE_POS[5] = sy
 
-        self.__open_begin()
-        self.__serial.write(ABSOLUTE_POS)
-        is_ack = self.__is_cmd_return(4)
-        is_complete = self.__is_cmd_return(5)
-        self.close()
-        if is_ack and is_complete:
-            return {'return': 'ok', 'info':'completed'}
-        else:
-            return {'return': 'err', 'info': 'ptz process error'}
+        return self.__communicate_blocked(ABSOLUTE_POS) 
 
     def set_zoom(self, params):
+        ZOOM_SET = bytearray(self.__cmds['zoom_set'])
         z = 0
         if 'z' in params:
             z = int(params['z'][0])
         z_paras = self.__encode_para(z)
         ZOOM_SET[4:8] = z_paras
-        self.__open_begin()
-        self.__serial.write(ZOOM_SET)
-        v =  self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'return': 'ok',  'info':'completed'}
-        else:
-            return {'return': 'err',  'info': 'ptz process error'}
-
+        return self.__communicate(ZOOM_SET)
+        
 
     def set_zoom_blocked(self, params):
         z = 0
@@ -399,112 +276,62 @@ class Ptz:
             z = int(params['z'][0])
         z_paras = self.__encode_para(z)
         ZOOM_SET[4:8] = z_paras
-        self.__open_begin()
-        self.__serial.write(ZOOM_SET)
-        is_ack = self.__is_cmd_return(4)
-        is_complete = self.__is_cmd_return(5)
-        self.close()
-        if is_ack and is_complete:
-            return {'return': 'ok',  'info':'completed'}
-        else:
-            return {'return': 'err',  'info': 'ptz process error'}
-        
+        return self.__communicate_blocked(ZOOM_SET)
+                
     def stop(self, params={}):
-        self.__open_begin()
-        self.__serial.write(STOP)
-        v = self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return { 'result': 'ok', 'info':'completed' } 
-        else:
-            return { 'result': 'err', 'info': 'ptz process  error' }
+       STOP = bytearray(self.__cmds['stop'])
+       return self.__communicate(STOP)
 
     def zoom_tele(self, params):
+        ZOOM_TELE = bytearray(self.__cmds['zoom_tele'])
         speed = 1
         if 'speed' in params:
             speed = int(params['speed'][0])
         tz = 0x20 | speed
-        ZOOM_TEL[4] = tz
-        self.__open_begin()
-        self.__serial.write(ZOOM_TEL)
-        v = self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'result': 'ok', 'info':'completed'}
-        else:
-            return {'result': 'err', 'info': 'ptz process error'}
+        ZOOM_TELE[4] = tz
+        return self.__communicate(ZOOM_TELE) 
 
     def zoom_wide(self, params):
+        ZOOM_WIDE = bytearray(self.__cmds['zoom_wide'])
         speed = 1
         if 'speed' in params:
             speed = int(params['speed'][0])
         wz = 0x30 | speed      
         ZOOM_WIDE[4] = wz
-        self.__open_begin()
-        self.__serial.write(ZOOM_WIDE)
-        v =  self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'result': 'ok', 'info':'completed'}
-        else:
-            return {'result': 'err', 'info': 'ptz process error'}
+        return self.__communicate(ZOOM_WIDE)
 
-    # note: it must be called twice
     def zoom_stop(self, params={}):
-        self.__open_begin()
-        self.__serial.write(ZOOM_STOP)
-        v = self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'result': 'ok', 'info':'completed'}
-        else:
-            return {'result': 'err', 'info': 'ptz process error'}
+        # note: it must be called twice
+        ZOOM_STOP = bytearray(self.__cmds['zoom_stop'])
+        return self.__communicate(ZOOM_STOP)
         
     def preset_clear(self, params):
+        MEMORY_RESET = bytearray(self.__cmds['memery_reset'])
         if 'id' in params:
             z  = int(params['id'][0])
         else:
             return {'result': 'err',  'info': 'id dosn\'t be set'}
 
         MEMORY_RESET[5] = z
-        self.__open_begin()
-        self.__serial.write(MEMORY_RESET)
-        v = self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'result': 'ok', 'info': 'completed'}
-        else:
-            return {'result': 'err', 'info': 'ptz proccess error'} 
+        return self.__communicate(MEMORY_RESET) 
 
     def preset_save(self, params):
+        MEMORY_SET = bytearray(self.__cmds['memory_set'])
         if 'id' in params:
             z  = int(params['id'][0])
         else:
             return {'result': 'err', 'info': 'id dosn\'t be set'}
         MEMORY_SET[5] = z
-        self.__open_begin()
-        self.__serial.write(MEMORY_SET)
-        v = self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'result': 'ok', 'info': 'completed'}
-        else:
-            return {'result': 'err',  'info': 'ptz proccess error'}
+        return self.__communicate(MEMORY_SET) 
 
     def preset_call(self, params):
+        MEMORY_CALL = bytearray(self.__cmds['memory_call'])
         if 'id' in params:
             z  = int(params['id'][0])
         else:
             return {'result': 'err', 'info': 'id dosn\'t be set' }
         MEMORY_CALL[5] = z
-        self.__open_begin()
-        self.__serial.write(MEMORY_CALL)
-        v = self.__is_cmd_return(4)
-        self.close()
-        if v:
-            return {'result': 'ok', 'info': 'completed'}
-        else:
-            return {'result': 'err', 'info': 'ptz proccess error' }
+        return self.__communicate(MEMORY_CALL) 
 
     def __is_packet(self, ba):
         length = len(ba)
@@ -518,23 +345,6 @@ class Ptz:
 
     def __decode_paras(self, paras, n):
         return  paras[n] << 12 | paras[n+1] << 8 | paras[n+2] << 4 | paras[n+3]
-
-    def __get_info(self, bas):
-        ipacket = False
-        bas['ba'] = bytearray()
-        s = self.__serial.read(1)
-        while s != '':
-            bas['ba'].append(s)
-            if s == '\xFF':
-                ipacket = self.__is_packet(bas['ba'])
-                if (ipacket):
-                    break
-                else:
-                    bas['ba'] = bytearray()
-                    s = self.__serial.read(1)
-            else:
-                s = self.__serial.read(1)
-        return ipacket 
 
     def get_paras(self):
         rt = []
@@ -563,6 +373,7 @@ class Ptz:
         return rt 
 
     def __to_short_int(self, v):
+        '''Convert int to short int ...'''
         if (v & 0x8000 != 0):
             v = v & 0x7FFF
             v = ~v
@@ -572,6 +383,7 @@ class Ptz:
         return v
 
     def get_pos_zoom(self):
+        '''Get position and zoom position ...'''
         pos = self.get_pos()
         zoom = self.get_zoom()
 
@@ -584,7 +396,7 @@ class Ptz:
             return {'result': 'err', 'info': 'ptz process error'}
 
     def get_pos(self, params={}):
-        self.__open_begin()
+        self.__open()
         self.__serial.flushInput()
         self.__serial.write(POS_INFO) 
         rt = self.get_paras()
@@ -598,7 +410,8 @@ class Ptz:
             return {'result':'err', 'info':'ptz process error'}
              
     def get_zoom(self, params={}):            
-        self.__open_begin()
+        '''Get position zoom ... '''
+        self.__open()
         self.__serial.flushInput()
         self.__serial.write(ZOOM_INFO)
         rt = self.get_paras()
@@ -610,53 +423,10 @@ class Ptz:
         else:
             return {'result':'err', 'info':'ptz process error'}
 
-    ''' usage for testing ptz'''
     def pos_reset(self):
-        self.__open_begin()
-        self.__serial.write(POS_RESET)
-        v =  self.__is_cmd_return(4)
-        self.close()
-        return v
-
-    def __raw(self, value, mode, bas= None):
-        self.__open_begin()
-        self.__serial.write(value)
-        if mode == 'ack':
-            is_ack = self.__is_cmd_return(4)
-            self.close()
-            return is_ack 
-        elif mode == 'complete':
-            is_ack = self.__is_cmd_return(4)
-            is_complete = self.__is_cmd_return(5)
-            self.close()
-            return is_ack and is_complete
-        elif mode == 'info':
-            ipacket = self.__get_info(bas)
-            self.close()
-            return ipacket
-        else:
-            self.close()
-            return False
-
-    def raw(self, params):
-        if 'value' in params and 'mode' in params:
-            result = {}
-            value = params['value'][0]
-            ba = self.__encode_ba(value)
-            mode = params['mode'][0]
-            is_ret  = self.__raw(ba, mode, result)
-            if  is_ret != True:
-                return {'result': 'err', 'info': 'timeout'}
-            else:
-                if mode == 'info':
-                    print '##########'
-                    print result
-                    s = self.__decode_ba(result['ba']) 
-                    return {'result': 'ok', 'info': s} 
-                else:
-                    return {'result': 'ok', 'info': ''}
-        else:
-            return {'result':'error', 'info': 'no params'}
+        ''' usage for testing ptz'''
+        POS_RESET = bytearray(self.__cmds['pos_reset'])
+        return self.__communicate(POS_RESET)
 
     def mouse_trace(self, params):
         ret  = self.ext_get_scales()
@@ -678,6 +448,7 @@ class Ptz:
             return set_rpos({'x': h_rpm, 'y': v_rpm, 'sx': sx, 'sy': sy})
           
     def ext_get_scales(self):
+        '''Get ratio zoom ...'''
         X = [0x0000, 0x1606, 0x2151, 0x2860, 0x2CB5, 0x3060, 0x32D3, 0x3545, \
             0x3727, 0x38A9, 0x3A42, 0x3B4B, 0x3C85, 0x3D75, 0x3E4E, 0x3EF7, \
             0x3FA0, 0x4000] 
@@ -697,6 +468,7 @@ class Ptz:
             return {'result': 'ok', 'info': '', 'value': { 'type':'double', 'data': {'z': int(popular_z)}}}
 
     def __encode_ba(string):
+        '''Convert string to bytearray ...'''
         length = len(string) / 2;
         ba = bytearray()
         for i in range(length):
@@ -706,6 +478,7 @@ class Ptz:
         return ba
 
     def __decode_ba(self, ba):
+        '''Convert bytearray to string ...'''
         s = ''
         for i in range(len(ba)):
             ch = hex(ba[i])
@@ -726,12 +499,3 @@ if __name__ == '__main__':
     ptz.down(params)
     time.sleep(5)
     ptz.stop()
-    
-    '''
-    ptz = Serial(port=com, baudrate=9600)
-    if ptz.isOpen():
-        print 'open'
-    ptz.write(bytearray('\x81\x01\x06\x01\x09\x00\x02\x03\xFF'))
-    time.sleep(5)
-    ptz.write(bytearray('\x81\x01\x06\x01\x0A\x00\x01\x03\xFF'))
-   ''' 
