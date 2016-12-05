@@ -13,10 +13,11 @@ sys_name = platform.system()
 
 class Ptz:
     def __init__(self, com, address = 1):
-        with open("ptz.config", "r") as fp: 
+        with open(".ptz.conf", "r") as fp: 
             cfg = json.loads(fp) 
         self.__cmds = cfg['cmds']
         self.__rets = cfg['rets']
+        self.__openStates = cfg['openStates']
         self.__com = com
         self.__addr = address
         self.__get_addr_head()
@@ -29,24 +30,23 @@ class Ptz:
         self.__serial.close()
 
     def __open(self):
-        opened = False
         i = 0
         while not opened and i < 3:
             try:
                 self.__serial.open()
         
             except SerialException as e:
-                if 'WindowsError(5' in e.message:
-                    print u'串口%s被另一个进程占用 ...'%(self.__com)
-                elif 'WindowsError(2'in e.message:
-                    print u'串口%s不存在'%(self.__com)
+                if 'WindowsError(2'in e.message:
+                    open_id = -1
+                elif 'WindowsError(5' in e.message:
+                    open_id = -2 
                 else:
-                    print u'串口%s不能被打开 ...'%(self.__com) 
+                    open_id = -3
  
                 time.sleep(25)
                 i = i + 1
             else:
-                opened = True
+                open_id = 0
 
         return opened
                 
@@ -128,9 +128,11 @@ class Ptz:
                 + self.__rets['info']}
 
     def __communicate(cmd_protocal):
-        opened = self.__open()
-        if opened == False:
-            v = {'result': 'err', 'info': '{0} can\'t be opened'.format(self.__com)}
+        open_id = self.__open()
+        ots = self.__openstates[open_id]
+        if open_id  != 0:
+            v = {'result': ots['result'], \
+                'info': self.__com + ' ' + ots['info'],}
         else:
             self.__serial.write(cmd_protocal)
             v = self.__is_cmd_return(4)         
@@ -147,10 +149,10 @@ class Ptz:
         if ack['result'] == 'ok' \
             and complete['result'] == 'ok':
             return complet 
-        else if ack['result'] == 'ok' \
+        elif ack['result'] == 'ok' \
             and complete['result'] == 'err':
             return {'return': 'err', 'info': 'ack succeeds and comeplet fails'}
-        else if ack['result'] == 'err' \
+        elif ack['result'] == 'err' \
             and complete['result'] == 'ok':
             return {'result': 'err', 'info': 'ack fails and complete succeeds'}
         else:
